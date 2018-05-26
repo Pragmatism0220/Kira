@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -117,6 +118,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         }
 
     }
+    
 
     /**
      * 继承后重写可替换为你需要的布局

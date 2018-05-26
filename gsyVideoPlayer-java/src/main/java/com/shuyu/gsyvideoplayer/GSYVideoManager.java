@@ -452,6 +452,16 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
         }
     }
 
+    /**
+     * 页面销毁了记得调用是否所有的video
+     */
+    public static void releaseAllVideos() {
+        if (GSYVideoManager.instance().listener() != null) {
+            GSYVideoManager.instance().listener().onCompletion();
+        }
+        GSYVideoManager.instance().releaseMediaPlayer();
+    }
+
     public void releaseMediaPlayer() {
         Message msg = new Message();
         msg.what = HANDLER_RELEASE;

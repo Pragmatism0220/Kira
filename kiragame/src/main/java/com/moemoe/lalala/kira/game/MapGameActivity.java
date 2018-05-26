@@ -19,13 +19,12 @@ import org.json.JSONObject;
 
 
 /**
- *
  * Created by yi on 2017/10/11.
  */
 
 public class MapGameActivity extends AppCompatActivity {
 
-   // ImageView mIvBack;
+    // ImageView mIvBack;
     RelativeLayout mRoot;
 
     private UnityPlayer mUnityPlayer;
@@ -39,7 +38,7 @@ public class MapGameActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_map_event_unity);
-      //  mIvBack = findViewById(R.id.iv_back);
+        //  mIvBack = findViewById(R.id.iv_back);
         mRoot = findViewById(R.id.rl_root);
         initViews(savedInstanceState);
     }
@@ -75,7 +74,7 @@ public class MapGameActivity extends AppCompatActivity {
 //    }
 
     protected void initViews(Bundle savedInstanceState) {
-       // ViewUtils.setStatusBarLight(getWindow(), findViewById(R.id.top_view));
+        // ViewUtils.setStatusBarLight(getWindow(), findViewById(R.id.top_view));
 //        id = getIntent().getStringExtra("id");
 //        token = getIntent().getStringExtra("token");
 //        version = getIntent().getStringExtra("version");
@@ -93,7 +92,7 @@ public class MapGameActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getBundleExtra("res");
         String res = bundle.getString("res");
         mUnityPlayer = new UnityPlayer(this);
-        mRoot.addView(mUnityPlayer,0);
+        mRoot.addView(mUnityPlayer, 0);
         mUnityPlayer.requestFocus();
         //mIvBack.setVisibility(View.GONE);
         //mIvBack.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +146,7 @@ public class MapGameActivity extends AppCompatActivity {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent var1) {
-        return var1.getAction() == 2?this.mUnityPlayer.injectEvent(var1):super.dispatchKeyEvent(var1);
+        return var1.getAction() == 2 ? this.mUnityPlayer.injectEvent(var1) : super.dispatchKeyEvent(var1);
     }
 
     @Override
@@ -157,10 +156,10 @@ public class MapGameActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int var1, KeyEvent var2) {
-        if(var1 == 4){
+        if (var1 == 4) {
             finish();
             return true;
-        }else {
+        } else {
             return this.mUnityPlayer.injectEvent(var2);
         }
     }
