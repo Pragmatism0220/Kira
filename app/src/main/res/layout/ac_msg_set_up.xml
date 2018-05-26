@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white" />
+
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/neta_bar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/y30"
+        android:layout_marginStart="@dimen/y30"
+        android:layout_marginTop="@dimen/y30"
+        android:text="群聊消息设置"
+        android:textSize="@dimen/y24" />
+
+    <RelativeLayout
+        android:id="@+id/rl_msg_root"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y120"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/bg_normal_white_btn">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/x30"
+            android:text="接受神秘集会的召唤"
+            android:textColor="@color/black_1e1e1e"
+            android:textSize="@dimen/x30" />
+
+
+        <ImageView
+            android:id="@+id/iv_indicate_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x30"
+            android:src="@drawable/select_btn_3g" />
+    </RelativeLayout>
+</LinearLayout>

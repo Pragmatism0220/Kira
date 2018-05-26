@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f6f6f6">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white"/>
+
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/neta_bar"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_doc"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y100"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/main_cyan"
+                    android:textSize="@dimen/x30"
+                    android:text="查看原帖"/>
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/x24"
+                    android:textColor="@color/gray_929292"
+                    android:layout_marginTop="@dimen/y4"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <include
+                android:id="@+id/comment_root"
+                layout="@layout/item_post_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y20"/>
+
+            <TextView
+                android:id="@+id/tv_del_or_report"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y100"
+                android:textSize="@dimen/x30"
+                android:textColor="@color/red_ea6142"
+                android:background="@color/white"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/y20"
+                android:text="删除评论"/>
+        </LinearLayout>
+    </ScrollView>
+
+
+    <com.moemoe.lalala.view.widget.view.KeyboardListenerLayout
+        android:id="@+id/ll_comment_pannel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_f6f6f6"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/y14"
+        android:paddingTop="@dimen/y14"
+        android:visibility="visible" >
+
+        <ImageView
+            android:id="@+id/iv_add_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x20"
+            android:gravity="center_vertical"
+            android:src="@drawable/btn_doc_reply_pic"/>
+
+        <EditText
+            android:id="@+id/edt_comment_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x20"
+            android:layout_marginEnd="@dimen/x20"
+            android:layout_toEndOf="@+id/iv_add_img"
+            android:layout_toStartOf="@+id/iv_comment_send"
+            android:layout_weight="1"
+            android:background="@drawable/bg_white_border_gray"
+            android:gravity="center_vertical"
+            android:hint="@string/a_hint_input_comment"
+            android:maxLines="4"
+            android:minHeight="@dimen/y72"
+            android:paddingBottom="@dimen/y8"
+            android:paddingStart="@dimen/x28"
+            android:paddingEnd="@dimen/x28"
+            android:paddingTop="@dimen/y8"
+            android:textSize="@dimen/x30" />
+
+        <TextView
+            android:id="@+id/iv_comment_send"
+            android:layout_width="@dimen/x96"
+            android:layout_height="@dimen/y72"
+            android:layout_alignBottom="@+id/edt_comment_input"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/x20"
+            android:background="@drawable/bg_rect_white_click_cyan"
+            android:gravity="center"
+            android:text="@string/label_send"
+            android:textColor="@color/txt_white_gray"
+            android:textSize="@dimen/x30" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_img"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y230"
+            android:layout_marginTop="@dimen/y18"
+            android:layout_marginBottom="@dimen/y18"
+            android:layout_marginStart="@dimen/x20"
+            android:layout_below="@+id/edt_comment_input"
+            android:visibility="gone">
+
+        </android.support.v7.widget.RecyclerView>
+    </com.moemoe.lalala.view.widget.view.KeyboardListenerLayout>
+
+</LinearLayout>

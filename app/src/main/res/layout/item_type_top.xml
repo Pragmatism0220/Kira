@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y24"
+        android:background="@color/gray_e8e8e8" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y100">
+
+        <TextView
+            android:id="@+id/tv_context"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/x24"
+            android:textColor="@color/black"
+            android:textSize="@dimen/x30" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x36"
+            android:text="显示全部"
+            android:textColor="@color/main_cyan"
+            android:textSize="@dimen/x28" />
+    </RelativeLayout>
+    <View
+        android:background="@color/gray_e8e8e8"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"/>
+</LinearLayout>

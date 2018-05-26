@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+
+    <ImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="@dimen/x218"
+        android:layout_height="@dimen/y218" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y100"
+        android:layout_alignBottom="@+id/iv_avatar"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_bag_cover" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/x16"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x30"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_manager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/x16"
+        android:src="@drawable/ic_club_myclub_minister"
+        android:visibility="gone" />
+</RelativeLayout>

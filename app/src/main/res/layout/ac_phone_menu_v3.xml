@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f6f6f6">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white"/>
+
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/neta_bar"/>
+
+    <com.moemoe.lalala.view.widget.view.KiraTabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y80"
+        android:background="@color/white"
+        android:paddingStart="@dimen/y120"
+        android:paddingEnd="@dimen/y120"
+        app:kira_tl_indicator_color="@color/main_cyan"
+        app:kira_tl_indicator_height="@dimen/y6"
+        app:kira_tl_indicator_width_equal_title="true"
+        app:kira_tl_tab_space_equal="true"
+        app:kira_tl_textSelectColor="@color/main_cyan"
+        app:kira_tl_textUnSelectColor="@color/main_cyan_50"
+        app:kira_tl_text_size="@dimen/x30" />
+
+    <View
+        android:id="@+id/view_step"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1_px"
+        android:background="@color/gray_e8e8e8" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f6f6f6">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white"/>
+
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/neta_bar"/>
+    
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        
+        <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        
+        <TextView
+            android:id="@+id/tv_pingbi"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y80"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x28"
+            android:gravity="center"
+            android:background="@color/alpha_80"
+            android:text="你已屏蔽了该用户"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/iv_to_last"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_left"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/size_10"
+            android:visibility="gone"/>
+        
+    </FrameLayout>
+
+    <include layout="@layout/view_no_pic_keyboard"/>
+</LinearLayout>

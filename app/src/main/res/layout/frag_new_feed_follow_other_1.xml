@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fl_type_sort"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y96"
+        android:background="@color/white"
+        android:paddingEnd="@dimen/x24"
+        android:paddingStart="@dimen/x24">
+
+        <TextView
+            android:id="@+id/tv_type_sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:drawableEnd="@drawable/icon_doc_comment_sort"
+            android:drawablePadding="@dimen/x6"
+            android:gravity="center"
+            android:text="类型排序"
+            android:textColor="@color/blue_42beec"
+            android:textSize="@dimen/x24"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y1"
+        android:background="@color/gray_e8e8e8" />
+
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_f6f6f6" />
+</LinearLayout>

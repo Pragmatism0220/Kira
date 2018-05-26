@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_one_list_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f6f6f6" >
+
+    <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true">
+    </com.moemoe.lalala.view.widget.recycler.PullAndLoadView>
+
+    <ImageView
+        android:id="@+id/iv_send_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/y20"
+        android:layout_marginEnd="@dimen/x20"
+        android:visibility="gone"
+        android:src="@drawable/bg_send_post_btn" />
+
+    <LinearLayout
+        android:id="@+id/rl_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_shadow_up"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/top_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/status_bar_height" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y100">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/x36"
+                android:paddingRight="@dimen/x36"
+                android:layout_centerVertical="true"
+                android:src="@drawable/btn_back_cover_normal"/>
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_cyan"
+                android:layout_centerInParent="true"
+                android:textSize="@dimen/x36"
+                android:text=""
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_simple_label"
+                android:layout_width="@dimen/x100"
+                android:layout_height="@dimen/y40"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/x20"
+                android:gravity="center"
+                android:text="标签精简"
+                android:textColor="@color/txt_cyan_white"
+                android:textStyle="bold"
+                android:textSize="@dimen/x18"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/btn_only_host_new"
+                android:visibility="gone"/>
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

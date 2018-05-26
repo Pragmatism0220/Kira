@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_lately_visit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y160"
+        android:background="@color/white"
+        android:paddingStart="@dimen/x24">
+
+        <TextView
+            android:id="@+id/tv_lately_visit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y24"
+            android:text="最近来访"
+            android:textColor="@color/black"
+            android:textSize="@dimen/x30" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_lately_visit"
+            android:layout_marginTop="@dimen/x20">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rl_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/y96" />
+
+            <ImageView
+                android:id="@+id/iv_go_more"
+                android:layout_width="@dimen/x72"
+                android:layout_height="@dimen/y72"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/x24"
+                android:layout_marginStart="@dimen/x12"
+                android:scaleType="fitCenter"
+                android:src="@drawable/btn_bag_recentvisit_more" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <com.moemoe.lalala.view.widget.view.KiraTabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y80"
+        android:background="@color/white"
+        app:kira_tl_divider_color="@color/gray_e8e8e8"
+        app:kira_tl_divider_padding="@dimen/y20"
+        app:kira_tl_divider_width="@dimen/x1"
+        app:kira_tl_indicator_color="@color/main_cyan"
+        app:kira_tl_indicator_height="@dimen/y6"
+        app:kira_tl_indicator_width_equal_title="true"
+        app:kira_tl_tab_space_equal="true"
+        app:kira_tl_textSelectColor="@color/main_cyan"
+        app:kira_tl_textUnSelectColor="@color/main_cyan_50"
+        app:kira_tl_text_size="@dimen/x30" />
+
+    <View
+        android:id="@+id/view_step"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1_px"
+        android:background="@color/gray_e8e8e8" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="@dimen/x480"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:background="@drawable/shape_pink_background_y16">
+
+        <TextView
+            android:id="@+id/tv_coin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x60"
+            android:layout_marginTop="@dimen/y60" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/x24"
+            android:textColor="@color/white_60"
+            android:layout_marginTop="@dimen/y4"
+            android:text="购买或者分享可以查看全部内容"/>
+
+        <LinearLayout
+            android:id="@+id/ll_lock_root"
+            android:layout_width="@dimen/x368"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/y40"
+            android:gravity="center_horizontal"
+            android:visibility="gone"
+            android:background="@drawable/shape_white_background_y12">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/pink_fb7ba2"
+                android:textSize="@dimen/x30"
+                android:layout_marginTop="@dimen/y8"
+                android:text="分享解锁"/>
+
+            <LinearLayout
+                android:id="@+id/ll_lock_root_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y7"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_lock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y16"
+                android:layout_marginBottom="@dimen/y16"
+                android:textSize="@dimen/x20"
+                android:textColor="@color/pink_fb7ba2" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btn_buy"
+            android:layout_width="@dimen/x368"
+            android:layout_height="@dimen/y100"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x36"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/y20"
+            android:gravity="center"
+            android:background="@drawable/shape_rect_border_white_no_background_y12"
+            android:text="支付购买"/>
+
+        <TextView
+            android:id="@+id/btn_cancel"
+            android:layout_width="@dimen/x368"
+            android:layout_height="@dimen/y100"
+            android:textSize="@dimen/x36"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@null"
+            android:layout_marginBottom="@dimen/y20"
+            android:text="返回"/>
+    </LinearLayout>
+</RelativeLayout>

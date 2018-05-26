@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white"/>
+
+    <include layout="@layout/neta_bar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/x24"
+        android:paddingRight="@dimen/x24">
+
+        <TextView
+            android:id="@+id/tv_send_phone_code"
+            style="@style/VgOneLine"
+            android:layout_marginTop="@dimen/y64"
+            android:text="@string/msg_register_send_phone_code_to"
+            android:textColor="@color/gray_929292"
+            android:textColorLink="@color/main_cyan"
+            android:textSize="@dimen/x28" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            style="@style/VgOneLine.White"
+            android:layout_below="@+id/tv_send_phone_code"
+            android:layout_marginTop="@dimen/y28" >
+
+            <EditText
+                android:id="@+id/edt_phone_code"
+                style="@style/EdtLoginInput"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_weight="1"
+                android:background="#00ffffff"
+                android:hint="@string/label_hint_input_phone_code"
+                android:inputType="number" >
+
+                <requestFocus />
+            </EditText>
+
+            <View
+                style="@style/VerticalSep"
+                android:layout_marginBottom="@dimen/y12"
+                android:layout_marginStart="@dimen/x12"
+                android:layout_marginTop="@dimen/y12" />
+
+            <TextView
+                android:id="@+id/tv_resend_phone_code"
+                android:layout_width="@dimen/x200"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="@dimen/x12"
+                android:text="@string/label_resend"
+                android:textColor="@color/txt_cyan_normal"
+                android:textSize="@dimen/x28"
+                android:background="@drawable/bg_normal_btn" />
+        </LinearLayout>
+
+        <View
+            style="@style/HorizontalSep"
+            android:layout_below="@+id/linearLayout1"
+            android:layout_marginStart="@dimen/x24"
+            android:layout_marginEnd="@dimen/x24" />
+
+        <TextView
+            android:id="@+id/tv_go_next"
+            style="@style/BtnCyanOneLine"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayout1"
+            android:layout_marginTop="@dimen/y48"
+            android:text="@string/label_done" />
+
+    </RelativeLayout>
+</LinearLayout>

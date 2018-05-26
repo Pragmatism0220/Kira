@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x308">
+
+
+        <ImageView
+            android:id="@+id/iv_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <FrameLayout
+            android:id="@+id/fl_cover_root"
+            android:layout_width="@dimen/y136"
+            android:layout_height="@dimen/y136"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/x24"
+            android:background="@drawable/shape_rect_border_white_no_background_y16">
+
+            <ImageView
+                android:id="@+id/iv_cover"
+                android:layout_width="@dimen/y128"
+                android:layout_height="@dimen/y128"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y100"
+            android:layout_marginTop="@dimen/status_bar_height"
+            android:background="@color/transparent">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:paddingEnd="@dimen/x20"
+                android:paddingStart="@dimen/x36"
+                android:src="@drawable/btn_back_white_normal" />
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="@dimen/x36"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/iv_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/x24"
+                android:src="@drawable/btn_clubdetail_out" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <FrameLayout
+            android:id="@+id/fl_cm_brief_introduction"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y80"
+            android:layout_marginEnd="@dimen/x24"
+            android:layout_marginStart="@dimen/x24"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/tv_cm_brief_introduction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text="@string/community_brief_introduction"
+                android:textColor="@color/black_1e1e1e"
+                android:textSize="@dimen/x30"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_cm_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:drawableEnd="@drawable/ic_bag_more"
+                android:drawablePadding="@dimen/x12"
+                android:gravity="center"
+                android:text="@string/community_edit"
+                android:visibility="gone"
+                android:textColor="@color/main_cyan"
+                android:textSize="@dimen/x30" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_cm_brief_introduction_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fl_cm_brief_introduction"
+            android:layout_marginBottom="@dimen/x36"
+            android:layout_marginEnd="@dimen/x48"
+            android:layout_marginStart="@dimen/x24"
+            android:textSize="@dimen/x24" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/x24"
+        android:background="@color/white">
+
+        <FrameLayout
+            android:id="@+id/fl_cm_minister"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y80"
+            android:layout_marginEnd="@dimen/x24"
+            android:layout_marginStart="@dimen/x24"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/tv_cm_minister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text="@string/minister"
+                android:textColor="@color/black_1e1e1e"
+                android:textSize="@dimen/x30"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_cm_apple"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end|center_vertical"
+                android:drawableEnd="@drawable/ic_bag_more"
+                android:drawablePadding="@dimen/x12"
+                android:gravity="center"
+                android:text="@string/community_apple"
+                android:visibility="gone"
+                android:textColor="@color/main_cyan"
+                android:textSize="@dimen/x30" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_minister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fl_cm_minister"
+            android:layout_marginEnd="@dimen/x24"
+            android:layout_marginStart="@dimen/x24"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/x36" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/x24"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tv_cm_member"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/x80"
+            android:layout_marginStart="@dimen/x24"
+            android:gravity="center_vertical"
+            android:text="@string/member"
+            android:textColor="@color/black_1e1e1e"
+            android:textSize="@dimen/x30"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rl_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_cm_member"
+            android:layout_marginBottom="@dimen/x24" />
+
+        <RelativeLayout
+            android:id="@+id/rl_see_all_member"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y90"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableEnd="@drawable/ic_rightarrow_gray_mini"
+                android:drawablePadding="@dimen/x8"
+                android:gravity="center"
+                android:text="查看所有部员"
+                android:textColor="@color/gray_929292"
+                android:textSize="@dimen/x24" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_mask"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x120"
+            android:layout_above="@+id/rl_see_all_member"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_whiteboard_mask" />
+    </RelativeLayout>
+</LinearLayout>

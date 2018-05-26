@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_layout"
+    android:layout_width="@dimen/x660"
+    android:layout_height="@dimen/y660"
+    android:layout_marginStart="@dimen/x30"
+    android:layout_marginEnd="@dimen/x30"
+    android:background="@drawable/bg_spitball_card">
+
+            <ImageView
+                android:id="@+id/iv_img"
+                android:layout_width="@dimen/x620"
+                android:layout_height="@dimen/y420"
+                android:layout_margin="@dimen/x20"
+                android:scaleType="centerCrop"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y140"
+                android:layout_marginStart="@dimen/x20"
+                android:layout_marginEnd="@dimen/x20"
+                android:layout_alignBottom="@+id/iv_img">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_blackboard_mask"
+                    android:scaleType="fitXY"/>
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/x10"
+                    android:layout_marginEnd="@dimen/x10"
+                    android:ellipsize="end"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/x36"
+                    android:text=""/>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_favorite"
+                android:layout_width="@dimen/x100"
+                android:layout_height="@dimen/y44"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/txt_white_red"
+                android:gravity="center"
+                android:text="收藏"
+                android:textStyle="bold"
+                android:textSize="@dimen/x20"
+                android:layout_marginBottom="@dimen/y18"
+                android:background="@drawable/btn_trash_favorite"
+                android:layout_marginEnd="@dimen/x30"/>
+
+            <TextView
+                android:id="@+id/tv_add_label"
+                android:layout_width="@dimen/x100"
+                android:layout_height="@dimen/y44"
+                android:layout_toStartOf="@+id/tv_favorite"
+                android:layout_alignBottom="@+id/tv_favorite"
+                android:textColor="@color/txt_white_main"
+                android:gravity="center"
+                android:text="添加标签"
+                android:textStyle="bold"
+                android:textSize="@dimen/x20"
+                android:background="@drawable/btn_trash_add_label"
+                android:layout_marginEnd="@dimen/x20"/>
+
+            <com.moemoe.lalala.view.widget.view.DocLabelView
+                android:id="@+id/dv_doc_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x24"
+                android:layout_marginEnd="@dimen/x24"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/y80"
+                app:child_view_height="@dimen/y44"
+                app:child_view_width="wrap_content"
+                app:line_spacing="@dimen/y14"
+                app:label_spacing="@dimen/x14"
+                app:line_limit="2">
+
+            </com.moemoe.lalala.view.widget.view.DocLabelView>
+</RelativeLayout>

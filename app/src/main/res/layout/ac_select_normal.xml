@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white"/>
+
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/neta_bar"/>
+
+    <TextView
+        android:id="@+id/tv_all_badge"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y88"
+        android:background="@color/white"
+        android:textColor="@color/main_cyan"
+        android:textSize="@dimen/x30"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="查看全部徽章"/>
+
+    <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
+        android:id="@+id/rv_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.moemoe.lalala.view.widget.recycler.PullAndLoadView>
+</LinearLayout>

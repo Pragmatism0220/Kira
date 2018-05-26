@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white" />
+
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/neta_bar" />
+
+    <LinearLayout
+        android:id="@+id/ll_top_root"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y100"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/x24"
+        android:paddingStart="@dimen/x24">
+
+        <RelativeLayout
+            android:id="@+id/rl_search_root"
+            android:layout_width="0dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/shape_e8e8e8_14"
+            android:paddingEnd="@dimen/x24"
+            android:paddingStart="@dimen/x24">
+
+            <LinearLayout
+                android:id="@+id/ll_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/iv_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_search_icon" />
+
+                <TextView
+                    android:id="@+id/tv_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/x16"
+                    android:text="搜索部员"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x28" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_search_root_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/iv_search_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_search_icon" />
+
+                <EditText
+                    android:id="@+id/et_search"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/y56"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/x16"
+                    android:layout_marginStart="@dimen/x16"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="搜索部员"
+                    android:imeOptions="actionSearch"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textColor="@color/black_1e1e1e"
+                    android:textColorHint="@color/white"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/x28" />
+
+                <ImageView
+                    android:id="@+id/iv_clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_search_cancel" />
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
+        android:id="@+id/rl_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

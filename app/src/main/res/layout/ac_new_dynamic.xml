@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x100"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:paddingEnd="@dimen/x20"
+            android:paddingStart="@dimen/x36"
+            android:src="@drawable/btn_back_blue_normal_unity" />
+
+        <com.moemoe.lalala.view.widget.view.KiraTabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            app:kira_tl_dot_bg_color="@color/main_red"
+            app:kira_tl_dot_text_color="@color/white"
+            app:kira_tl_dot_text_size="@dimen/x16"
+            app:kira_tl_indicator_color="@color/main_cyan"
+            app:kira_tl_indicator_corner_radius="@dimen/y4"
+            app:kira_tl_indicator_height="@dimen/y8"
+            app:kira_tl_indicator_width="@dimen/x88"
+            app:kira_tl_tab_width="@dimen/x136"
+            app:kira_tl_textBold="BOTH"
+            app:kira_tl_textSelectColor="@color/main_cyan"
+            app:kira_tl_textUnSelectColor="@color/main_cyan_50"
+            app:kira_tl_text_size="@dimen/x36" />
+
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/iv_msg"
+            android:layout_marginEnd="@dimen/x24"
+            android:src="@drawable/btn_trends_search" />
+        <ImageView
+            android:id="@+id/iv_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x36"
+            android:src="@drawable/btn_trends_inform" />
+
+        <TextView
+            android:id="@+id/tv_msg_dot"
+            android:layout_width="@dimen/y28"
+            android:layout_height="@dimen/y28"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/x14"
+            android:layout_marginTop="@dimen/y24"
+            android:background="@drawable/ic_inform_reddot_big"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x16"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_step"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1_px"
+        android:background="@color/gray_e8e8e8" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

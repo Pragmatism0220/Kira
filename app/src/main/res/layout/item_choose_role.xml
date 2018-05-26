@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/item_main"
+        android:layout_width="@dimen/y200"
+        android:layout_height="@dimen/y250"
+        android:background="@drawable/item_choose_role_bg"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/item_choose_role_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingLeft="@dimen/y10"
+                android:paddingRight="@dimen/y10"
+                android:paddingTop="5dp"
+                android:src="@drawable/choose_role" />
+
+            <ImageView
+                android:id="@+id/item_choose_role_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:paddingTop="5dp"
+                android:src="@drawable/ic_home_roleschoice_from_official" />
+
+            <ImageView
+                android:id="@+id/item_choose_role_zhai"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:src="@drawable/ic_home_roleschoice_inhome" />
+        </FrameLayout>
+
+
+        <TextView
+            android:id="@+id/item_choose_role_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_choose_role_image"
+            android:layout_gravity="center"
+            android:paddingTop="2dp"
+            android:text="莲"
+            android:textColor="@color/white" />
+
+
+    </LinearLayout>
+</layout>

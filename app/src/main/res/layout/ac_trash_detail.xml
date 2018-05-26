@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f6f6f6">
+
+    <LinearLayout
+        android:id="@+id/top_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <View
+            android:id="@+id/top_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/status_bar_height"
+            android:background="@color/white"/>
+
+        <include
+            android:id="@+id/include_toolbar"
+            layout="@layout/neta_bar"/>
+    </LinearLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_root">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/y68"
+                android:textColor="@color/black"
+                android:layout_marginEnd="@dimen/x20"
+                android:layout_marginStart="@dimen/x20"
+                android:textStyle="bold"
+                android:textSize="@dimen/x36"
+                android:text=""/>
+
+            <FrameLayout
+                android:id="@+id/fl_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/tv_title"
+                android:layout_marginEnd="@dimen/x20"
+                android:layout_marginStart="@dimen/x20"
+                android:layout_marginTop="@dimen/y56">
+
+                <TextView
+                    android:id="@+id/tv_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/x30"
+                    android:textColor="@color/gray_929292"
+                    android:text=""/>
+
+                <ImageView
+                    android:id="@+id/iv_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:visibility="gone">
+                </ImageView>
+
+                <com.moemoe.lalala.view.widget.longimage.LongImageView
+                    android:id="@+id/iv_doc_long_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+            <com.moemoe.lalala.view.widget.view.DocLabelView
+                android:id="@+id/dv_doc_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fl_content"
+                android:layout_marginStart="@dimen/x24"
+                android:layout_marginEnd="@dimen/x24"
+                android:layout_marginBottom="@dimen/y100"
+                android:layout_marginTop="@dimen/y60"
+                app:child_view_height="@dimen/y44"
+                app:child_view_width="wrap_content"
+                app:line_spacing="@dimen/y14"
+                app:label_spacing="@dimen/x14">
+
+            </com.moemoe.lalala.view.widget.view.DocLabelView>
+
+            <LinearLayout
+                android:id="@+id/ll_like_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/dv_doc_label"
+                android:layout_marginTop="@dimen/y28"
+                android:layout_marginStart="@dimen/x40"
+                android:layout_marginBottom="@dimen/y14">
+
+                <ImageView
+                    android:id="@+id/iv_like"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/bg_spitball_huaji"/>
+
+                <TextView
+                    android:id="@+id/tv_like_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/x30"
+                    android:textColor="@color/yellow_f2cc2c"
+                    android:layout_marginStart="@dimen/x12"
+                    android:layout_gravity="center"
+                    android:text=""/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_dislike_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/ll_like_container"
+                android:layout_alignTop="@+id/ll_like_container"
+                android:orientation="horizontal"
+                android:layout_marginStart="@dimen/x28"
+                android:layout_marginBottom="@dimen/y14">
+
+                <ImageView
+                    android:id="@+id/iv_dislike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/bg_spitball_yaxi"/>
+
+                <TextView
+                    android:id="@+id/tv_dislike_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/x30"
+                    android:textColor="@color/gray_929292"
+                    android:layout_marginStart="@dimen/x12"
+                    android:layout_gravity="center"
+                    android:text=""/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_favorite"
+                android:layout_width="@dimen/x100"
+                android:layout_height="@dimen/y44"
+                android:layout_alignBottom="@+id/ll_like_container"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/txt_white_red"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="收藏"
+                android:background="@drawable/btn_trash_favorite"
+                android:layout_marginEnd="@dimen/x40"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <include layout="@layout/view_no_pic_keyboard"/>
+</RelativeLayout>

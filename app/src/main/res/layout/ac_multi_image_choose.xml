@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f6f6f6"
+    android:orientation="vertical" >
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white"/>
+
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/neta_bar"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_photo_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <GridView
+            android:id="@+id/gv_select_photos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:clipToPadding="true"
+            android:horizontalSpacing="@dimen/x4"
+            android:listSelector="@null"
+            android:numColumns="3"
+            android:scrollbars="none"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="@dimen/y4" />
+
+        <RelativeLayout
+            android:id="@+id/ll_select_album"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_dark_translucent"
+            android:visibility="gone" >
+
+            <ListView
+                android:id="@+id/lv_select_ablum"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/y120"
+                android:background="@android:color/white"
+                android:paddingLeft="@dimen/x30"
+                android:paddingRight="@dimen/x30"
+                android:scrollbarStyle="outsideOverlay" >
+            </ListView>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_toolbar_ar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tv_album_ar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x20"
+                android:gravity="start|center_vertical"
+                android:minWidth="@dimen/x100"
+                android:text="@string/label_recent_photos"
+                android:textColor="@color/main_cyan"
+                android:textSize="@dimen/x30" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@drawable/ic_album_more"
+                android:scaleType="centerInside" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_line_ar"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/y20"
+            android:layout_marginEnd="@dimen/x10"
+            android:layout_marginTop="10dp"
+            android:layout_toStartOf="@+id/tv_preview_ar"
+            android:background="@color/main_cyan" />
+
+        <TextView
+            android:id="@+id/tv_preview_ar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:enabled="false"
+            android:padding="10dp"
+            android:text="@string/label_preview"
+            android:textColor="@color/main_cyan"
+            android:textSize="@dimen/x30" />
+    </RelativeLayout>
+
+</LinearLayout>

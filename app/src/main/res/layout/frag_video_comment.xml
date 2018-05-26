@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </com.moemoe.lalala.view.widget.recycler.PullAndLoadView>
+
+    <RelativeLayout
+        android:id="@+id/rl_comment_root"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y100"
+        android:background="@color/white">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/gray_e8e8e8"/>
+
+        <TextView
+            android:id="@+id/tv_to_comment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y100"
+            android:textColor="@color/gray_d7d7d7"
+            android:textSize="@dimen/x30"
+            android:paddingStart="@dimen/x24"
+            android:paddingEnd="@dimen/x24"
+            android:gravity="center_vertical"
+            android:text="输入评论..."/>
+
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f6f6f6">
+
+    <LinearLayout
+        android:id="@+id/top_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <View
+            android:id="@+id/top_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/status_bar_height"
+            android:background="@color/white"/>
+
+        <include
+            android:id="@+id/include_toolbar"
+            layout="@layout/neta_bar"/>
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/edt_title"
+        style="@style/EdtNormal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y110"
+        android:background="@drawable/bg_normal_white_btn"
+        android:ellipsize="end"
+        android:layout_below="@+id/top_root"
+        android:layout_marginTop="@dimen/y20"
+        android:hint="@string/a_hint_input_title"
+        android:minLines="1"
+        android:textColor="@color/txt_gray_red"
+        android:textColorHint="@color/gray_c1c1c1"
+        android:textSize="@dimen/x30" />
+
+    <View
+        android:id="@+id/sep"
+        style="@style/HorizontalSep"
+        android:layout_below="@+id/edt_title" />
+
+    <FrameLayout
+        android:id="@+id/fl_input"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y288"
+        android:layout_marginTop="@dimen/y20"
+        android:layout_below="@+id/sep"
+        android:background="@drawable/bg_normal_white_btn">
+
+        <EditText
+            android:id="@+id/edt_content"
+            style="@style/EdtNormal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y288"
+            android:gravity="top"
+            android:hint="@string/a_hint_input_content"
+            android:maxHeight="@dimen/y600"
+            android:minLines="8"
+            android:visibility="gone"
+            android:scrollbars="vertical"
+            android:textColor="@color/gray_595e64"
+            android:textColorHint="@color/gray_c1c1c1"
+            android:background="@drawable/bg_normal_white_btn"
+            android:textSize="@dimen/x30" />
+
+        <ImageView
+            android:id="@+id/iv_img"
+            android:layout_width="@dimen/y230"
+            android:layout_height="@dimen/y230"
+            android:src="@drawable/ic_add_photo"
+            android:visibility="gone"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_create_tag"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y56"
+        android:layout_below="@+id/fl_input"
+        android:paddingTop="@dimen/y12"
+        android:paddingStart="@dimen/x20"
+        android:textColor="@color/gray_d7d7d7"
+        android:text="@string/label_create_doc_tag"
+        android:textSize="@dimen/x24"
+        android:background="@color/white" />
+
+    <com.moemoe.lalala.view.widget.view.DocLabelView
+        android:layout_below="@+id/tv_create_tag"
+        android:id="@+id/dv_doc_label_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/y20"
+        android:paddingStart="@dimen/x20"
+        android:background="@color/white"
+        android:paddingBottom="@dimen/y10"
+        app:child_view_height="@dimen/y44"
+        app:child_view_width="wrap_content"
+        app:line_spacing="@dimen/y14"
+        app:label_spacing="@dimen/x14" />
+
+    <include layout="@layout/view_no_pic_keyboard"/>
+</RelativeLayout>

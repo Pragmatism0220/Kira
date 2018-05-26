@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_one_list_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f6f6f6">
+
+    <RelativeLayout
+        android:id="@+id/rl_capacity"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y96"
+        android:layout_marginBottom="@dimen/x2"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/x24"
+        android:paddingRight="@dimen/x24"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="我的容量：0MB/1024MB"
+            android:textColor="@color/green_6fc93a"
+            android:textSize="@dimen/x24" />
+
+        <TextView
+            android:id="@+id/tv_more_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:drawablePadding="@dimen/x8"
+            android:drawableRight="@drawable/ic_bag_more"
+            android:text="增加容量"
+            android:textColor="@color/main_cyan"
+            android:textSize="@dimen/x24" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/tab_layout1"
+        android:layout_width="match_parent"
+        android:layout_below="@id/rl_capacity"
+        android:layout_height="@dimen/size_1_px"
+        android:background="@color/gray_e8e8e8"
+        android:visibility="gone" />
+
+    <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/tab_layout1" />
+
+    <include layout="@layout/view_no_pic_keyboard" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/ll_not_show"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/y140"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/btn_cardbg_hide" />
+
+            <TextView
+                android:id="@+id/tv_secret_not_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y10"
+                android:gravity="center"
+                android:textColor="@color/gray_d7d7d7"
+                android:textSize="@dimen/x30" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</RelativeLayout>

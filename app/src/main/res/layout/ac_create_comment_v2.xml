@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/go_back"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/alpha_20" />
+
+    <ScrollView
+        android:id="@+id/scrllview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rl_ope_root"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/et_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/x16"
+                android:layout_marginStart="@dimen/x16"
+                android:layout_marginTop="@dimen/y16"
+                android:background="@color/bg_f6f6f6"
+                android:gravity="top"
+                android:hint="输入评论"
+                android:minHeight="@dimen/y176"
+                android:maxHeight="@dimen/y284"
+                android:paddingBottom="@dimen/y52"
+                android:paddingEnd="@dimen/x30"
+                android:paddingStart="@dimen/x24"
+                android:paddingTop="@dimen/y16"
+                android:textColor="@color/black_1e1e1e"
+                android:textColorHint="@color/gray_929292"
+                android:textSize="@dimen/x30" />
+
+            <TextView
+                android:id="@+id/tv_content_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/et_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="@dimen/x16"
+                android:layout_marginEnd="@dimen/x40"
+                android:text="0/150"
+                android:textColor="@color/gray_d7d7d7"
+                android:textSize="@dimen/x30" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_content"
+                android:layout_marginEnd="@dimen/x16"
+                android:layout_marginStart="@dimen/x16"
+                android:layout_marginTop="@dimen/y16"
+                >
+
+            </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:id="@+id/ll_extra_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/list"
+                android:layout_marginEnd="@dimen/x36"
+                android:layout_marginStart="@dimen/x36"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/y24"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+
+    <com.moemoe.lalala.view.widget.view.KeyboardListenerLayout
+        android:id="@+id/rl_ope_root"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y112"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_alt_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/x32"
+                android:layout_marginStart="@dimen/x24"
+                android:src="@drawable/btn_doc_at" />
+
+            <ImageView
+                android:id="@+id/iv_add_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/x60"
+                android:src="@drawable/btn_doc_pic" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+
+            <CheckBox
+                android:id="@+id/cb_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/x40"
+                android:button="@drawable/btn_forward_comment"
+                android:gravity="center_vertical"
+                android:hint="同时转发"
+                android:paddingLeft="@dimen/x16"
+                android:textColor="@color/black_1e1e1e"
+                android:textColorHint="@color/gray_929292"
+                android:textSize="@dimen/x30" />
+
+            <TextView
+                android:id="@+id/tv_send"
+                android:layout_width="@dimen/x120"
+                android:layout_height="@dimen/x68"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/x16"
+                android:background="@drawable/btn_comment_send_"
+                android:gravity="center"
+                android:text="发送"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x30" />
+        </LinearLayout>
+
+    </com.moemoe.lalala.view.widget.view.KeyboardListenerLayout>
+
+</RelativeLayout>

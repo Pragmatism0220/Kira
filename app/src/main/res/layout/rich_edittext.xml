@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.moemoe.lalala.view.widget.richtext.DeletableEditText xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@null"
+    android:cursorVisible="true"
+    android:paddingBottom="@dimen/y56"
+    android:paddingStart="@dimen/x36"
+    android:paddingTop="@dimen/y36"
+    android:textColor="@color/gray_444444"
+    android:textColorHint="@color/gray_d7d7d7"
+    android:textSize="@dimen/x30">
+
+</com.moemoe.lalala.view.widget.richtext.DeletableEditText>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.moemoe.lalala.view.activity.DormitoryDramaActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="68dp"
+                android:layout_marginStart="@dimen/y32"
+                android:layout_marginTop="@dimen/x25"
+                android:src="@drawable/ic_home_title_mystory" />
+
+            <Button
+                android:id="@+id/drama_back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/x25"
+                android:background="@drawable/role_back_btn"
+                android:onClick="@{presenter.onClick}" />
+
+        </RelativeLayout>
+
+
+        <FrameLayout
+            android:id="@+id/principal_line_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/principal_line_select"
+            android:onClick="@{presenter.onClick}">
+
+            <TextView
+                android:id="@+id/principal_line_schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom||right"
+                android:layout_marginBottom="@dimen/y10"
+                android:layout_marginRight="@dimen/x80"
+                android:text="收集度：000"
+                android:textColor="@color/white" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+</layout>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.moemoe.lalala.view.activity.ReloadingRoomActivity.Presenter" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:orientation="vertical"
+        tools:context="com.moemoe.lalala.view.activity.ReloadingRoomActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="358dp"
+            android:background="@drawable/reloading_top_bg">
+
+            <ImageView
+                android:id="@+id/reloading_name_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="68dp"
+                android:paddingLeft="@dimen/y32"
+                android:paddingTop="@dimen/y25"
+                android:src="@drawable/ic_home_roles_clothes_title" />
+
+            <Button
+                android:id="@+id/reloading_back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/y36"
+                android:background="@drawable/role_back_btn"
+                android:onClick="@{presenter.onClick}" />
+
+            <Button
+                android:id="@+id/reloading_left_btn"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/y48"
+                android:background="@drawable/reloading_room_left_btn"
+                android:onClick="@{presenter.onClick}" />
+
+            <Button
+                android:id="@+id/reloading_right_btn"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/y48"
+                android:background="@drawable/reloading_room_right_btn"
+                android:onClick="@{presenter.onClick}" />
+
+            <android.support.v4.view.ViewPager
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"></android.support.v4.view.ViewPager>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/reloading_buttom_bg">
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</layout>

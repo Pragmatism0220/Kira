@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fl_map_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white_70" />
+
+    <LinearLayout
+        android:id="@+id/ll_tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y100"
+        android:layout_below="@+id/top_view"
+        android:background="@color/white_95"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/y26"
+            android:background="@color/transparent"
+            android:src="@drawable/btn_home" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/y26"
+            android:layout_weight="1"
+            android:background="@drawable/shape_tool_bar"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_personal"
+                android:layout_width="@dimen/x64"
+                android:layout_height="@dimen/y64"
+                android:src="@drawable/bg_default_circle" />
+
+            <TextView
+                android:id="@+id/tv_search"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/y24"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="搜索你感兴趣的"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x30" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/y24"
+                android:src="@drawable/btn_trends_search_white" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:layout_marginEnd="@dimen/y26"
+            android:layout_marginStart="@dimen/y26"
+            android:src="@drawable/btn_association" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_live2d"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/x30"
+        android:layout_marginTop="@dimen/y60"
+        android:src="@drawable/btn_map_to_live"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/rl_map_new"
+        android:layout_width="@dimen/x280"
+        android:layout_height="@dimen/y148"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="@dimen/y60"
+        android:background="@drawable/shape_map_new"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/rl_map_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y10"
+            android:layout_toLeftOf="@+id/rl_map_refresh">
+
+            <ImageView
+                android:id="@+id/iv_search"
+                android:layout_width="@dimen/x100"
+                android:layout_height="@dimen/y100"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/btn_map_search" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_search"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/y4"
+                android:text="搜索"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x20" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_map_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/x24"
+            android:layout_marginStart="@dimen/x8"
+            android:layout_marginTop="@dimen/y10"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_map_refresh"
+                android:layout_width="@dimen/x100"
+                android:layout_height="@dimen/y100"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/btn_map_refresh" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_map_refresh"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/y4"
+                android:text="地图刷新 "
+                android:textColor="@color/white"
+                android:textSize="@dimen/x20" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_live2d_shop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/iv_live2d"
+        android:layout_marginEnd="@dimen/x30"
+        android:layout_marginTop="@dimen/y10"
+        android:src="@drawable/btn_phone_menu_live2dshop_normal"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/iv_live2d_shop"
+        android:layout_marginEnd="@dimen/x30"
+        android:layout_marginTop="@dimen/y10"
+        android:src="@drawable/btn_phone_menu_alarm_normal"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x30"
+        android:layout_marginTop="@dimen/y60"
+        android:src="@drawable/btn_map_bag"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_user_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x15"
+        android:layout_marginTop="@dimen/y60"
+        android:layout_toEndOf="@+id/iv_refresh"
+        android:src="@drawable/btn_map_luntan"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/rl_main_list_root"
+        android:layout_width="@dimen/x200"
+        android:layout_height="@dimen/x200"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/btn_map_phone"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_sys_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/y70"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x50"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_sys_time"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x18"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_luntan_root"
+        android:layout_width="@dimen/y200"
+        android:layout_height="@dimen/y200"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/rl_main_list_root"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_luntan"
+            android:layout_width="@dimen/y200"
+            android:layout_height="@dimen/y200"
+            android:src="@drawable/btn_map_luntan_new" />
+
+        <TextView
+            android:id="@+id/tv_sys_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/y5"
+            android:gravity="center_vertical"
+            android:textColor="#d6b943"
+            android:textSize="@dimen/x18"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+
+    <include layout="@layout/float_send_layout" />
+
+    <include layout="@layout/float_comprehensive_layout" />
+</RelativeLayout>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fl_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/iv_music"
+        android:layout_width="@dimen/y90"
+        android:layout_height="@dimen/y90"
+        android:src="@drawable/ic_bag_musicicon"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y104"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/ll_music_root"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:paddingStart="@dimen/x16"
+        android:paddingBottom="@dimen/y16"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_music_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x24" />
+
+        <TextView
+            android:id="@+id/tv_music_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x20"
+            android:layout_marginTop="@dimen/y10"/>
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/iv_multi_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/x10"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_marginTop="@dimen/y10"
+        android:background="@drawable/ic_image_checkbox"
+        android:button="@null"
+        android:visibility="gone"/>
+</FrameLayout>

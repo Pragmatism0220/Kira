@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f6f6f6"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white" />
+
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/neta_bar" />
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/rl_community"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y80"
+        android:background="@color/orange_f2cc2c">
+
+        <TextView
+            android:id="@+id/tv_community_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/y30" />
+
+        <TextView
+            android:id="@+id/tv_join"
+            android:layout_width="@dimen/size_50"
+            android:layout_height="@dimen/size_26"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/y36"
+            android:background="@drawable/bg_white_border_gray"
+            android:gravity="center"
+            android:text="加入"
+            android:textColor="@color/orange_f2cc2c"
+            android:textSize="@dimen/size_12" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
+            android:id="@+id/rv_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+        </com.moemoe.lalala.view.widget.recycler.PullAndLoadView>
+
+        <LinearLayout
+            android:id="@+id/ll_jump_root"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/y32"
+            android:layout_marginEnd="@dimen/x20"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_jump_to"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y70"
+                android:layout_marginEnd="@dimen/x20"
+                android:background="@drawable/shape_rect_jump"
+                android:drawablePadding="@dimen/x28"
+                android:drawableStart="@drawable/btn_doc_jump_direction"
+                android:gravity="center"
+                android:paddingEnd="@dimen/x32"
+                android:paddingStart="@dimen/x26"
+                android:text="@string/label_jump_to"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x28" />
+
+            <ImageView
+                android:id="@+id/iv_cancel_jump"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_cancel_jump" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_go_pinlun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="@dimen/x24"
+            android:layout_marginEnd="@dimen/x24"
+            android:src="@drawable/btn_doc_godown" />
+    </FrameLayout>
+
+    <com.moemoe.lalala.view.widget.view.KeyboardListenerLayout
+        android:id="@+id/ll_comment_pannel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/edt_comment_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/y14"
+            android:layout_marginEnd="@dimen/x20"
+            android:layout_marginStart="@dimen/x20"
+            android:layout_marginTop="@dimen/y14"
+            android:layout_toEndOf="@+id/iv_add_img"
+            android:layout_toStartOf="@+id/iv_comment_send"
+            android:layout_weight="1"
+            android:background="@drawable/bg_white_border_gray"
+            android:gravity="center_vertical"
+            android:hint="@string/a_hint_input_comment"
+            android:maxLines="4"
+            android:minHeight="@dimen/y72"
+            android:paddingBottom="@dimen/y8"
+            android:paddingLeft="@dimen/x28"
+            android:paddingRight="@dimen/x28"
+            android:paddingTop="@dimen/y8"
+            android:textSize="@dimen/x30" />
+
+        <TextView
+            android:id="@+id/iv_comment_send"
+            android:layout_width="@dimen/x96"
+            android:layout_height="@dimen/y72"
+            android:layout_alignBottom="@+id/edt_comment_input"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x20"
+            android:background="@drawable/bg_rect_white_click_cyan"
+            android:gravity="center"
+            android:text="@string/label_send"
+            android:textColor="@color/txt_white_gray"
+            android:textSize="@dimen/x30" />
+
+        <include layout="@layout/item_doc_show_all" />
+
+    </com.moemoe.lalala.view.widget.view.KeyboardListenerLayout>
+
+    <include layout="@layout/item_new_list_bottom_2" />
+
+
+</LinearLayout>

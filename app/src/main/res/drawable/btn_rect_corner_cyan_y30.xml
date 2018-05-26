@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/shape_background_main_cyan_y30" android:state_selected="true" />
+    <item android:drawable="@drawable/shape_rect_border_main_no_background_y30" android:state_selected="false" />
+    <item android:drawable="@drawable/shape_rect_border_main_no_background_y30"/>
+</selector>

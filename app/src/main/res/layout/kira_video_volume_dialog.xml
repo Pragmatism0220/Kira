@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="@dimen/x360"
+        android:layout_height="@dimen/y80"
+        android:gravity="center">
+
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_black_60_background_y8"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/x20"
+                android:src="@drawable/btn_video_player_sound" />
+
+            <ProgressBar
+                android:id="@+id/volume_progressbar"
+                android:layout_width="@dimen/x240"
+                android:layout_height="@dimen/y8"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/x20"
+                android:progressDrawable="@drawable/kira_video_volume_progress"
+                android:max="100" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

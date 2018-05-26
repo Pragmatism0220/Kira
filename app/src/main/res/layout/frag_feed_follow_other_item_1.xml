@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/fl_video_root"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y96"
+                android:background="@color/white"
+                android:paddingEnd="@dimen/x24"
+                android:paddingStart="@dimen/x24">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:drawablePadding="@dimen/x12"
+                    android:drawableStart="@drawable/ic_trends_tag_sort_video"
+                    android:gravity="center"
+                    android:text="视频"
+                    android:textColor="@color/pink_fb7ba2"
+                    android:textSize="@dimen/x24"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_video_show_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center_vertical"
+                    android:drawableEnd="@drawable/ic_bag_more"
+                    android:drawablePadding="@dimen/x12"
+                    android:gravity="center"
+                    android:text="显示全部"
+                    android:textColor="@color/main_cyan"
+                    android:textSize="@dimen/x24" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_video_item_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginBottom="@dimen/x24"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/y12"
+                android:paddingEnd="@dimen/x24"
+                android:paddingStart="@dimen/x24">
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/fl_manga_root"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y96"
+                android:background="@color/white"
+                android:paddingEnd="@dimen/x24"
+                android:paddingStart="@dimen/x24">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:drawablePadding="@dimen/x12"
+                    android:drawableStart="@drawable/ic_trends_tag_sort_folder"
+                    android:gravity="center"
+                    android:text="综合文件夹"
+                    android:textColor="@color/orange_f2cc2c"
+                    android:textSize="@dimen/x24"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_manga_show_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center_vertical"
+                    android:drawableEnd="@drawable/ic_bag_more"
+                    android:drawablePadding="@dimen/x12"
+                    android:gravity="center"
+                    android:text="显示全部"
+                    android:textColor="@color/main_cyan"
+                    android:textSize="@dimen/x24" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_manga_item_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/x24"
+                android:paddingBottom="@dimen/y12"
+                android:paddingEnd="@dimen/x24"
+                android:paddingStart="@dimen/x24">
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/fl_article_root"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y96"
+                android:background="@color/white"
+                android:paddingEnd="@dimen/x24"
+                android:paddingStart="@dimen/x24">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:drawablePadding="@dimen/x12"
+                    android:drawableStart="@drawable/ic_trends_tag_sort_doc"
+                    android:gravity="center"
+                    android:text="文章"
+                    android:textColor="@color/blue_4999e8"
+                    android:textSize="@dimen/x24"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_article_show_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center_vertical"
+                    android:drawableEnd="@drawable/ic_bag_more"
+                    android:drawablePadding="@dimen/x12"
+                    android:gravity="center"
+                    android:text="显示全部"
+                    android:textColor="@color/main_cyan"
+                    android:textSize="@dimen/x24" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_article_item_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginBottom="@dimen/x24"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/y12">
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/fl_music_root"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y96"
+                android:background="@color/white"
+                android:paddingEnd="@dimen/x24"
+                android:paddingStart="@dimen/x24">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:drawablePadding="@dimen/x12"
+                    android:drawableStart="@drawable/ic_trends_tag_sort_music"
+                    android:gravity="center"
+                    android:text="音乐"
+                    android:textColor="@color/green_6fc93a"
+                    android:textSize="@dimen/x24"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_music_show_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center_vertical"
+                    android:drawableEnd="@drawable/ic_bag_more"
+                    android:drawablePadding="@dimen/x12"
+                    android:gravity="center"
+                    android:text="显示全部"
+                    android:textColor="@color/main_cyan"
+                    android:textSize="@dimen/x24" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_music_item_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/y12">
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_to_wen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="@dimen/y24"
+            android:layout_marginEnd="@dimen/x24"
+            android:background="@drawable/btn_feed_create_contribute" />
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

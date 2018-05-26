@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_label_root"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/y44"
+    android:background="@drawable/btn_follow_label">
+
+    <TextView
+        android:id="@+id/tv_item_label_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x12"
+        android:layout_marginEnd="@dimen/x8"
+        android:layout_gravity="center_vertical"
+        android:text=""
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x20"
+        android:visibility="visible"/>
+
+    <EditText
+        android:id="@+id/et_item_label_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginStart="@dimen/x12"
+        android:layout_marginEnd="@dimen/x8"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/white"
+        android:background="@null"
+        android:singleLine="true"
+        android:textSize="@dimen/x20"
+        android:imeOptions="actionDone"
+        android:visibility="gone"/>
+
+    <View
+        android:layout_width="@dimen/x2"
+        android:layout_height="@dimen/y30"
+        android:background="#ffffff"
+        android:layout_gravity="center_vertical" />
+
+    <TextView
+        android:id="@+id/tv_item_label_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x8"
+        android:layout_marginEnd="@dimen/x12"
+        android:layout_gravity="center_vertical"
+        android:textStyle="bold"
+        android:text=""
+        android:textColor="#000000"
+        android:textSize="@dimen/x20" />
+</LinearLayout>

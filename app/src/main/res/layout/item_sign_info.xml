@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_root"
+    android:layout_width="@dimen/y90"
+    android:layout_height="@dimen/y90"
+    android:background="@drawable/bg_item_sign"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/label_sign_info_score"
+        android:textColor="@color/pink_fb7ba2"
+        android:textSize="@dimen/x16" />
+
+    <TextView
+        android:id="@+id/tv_coin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/y6"
+        android:text="@string/label_sign_info_coin"
+        android:textColor="@color/pink_fb7ba2"
+        android:textSize="@dimen/x16" />
+</LinearLayout>

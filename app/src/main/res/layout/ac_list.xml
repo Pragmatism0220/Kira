@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f6f6f6">
+
+    <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
+        android:id="@+id/rv_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_f6f6f6">
+
+        <ImageView
+            android:id="@+id/iv_send_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/y24"
+            android:layout_marginEnd="@dimen/x24"
+            android:src="@drawable/btn_send_wen"
+            android:visibility="gone" />
+    </com.moemoe.lalala.view.widget.recycler.PullAndLoadView>
+</RelativeLayout>

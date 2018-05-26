@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/y100"
+    android:layout_marginTop="@dimen/y4"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/txt_pink_blue"
+        android:textSize="@dimen/x30"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x6"
+        android:layout_weight="1"
+        android:textColor="@color/gray_d7d7d7"
+        android:textSize="@dimen/x30" />
+
+    <TextView
+        android:id="@+id/tv_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/txt_gray_blue"
+        android:textSize="@dimen/x30"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_limit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/txt_pink_blue"
+        android:textSize="@dimen/x30"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/tv_go_content"
+        android:background="@drawable/btn_rect_corner_cyan_y30"
+        android:textSize="@dimen/y24"
+        android:gravity="center"
+        android:layout_marginStart="@dimen/y24"
+        android:layout_width="@dimen/y140"
+        android:layout_height="@dimen/y58" />
+</LinearLayout>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white"/>
+
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/neta_bar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/x56"
+        android:paddingRight="@dimen/x56"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y40"
+            android:text="@string/label_register_info"
+            android:textColor="@color/gray_929292"
+            android:textSize="@dimen/x30" />
+
+        <LinearLayout
+            android:id="@+id/ll_phone_number_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y64" >
+
+            <TextView
+                android:id="@+id/tv_country_code"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="@dimen/x12"
+                android:text="@string/label_country_china"
+                android:textColor="@color/main_cyan"
+                android:textSize="@dimen/x28"
+                android:visibility="visible" />
+
+            <View
+                style="@style/VerticalSep"
+                android:layout_marginBottom="@dimen/y12"
+                android:layout_marginTop="@dimen/y12"
+                android:visibility="visible" />
+
+            <EditText
+                android:id="@+id/edt_phone_number"
+                style="@style/EdtLoginInput"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:background="@null"
+                android:paddingLeft="@dimen/x12"
+                android:hint="@string/label_hint_input_phone_number"
+                android:inputType="phone" />
+        </LinearLayout>
+
+        <View style="@style/HorizontalSep" />
+
+        <EditText
+            android:id="@+id/edt_password"
+            style="@style/EdtLoginInput"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:background="@drawable/bg_edt_underline"
+            android:hint="@string/label_hint_input_password_register"
+            android:inputType="textPassword" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/tv_to_next"
+            android:layout_height="wrap_content"
+            style="@style/BtnCyanOneLine"
+            android:background="@drawable/bg_line_btn_green"
+            android:layout_marginTop="@dimen/y40"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:text="@string/label_register" />
+
+        <TextView
+            android:id="@+id/tv_register_by_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x24"
+            android:layout_marginTop="@dimen/y24"
+            android:drawableEnd="@drawable/ic_arrow_left"
+            android:gravity="center"
+            android:text="@string/label_register_by_email"
+            android:textColor="@color/gray_595e64"
+            android:textSize="@dimen/x24"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_regist_privace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y24"
+            android:text="@string/label_register_contract"
+            android:textColor="@color/gray_c1c1c1"
+            android:textSize="@dimen/x24" />
+    </LinearLayout>
+
+</LinearLayout>

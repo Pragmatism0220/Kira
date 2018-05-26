@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <com.moemoe.lalala.view.widget.view.KiraTabLayout
+            android:id="@+id/indicator_person_data"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/y100"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white"
+            app:kira_tl_dot_bg_color="@color/main_red"
+            app:kira_tl_dot_text_color="@color/white"
+            app:kira_tl_dot_text_size="@dimen/x16"
+            app:kira_tl_dot_width="@dimen/y28"
+            app:kira_tl_indicator_color="@color/main_cyan"
+            app:kira_tl_indicator_corner_radius="@dimen/y4"
+            app:kira_tl_indicator_height="@dimen/y8"
+            app:kira_tl_indicator_width="@dimen/x88"
+            app:kira_tl_tab_width="@dimen/x136"
+            app:kira_tl_textBold="BOTH"
+            app:kira_tl_textSelectColor="@color/main_cyan"
+            app:kira_tl_textUnSelectColor="@color/main_cyan_50"
+            app:kira_tl_text_size="@dimen/x36" />
+
+        <View
+            android:id="@+id/view_step"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1_px"
+            android:layout_below="@+id/indicator_person_data"
+            android:background="@color/gray_e8e8e8" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/view_step" />
+    </RelativeLayout>
+
+
+    <ViewStub
+        android:id="@+id/stub_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/item_not_login" />
+</RelativeLayout>

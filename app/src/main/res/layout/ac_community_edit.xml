@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white" />
+
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/neta_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/x24"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/x24"
+        android:paddingStart="@dimen/x24">
+
+        <EditText
+            android:id="@+id/edit_community"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x24"
+            android:background="@null"
+            android:textSize="@dimen/x28" />
+
+        <TextView
+            android:id="@+id/tv_character_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/x16"
+            android:layout_marginTop="@dimen/x12"
+            android:gravity="end"
+            android:text="50"
+            android:textColor="@color/gray_929292"
+            android:textSize="@dimen/x24" />
+    </LinearLayout>
+</LinearLayout>

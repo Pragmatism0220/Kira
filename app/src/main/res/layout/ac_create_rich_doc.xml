@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f6f6f6">
+
+    <LinearLayout
+        android:id="@+id/top_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/top_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/status_bar_height"
+            android:background="@color/white" />
+
+        <include
+            android:id="@+id/include_toolbar"
+            layout="@layout/neta_bar" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_type_root"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y108"
+        android:layout_below="@+id/top_root"
+        android:background="@color/white"
+        android:paddingEnd="@dimen/x36"
+        android:paddingStart="@dimen/x36"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_coin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y24"
+            android:text="@string/label_coin_watch"
+            android:textColor="@color/main_cyan"
+            android:textSize="@dimen/x36" />
+
+        <TextView
+            android:id="@+id/tv_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y24"
+            android:layout_toEndOf="@+id/tv_coin"
+            android:text="/"
+            android:textColor="@color/gray_d7d7d7"
+            android:textSize="@dimen/x36" />
+
+        <TextView
+            android:id="@+id/tv_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y24"
+            android:layout_toEndOf="@+id/tv_filter"
+            android:text="@string/label_report_watch"
+            android:textColor="@color/gray_d7d7d7"
+            android:textSize="@dimen/x36" />
+
+        <TextView
+            android:id="@+id/tv_type_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_coin"
+            android:layout_marginTop="@dimen/y6"
+            android:text="@string/label_coin_watch_info"
+            android:textColor="@color/gray_d7d7d7"
+            android:textSize="@dimen/x20" />
+
+        <TextView
+            android:id="@+id/tv_change_type"
+            android:layout_width="@dimen/x88"
+            android:layout_height="@dimen/y48"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x12"
+            android:background="@drawable/shape_main_background_2"
+            android:gravity="center"
+            android:text="@string/label_change_type"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x30"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_sep"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1_px"
+        android:layout_below="@+id/rl_type_root"
+        android:background="@color/gray_e8e8e8"
+        android:visibility="gone" />
+
+    <com.moemoe.lalala.view.widget.richtext.NetaRichEditor
+        android:id="@+id/rich_et"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/view_sep2"
+        android:layout_below="@+id/view_sep"
+        android:background="@color/white"
+        android:fillViewport="true" />
+
+    <View
+        android:id="@+id/view_sep2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1_px"
+        android:layout_above="@+id/rl_release_position"
+        android:background="@color/gray_e8e8e8" />
+
+    <RelativeLayout
+        android:id="@+id/rl_release_position"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y100"
+        android:layout_above="@id/view_sep1"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_release"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/x36"
+            android:text="发在"
+            android:textColor="@color/black_1e1e1e"
+            android:textSize="@dimen/x30" />
+
+        <TextView
+            android:id="@+id/tv_release_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/x24"
+            android:layout_toRightOf="@id/tv_release"
+            android:text=""
+            android:textColor="@color/green_6fc93a"
+            android:textSize="@dimen/x30" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x36"
+            android:text="修改"
+            android:textColor="@color/main_cyan"
+            android:textSize="@dimen/x30" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_sep1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1_px"
+        android:layout_above="@+id/rl_ope_root"
+        android:background="@color/gray_e8e8e8" />
+
+    <com.moemoe.lalala.view.widget.view.KeyboardListenerLayout
+        android:id="@+id/rl_ope_root"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y112"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_add_hide_doc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/x36"
+            android:src="@drawable/btn_add_hide_doc"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_add_bag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/x24"
+            android:layout_toEndOf="@+id/iv_add_hide_doc"
+            android:src="@drawable/btn_add_bag"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_add_music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/x24"
+            android:layout_toEndOf="@+id/iv_add_bag"
+            android:src="@drawable/btn_add_music_doc"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/view_add_sep"
+            android:layout_width="@dimen/size_1_px"
+            android:layout_height="@dimen/y72"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/x24"
+            android:layout_toEndOf="@+id/iv_add_music"
+            android:background="@color/gray_d7d7d7"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_add_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x60"
+            android:src="@drawable/btn_doc_pic" />
+
+        <ImageView
+            android:id="@+id/iv_alt_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x48"
+            android:layout_toStartOf="@+id/iv_add_img"
+            android:src="@drawable/btn_doc_at" />
+    </com.moemoe.lalala.view.widget.view.KeyboardListenerLayout>
+</RelativeLayout>

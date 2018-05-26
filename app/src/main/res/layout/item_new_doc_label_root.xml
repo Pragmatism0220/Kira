@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+        <com.moemoe.lalala.view.widget.view.DocLabelView
+            android:id="@+id/dv_doc_label_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/y36"
+            android:paddingBottom="@dimen/y36"
+            android:layout_marginStart="@dimen/x36"
+            android:layout_marginEnd="@dimen/x36"
+            app:child_view_height="@dimen/y48"
+            app:child_view_width="wrap_content"
+            app:child_view_min_width="@dimen/x20"
+            app:line_spacing="@dimen/y14"
+            app:label_spacing="@dimen/x14">
+        </com.moemoe.lalala.view.widget.view.DocLabelView>
+</LinearLayout>

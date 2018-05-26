@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_list_bottom_root_2"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/y90"
+    android:visibility="gone">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1_px"
+        android:background="@color/gray_e8e8e8" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/fl_forward_root_2"
+            android:layout_width="@dimen/x188"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_forward_num_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawablePadding="@dimen/x10"
+                android:drawableStart="@drawable/btn_feed_repeat"
+                android:gravity="center_vertical"
+                android:textColor="@color/main_cyan"
+                android:textSize="@dimen/x20" />
+
+        </FrameLayout>
+
+        <View
+            android:layout_width="@dimen/size_1_px"
+            android:layout_height="@dimen/y40"
+            android:layout_gravity="center_vertical"
+            android:background="@color/gray_e8e8e8" />
+
+        <FrameLayout
+            android:id="@+id/fl_comment_root_2"
+            android:layout_width="@dimen/x188"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_comment_num_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawablePadding="@dimen/x10"
+                android:drawableStart="@drawable/btn_feed_comment"
+                android:gravity="center_vertical"
+                android:textColor="@color/green_93d856"
+                android:textSize="@dimen/x20" />
+        </FrameLayout>
+        <View
+            android:layout_width="@dimen/size_1_px"
+            android:layout_height="@dimen/y40"
+            android:layout_gravity="center_vertical"
+            android:background="@color/gray_e8e8e8" />
+        <FrameLayout
+            android:id="@+id/fl_tag_root_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_like_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawablePadding="@dimen/x10"
+                android:drawableStart="@drawable/bg_feed_favorite"
+                android:gravity="center_vertical"
+                android:text="点赞"
+                android:textColor="@color/pink_fb7ba2"
+                android:textSize="@dimen/x20" />
+
+        </FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_tag_root_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingEnd="@dimen/x16"
+            android:paddingStart="@dimen/x16">
+
+            <ImageView
+                android:id="@+id/iv_like_item"
+                android:layout_width="@dimen/y56"
+                android:layout_height="@dimen/y56"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/bg_feed_favorite" />
+
+            <LinearLayout
+                android:id="@+id/ll_like_user_root"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/x16"
+                android:layout_toStartOf="@+id/iv_like_item"
+                android:layoutDirection="rtl"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_like_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/x4"
+                android:textColor="@color/pink_fb7ba2"
+                android:textSize="@dimen/x20" />
+            <TextView
+                android:id="@+id/tv_zan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="赞"
+                android:layout_toEndOf="@+id/tv_like_num"
+                android:textColor="@color/gray_d7d7d7"
+                android:textSize="@dimen/x20" />
+
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

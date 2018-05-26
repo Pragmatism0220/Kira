@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="@dimen/x634"
+        android:layout_height="@dimen/y360"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/bg_phone_tape_len_incite"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/pink_fb7ba2">
+
+        <com.flyco.tablayout.CommonTabLayout
+            android:id="@+id/indicator_person_data"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/y68"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/transparent"
+            app:tl_iconVisible="false"
+            app:tl_textBold="BOTH"
+            app:tl_tab_width="@dimen/x76"
+            app:tl_indicator_width="@dimen/x76"
+            app:tl_indicator_height="@dimen/y6"
+            app:tl_indicator_color="@color/white"
+            app:tl_textsize="@dimen/x30"
+            app:tl_textSelectColor="@color/white"
+            app:tl_textUnselectColor="@color/white_50"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager_person_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+</LinearLayout>

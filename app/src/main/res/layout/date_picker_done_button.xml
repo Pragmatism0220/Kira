@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="@dimen/x540"
+    android:layout_height="wrap_content"
+    style="?android:attr/buttonBarStyle">
+
+    <Button
+        android:textSize="@dimen/x28"
+        android:textColor="@color/done_text_color"
+        android:id="@id/done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/y96"
+        android:text="@string/label_done"
+        style="?android:attr/buttonBarButtonStyle" />
+</LinearLayout>

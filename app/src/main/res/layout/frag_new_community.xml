@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tl="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.moemoe.lalala.view.widget.view.KiraTabLayout
+            android:id="@+id/tl_8"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y104"
+            android:background="@color/white"
+            android:paddingLeft="@dimen/x12"
+            android:paddingRight="@dimen/x12"
+            app:kira_tl_indicator_margin_bottom="@dimen/x24"
+            app:kira_tl_indicator_margin_end="@dimen/x12"
+            app:kira_tl_indicator_margin_start="@dimen/x12"
+            app:kira_tl_indicator_margin_top="@dimen/x24"
+            app:kira_tl_indicator_style="BLOCK"
+            app:kira_tl_tab_layout="@layout/tag_community"
+            app:kira_tl_tab_padding="@dimen/x12"
+            app:kira_tl_textSelectColor="@color/white"
+            app:kira_tl_textUnSelectColor="@color/main_cyan"
+            app:kira_tl_text_size="@dimen/x30" />
+
+        <View
+            android:id="@+id/view_step"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1_px"
+            android:layout_below="@+id/tl_8"
+            android:background="@color/gray_e8e8e8" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/view_step" />
+    </RelativeLayout>
+
+    <ViewStub
+        android:id="@+id/stub_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/item_not_login" />
+</RelativeLayout>

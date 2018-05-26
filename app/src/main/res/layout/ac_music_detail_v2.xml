@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y100"
+        app:navigationIcon="@drawable/btn_back_white_normal"
+        app:layout_collapseMode="pin"
+        android:layout_marginTop="@dimen/status_bar_height"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+
+        <ImageView
+            android:id="@+id/iv_menu_list"
+            android:layout_height="@dimen/y100"
+            android:layout_width="@dimen/x86"
+            android:paddingTop="@dimen/y32"
+            android:paddingBottom="@dimen/y32"
+            android:paddingEnd="@dimen/x36"
+            android:paddingStart="@dimen/x18"
+            android:layout_gravity="end"
+            android:visibility="gone"
+            android:src="@drawable/btn_menu_white_normal" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y192"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x40"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x24"
+        android:layout_below="@+id/tv_title"
+        android:layout_marginTop="@dimen/y6"
+        android:layout_centerHorizontal="true"/>
+
+    <FrameLayout
+        android:id="@+id/fl_cover_root"
+        android:layout_width="@dimen/y440"
+        android:layout_height="@dimen/y440"
+        android:background="@drawable/btn_music_player_dish_big"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/y364">
+
+        <ImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="@dimen/y300"
+            android:layout_height="@dimen/y300"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_fav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:layout_below="@+id/fl_cover_root"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/y70"
+        android:drawableTop="@drawable/btn_music_fav"
+        android:drawablePadding="@dimen/y16"
+        android:text="收藏"
+        android:textSize="@dimen/x20"/>
+
+    <TextView
+        android:id="@+id/tv_download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tv_fav"
+        android:drawableTop="@drawable/btn_media_detail_download_white"
+        android:drawablePadding="@dimen/y16"
+        android:layout_toStartOf="@+id/tv_fav"
+        android:layout_marginEnd="@dimen/x96"
+        android:text="下载"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x20"/>
+
+    <TextView
+        android:id="@+id/tv_forward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tv_fav"
+        android:drawableTop="@drawable/btn_media_detail_repeat_white"
+        android:drawablePadding="@dimen/y16"
+        android:layout_toEndOf="@+id/tv_fav"
+        android:layout_marginStart="@dimen/x96"
+        android:text="转发"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x20"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@+id/rl_bottom_root"
+        android:layout_marginBottom="@dimen/y40"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_current"
+            android:layout_width="@dimen/x120"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x20"
+            tools:text="00:00"/>
+
+        <SeekBar
+            android:id="@+id/progress"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/y36"
+            android:max="100"
+            android:thumb="@drawable/btn_video_player_progress"
+            android:progressDrawable="@drawable/kira_video_progress"
+            android:paddingStart="@dimen/y16"
+            android:paddingEnd="@dimen/y16"
+            android:paddingTop="@dimen/y14"
+            android:paddingBottom="@dimen/y14"
+            android:progress="50"/>
+
+        <TextView
+            android:id="@+id/tv_total"
+            android:layout_width="@dimen/x120"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x20"
+            tools:text="00:00"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/y60">
+
+        <ImageView
+            android:id="@+id/iv_mode"
+            android:layout_width="@dimen/y52"
+            android:layout_height="@dimen/y52"
+            android:layout_marginStart="@dimen/x36"
+            android:layout_centerVertical="true"
+            android:src="@drawable/musci_play_mode_list"/>
+
+        <ImageView
+            android:id="@+id/iv_pre"
+            android:layout_width="@dimen/y52"
+            android:layout_height="@dimen/y52"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/iv_music_control"
+            android:layout_marginEnd="@dimen/x64"
+            android:src="@drawable/btn_music_player_previous"/>
+
+        <ImageView
+            android:id="@+id/iv_music_control"
+            android:layout_width="@dimen/y116"
+            android:layout_height="@dimen/y116"
+            android:layout_centerInParent="true"
+            android:src="@drawable/btn_music_play"/>
+
+
+        <ImageView
+            android:id="@+id/iv_next"
+            android:layout_width="@dimen/y52"
+            android:layout_height="@dimen/y52"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/iv_music_control"
+            android:layout_marginStart="@dimen/x64"
+            android:src="@drawable/btn_music_player_next"/>
+
+        <ImageView
+            android:id="@+id/iv_music_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x36"
+            android:src="@drawable/btn_music_player_play_menu"/>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_list_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:background="@color/alpha_80">
+        
+        <View
+            android:id="@+id/view_close_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tv_clear_list"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y90"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/x24"
+            android:paddingEnd="@dimen/x24"
+            android:background="@color/white_e6"
+            android:textColor="@color/gray_929292"
+            android:textSize="@dimen/x30"
+            android:text="清空列表"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1_px"
+            android:background="@color/gray_e8e8e8"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y690"
+            android:background="@color/white_e6"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1_px"
+            android:background="@color/gray_e8e8e8"/>
+
+        <TextView
+            android:id="@+id/tv_close_list"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y120"
+            android:gravity="center"
+            android:textSize="@dimen/x36"
+            android:textColor="@color/black_1e1e1e"
+            android:background="@color/white_e6"
+            android:text="关闭"/>
+    </LinearLayout>
+</RelativeLayout>

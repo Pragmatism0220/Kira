@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_e8e8e8">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white"/>
+
+    <RelativeLayout
+        android:id="@+id/include_toolbar"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/top_view"
+        android:layout_height="@dimen/y100"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/x36"
+            android:paddingRight="@dimen/x36"
+            android:layout_centerVertical="true"
+            android:src="@drawable/btn_back_blue_normal_unity"/>
+
+        <com.flyco.tablayout.CommonTabLayout
+            android:id="@+id/indicator_person_data"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white"
+            app:tl_iconVisible="false"
+            app:tl_textBold="BOTH"
+            app:tl_tab_width="@dimen/x110"
+            app:tl_textsize="@dimen/x36"
+            app:tl_textSelectColor="@color/main_cyan"
+            app:tl_textUnselectColor="@color/main_cyan_70"/>
+
+        <TextView
+            android:id="@+id/tv_simple_label"
+            android:layout_width="@dimen/x100"
+            android:layout_height="@dimen/y40"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x36"
+            android:gravity="center"
+            android:text="标签精简"
+            android:textColor="@color/txt_cyan_white"
+            android:textStyle="bold"
+            android:textSize="@dimen/x18"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/btn_only_host_new"
+            android:visibility="gone" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1_px"
+            android:background="@color/gray_e8e8e8"
+            android:layout_alignParentBottom="true"/>
+
+        <ImageView
+            android:id="@+id/iv_menu_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x36"
+            android:visibility="gone"/>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/include_toolbar">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager_person_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <include layout="@layout/view_no_pic_keyboard"/>
+
+    </RelativeLayout>
+
+    <include layout="@layout/float_send_layout"/>
+</RelativeLayout>

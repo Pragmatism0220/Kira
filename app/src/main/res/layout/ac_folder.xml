@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/white" />
+
+    <include layout="@layout/neta_bar" />
+
+    <TextView
+        android:id="@+id/tv_show_sp_examine"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y80"
+        android:layout_marginBottom="@dimen/y24"
+        android:layout_marginEnd="@dimen/x24"
+        android:layout_marginStart="@dimen/x24"
+        android:layout_marginTop="@dimen/y24"
+        android:background="@drawable/shape_green_6fc93a_background_y8"
+        android:gravity="center"
+        android:text="查看视频审核进度"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x30"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_top_root"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y100"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/x24"
+                android:paddingRight="@dimen/x24"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="@dimen/y80"
+                    android:layout_height="@dimen/y80"
+                    android:src="@drawable/bg_default_circle" />
+
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/x24"
+                    android:layout_weight="1"
+                    android:textColor="@color/black_1e1e1e"
+                    android:textSize="@dimen/x32" />
+
+                <TextView
+                    android:id="@+id/tv_to_bag"
+                    android:layout_width="@dimen/x150"
+                    android:layout_height="@dimen/y60"
+                    android:background="@drawable/btn_rect_corner_cyan_3"
+                    android:gravity="center"
+                    android:text="进入TA书包"
+                    android:textColor="@color/txt_white_cyan"
+                    android:textSize="@dimen/x24" />
+            </LinearLayout>
+
+            <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+            </com.moemoe.lalala.view.widget.recycler.PullAndLoadView>
+
+            <LinearLayout
+                android:id="@+id/ll_bottom_root"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y100"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/x36"
+                    android:text=""
+                    android:textColor="@color/gray_929292"
+                    android:textSize="@dimen/x20" />
+
+                <TextView
+                    android:id="@+id/tv_buy_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/x24"
+                    android:text="0"
+                    android:textColor="@color/main_cyan"
+                    android:textSize="@dimen/x20"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/x4"
+                    android:text="人购买"
+                    android:textColor="@color/gray_929292"
+                    android:textSize="@dimen/x20" />
+
+                <TextView
+                    android:id="@+id/tv_follow_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/x24"
+                    android:text="0"
+                    android:textColor="@color/main_cyan"
+                    android:textSize="@dimen/x20" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/x4"
+                    android:text="人收藏"
+                    android:textColor="@color/gray_929292"
+                    android:textSize="@dimen/x20" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_add_folder"
+            android:layout_width="@dimen/x164"
+            android:layout_height="@dimen/x164"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="@dimen/y32"
+            android:layout_marginEnd="@dimen/x24"
+            android:src="@drawable/btn_create_folder" />
+    </RelativeLayout>
+</LinearLayout>

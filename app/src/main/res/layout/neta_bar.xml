@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/app_bar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/y100"
+    android:background="@drawable/bg_shadow_up">
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:paddingEnd="@dimen/x20"
+        android:paddingStart="@dimen/x36"
+        android:src="@drawable/btn_back_blue_normal_unity"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ll_left_root"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/iv_back"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_left_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textColor="@color/black_1e1e1e"
+                android:textSize="@dimen/x36" />
+
+            <TextView
+                android:id="@+id/tv_left_tag_3"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y32"
+                android:layout_marginLeft="@dimen/x30"
+                android:layout_marginTop="@dimen/x10"
+                android:layout_toRightOf="@id/tv_left_menu"
+                android:gravity="center"
+                android:paddingStart="@dimen/x10"
+                android:paddingEnd="@dimen/x10"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x18"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_left_tag_4"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y32"
+                android:layout_marginTop="@dimen/x10"
+                android:layout_toRightOf="@id/tv_left_tag_3"
+                android:gravity="center"
+                android:layout_marginLeft="@dimen/x10"
+                android:paddingStart="@dimen/x10"
+                android:paddingEnd="@dimen/x10"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x18"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_left_tag_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/x16"
+                android:text=""
+                android:textColor="@color/main_cyan"
+                android:textSize="@dimen/x18"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_left_tag_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/pink_fb7ba2"
+                android:textSize="@dimen/x18"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tv_toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text=""
+        android:textColor="@color/black_1e1e1e"
+        android:textSize="@dimen/x36"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/rl_tv_menu_root"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_right_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/x24"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/main_cyan"
+                android:textSize="@dimen/x36"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/main_cyan"
+                android:textSize="@dimen/x36"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/iv_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_bag_pic_big_noraml"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_menu_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingEnd="@dimen/x36"
+            android:paddingStart="@dimen/x24"
+            android:src="@drawable/btn_menu_normal"
+            android:visibility="gone" />
+    </LinearLayout>
+</RelativeLayout>

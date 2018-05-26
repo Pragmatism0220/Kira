@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.moemoe.lalala.view.widget.view.CircleImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/circle_iamge"
+    android:layout_width="20dp"
+    android:layout_height="20dp"
+    android:orientation="vertical"
+    app:round_borderColor="@color/white"
+    app:round_borderWidth="3dp">
+
+</com.moemoe.lalala.view.widget.view.CircleImageView>

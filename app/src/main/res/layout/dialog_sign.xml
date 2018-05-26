@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="@dimen/x560"
+        android:layout_height="@dimen/y776"
+        android:layout_gravity="center">
+
+        <RelativeLayout
+            android:layout_width="@dimen/x540"
+            android:layout_height="@dimen/y740"
+            android:layout_marginTop="@dimen/y36"
+            android:background="@drawable/bg_rect_corner_while">
+
+            <ImageView
+                android:id="@+id/iv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y24"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/icon_signmain_title2"/>
+
+            <ImageView
+                android:id="@+id/iv_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y24"
+                android:layout_marginStart="@dimen/x24"
+                android:layout_toEndOf="@+id/iv_title"
+                android:src="@drawable/ic_lv_means"/>
+
+            <TextView
+                android:id="@+id/tv_total_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/x24"
+                android:textColor="@color/pink_fb7ba2"
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/y100" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/x18"
+                android:textColor="@color/pink_fb7ba2"
+                android:layout_alignBottom="@+id/tv_total_score"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/x52"
+                android:text="每日上限"/>
+
+            <ProgressBar
+                android:id="@+id/pb_score"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y20"
+                android:layout_marginStart="@dimen/x40"
+                android:layout_marginEnd="@dimen/x40"
+                android:layout_marginTop="@dimen/y4"
+                style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/daily_progress"
+                android:max="650"
+                android:progress="341"
+                android:layout_below="@+id/tv_total_score"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_task_list"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y310"
+                android:layout_below="@+id/pb_score"
+                android:layout_marginTop="@dimen/y2"
+                android:layout_marginStart="@dimen/x44"
+                android:layout_marginEnd="@dimen/x40">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@+id/rv_task_list"
+                android:layout_marginTop="@dimen/y10"
+                android:layout_marginStart="@dimen/x20"
+                android:layout_marginEnd="@dimen/x20"
+                android:paddingStart="@dimen/x20"
+                android:background="@drawable/shape_rect_green_no_background_2">
+
+                <LinearLayout
+                    android:id="@+id/ll_info_root"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/y20">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/x24"
+                        android:textColor="@color/black"
+                        android:text="你的当前等级是"/>
+
+                    <TextView
+                        android:id="@+id/tv_level"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/x6"
+                        android:textColor="@color/blue_4999e8"
+                        android:textSize="@dimen/x24"
+                        android:textStyle="bold"
+                        android:text="@string/label_level"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/x16"
+                        android:textSize="@dimen/x24"
+                        android:textColor="@color/black"
+                        android:text="每日获得"/>
+
+                    <TextView
+                        android:id="@+id/tv_coin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/x6"
+                        android:textStyle="bold"
+                        android:textColor="@color/green_93d856"
+                        android:text="3"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/x6"
+                        android:textSize="@dimen/size_12"
+                        android:textColor="@color/black"
+                        android:text="节操"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/y6"
+                    android:textColor="@color/gray_929292"
+                    android:textSize="@dimen/x18"
+                    android:text="保持良好的出勤率可以快速提升等级，同时获得更多节操。"/>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/y6"
+                    android:layout_marginBottom="@dimen/y12">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_sign_info"
+                        android:layout_width="@dimen/x462"
+                        android:layout_height="@dimen/y66"
+                        android:layout_marginBottom="@dimen/y12">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_signmain_x2"
+                        android:layout_marginStart="@dimen/x174"
+                        android:layout_gravity="bottom"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_signmain_x3"
+                        android:layout_gravity="bottom|end"/>
+                </FrameLayout>
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/iv_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/y10"
+                android:layout_marginEnd="@dimen/x70"
+                android:src="@drawable/btn_sign"/>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y16"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/btn_trash_exit" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x60"
+            android:src="@drawable/icon_signmain_title"/>
+    </RelativeLayout>
+</LinearLayout>
