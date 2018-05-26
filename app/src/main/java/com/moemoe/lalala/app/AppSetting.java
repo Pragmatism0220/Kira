@@ -14,6 +14,7 @@ public class AppSetting {
     public static boolean IS_DOWNLOAD_LOW_IN_3G = true;
     public static boolean IS_EDITOR_VERSION = false;
     public static boolean OpenUmeng = true;
+    public static boolean OpenTD=true;
     public static boolean isRunning = false;
     public static boolean isFirstLauncherToday = false;
     public static boolean isEnterEventToday = false;
@@ -28,7 +29,7 @@ public class AppSetting {
     public static String CHANNEL;
     public static int VERSION_CODE;
 
-    public static void initDeviceInfo(Context context){
+    public static void initDeviceInfo(Context context) {
         ApplicationInfo appInfo;
         try {
             appInfo = context.getPackageManager()
@@ -42,6 +43,7 @@ public class AppSetting {
 
     /**
      * 获取包内信息
+     *
      * @param context
      * @author Ben
      */

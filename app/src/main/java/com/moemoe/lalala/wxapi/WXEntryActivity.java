@@ -53,11 +53,13 @@ public class WXEntryActivity extends WechatHandlerActivity {
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+//        TCAgent.onPageEnd(this, this.getClass().getName());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+//        TCAgent.onPageStart(this, this.getClass().getName());
     }
 }

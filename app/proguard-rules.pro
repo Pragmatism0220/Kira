@@ -402,3 +402,5 @@ public void EventError();
 -keep class android.support.** { *; }
 -keep class android.app.**{*;}
 -keep class **.R$* {*;}
+
+

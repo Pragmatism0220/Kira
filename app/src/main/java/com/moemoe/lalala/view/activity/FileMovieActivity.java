@@ -10,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.di.components.DaggerFileMovieComponent;
 import com.moemoe.lalala.di.modules.FileMovieModule;
 import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
 import com.moemoe.lalala.model.entity.FolderType;
 import com.moemoe.lalala.model.entity.ManHua2Entity;
 import com.moemoe.lalala.model.entity.NewFolderEntity;
@@ -44,6 +46,7 @@ import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.GridDecoration;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
+import com.moemoe.lalala.utils.ShareUtils;
 import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.TagUtils;
@@ -68,6 +71,7 @@ import butterknife.BindView;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
+import io.reactivex.schedulers.Schedulers;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import jp.wasabeef.glide.transformations.CropTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
@@ -426,9 +430,9 @@ public class FileMovieActivity extends BaseAppCompatActivity implements NewFolde
         MenuItem item = new MenuItem(4, "转发到动态");
         items.add(item);
 
-        item = new MenuItem(5, "分享");
-        items.add(item);
-
+//        item = new MenuItem(5, "分享");
+//        items.add(item);
+        bottomMenuFragment.setIsShare(true);
         bottomMenuFragment.setMenuItems(items);
         bottomMenuFragment.setShowTop(false);
         bottomMenuFragment.setMenuType(BottomMenuFragment.TYPE_VERTICAL);
@@ -480,73 +484,136 @@ public class FileMovieActivity extends BaseAppCompatActivity implements NewFolde
                     entity.setCreateUser(entity1);
                     CreateForwardActivity.startActivity(FileMovieActivity.this, entity, mUserId);
                 } else if (itemId == 5) {
-                    showShare();
+//                    showShare();
+                }
+            }
+        });
+        bottomMenuFragment.setShareOnClickListener(new BottomMenuFragment.ShareItemClickListener() {
+            @Override
+            public void OnShareItemClick(String shareName) {
+                // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+                // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+                // text是分享文本，所有平台都需要这个字段
+                // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+                String url;
+                if (BuildConfig.DEBUG) {
+                    url = ApiService.SHARE_BAG_DEBUG + "?folderId=" + mFolderInfo.getFolderId() + "&type=" + mFolderType + "&userId=" + PreferenceUtils.getUUid() +
+                            "&folderCreateUser=" + mFolderInfo.getCreateUserId();
+                } else {
+                    url = ApiService.SHARE_BAG + "?folderId=" + mFolderInfo.getFolderId() + "&type=" + mFolderType + "&userId=" + PreferenceUtils.getUUid() +
+                            "&folderCreateUser=" + mFolderInfo.getCreateUserId();
+                }
+                switch (shareName) {
+                    case "QQ":
+                        ShareUtils.shareQQ(FileMovieActivity.this, "", url, "" + " " + url, ApiService.URL_QINIU + "", platformActionListener);
+                        break;
+                    case "QQZone":
+                        ShareUtils.shareQQzone(FileMovieActivity.this, "", url, "" + " " + url, ApiService.URL_QINIU + "", platformActionListener);
+                        break;
+                    case "WeChat":
+                        ShareUtils.shareWechat(FileMovieActivity.this, "", url, "" + " " + url, ApiService.URL_QINIU + "", platformActionListener);
+                        break;
+                    case "WeChatPyq":
+                        ShareUtils.sharepyq(FileMovieActivity.this, "", url, "" + " " + url, ApiService.URL_QINIU + "", platformActionListener);
+                        break;
+                    case "WeiBo":
+                        ShareUtils.shareWeibo(FileMovieActivity.this, "", url, "" + " " + url, ApiService.URL_QINIU + "", platformActionListener);
+                        break;
                 }
             }
         });
     }
 
-    private void showShare() {
-        final OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        oks.disableSSOWhenAuthorize();
-        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
-        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
-        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-        oks.setTitle("");
-        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-        String url;
-        if (BuildConfig.DEBUG) {
-            url = ApiService.SHARE_BAG_DEBUG + "?folderId=" + mFolderInfo.getFolderId() + "&type=" + mFolderType + "&userId=" + PreferenceUtils.getUUid() +
-                    "&folderCreateUser=" + mFolderInfo.getCreateUserId();
-        } else {
-            url = ApiService.SHARE_BAG + "?folderId=" + mFolderInfo.getFolderId() + "&type=" + mFolderType + "&userId=" + PreferenceUtils.getUUid() +
-                    "&folderCreateUser=" + mFolderInfo.getCreateUserId();
+    /**
+     * 分享回调
+     */
+    PlatformActionListener platformActionListener = new PlatformActionListener() {
+        @Override
+        public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+            Log.e("kid", "分享成功");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
         }
-        oks.setTitleUrl(url);
-        // text是分享文本，所有平台都需要这个字段
-        oks.setText("" + " " + url);
-        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-        oks.setImageUrl(ApiService.URL_QINIU + "");
-        // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl(url);
-        // site是分享此内容的网站名称，仅在QQ空间使用
-        oks.setSite(getString(R.string.app_name));
-        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl(url);
-        // 启动分享GUI
-        oks.setCallback(new PlatformActionListener() {
-            @Override
-            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-//                MoeMoeApplication.getInstance().getNetComponent().getApiService().shareKpi("{\"doc\":\"" + mDocId + "\"}")//{"doc":"uuid"}
-//                        .subscribeOn(Schedulers.io())
-//                        .subscribe(new NetSimpleResultSubscriber() {
-//                            @Override
-//                            public void onSuccess() {
-//
-//                            }
-//
-//                            @Override
-//                            public void onFail(int code, String msg) {
-//
-//                            }
-//                        });
-//                mPresenter.shareDoc();
+
+        @Override
+        public void onError(Platform platform, int i, Throwable throwable) {
+            Log.e("kid", "分享失败");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
             }
+        }
 
-            @Override
-            public void onError(Platform platform, int i, Throwable throwable) {
-
+        @Override
+        public void onCancel(Platform platform, int i) {
+            Log.e("kid", "分享取消");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
             }
+        }
+    };
+//    private void showShare() {
+//        final OnekeyShare oks = new OnekeyShare();
+//        //关闭sso授权
+//        oks.disableSSOWhenAuthorize();
+//        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
+//        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+//        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+//        oks.setTitle("");
+//        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+//        String url;
+//        if (BuildConfig.DEBUG) {
+//            url = ApiService.SHARE_BAG_DEBUG + "?folderId=" + mFolderInfo.getFolderId() + "&type=" + mFolderType + "&userId=" + PreferenceUtils.getUUid() +
+//                    "&folderCreateUser=" + mFolderInfo.getCreateUserId();
+//        } else {
+//            url = ApiService.SHARE_BAG + "?folderId=" + mFolderInfo.getFolderId() + "&type=" + mFolderType + "&userId=" + PreferenceUtils.getUUid() +
+//                    "&folderCreateUser=" + mFolderInfo.getCreateUserId();
+//        }
+//        oks.setTitleUrl(url);
+//        // text是分享文本，所有平台都需要这个字段
+//        oks.setText("" + " " + url);
+//        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+//        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+//        oks.setImageUrl(ApiService.URL_QINIU + "");
+//        // url仅在微信（包括好友和朋友圈）中使用
+//        oks.setUrl(url);
+//        // site是分享此内容的网站名称，仅在QQ空间使用
+//        oks.setSite(getString(R.string.app_name));
+//        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+//        oks.setSiteUrl(url);
+//        // 启动分享GUI
+//        oks.setCallback(new PlatformActionListener() {
+//            @Override
+//            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+////                MoeMoeApplication.getInstance().getNetComponent().getApiService().shareKpi("{\"doc\":\"" + mDocId + "\"}")//{"doc":"uuid"}
+////                        .subscribeOn(Schedulers.io())
+////                        .subscribe(new NetSimpleResultSubscriber() {
+////                            @Override
+////                            public void onSuccess() {
+////
+////                            }
+////
+////                            @Override
+////                            public void onFail(int code, String msg) {
+////
+////                            }
+////                        });
+////                mPresenter.shareDoc();
+//            }
+//
+//            @Override
+//            public void onError(Platform platform, int i, Throwable throwable) {
+//
+//            }
+//
+//            @Override
+//            public void onCancel(Platform platform, int i) {
+//
+//            }
+//        });
+//        oks.show(this);
+//    }
 
-            @Override
-            public void onCancel(Platform platform, int i) {
-
-            }
-        });
-        oks.show(this);
-    }
     @Override
     protected void initListeners() {
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
@@ -555,7 +622,11 @@ public class FileMovieActivity extends BaseAppCompatActivity implements NewFolde
                 StreamFileEntity entity = mAdapter.getItem(position);
                 if (!mIsSelect) {
                     if (FolderType.SP.toString().equals(mFolderType)) {
-                        KiraVideoActivity.startActivity(FileMovieActivity.this, entity.getFolderId(), entity.getId(), entity.getFileName(), entity.getCover());
+                        if (entity.getState() == 0) {
+                            showToast("视频还在审核中~");
+                        } else {
+                            KiraVideoActivity.startActivity(FileMovieActivity.this, entity.getFolderId(), entity.getId(), entity.getFileName(), entity.getCover());
+                        }
                     } else {
                         KiraMusicActivity.startActivity(FileMovieActivity.this, entity.getFolderId(), entity.getId(), entity.getFileName(), entity.getCover());
                     }

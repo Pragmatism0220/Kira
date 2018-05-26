@@ -45,11 +45,10 @@ import master.flame.danmaku.danmaku.parser.IDataSource;
 import master.flame.danmaku.ui.widget.DanmakuView;
 
 /**
- *
  * Created by yi on 2018/2/5.
  */
 
-public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
+public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer {
 
     private DanmakuContext danmakuContext;
     private String danmuUrl;
@@ -92,7 +91,7 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
 
     @Override
     public int getLayoutId() {
-        if(mIfCurrentIsFullscreen){
+        if (mIfCurrentIsFullscreen) {
             return R.layout.item_video_land;
         }
         return R.layout.item_video;
@@ -155,16 +154,16 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
         initView();
     }
 
-    public View getMenu(){
+    public View getMenu() {
         return mMenu;
     }
 
-    private void initView(){
+    private void initView() {
         //初始化弹幕控件
 
         mMenu = findViewById(R.id.iv_menu_list);
         danmakuContainer = findViewById(R.id.danmaku_container);
-        if(mIfCurrentIsFullscreen){
+        if (mIfCurrentIsFullscreen) {
             definitionChange = findViewById(R.id.tv_change_definition);
             danmakuSettingLayout = findViewById(R.id.ll_danmu_setting_root);
             definitionSettingLayout = findViewById(R.id.fl_definition_setting_root);
@@ -173,9 +172,9 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
             danmukuSetting.setOnClickListener(new NoDoubleClickListener() {
                 @Override
                 public void onNoDoubleClick(View v) {
-                    if(danmakuSettingLayout.getVisibility() == VISIBLE){
+                    if (danmakuSettingLayout.getVisibility() == VISIBLE) {
                         hideDanmakuSetting();
-                    }else {
+                    } else {
                         showDamakuSetting();
                     }
                 }
@@ -186,7 +185,7 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
                 @Override
                 public void onNoDoubleClick(View v) {
                     //showDefinitionSetting();
-                    ToastUtils.showShortToast(getContext(),"暂不支持");
+                    ToastUtils.showShortToast(getContext(), "暂不支持");
                 }
             });
 
@@ -196,19 +195,19 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
             closeSend = findViewById(R.id.iv_send_close);
             danmakuEdit = findViewById(R.id.et_danmu);
             sendDanmakuText = findViewById(R.id.text_send_danmu);
-            sendDanmaku= findViewById(R.id.tv_send_danmu);
+            sendDanmaku = findViewById(R.id.tv_send_danmu);
 
             sendDanmakuText.setOnClickListener(new NoDoubleClickListener() {
                 @Override
                 public void onNoDoubleClick(View v) {
-                    if(sendDanmakuLayout.getVisibility() == VISIBLE){
+                    if (sendDanmakuLayout.getVisibility() == VISIBLE) {
                         sendDanmakuLayout.setVisibility(GONE);
-                    }else {
+                    } else {
                         hideAllWidget();
                         danmakuEdit.setText("");
                         sendDanmakuLayout.setVisibility(VISIBLE);
                         danmakuEdit.requestFocus();
-                        SoftKeyboardUtils.showSoftKeyboard(getContext(),danmakuEdit);
+                        SoftKeyboardUtils.showSoftKeyboard(getContext(), danmakuEdit);
                         cancelDismissControlViewTimer();
                     }
                 }
@@ -219,7 +218,7 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     String danmu = danmakuEdit.getText().toString();
-                    if(!TextUtils.isEmpty(danmu)){
+                    if (!TextUtils.isEmpty(danmu)) {
                         sendDanmu(danmu);
                     }
                     return false;
@@ -230,7 +229,7 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
                 @Override
                 public void onNoDoubleClick(View v) {
                     String danmu = danmakuEdit.getText().toString();
-                    if(!TextUtils.isEmpty(danmu)){
+                    if (!TextUtils.isEmpty(danmu)) {
                         sendDanmu(danmu);
                     }
                     danmakuEdit.setText("");
@@ -241,7 +240,7 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
                 @Override
                 public void onNoDoubleClick(View v) {
                     hideAllWidget();
-                    SoftKeyboardUtils.dismissSoftKeyboard(getContext(),danmakuEdit);
+                    SoftKeyboardUtils.dismissSoftKeyboard(getContext(), danmakuEdit);
                 }
             });
 
@@ -258,11 +257,11 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
             smallDanmu = findViewById(R.id.tv_small_danmu);
 
             float curSize = VideoConfig.loadDanmuSize(getContext());
-            if(curSize == getResources().getDimension(R.dimen.x40)){
+            if (curSize == getResources().getDimension(R.dimen.x40)) {
                 bigDanmu.setSelected(true);
-            }else if(curSize == getResources().getDimension(R.dimen.x30)){
+            } else if (curSize == getResources().getDimension(R.dimen.x30)) {
                 midDanmu.setSelected(true);
-            }else {
+            } else {
                 smallDanmu.setSelected(true);
             }
 
@@ -318,35 +317,35 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
         }
     }
 
-    private void showDamakuSetting(){
+    private void showDamakuSetting() {
         danmakuSettingLayout.setVisibility(VISIBLE);
         cancelDismissControlViewTimer();
     }
 
-    private void hideDanmakuSetting(){
+    private void hideDanmakuSetting() {
         danmakuSettingLayout.setVisibility(GONE);
     }
 
-    private void showDefinitionSetting(){
+    private void showDefinitionSetting() {
         definitionSettingLayout.setVisibility(VISIBLE);
         cancelDismissControlViewTimer();
     }
 
-    private void hideDefinitionSetting(){
+    private void hideDefinitionSetting() {
         definitionSettingLayout.setVisibility(GONE);
     }
 
-        //修改弹幕样式
-    private void configDanmakuStyle(){
+    //修改弹幕样式
+    private void configDanmakuStyle() {
         danmakuContext.setDanmakuTransparency(VideoConfig.loadDanmuOpacity());
         danmakuContext.setScaleTextSize(VideoConfig.loadDanmuSize(getContext()));
     }
 
-    public void sendDanmu(String content){
+    public void sendDanmu(String content) {
 
-        if(danmakuView != null){
-            BaseDanmaku danmaku = danmakuContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL,danmakuContext);
-            if(danmaku == null) return;
+        if (danmakuView != null) {
+            BaseDanmaku danmaku = danmakuContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL, danmakuContext);
+            if (danmaku == null) return;
             danmaku.text = content;
             danmaku.padding = 5;
             danmaku.priority = 8;
@@ -355,7 +354,7 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
             danmaku.textSize = 1.0f;
             danmaku.textColor = Color.WHITE;
             danmaku.textShadowColor = Color.WHITE;
-            danmaku.borderColor = ContextCompat.getColor(getContext(),R.color.main_cyan);
+            danmaku.borderColor = ContextCompat.getColor(getContext(), R.color.main_cyan);
             danmakuView.addDanmaku(danmaku);
         }
         DanmakuSend send = new DanmakuSend();
@@ -364,33 +363,33 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
         send.color = String.valueOf(Color.WHITE);
         send.fontSize = String.valueOf(VideoConfig.loadDanmuSize(getContext()));
 
-        ((DanmuPlayerHolder)CommonUtil.getAppCompActivity(getContext())).onSendDanmu(send);
+        ((DanmuPlayerHolder) CommonUtil.getAppCompActivity(getContext())).onSendDanmu(send);
         hideAllWidget();
         SoftKeyboardUtils.dismissSoftKeyboard(CommonUtil.getAppCompActivity(getContext()));
     }
 
-    public void setUpDanmu(String uri){
+    public void setUpDanmu(String uri) {
         danmuUrl = uri;
         danmakuView = new DanmakuView(getContext());
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         danmakuContainer.removeAllViews();
-        danmakuContainer.addView(danmakuView,lp);
+        danmakuContainer.addView(danmakuView, lp);
 
         HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<>();
-        overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_RL,true);
-        overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP,true);
+        overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_RL, true);
+        overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);
 
         danmakuContext = DanmakuContext.create();
-        danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN,3f)
+        danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3f)
                 .setDuplicateMergingEnabled(false)
                 .preventOverlapping(overlappingEnablePair)
                 .setScaleTextSize(1.0f)
                 .setScrollSpeedFactor(1.2f)
                 .setDanmakuTransparency(VideoConfig.loadDanmuOpacity());
 
-        if(!mIfCurrentIsFullscreen){
-            HashMap<Integer,Integer> map = new HashMap<>();
-            map.put(BaseDanmaku.TYPE_SCROLL_RL,5);
+        if (!mIfCurrentIsFullscreen) {
+            HashMap<Integer, Integer> map = new HashMap<>();
+            map.put(BaseDanmaku.TYPE_SCROLL_RL, 5);
             danmakuContext.setMaximumLines(map);
         }
 
@@ -398,13 +397,13 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
         danmakuView.setCallback(new DrawHandler.Callback() {
             @Override
             public void prepared() {
-               if(danmakuView != null){
+                if (danmakuView != null) {
                     danmakuView.start();
                     seekDanmu();
-                    if(getCurrentState() != GSYVideoPlayer.CURRENT_STATE_PLAYING){
+                    if (getCurrentState() != GSYVideoPlayer.CURRENT_STATE_PLAYING) {
                         danmakuView.pause();
                     }
-               }
+                }
             }
 
             @Override
@@ -426,20 +425,20 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
                 danmakuContext);
         danmakuView.enableDanmakuDrawingCache(true);
 
-       configDanmakuStyle();
+        configDanmakuStyle();
     }
 
-    private void seekDanmu(){
+    private void seekDanmu() {
         if (danmakuView != null && danmakuView.isPrepared()) {
             danmakuView.seekTo((long) getCurrentPositionWhenPlaying());
         }
     }
 
-    private BaseDanmakuParser createParser(String uri){
+    private BaseDanmakuParser createParser(String uri) {
         ILoader loader = DanmakuLoaderFactory.create(DanmakuLoaderFactory.TAG_BILI);
         try {
             loader.load(uri);
-        }catch (IllegalDataException e){
+        } catch (IllegalDataException e) {
             e.printStackTrace();
         }
         BaseDanmakuParser parser = new BiliDanmukuParser();
@@ -456,13 +455,13 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
 
     @Override
     public GSYBaseVideoPlayer startWindowFullscreen(Context context, boolean actionBar, boolean statusBar) {
-        if(danmakuView != null){
+        if (danmakuView != null) {
             danmakuView.hide();
         }
         GSYBaseVideoPlayer player = super.startWindowFullscreen(context, actionBar, statusBar);
-        if(player != null){
+        if (player != null) {
             KiraVideoPlayerV2 videoPlayerV2 = (KiraVideoPlayerV2) player;
-            if(!TextUtils.isEmpty(danmuUrl)){
+            if (!TextUtils.isEmpty(danmuUrl)) {
                 videoPlayerV2.showDamaku(isShowDanmu);
                 videoPlayerV2.isShowDanmu = isShowDanmu;
                 videoPlayerV2.setUpDanmu(danmuUrl);
@@ -474,8 +473,8 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
     @Override
     protected void resolveNormalVideoShow(View oldF, ViewGroup vp, GSYVideoPlayer gsyVideoPlayer) {
         super.resolveNormalVideoShow(oldF, vp, gsyVideoPlayer);
-        CommonUtil.hideSupportActionBar(getContext(),true,true);
-        if(gsyVideoPlayer != null){
+        CommonUtil.hideSupportActionBar(getContext(), true, true);
+        if (gsyVideoPlayer != null) {
             KiraVideoPlayerV2 gsyDanmaVideoPlayer = (KiraVideoPlayerV2) gsyVideoPlayer;
             if (gsyDanmaVideoPlayer.danmakuView != null &&
                     gsyDanmaVideoPlayer.danmakuView.isPrepared()) {
@@ -485,8 +484,8 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
         }
     }
 
-    public void onVideoDestroy(){
-        if(danmakuView != null){
+    public void onVideoDestroy() {
+        if (danmakuView != null) {
             danmakuView.release();
         }
     }
@@ -494,32 +493,32 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
     @Override
     protected void setTextAndProgress(int secProgress) {
         super.setTextAndProgress(secProgress);
-        if(needCorrectDanmu){
+        if (needCorrectDanmu) {
             needCorrectDanmu = false;
             seekDanmu();
         }
-        switch (mCurrentState){
+        switch (mCurrentState) {
             case GSYVideoPlayer.CURRENT_STATE_PLAYING_BUFFERING_START:
             case GSYVideoPlayer.CURRENT_STATE_PAUSE:
-                if(mLastState == mCurrentState){
+                if (mLastState == mCurrentState) {
                     pauseDanmu();
                 }
                 break;
             case GSYVideoPlayer.CURRENT_STATE_PLAYING:
-                if(mLastState != mCurrentState){
+                if (mLastState != mCurrentState) {
                     resumeDanmu();
                 }
         }
         mLastState = mCurrentState;
     }
 
-    private void showDamaku(boolean show){
+    private void showDamaku(boolean show) {
         isShowDanmu = show;
-        if(danmakuView != null && danmakuView.isPrepared()){
-            if(switchDanmaku != null ) switchDanmaku.setSelected(!show);
-            if(show){
+        if (danmakuView != null && danmakuView.isPrepared()) {
+            if (switchDanmaku != null) switchDanmaku.setSelected(!show);
+            if (show) {
                 danmakuView.show();
-            }else {
+            } else {
                 danmakuView.hide();
             }
         }
@@ -528,23 +527,25 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
     @Override
     protected void onClickUiToggle() {
         super.onClickUiToggle();
-        if(mIfCurrentIsFullscreen){
-            if(danmakuSettingLayout != null && danmakuSettingLayout.getVisibility() == VISIBLE) {
+        if (mIfCurrentIsFullscreen) {
+            if (danmakuSettingLayout != null && danmakuSettingLayout.getVisibility() == VISIBLE) {
                 danmakuSettingLayout.setVisibility(GONE);
             }
-            if(definitionSettingLayout != null && definitionSettingLayout.getVisibility() == VISIBLE) definitionSettingLayout.setVisibility(GONE);
-            if(sendDanmakuLayout != null && sendDanmakuLayout.getVisibility() == VISIBLE) sendDanmakuLayout.setVisibility(GONE);
+            if (definitionSettingLayout != null && definitionSettingLayout.getVisibility() == VISIBLE)
+                definitionSettingLayout.setVisibility(GONE);
+            if (sendDanmakuLayout != null && sendDanmakuLayout.getVisibility() == VISIBLE)
+                sendDanmakuLayout.setVisibility(GONE);
         }
     }
 
     @Override
     protected void hideAllWidget() {
         super.hideAllWidget();
-        CommonUtil.hideSupportActionBar(getContext(),true,true);
-        if(mIfCurrentIsFullscreen){
-            if(danmakuSettingLayout != null) danmakuSettingLayout.setVisibility(GONE);
-            if(definitionSettingLayout != null) definitionSettingLayout.setVisibility(GONE);
-            if(sendDanmakuLayout != null) sendDanmakuLayout.setVisibility(GONE);
+        CommonUtil.hideSupportActionBar(getContext(), true, true);
+        if (mIfCurrentIsFullscreen) {
+            if (danmakuSettingLayout != null) danmakuSettingLayout.setVisibility(GONE);
+            if (definitionSettingLayout != null) definitionSettingLayout.setVisibility(GONE);
+            if (sendDanmakuLayout != null) sendDanmakuLayout.setVisibility(GONE);
         }
     }
 
@@ -564,7 +565,7 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
     public void onCompletion() {
         super.onCompletion();
         pauseDanmu();
-        ((DanmuPlayerHolder)CommonUtil.getAppCompActivity(getContext())).onComplete();
+        ((DanmuPlayerHolder) CommonUtil.getAppCompActivity(getContext())).onComplete();
     }
 
 
@@ -572,7 +573,7 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
     public void onAutoCompletion() {
         super.onAutoCompletion();
         pauseDanmu();
-        ((DanmuPlayerHolder)CommonUtil.getAppCompActivity(getContext())).onComplete();
+        ((DanmuPlayerHolder) CommonUtil.getAppCompActivity(getContext())).onComplete();
     }
 
     @Override
@@ -581,13 +582,13 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
         needCorrectDanmu = true;
     }
 
-    private void resumeDanmu(){
+    private void resumeDanmu() {
         if (danmakuView != null && danmakuView.isPrepared()) {
             danmakuView.resume();
         }
     }
 
-    private void pauseDanmu(){
+    private void pauseDanmu() {
         if (danmakuView != null && danmakuView.isPrepared()) {
             danmakuView.pause();
         }
@@ -595,15 +596,15 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
 
     @Override
     protected void updateStartImage() {
-        if(mStartButton instanceof ImageView){
+        if (mStartButton instanceof ImageView) {
             if (mCurrentState == CURRENT_STATE_PLAYING) {
                 mStartButton.setSelected(true);
-            }else if (mCurrentState == CURRENT_STATE_ERROR) {
+            } else if (mCurrentState == CURRENT_STATE_ERROR) {
                 mStartButton.setSelected(false);
-            }else {
+            } else {
                 mStartButton.setSelected(false);
             }
-        }else {
+        } else {
             super.updateStartImage();
         }
     }
@@ -622,7 +623,9 @@ public class KiraVideoPlayerV2 extends StandardGSYVideoPlayer{
 
     public interface DanmuPlayerHolder {
         void onSendDanmu(DanmakuSend send);
+
         void onSavePlayHistory(int position);
+
         void onComplete();
     }
 }

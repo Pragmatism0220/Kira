@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/y178">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y168"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_shop_items_list">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x190"
+            android:layout_marginTop="@dimen/y18"
+            android:text="Kira  VIP会员"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x30"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/tv_name"
+            android:layout_below="@+id/tv_name"
+            android:layout_marginTop="@dimen/y5"
+            android:ellipsize="end"
+            android:lines="2"
+            android:maxEms="15"
+            android:maxLines="2"
+            android:text="想体验百度云的极速下载？相当后山传奇车神么？"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x20" />
+
+        <TextView
+            android:id="@+id/tv_money"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/y32"
+            android:layout_alignStart="@+id/tv_content"
+            android:layout_below="@+id/tv_content"
+            android:layout_marginTop="@dimen/y2"
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingEnd="@dimen/x20"
+            android:paddingStart="@dimen/x20"
+            android:text="500元"
+            android:textColor="@color/main_cyan"
+            android:textSize="@dimen/x20" />
+
+        <TextView
+            android:id="@+id/tv_money_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/tv_money"
+            android:layout_marginStart="@dimen/x16"
+            android:layout_toEndOf="@+id/tv_money"
+            android:gravity="center_vertical"
+            android:text="不限量购买"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x20" />
+
+        <ImageView
+            android:id="@+id/iv_go_shopping"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x12"
+            android:src="@drawable/btn_shopping_go" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="@dimen/x160"
+        android:layout_height="@dimen/y160"
+        android:layout_marginStart="@dimen/y14"
+        android:scaleType="fitXY"
+        android:src="@drawable/btn_shop_buy_normal" />
+</FrameLayout>

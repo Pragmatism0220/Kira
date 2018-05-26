@@ -15,6 +15,7 @@ import com.moemoe.lalala.model.api.NetResultSubscriber;
 import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
 import com.moemoe.lalala.model.entity.AppUpdateEntity;
 import com.moemoe.lalala.model.entity.BuildEntity;
+import com.moemoe.lalala.model.entity.DeskMateEntity;
 import com.moemoe.lalala.model.entity.JuQIngStoryEntity;
 import com.moemoe.lalala.model.entity.JuQingDoneEntity;
 import com.moemoe.lalala.model.entity.JuQingTriggerEntity;
@@ -25,6 +26,7 @@ import com.moemoe.lalala.model.entity.MapMarkEntity;
 import com.moemoe.lalala.model.entity.NearUserEntity;
 import com.moemoe.lalala.model.entity.NetaEvent;
 import com.moemoe.lalala.model.entity.SplashEntity;
+import com.moemoe.lalala.model.entity.UserDeskmateEntity;
 import com.moemoe.lalala.model.entity.UserLocationEntity;
 import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.GreenDaoManager;
@@ -238,6 +240,24 @@ public class MapPresenter implements MapContract.Presenter {
                     @Override
                     public void onFail(int code, String msg) {
 
+                    }
+                });
+    }
+
+    @Override
+    public void loadHousUserDeskmate() {
+        apiService.loadHousUserDeskmate()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<UserDeskmateEntity>() {
+                    @Override
+                    public void onSuccess(UserDeskmateEntity entity) {
+                        if (view != null) view.onLoadHousUserDeskmateSuccess(entity);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
                     }
                 });
     }

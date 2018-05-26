@@ -1,20 +1,27 @@
 package com.moemoe.lalala.view.fragment;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
+import com.liulishuo.filedownloader.util.FileDownloadUtils;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.model.entity.DownloadEntity;
 import com.moemoe.lalala.model.entity.FolderType;
 import com.moemoe.lalala.model.entity.Image;
+import com.moemoe.lalala.utils.FileUtil;
+import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.TasksManager;
 import com.moemoe.lalala.utils.ToastUtils;
 import com.moemoe.lalala.view.activity.ImageBigSelectActivity;
+import com.moemoe.lalala.view.activity.KiraDownloadVideoPlayerActivity;
 import com.moemoe.lalala.view.activity.KiraMusicActivity;
 import com.moemoe.lalala.view.activity.KiraVideoActivity;
 import com.moemoe.lalala.view.activity.NewFileXiaoShuo2Activity;
@@ -102,7 +109,40 @@ public class DownLoadListFragment extends BaseFragment {
                         String folderId = o.getString("folderId");
                         String folderName = o.getString("folderName");
                         String cover = o.getString("cover");
-                        KiraVideoActivity.startActivity(getContext(), folderId, fileId, folderName, cover);
+                        final File file = new File(StorageUtils.getVideoRootPath(), folderName+ ".mp4");
+//                        final File file = new File(Environment.getExternalStorageDirectory().getPath()+"/"+folderName + ".mp4");
+                        if (FileUtil.isExists(file.getAbsolutePath())) {
+//                            KiraVideoActivity.startActivity(getContext(), folderId, fileId, folderName, cover, entity.getPath());
+//                            Intent intent = new Intent();
+//                            intent.setAction(Intent.ACTION_VIEW);
+//                            Uri uri = Uri.fromFile(file);
+//                            intent.setDataAndType(uri, "video/mp4");
+//                            intent.setClassName("com.cooliris.media", "com.cooliris.media.FileProvider");
+//                            intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//                            startActivity(intent);
+
+
+                            Intent intent = new Intent(getContext(), KiraDownloadVideoPlayerActivity.class);
+                            intent.putExtra("path", entity.getPath());
+                            intent.putExtra("folderName", folderName);
+                            startActivity(intent);
+                        }
+
+
+//                        Intent intent = new Intent(Intent.ACTION_VIEW);
+//                        String type1 = "video/* ";
+//                        File file = new File(entity.getPath()+ ".mp4");
+//                        Uri uri;
+//                        // 判断版本大于等于7.0
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {// "com.moemoe.lalala.FileProvider"即是在清单文件中配置的authorities
+//                            uri = FileProvider.getUriForFile(getContext(), "com.moemoe.lalala.FileProvider", file);// 给目标应用一个临时授权
+//                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                        } else {
+//                            uri = Uri.fromFile(file);
+//                        }
+//                        intent.setDataAndType(uri, type1);
+//                        startActivity(intent);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

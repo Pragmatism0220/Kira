@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.moemoe.lalala.view.activity.ShoppingDetalisActivity.Presenter" />
+    </data>
+
+    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.moemoe.lalala.view.activity.ShoppingDetalisActivity">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/status_bar_height"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_shop_background"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.youth.banner.Banner
+                        android:id="@+id/banner_top"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/y750"
+                        android:layout_below="@+id/iv_top_detalis_background"
+                        android:layout_marginTop="-20dp"
+                        app:image_scale_type="fit_xy"
+                        app:is_auto_play="false"
+                        app:title_background="@color/alpha_80"
+                        app:title_textcolor="@color/white"
+                        app:title_textsize="@dimen/x24">
+
+                    </com.youth.banner.Banner>
+
+                    <ImageView
+                        android:id="@+id/iv_top_detalis_background"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/bg_shop_topbackground" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/x24"
+                        android:layout_marginTop="@dimen/y24"
+                        android:src="@drawable/ic_shop_title" />
+
+                    <ImageView
+                        android:id="@+id/shopping_detalis_back"
+                        android:layout_width="@dimen/x180"
+                        android:layout_height="@dimen/y88"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="@dimen/y44"
+                        android:onClick="@{presenter.onClick}"
+                        android:src="@drawable/role_back_btn" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_commodity_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/y60"
+                    android:text="Neta官方    小莲斧子   拖鞋"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x48"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_commodity_shuoming"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/y20"
+                    android:text="Neta官方    小莲斧子   拖鞋"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x30"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_refresh_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/y12"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:paddingEnd="@dimen/x20"
+                    android:paddingStart="@dimen/x20"
+                    android:text="库存:   99999"
+                    android:textColor="@color/main_cyan"
+                    android:textSize="@dimen/x24" />
+
+                <TextView
+                    android:id="@+id/tv_done"
+                    android:layout_width="@dimen/x260"
+                    android:layout_height="@dimen/y90"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/y32"
+                    android:background="@drawable/btn_shopping_money"
+                    android:gravity="center"
+                    android:text="3000节操"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x30" />
+            </LinearLayout>
+
+        </ScrollView>
+    </RelativeLayout>
+</layout>

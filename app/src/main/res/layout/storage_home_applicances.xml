@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/status_bar_height"
+    android:background="@drawable/ic_role_top_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/storage_home_title"
+            android:layout_width="@dimen/x320"
+            android:layout_height="@dimen/y142"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/x36"
+            android:layout_marginTop="@dimen/y44"
+            android:background="@drawable/ic_home_items_title" />
+
+        <Button
+            android:id="@+id/storage_home_back"
+            android:layout_width="@dimen/x180"
+            android:layout_height="@dimen/y88"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/y44"
+            android:background="@drawable/role_back_btn"
+            android:onClick="@{presenter.onClick}" />
+
+
+        <ImageView
+            android:id="@+id/storage_home_commodity_image"
+            android:layout_width="@dimen/x200"
+            android:layout_height="@dimen/y200"
+            android:layout_marginStart="@dimen/x36"
+            android:layout_marginTop="@dimen/y186"
+            android:background="@drawable/btn_home_items_background_circle" />
+
+        <TextView
+            android:id="@+id/storage_home_commodity_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x20"
+            android:layout_marginTop="@dimen/y186"
+            android:layout_toRightOf="@+id/storage_home_commodity_image"
+            android:text="@string/moc"
+            android:textColor="@color/white"
+            android:textSize="24dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/storage_home_commodity_num"
+            android:layout_width="@dimen/x96"
+            android:layout_height="@dimen/y48"
+            android:layout_marginStart="@dimen/x20"
+            android:layout_marginTop="@dimen/y186"
+            android:layout_toRightOf="@+id/storage_home_commodity_name"
+            android:background="@drawable/ic_white_bg"
+            android:gravity="center"
+            android:text="X13"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/storage_home_commodity_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/storage_home_commodity_name"
+            android:layout_marginEnd="@dimen/x36"
+            android:layout_marginStart="@dimen/x20"
+            android:layout_marginTop="@dimen/y24"
+            android:layout_toRightOf="@+id/storage_home_commodity_image"
+            android:text="@string/home_info"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+
+        <Button
+            android:id="@+id/storage_home_commodity_buy_btn"
+            android:layout_width="@dimen/x214"
+            android:layout_height="@dimen/y94"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/storage_home_commodity_image"
+            android:layout_marginBottom="@dimen/y20"
+            android:layout_marginStart="@dimen/x136"
+            android:layout_marginTop="@dimen/y30"
+            android:background="@drawable/storage_buy_btn_bg"
+            android:onClick="@{presenter.onClick}" />
+
+        <Button
+            android:id="@+id/storage_home_commodity_use_btn"
+            android:layout_width="@dimen/x214"
+            android:layout_height="@dimen/y94"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/storage_home_commodity_image"
+            android:layout_marginBottom="@dimen/y20"
+            android:layout_marginEnd="@dimen/x136"
+            android:layout_marginTop="@dimen/y30"
+            android:background="@drawable/storage_use_btn_bg"
+            android:onClick="@{presenter.onClick}" />
+
+        <CheckBox
+            android:id="@+id/storage_check_box_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/storage_home_commodity_use_btn"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x40"
+            android:background="@drawable/checkbox_selector"
+            android:button="@null"
+            android:checked="false"
+            android:onClick="@{presenter.onClick}" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/storage_home_commodity_use_btn"
+            android:layout_marginEnd="@dimen/x10"
+            android:layout_toLeftOf="@+id/storage_check_box_btn"
+            android:background="@drawable/ic_show_unowned" />
+    </RelativeLayout>
+</LinearLayout>

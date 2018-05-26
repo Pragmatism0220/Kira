@@ -241,7 +241,7 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
         } else {
             mBottomBar.setVisibility(View.VISIBLE);
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mTab.getLayoutParams();
-            layoutParams.setMargins(0,0,0,(int) getResources().getDimension(R.dimen.y80));
+            layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y80));
             mTab.setLayoutParams(layoutParams);
         }
     }
@@ -446,13 +446,20 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
                 /**
                  * 关注
                  */
-                Toast.makeText(getApplicationContext(), "关注", Toast.LENGTH_SHORT).show();
+                mPresenter.followUser(mUserId, mFollow.isSelected());
                 break;
             case R.id.chat_btn:
                 /**
                  * 聊天
                  */
-                Toast.makeText(getApplicationContext(), "聊天", Toast.LENGTH_SHORT).show();
+
+                if (DialogUtils.checkLoginAndShowDlg(PersonalV2Activity.this)) {
+                    if (!TextUtils.isEmpty(PreferenceUtils.getAuthorInfo().getRcToken()) && !TextUtils.isEmpty(mInfo.getRcTargetId())) {
+                        RongIM.getInstance().startPrivateChat(PersonalV2Activity.this, mInfo.getRcTargetId(), mInfo.getUserName());
+                    } else {
+                        showToast("打开私信失败");
+                    }
+                }
                 break;
             case R.id.house_btn:
                 /**
@@ -548,7 +555,7 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
         }
         if (mIsSelf) {
             mFollowRoot.setVisibility(View.GONE);
-            mTvHuiYuan.setVisibility(View.VISIBLE);
+            mTvHuiYuan.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(info.getVipTime())) {
                 mTvHuiYuan.setText("会员到期日: " + info.getVipTime());
 //                mAvatarRoot.setPadding(0, (int) getResources().getDimension(R.dimen.y40), 0, 0);
@@ -563,9 +570,9 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
 //                mAvatarRoot.setPadding(0, (int) getResources().getDimension(R.dimen.y40), 0, 0);
             }
 
-            mFollowRoot.setVisibility(View.VISIBLE);
+            mFollowRoot.setVisibility(View.GONE);
             mFollow.setSelected(info.isFollowing());
-            mTvHuiYuan.setVisibility(View.GONE);
+            mAttention.setSelected(info.isFollowing());
             mFollow.setText(info.isFollowing() ? getString(R.string.label_followed) : getString(R.string.label_follow));
         }
         final ImageView[] huiZhangImgs = new ImageView[]{mIvHuizhang3, mIvHuizhang2, mIvHuizhang1};
@@ -642,6 +649,8 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
     public void onFollowSuccess(boolean isFollow) {
         mFollow.setSelected(isFollow);
         mFollow.setText(isFollow ? getString(R.string.label_followed) : getString(R.string.label_follow));
+
+        mAttention.setText(isFollow ? getString(R.string.label_followed) : getString(R.string.label_follow));
     }
 
     private boolean isChanged = false;

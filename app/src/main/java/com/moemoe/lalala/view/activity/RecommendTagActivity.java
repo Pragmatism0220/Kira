@@ -221,33 +221,36 @@ public class RecommendTagActivity extends BaseAppCompatActivity implements Recom
                 break;
             case R.id.iv_1_close:
                 mRes.remove(mTvTag1.getText().toString());
-                if (mTag3Root.getVisibility() == View.VISIBLE) {
-                    mTag3Root.setVisibility(View.GONE);
-                    mTvTag1.setText(mTvTag2.getText());
-                    mTvTag2.setText(mTvTag3.getText());
-                    TagUtils.setBackGround(mTvTag2.getText().toString(), mTvTag1);
-                    TagUtils.setBackGround(mTvTag3.getText().toString(), mTvTag2);
-                } else if (mTag2Root.getVisibility() == View.VISIBLE) {
-                    mTag2Root.setVisibility(View.GONE);
-                    mTvTag1.setText(mTvTag2.getText());
-                    TagUtils.setBackGround(mTvTag2.getText().toString(), mTvTag1);
-                } else {
-                    mTag1Root.setVisibility(View.GONE);
-                    mTvTag1.setText("");
-                }
+//                mRes.remove(0);
+//                if (mTag3Root.getVisibility() == View.VISIBLE) {
+//                    mTag3Root.setVisibility(View.GONE);
+//                    mTvTag1.setText(mTvTag2.getText());
+//                    mTvTag2.setText(mTvTag3.getText());
+//                    TagUtils.setBackGround(mTvTag2.getText().toString(), mTvTag1);
+//                    TagUtils.setBackGround(mTvTag3.getText().toString(), mTvTag2);
+//                } else if (mTag2Root.getVisibility() == View.VISIBLE) {
+//                    mTag2Root.setVisibility(View.GONE);
+//                    mTvTag1.setText(mTvTag2.getText());
+//                    TagUtils.setBackGround(mTvTag2.getText().toString(), mTvTag1);
+//                } else {
+                mTag1Root.setVisibility(View.GONE);
+                mTvTag1.setText("");
+//                }
                 break;
             case R.id.iv_2_close:
+//                mRes.remove(1);
                 mRes.remove(mTvTag2.getText().toString());
-                if (mTag3Root.getVisibility() == View.VISIBLE) {
-                    mTag3Root.setVisibility(View.GONE);
-                    mTvTag2.setText(mTvTag3.getText());
-                    TagUtils.setBackGround(mTvTag3.getText().toString(), mTvTag2);
-                } else {
-                    mTag2Root.setVisibility(View.GONE);
-                    mTvTag2.setText("");
-                }
+//                if (mTag3Root.getVisibility() == View.VISIBLE) {
+//                    mTag3Root.setVisibility(View.GONE);
+//                    mTvTag2.setText(mTvTag3.getText());
+//                    TagUtils.setBackGround(mTvTag3.getText().toString(), mTvTag2);
+//                } else {
+                mTag2Root.setVisibility(View.GONE);
+                mTvTag2.setText("");
+//                }
                 break;
             case R.id.iv_3_close:
+//                mRes.remove(3);
                 mRes.remove(mTvTag3.getText().toString());
                 mTag3Root.setVisibility(View.GONE);
                 break;

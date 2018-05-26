@@ -17,11 +17,23 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
+import com.moemoe.lalala.app.MoeMoeApplication;
+import com.moemoe.lalala.di.components.DaggerHouseComponent;
+import com.moemoe.lalala.di.modules.HouseModule;
+import com.moemoe.lalala.model.entity.MapDbEntity;
+import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
+import com.moemoe.lalala.presenter.DormitoryContract;
+import com.moemoe.lalala.presenter.DormitoryPresenter;
 import com.moemoe.lalala.utils.DialogUtils;
+import com.moemoe.lalala.utils.ErrorCodeUtils;
+import com.moemoe.lalala.utils.FileUtil;
+import com.moemoe.lalala.utils.GreenDaoManager;
 import com.moemoe.lalala.utils.MapToolTipUtils;
+import com.moemoe.lalala.utils.MapUtil;
 import com.moemoe.lalala.utils.NetworkUtils;
 import com.moemoe.lalala.utils.PreferenceUtils;
+import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.widget.map.MapWidget;
@@ -32,9 +44,16 @@ import com.moemoe.lalala.view.widget.map.interfaces.OnMapTouchListener;
 import com.moemoe.lalala.view.widget.view.CircleImageView;
 import com.moemoe.lalala.view.widget.view.PileView;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
@@ -42,7 +61,7 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
  * 宅屋界面
  */
 
-public class DormitoryActivity extends BaseAppCompatActivity {
+public class DormitoryActivity extends BaseAppCompatActivity implements DormitoryContract.View {
 
     @BindView(R.id.fl_map_root)
     FrameLayout mMap;
@@ -67,12 +86,15 @@ public class DormitoryActivity extends BaseAppCompatActivity {
     @BindView(R.id.visitor_count)
     TextView mVisitorCount;
 
+
+    @Inject
+    DormitoryPresenter mPresenter;
+
     private int Test_visitor_count = 66;
-
-
+    private Disposable initDisposable;
+    private Disposable resolvDisposable;
     private PileView mPileLayout;
-
-    private MapWidget mapWidget;// 0 map 1 event 2 allUser 3 birthdayUser 4 followUser 5 nearUser
+    private MapWidget mapWidget;// 0 map 1 furnitures 2 allUser 3 birthdayUser 4 followUser 5 nearUser
     private MapMarkContainer mContainer;
     private boolean mIsOut = false;
 
@@ -85,10 +107,20 @@ public class DormitoryActivity extends BaseAppCompatActivity {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+
+        DaggerHouseComponent.builder()
+                .houseModule(new HouseModule(this))
+                .netComponent(MoeMoeApplication.getInstance().getNetComponent())
+                .build()
+                .inject(this);
+
+        mContainer = new MapMarkContainer();
         ViewUtils.setStatusBarLight(getWindow(), null);
         MapToolTipUtils.getInstance().init(this, 5, 8, mapWidget, mMap);
         mPileLayout = findViewById(R.id.pile_layout);
-        initMap("home_asa");
+        initMap("house_asa");
+//        mPresenter.loadHouseInHouseRubblish();
+//        mPresenter.loadHouseInHouseRoles();
         initPraises();
     }
 
@@ -105,7 +137,11 @@ public class DormitoryActivity extends BaseAppCompatActivity {
         config.setMapCenteringEnabled(true);
         mMap.removeAllViews();
         mMap.addView(mapWidget);
+        mPresenter.addMapMark(this, mContainer, mapWidget, "furnitures");
+        mPresenter.addMapMark(this, mContainer, mapWidget, "rubblish");
+        mPresenter.addMapMark(this, mContainer, mapWidget, "roles");
         MapToolTipUtils.getInstance().updateMap(mapWidget);
+        MapToolTipUtils.getInstance().updateList(mContainer.getContainer());
     }
 
     @Override
@@ -167,7 +203,7 @@ public class DormitoryActivity extends BaseAppCompatActivity {
 //                    if (!TextUtils.isEmpty(entity.getSchema())) {
 //                        String temp = entity.getSchema();
 //                        if (temp.contains("map_event_1.0") || temp.contains("game_1.0")) {
-//                            if (!DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+//                            if (!DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {+
 //                                return;
 //                            }
 //                        }
@@ -309,8 +345,9 @@ public class DormitoryActivity extends BaseAppCompatActivity {
         mStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DormitoryActivity.this, ReloadingRoomActivity.class);
+                Intent intent = new Intent(DormitoryActivity.this, StorageActivity.class);
                 startActivity(intent);
+
             }
         });
         mDrama.setOnClickListener(new View.OnClickListener() {
@@ -328,7 +365,6 @@ public class DormitoryActivity extends BaseAppCompatActivity {
         });
 
     }
-
 
     /**
      * 初始化Praise
@@ -410,6 +446,7 @@ public class DormitoryActivity extends BaseAppCompatActivity {
     protected void onResume() {
         super.onResume();
         showBtn();
+        mPresenter.loadHouseInHouseFurnitures();
     }
 
     private void clearMap() {
@@ -429,4 +466,223 @@ public class DormitoryActivity extends BaseAppCompatActivity {
         mLlToolBar.setVisibility(View.INVISIBLE);
     }
 
+    @Override
+    public void onFailure(int code, String msg) {
+        ErrorCodeUtils.showErrorMsgByCode(DormitoryActivity.this, code, msg);
+    }
+
+    /**
+     * 家具信息
+     *
+     * @param entities
+     */
+    @Override
+    public void onLoadHouseInHouseFurnitures(ArrayList<MapEntity> entities) {
+        final ArrayList<MapDbEntity> res = new ArrayList<>();
+        final ArrayList<MapDbEntity> errorList = new ArrayList<>();
+        MapUtil.checkAndDownloadHouse(this, true, MapDbEntity.toDb(entities, "furnitures"), "furnitures", new Observer<MapDbEntity>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                initDisposable = d;
+            }
+
+            @Override
+            public void onNext(@NonNull MapDbEntity mapDbEntity) {
+                File file = new File(StorageUtils.getHouseRootPath() + mapDbEntity.getFileName());
+                String md5 = mapDbEntity.getMd5();
+                if (md5.length() < 32) {
+                    int n = 32 - md5.length();
+                    for (int i = 0; i < n; i++) {
+                        md5 = "0" + md5;
+                    }
+                }
+                if (mapDbEntity.getDownloadState() == 3 || !md5.equals(StringUtils.getFileMD5(file))) {
+                    FileUtil.deleteFile(StorageUtils.getHouseRootPath() + mapDbEntity.getFileName());
+                    errorList.add(mapDbEntity);
+                } else {
+                    res.add(mapDbEntity);
+                }
+
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                GreenDaoManager.getInstance().getSession().getMapDbEntityDao().insertOrReplaceInTx(res);
+                mPresenter.addMapMark(DormitoryActivity.this, mContainer, mapWidget, "furnitures");
+                if (errorList.size() > 0) {
+                    resolvErrorList(errorList, "furnitures");
+                }
+            }
+        });
+    }
+
+    /**
+     * 垃圾信息
+     *
+     * @param entities
+     */
+    @Override
+    public void onLoadHouseInHouseRubblish(ArrayList<MapEntity> entities) {
+        final ArrayList<MapDbEntity> res = new ArrayList<>();
+        final ArrayList<MapDbEntity> errorList = new ArrayList<>();
+        MapUtil.checkAndDownloadHouse(this, true, MapDbEntity.toDb(entities, "rubblish"), "rubblish", new Observer<MapDbEntity>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                initDisposable = d;
+            }
+
+            @Override
+            public void onNext(@NonNull MapDbEntity mapDbEntity) {
+                File file = new File(StorageUtils.getHouseRootPath() + mapDbEntity.getFileName());
+                String md5 = mapDbEntity.getMd5();
+                if (md5.length() < 32) {
+                    int n = 32 - md5.length();
+                    for (int i = 0; i < n; i++) {
+                        md5 = "0" + md5;
+                    }
+                }
+                if (mapDbEntity.getDownloadState() == 3 || !md5.equals(StringUtils.getFileMD5(file))) {
+                    FileUtil.deleteFile(StorageUtils.getHouseRootPath() + mapDbEntity.getFileName());
+                    errorList.add(mapDbEntity);
+                } else {
+                    res.add(mapDbEntity);
+                }
+
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                GreenDaoManager.getInstance().getSession().getMapDbEntityDao().insertOrReplaceInTx(res);
+                mPresenter.addMapMark(DormitoryActivity.this, mContainer, mapWidget, "rubblish");
+                if (errorList.size() > 0) {
+                    resolvErrorList(errorList, "rubblish");
+                }
+            }
+        });
+    }
+
+    /**
+     * 人物角色信息
+     *
+     * @param entities
+     */
+    @Override
+    public void onLoadHouseInHouseRoles(ArrayList<MapEntity> entities) {
+        final ArrayList<MapDbEntity> res = new ArrayList<>();
+        final ArrayList<MapDbEntity> errorList = new ArrayList<>();
+        MapUtil.checkAndDownloadHouse(this, true, MapDbEntity.toDb(entities, "roles"), "roles", new Observer<MapDbEntity>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                initDisposable = d;
+            }
+
+            @Override
+            public void onNext(@NonNull MapDbEntity mapDbEntity) {
+                File file = new File(StorageUtils.getHouseRootPath() + mapDbEntity.getFileName());
+                String md5 = mapDbEntity.getMd5();
+                if (md5.length() < 32) {
+                    int n = 32 - md5.length();
+                    for (int i = 0; i < n; i++) {
+                        md5 = "0" + md5;
+                    }
+                }
+                if (mapDbEntity.getDownloadState() == 3 || !md5.equals(StringUtils.getFileMD5(file))) {
+                    FileUtil.deleteFile(StorageUtils.getHouseRootPath() + mapDbEntity.getFileName());
+                    errorList.add(mapDbEntity);
+                } else {
+                    res.add(mapDbEntity);
+                }
+
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                GreenDaoManager.getInstance().getSession().getMapDbEntityDao().insertOrReplaceInTx(res);
+                mPresenter.addMapMark(DormitoryActivity.this, mContainer, mapWidget, "roles");
+                if (errorList.size() > 0) {
+                    resolvErrorList(errorList, "roles");
+                }
+            }
+        });
+    }
+
+
+    private void resolvErrorList(ArrayList<MapDbEntity> errorList, final String type) {
+        final ArrayList<MapDbEntity> errorListTmp = new ArrayList<>();
+        final ArrayList<MapDbEntity> res = new ArrayList<>();
+        MapUtil.checkAndDownloadHouse(this, false, errorList, type, new Observer<MapDbEntity>() {
+
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                resolvDisposable = d;
+            }
+
+            @Override
+            public void onNext(@NonNull MapDbEntity mapDbEntity) {
+                File file = new File(StorageUtils.getHouseRootPath() + mapDbEntity.getFileName());
+                String md5 = mapDbEntity.getMd5();
+                if (md5.length() < 32) {
+                    int n = 32 - md5.length();
+                    for (int i = 0; i < n; i++) {
+                        md5 = "0" + md5;
+                    }
+                }
+                if (!md5.equals(StringUtils.getFileMD5(file)) || mapDbEntity.getDownloadState() == 3) {
+                    FileUtil.deleteFile(StorageUtils.getHouseRootPath() + mapDbEntity.getFileName());
+                    errorListTmp.add(mapDbEntity);
+                } else {
+                    res.add(mapDbEntity);
+                }
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                GreenDaoManager.getInstance().getSession().getMapDbEntityDao().insertOrReplaceInTx(res);
+                if (errorListTmp.size() > 0) {
+                    resolvErrorList(errorListTmp, type);
+                } else {
+                    if ("map".equals(type)) {
+//                        invalidateMap(true);
+                    } else if ("furnitures".equals(type)) {
+                        mPresenter.addMapMark(DormitoryActivity.this, mContainer, mapWidget, "furnitures");
+                    } else if ("roles".equals(type)) {
+                        mPresenter.addMapMark(DormitoryActivity.this, mContainer, mapWidget, "roles");
+                    } else if ("rubblish".equals(type)) {
+                        mPresenter.addMapMark(DormitoryActivity.this, mContainer, mapWidget, "rubblish");
+                    } else if ("nearUser".equals(type)) {
+                        mPresenter.addMapMark(DormitoryActivity.this, mContainer, mapWidget, "nearUser");
+                    } else if ("topUser".equals(type)) {
+                        mPresenter.addMapMark(DormitoryActivity.this, mContainer, mapWidget, "topUser");
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (initDisposable != null && !initDisposable.isDisposed()) initDisposable.dispose();
+        if (resolvDisposable != null && !resolvDisposable.isDisposed()) resolvDisposable.dispose();
+    }
 }

@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.icu.text.UFormat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -26,11 +28,20 @@ import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
+import com.moemoe.lalala.model.entity.FileXiaoShuoEntity;
 import com.moemoe.lalala.model.entity.ShareLive2dEntity;
+import com.moemoe.lalala.view.activity.CommunityV1Activity;
+import com.moemoe.lalala.view.activity.FileMovieActivity;
 import com.moemoe.lalala.view.activity.NewDocDetailActivity;
+import com.moemoe.lalala.view.activity.NewFileCommonActivity;
+import com.moemoe.lalala.view.activity.NewFileManHuaActivity;
+import com.moemoe.lalala.view.activity.NewFileXiaoshuoActivity;
 import com.moemoe.lalala.view.activity.ShopDetailActivity;
+import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
+import com.moemoe.lalala.view.widget.netamenu.MenuItem;
 import com.moemoe.lalala.view.widget.view.KiraRatingBar;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import cn.sharesdk.framework.Platform;
@@ -56,6 +67,7 @@ public class AlertDialogUtil {
     private int hour;
     private int minute;
     private float score;
+    private BottomMenuFragment bottomMenuFragment;
 
     private AlertDialogUtil() {
     }
@@ -145,34 +157,84 @@ public class AlertDialogUtil {
         confirm = contentView.findViewById(R.id.btn_buy);
     }
 
-    private void showShareToBuy(Context context, String folderId, String folderType, String cover, String createUser) {
-        final OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        oks.disableSSOWhenAuthorize();
-        oks.setTitle("你被邀请帮助好友解锁书包");
-        //  String url = "http://2333.moemoe.la/share/folder?folderId=" + folderId + "&type=" + folderType + "&userId=" + PreferenceUtils.getUUid();
-        String url = "http://2333.moemoe.la/share/folder?folderId=" + folderId + "&type=" + folderType + "&userId=" + PreferenceUtils.getUUid() + "&folderCreateUser=" + createUser;
-        oks.setTitleUrl(url);
-        oks.setText("更多神秘书包可以下载APP查看哦 " + url);
-        oks.setImageUrl(ApiService.URL_QINIU + cover);
-        oks.setUrl(url);
-        oks.setSite(context.getString(R.string.app_name));
-        oks.setSiteUrl(url);
-        oks.setCallback(new PlatformActionListener() {
+    private void showShareToBuy(final Context context, final String folderId, final String folderType, final String cover, final String createUser) {
+        final String url = "http://2333.moemoe.la/share/folder?folderId=" + folderId + "&type=" + folderType + "&userId=" + PreferenceUtils.getUUid() + "&folderCreateUser=" + createUser;
+        bottomMenuFragment = new BottomMenuFragment();
+        ArrayList<MenuItem> items = new ArrayList<>();
+
+        MenuItem item = new MenuItem(1, "QQ", R.drawable.btn_doc_option_send_qq);
+        items.add(item);
+
+        item = new MenuItem(2, "QQ空间", R.drawable.btn_doc_option_send_qzone);
+        items.add(item);
+
+        item = new MenuItem(3, "微信", R.drawable.btn_doc_option_send_wechat);
+        items.add(item);
+
+        item = new MenuItem(4, "微信朋友圈", R.drawable.btn_doc_option_send_pengyouquan);
+        items.add(item);
+
+        item = new MenuItem(5, "微博", R.drawable.btn_doc_option_send_weibo);
+        items.add(item);
+
+        bottomMenuFragment.setShowTop(false);
+        bottomMenuFragment.setMenuItems(items);
+        bottomMenuFragment.setMenuType(BottomMenuFragment.TYPE_HORIZONTAL);
+        bottomMenuFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
             @Override
-            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-            }
+            public void OnMenuItemClick(int itemId) {
 
-            @Override
-            public void onError(Platform platform, int i, Throwable throwable) {
+                // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+                // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+                // text是分享文本，所有平台都需要这个字段
+                // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+                switch (itemId) {
+                    case 1:
+                        ShareUtils.shareQQ(context, "你被邀请帮助好友解锁书包", url, "更多神秘书包可以下载APP查看哦 " + url, ApiService.URL_QINIU + cover, platformActionListener);
+                        break;
+                    case 2:
+                        ShareUtils.shareQQzone(context, "你被邀请帮助好友解锁书包", url, "更多神秘书包可以下载APP查看哦 " + url, ApiService.URL_QINIU + cover, platformActionListener);
+                        ;
+                        break;
+                    case 3:
+                        ShareUtils.shareWechat(context, "你被邀请帮助好友解锁书包", url, "更多神秘书包可以下载APP查看哦 " + url, ApiService.URL_QINIU + cover, platformActionListener);
+                        break;
+                    case 4:
+                        ShareUtils.sharepyq(context, "你被邀请帮助好友解锁书包", url, "更多神秘书包可以下载APP查看哦 " + url, ApiService.URL_QINIU + cover, platformActionListener);
+                        break;
+                    case 5:
+                        ShareUtils.shareWeibo(context, "你被邀请帮助好友解锁书包", url, "更多神秘书包可以下载APP查看哦 " + url, ApiService.URL_QINIU + cover, platformActionListener);
+                        break;
 
-            }
-
-            @Override
-            public void onCancel(Platform platform, int i) {
-
+                }
             }
         });
+//        final OnekeyShare oks = new OnekeyShare();
+//        //关闭sso授权
+//        oks.disableSSOWhenAuthorize();
+//        oks.setTitle("你被邀请帮助好友解锁书包");
+//        //  String url = "http://2333.moemoe.la/share/folder?folderId=" + folderId + "&type=" + folderType + "&userId=" + PreferenceUtils.getUUid();
+//        oks.setTitleUrl(url);
+//        oks.setText("更多神秘书包可以下载APP查看哦 " + url);
+//        oks.setImageUrl(ApiService.URL_QINIU + cover);
+//        oks.setUrl(url);
+//        oks.setSite(context.getString(R.string.app_name));
+//        oks.setSiteUrl(url);
+//        oks.setCallback(new PlatformActionListener() {
+//            @Override
+//            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+//            }
+//
+//            @Override
+//            public void onError(Platform platform, int i, Throwable throwable) {
+//
+//            }
+//
+//            @Override
+//            public void onCancel(Platform platform, int i) {
+//
+//            }
+//        });
         MoeMoeApplication.getInstance().getNetComponent().getApiService().shareKpi("folder")
                 .subscribeOn(Schedulers.io())
                 .subscribe(new NetSimpleResultSubscriber() {
@@ -186,8 +248,47 @@ public class AlertDialogUtil {
 
                     }
                 });
-        oks.show(context);
+        if (context instanceof FileMovieActivity) {
+            bottomMenuFragment.show(((FileMovieActivity) context).getSupportFragmentManager(), "sharesdk");
+        } else if (context instanceof NewFileCommonActivity) {
+            bottomMenuFragment.show(((NewFileCommonActivity) context).getSupportFragmentManager(), "sharesdk");
+        } else if (context instanceof NewFileManHuaActivity) {
+            bottomMenuFragment.show(((NewFileManHuaActivity) context).getSupportFragmentManager(), "sharesdk");
+        } else if (context instanceof NewFileXiaoshuoActivity) {
+            bottomMenuFragment.show(((NewFileXiaoshuoActivity) context).getSupportFragmentManager(), "sharesdk");
+        }
+//        oks.show(context);
     }
+
+    /**
+     * 分享回调
+     */
+    PlatformActionListener platformActionListener = new PlatformActionListener() {
+        @Override
+        public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+            Log.e("kid", "分享成功");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
+
+        @Override
+        public void onError(Platform platform, int i, Throwable throwable) {
+            Log.e("kid", "分享失败");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
+
+        @Override
+        public void onCancel(Platform platform, int i) {
+            Log.e("kid", "分享取消");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
+
+    };
 
     public void createPromptNormalDialog(Context context, String content) {
         this.context = context;
@@ -567,6 +668,25 @@ public class AlertDialogUtil {
         return res;
     }
 
+    public void creatBubbleDialog(Context context) {
+        this.context = context;
+        if (this.dialog != null && this.dialog.isShowing()) {
+            this.dialog.dismiss();
+            this.dialog = null;
+        }
+        View contentView = View.inflate(context, R.layout.dialog_bubble, null);
+        this.dialog = new Dialog(context, R.style.NetaDialog);
+        this.dialog.setContentView(contentView);
+        Window window = this.dialog.getWindow();
+        window.setWindowAnimations(R.style.dialogWindowAnim);
+        RelativeLayout mRlBubble = (RelativeLayout) contentView.findViewById(R.id.rl_bobble);
+        TextView mTvContent = (TextView) contentView.findViewById(R.id.tv_content);
+        confirm = (TextView) contentView.findViewById(R.id.iv_chakan);
+        cancel = (TextView) contentView.findViewById(R.id.iv_canls);
+        mRlBubble.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_left);
+
+    }
+
     public void setButtonText(String comfirmBtn, String cancelBtn, int status) {
         if (cancel != null && confirm != null) {
             if (!TextUtils.isEmpty(comfirmBtn))
@@ -675,6 +795,13 @@ public class AlertDialogUtil {
             item4 = null;
             editText = null;
         }
+    }
+
+    public boolean isShow() {
+        if (this.dialog != null) {
+            return this.dialog.isShowing();
+        }
+        return false;
     }
 
     public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {

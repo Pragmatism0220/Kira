@@ -162,17 +162,17 @@ public class PhoneMainV2Activity extends BaseAppCompatActivity implements PhoneM
         }
         toUri();
         if (PreferenceUtils.isActivityFirstLaunch(this, "phone")) {
-            Intent i = new Intent(this, MengXinActivity.class);
-            i.putExtra("type", "phone");
-            ArrayList<String> res = new ArrayList<>();
-            res.add("13.jpg");
-            res.add("14.jpg");
-            res.add("15.jpg");
-            res.add("16.jpg");
-            res.add("17.jpg");
-            res.add("18.jpg");
-            i.putExtra("gui", res);
-            startActivity(i);
+//            Intent i = new Intent(this, MengXinActivity.class);
+//            i.putExtra("type", "phone");
+//            ArrayList<String> res = new ArrayList<>();
+//            res.add("13.jpg");
+//            res.add("14.jpg");
+//            res.add("15.jpg");
+//            res.add("16.jpg");
+//            res.add("17.jpg");
+//            res.add("18.jpg");
+//            i.putExtra("gui", res);
+//            startActivity(i);
         }
     }
 

@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
@@ -28,6 +29,7 @@ import com.moemoe.lalala.utils.AndroidBug5497Workaround;
 import com.moemoe.lalala.utils.NetworkUtils;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
+import com.moemoe.lalala.utils.ShareUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.fragment.WebViewFragment;
 import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
@@ -75,6 +77,11 @@ public class WebViewActivity extends BaseAppCompatActivity implements SimpleCont
     private boolean mShouldTint = false;
     private boolean mHaveShare = false;
     private BottomMenuFragment bottomMenuFragment;
+    private boolean ismHaveShare = true;
+    private int type;
+    private String num;
+    private String per;
+    private String lines;
 
     @Override
     protected int getLayoutId() {
@@ -124,8 +131,11 @@ public class WebViewActivity extends BaseAppCompatActivity implements SimpleCont
         mIvMenu.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if (bottomMenuFragment != null)
+                if (bottomMenuFragment != null) {
+                    ismHaveShare = false;
                     bottomMenuFragment.show(getSupportFragmentManager(), "WebMenu");
+                }
+
             }
         });
         initPopupMenus();
@@ -153,126 +163,284 @@ public class WebViewActivity extends BaseAppCompatActivity implements SimpleCont
     }
 
     public void showShare(final int type) {//0 抽奖 1魔塔 2游戏
-        final OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        oks.disableSSOWhenAuthorize();
-        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
-        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
-        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-        String url;
-        if (type == 0) {
-            oks.setTitle("来来来，扭蛋机每天免费给你抽宝贝！");
-            url = "http://prize.moemoe.la:8000/prize/share/";
-            oks.setText("异次元穿越而来的扭蛋机，每天三枚代币免费抽奖！隔三差五送出正版写真、一言不合秒充流量话费，" +
-                    "抽奖累积节操积分更能换取本子、高清、熟肉等”不可描述“珍稀资源。二次元没有骗局，前方真心高能！");
-            oks.setImageUrl("http://source.moemoe.la/static/image3/18.png");
-        } else if (type == 1) {
-            oks.setTitle("↑←↓→ Neta学园的高智商战斗剧情");
-            url = "http://ad.moemoe.la:8001/ad/ad_mota";
-            oks.setText("关于拯救校长这件事，能用武力解决就不用再讲道理了，即便只用↑←↓→，能通关的同学寥寥无几。");
-            oks.setImageUrl("http://s.moemoe.la/mota/h.jpg");
-        } else {
-            clickEvent("首页-分享");
-            oks.setTitle("打魔王竟然要靠手速？来挑战吧！");
-            url = "http://s.moemoe.la/game/devil/start.html";
-            oks.setText("你的好友用鬼畜般的手速对魔王造成了成吨的伤害，难道你不想挑战下？！");
-            oks.setImageUrl("http://s.moemoe.la/mowang2.png");
+        this.type = type;
+        if (bottomMenuFragment != null) {
+            ismHaveShare = true;
+            bottomMenuFragment.show(getSupportFragmentManager(), "WebShare");
         }
-        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-
-        oks.setTitleUrl(url);
-        // text是分享文本，所有平台都需要这个字段
-
-        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-
-        // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl(url);
-        // site是分享此内容的网站名称，仅在QQ空间使用
-        oks.setSite(getString(R.string.app_name));
-        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl(url);
-        // 启动分享GUIh
-        oks.setCallback(new PlatformActionListener() {
-            @Override
-            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-                if (mWebViewFragment != null) {
-                    if (type == 0) {
-                        mWebViewFragment.shareUrl();
-                    } else {
-                        MotaResult pay = new MotaResult();
-                        pay.setResult("success");
-                        pay.setType("share");
-                        Gson gson = new Gson();
-                        String temp = gson.toJson(pay);
-                        mWebViewFragment.resultMota(temp);
-                    }
-                    if (type == 2) {
-                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
-                        mPresenter.loadGameShare(authorInfo.getUserId());
-                    }
-                }
-            }
-
-            @Override
-            public void onError(Platform platform, int i, Throwable throwable) {
-                MotaResult pay = new MotaResult();
-                pay.setResult("fail");
-                pay.setType("share");
-                Gson gson = new Gson();
-                String temp = gson.toJson(pay);
-                mWebViewFragment.resultMota(temp);
-            }
-
-            @Override
-            public void onCancel(Platform platform, int i) {
-                MotaResult pay = new MotaResult();
-                pay.setResult("cancel");
-                pay.setType("share");
-                Gson gson = new Gson();
-                String temp = gson.toJson(pay);
-                mWebViewFragment.resultMota(temp);
-                if (type == 2) {
-                    AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
-                    mPresenter.loadGameShare(authorInfo.getUserId());
-                }
-            }
-        });
-        oks.show(this);
+//        final OnekeyShare oks = new OnekeyShare();
+//        //关闭sso授权
+//        oks.disableSSOWhenAuthorize();
+//        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
+//        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+//        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+//        String url;
+//        if (type == 0) {
+//            oks.setTitle("来来来，扭蛋机每天免费给你抽宝贝！");
+//            url = "http://prize.moemoe.la:8000/prize/share/";
+//            oks.setText("异次元穿越而来的扭蛋机，每天三枚代币免费抽奖！隔三差五送出正版写真、一言不合秒充流量话费，" +
+//                    "抽奖累积节操积分更能换取本子、高清、熟肉等”不可描述“珍稀资源。二次元没有骗局，前方真心高能！");
+//            oks.setImageUrl("http://source.moemoe.la/static/image3/18.png");
+//        } else if (type == 1) {
+//            oks.setTitle("↑←↓→ Neta学园的高智商战斗剧情");
+//            url = "http://ad.moemoe.la:8001/ad/ad_mota";
+//            oks.setText("关于拯救校长这件事，能用武力解决就不用再讲道理了，即便只用↑←↓→，能通关的同学寥寥无几。");
+//            oks.setImageUrl("http://s.moemoe.la/mota/h.jpg");
+//        } else {
+//            clickEvent("首页-分享");
+//            oks.setTitle("打魔王竟然要靠手速？来挑战吧！");
+//            url = "http://s.moemoe.la/game/devil/start.html";
+//            oks.setText("你的好友用鬼畜般的手速对魔王造成了成吨的伤害，难道你不想挑战下？！");
+//            oks.setImageUrl("http://s.moemoe.la/mowang2.png");
+//        }
+//        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+//
+//        oks.setTitleUrl(url);
+//        // text是分享文本，所有平台都需要这个字段
+//
+//        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+//        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+//
+//        // url仅在微信（包括好友和朋友圈）中使用
+//        oks.setUrl(url);
+//        // site是分享此内容的网站名称，仅在QQ空间使用
+//        oks.setSite(getString(R.string.app_name));
+//        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+//        oks.setSiteUrl(url);
+//        // 启动分享GUIh
+//        oks.setCallback(new PlatformActionListener() {
+//            @Override
+//            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+//                if (mWebViewFragment != null) {
+//                    if (type == 0) {
+//                        mWebViewFragment.shareUrl();
+//                    } else {
+//                        MotaResult pay = new MotaResult();
+//                        pay.setResult("success");
+//                        pay.setType("share");
+//                        Gson gson = new Gson();
+//                        String temp = gson.toJson(pay);
+//                        mWebViewFragment.resultMota(temp);
+//                    }
+//                    if (type == 2) {
+//                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+//                        mPresenter.loadGameShare(authorInfo.getUserId());
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onError(Platform platform, int i, Throwable throwable) {
+//                MotaResult pay = new MotaResult();
+//                pay.setResult("fail");
+//                pay.setType("share");
+//                Gson gson = new Gson();
+//                String temp = gson.toJson(pay);
+//                mWebViewFragment.resultMota(temp);
+//            }
+//
+//            @Override
+//            public void onCancel(Platform platform, int i) {
+//                MotaResult pay = new MotaResult();
+//                pay.setResult("cancel");
+//                pay.setType("share");
+//                Gson gson = new Gson();
+//                String temp = gson.toJson(pay);
+//                mWebViewFragment.resultMota(temp);
+//                if (type == 2) {
+//                    AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+//                    mPresenter.loadGameShare(authorInfo.getUserId());
+//                }
+//            }
+//        });
+//        oks.show(this);
     }
 
     public void showShare(String num, String per, String lines) {
+        type = 10;
         clickEvent("结果-分享");
-        final OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        oks.disableSSOWhenAuthorize();
-        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
-        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
-        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-        String url;
-        oks.setTitle("打魔王竟然要靠手速？来挑战吧！");
-        url = "http://s.moemoe.la/game/devil/challenge.html?num=" + num + "&per=" + per + "&lines=" + lines;
-        oks.setText("你的好友用鬼畜般的手速对魔王造成了成吨的伤害，难道你不想挑战下？！");
-        oks.setImageUrl("http://s.moemoe.la/mowang2.png");
-        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+        this.num = num;
+        this.per = per;
+        this.lines = lines;
+        if (bottomMenuFragment != null) {
+            ismHaveShare = true;
+            bottomMenuFragment.show(getSupportFragmentManager(), "WebShare");
+        }
+//        final OnekeyShare oks = new OnekeyShare();
+//        //关闭sso授权
+//        oks.disableSSOWhenAuthorize();
+//        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
+//        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+//        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+//        String url;
+//        oks.setTitle("打魔王竟然要靠手速？来挑战吧！");
+//        url = "http://s.moemoe.la/game/devil/challenge.html?num=" + num + "&per=" + per + "&lines=" + lines;
+//        oks.setText("你的好友用鬼畜般的手速对魔王造成了成吨的伤害，难道你不想挑战下？！");
+//        oks.setImageUrl("http://s.moemoe.la/mowang2.png");
+//        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+//
+//        oks.setTitleUrl(url);
+//        // text是分享文本，所有平台都需要这个字段
+//
+//        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+//        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+//
+//        // url仅在微信（包括好友和朋友圈）中使用
+//        oks.setUrl(url);
+//        // site是分享此内容的网站名称，仅在QQ空间使用
+//        oks.setSite(getString(R.string.app_name));
+//        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+//        oks.setSiteUrl(url);
+//        // 启动分享GUI
+//        oks.setCallback(new PlatformActionListener() {
+//            @Override
+//            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+//                if (mWebViewFragment != null) {
+//                    MotaResult pay = new MotaResult();
+//                    pay.setResult("success");
+//                    pay.setType("share");
+//                    Gson gson = new Gson();
+//                    String temp = gson.toJson(pay);
+//                    mWebViewFragment.resultMota(temp);
+//                    AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+//                    mPresenter.loadGameShare(authorInfo.getUserId());
+//                }
+//            }
+//
+//            @Override
+//            public void onError(Platform platform, int i, Throwable throwable) {
+//                MotaResult pay = new MotaResult();
+//                pay.setResult("fail");
+//                pay.setType("share");
+//                Gson gson = new Gson();
+//                String temp = gson.toJson(pay);
+//                mWebViewFragment.resultMota(temp);
+//            }
+//
+//            @Override
+//            public void onCancel(Platform platform, int i) {
+//                MotaResult pay = new MotaResult();
+//                pay.setResult("cancel");
+//                pay.setType("share");
+//                Gson gson = new Gson();
+//                String temp = gson.toJson(pay);
+//                mWebViewFragment.resultMota(temp);
+//                AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+//                mPresenter.loadGameShare(authorInfo.getUserId());
+//            }
+//        });
+//        oks.show(this);
+    }
 
-        oks.setTitleUrl(url);
-        // text是分享文本，所有平台都需要这个字段
+    private void initPopupMenus() {
+        bottomMenuFragment = new BottomMenuFragment();
+        ArrayList<MenuItem> items = new ArrayList<>();
+        MenuItem item;
+        if (ismHaveShare) {
+            item = new MenuItem(1, "QQ", R.drawable.btn_doc_option_send_qq);
+            items.add(item);
 
-        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+            item = new MenuItem(2, "QQ空间", R.drawable.btn_doc_option_send_qzone);
+            items.add(item);
 
-        // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl(url);
-        // site是分享此内容的网站名称，仅在QQ空间使用
-        oks.setSite(getString(R.string.app_name));
-        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl(url);
-        // 启动分享GUI
-        oks.setCallback(new PlatformActionListener() {
+            item = new MenuItem(3, "微信", R.drawable.btn_doc_option_send_wechat);
+            items.add(item);
+
+            item = new MenuItem(4, "微信朋友圈", R.drawable.btn_doc_option_send_pengyouquan);
+            items.add(item);
+
+            item = new MenuItem(5, "微博", R.drawable.btn_doc_option_send_weibo);
+            items.add(item);
+            bottomMenuFragment.setMenuType(BottomMenuFragment.TYPE_HORIZONTAL);
+        } else {
+            item = new MenuItem(MENU_OPEN_OUT, getString(R.string.label_open_out));
+            items.add(item);
+            if (mHaveShare) {
+                MenuItem share = new MenuItem(MENU_OPEN_SHARE, getString(R.string.label_share));
+                items.add(share);
+            }
+            bottomMenuFragment.setMenuType(BottomMenuFragment.TYPE_VERTICAL);
+        }
+        bottomMenuFragment.setMenuItems(items);
+        bottomMenuFragment.setShowTop(false);
+        bottomMenuFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
             @Override
-            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-                if (mWebViewFragment != null) {
+            public void OnMenuItemClick(int itemId) {
+                if (ismHaveShare) {
+                    // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+                    // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+                    // text是分享文本，所有平台都需要这个字段
+                    // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+                    String title;
+                    String titleUrl;
+                    String text;
+                    String imageUrl;
+                    if (type == 0) {
+                        title = "来来来，扭蛋机每天免费给你抽宝贝！";
+
+                        titleUrl = "http://prize.moemoe.la:8000/prize/share/";
+                        text = "异次元穿越而来的扭蛋机，每天三枚代币免费抽奖！隔三差五送出正版写真、一言不合秒充流量话费，" +
+                                "抽奖累积节操积分更能换取本子、高清、熟肉等”不可描述“珍稀资源。二次元没有骗局，前方真心高能！";
+                        imageUrl = "http://source.moemoe.la/static/image3/18.png";
+                    } else if (type == 1) {
+                        title = "↑←↓→ Neta学园的高智商战斗剧情";
+                        titleUrl = "http://ad.moemoe.la:8001/ad/ad_mota";
+                        text = "关于拯救校长这件事，能用武力解决就不用再讲道理了，即便只用↑←↓→，能通关的同学寥寥无几。";
+                        imageUrl = "http://s.moemoe.la/mota/h.jpg";
+                    } else if (type == 10) {
+                        title = "打魔王竟然要靠手速？来挑战吧！";
+                        titleUrl = "http://s.moemoe.la/game/devil/challenge.html?num=" + num + "&per=" + per + "&lines=" + lines;
+                        text = "你的好友用鬼畜般的手速对魔王造成了成吨的伤害，难道你不想挑战下？！";
+                        imageUrl = "http://s.moemoe.la/mowang2.png";
+                    } else {
+                        clickEvent("首页-分享");
+                        title = "打魔王竟然要靠手速？来挑战吧！";
+                        titleUrl = "http://s.moemoe.la/game/devil/start.html";
+                        text = "你的好友用鬼畜般的手速对魔王造成了成吨的伤害，难道你不想挑战下？！";
+                        imageUrl = "http://s.moemoe.la/mowang2.png";
+                    }
+                    switch (itemId) {
+                        case 1:
+                            ShareUtils.shareQQ(WebViewActivity.this, title, titleUrl, text, imageUrl, platformActionListener);
+                            break;
+                        case 2:
+                            ShareUtils.shareQQzone(WebViewActivity.this, title, titleUrl, text, imageUrl, platformActionListener);
+                            ;
+                            break;
+                        case 3:
+                            ShareUtils.shareWechat(WebViewActivity.this, title, titleUrl, text, imageUrl, platformActionListener);
+                            break;
+                        case 4:
+                            ShareUtils.sharepyq(WebViewActivity.this, title, titleUrl, text, imageUrl, platformActionListener);
+                            break;
+                        case 5:
+                            ShareUtils.shareWeibo(WebViewActivity.this, title, titleUrl, text, imageUrl, platformActionListener);
+                            break;
+
+                    }
+                } else {
+                    if (itemId == MENU_OPEN_OUT) {
+                        Uri uri = Uri.parse(mUrl);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                    } else if (itemId == MENU_OPEN_SHARE) {
+                        showShare(0);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 分享回调
+     */
+    PlatformActionListener platformActionListener = new PlatformActionListener() {
+        @Override
+        public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+            if (mWebViewFragment != null) {
+                if (type == 0) {
+                    mWebViewFragment.shareUrl();
+                } else if (type == 10) {
                     MotaResult pay = new MotaResult();
                     pay.setResult("success");
                     pay.setType("share");
@@ -281,11 +449,35 @@ public class WebViewActivity extends BaseAppCompatActivity implements SimpleCont
                     mWebViewFragment.resultMota(temp);
                     AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
                     mPresenter.loadGameShare(authorInfo.getUserId());
+                } else {
+                    MotaResult pay = new MotaResult();
+                    pay.setResult("success");
+                    pay.setType("share");
+                    Gson gson = new Gson();
+                    String temp = gson.toJson(pay);
+                    mWebViewFragment.resultMota(temp);
+                }
+                if (type == 2) {
+                    AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                    mPresenter.loadGameShare(authorInfo.getUserId());
                 }
             }
+            Log.e("kid", "分享成功");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
 
-            @Override
-            public void onError(Platform platform, int i, Throwable throwable) {
+        @Override
+        public void onError(Platform platform, int i, Throwable throwable) {
+            if (type == 10) {
+                MotaResult pay = new MotaResult();
+                pay.setResult("fail");
+                pay.setType("share");
+                Gson gson = new Gson();
+                String temp = gson.toJson(pay);
+                mWebViewFragment.resultMota(temp);
+            } else {
                 MotaResult pay = new MotaResult();
                 pay.setResult("fail");
                 pay.setType("share");
@@ -293,9 +485,15 @@ public class WebViewActivity extends BaseAppCompatActivity implements SimpleCont
                 String temp = gson.toJson(pay);
                 mWebViewFragment.resultMota(temp);
             }
+            Log.e("kid", "分享失败");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
 
-            @Override
-            public void onCancel(Platform platform, int i) {
+        @Override
+        public void onCancel(Platform platform, int i) {
+            if (type == 10) {
                 MotaResult pay = new MotaResult();
                 pay.setResult("cancel");
                 pay.setType("share");
@@ -304,36 +502,21 @@ public class WebViewActivity extends BaseAppCompatActivity implements SimpleCont
                 mWebViewFragment.resultMota(temp);
                 AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
                 mPresenter.loadGameShare(authorInfo.getUserId());
+            } else {
+                MotaResult pay = new MotaResult();
+                pay.setResult("fail");
+                pay.setType("share");
+                Gson gson = new Gson();
+                String temp = gson.toJson(pay);
+                mWebViewFragment.resultMota(temp);
             }
-        });
-        oks.show(this);
-    }
-
-    private void initPopupMenus() {
-        bottomMenuFragment = new BottomMenuFragment();
-        ArrayList<MenuItem> items = new ArrayList<>();
-        MenuItem item = new MenuItem(MENU_OPEN_OUT, getString(R.string.label_open_out));
-        items.add(item);
-        if (mHaveShare) {
-            MenuItem share = new MenuItem(MENU_OPEN_SHARE, getString(R.string.label_share));
-            items.add(share);
+            Log.e("kid", "分享取消");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
         }
-        bottomMenuFragment.setMenuType(BottomMenuFragment.TYPE_VERTICAL);
-        bottomMenuFragment.setMenuItems(items);
-        bottomMenuFragment.setShowTop(false);
-        bottomMenuFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
-            @Override
-            public void OnMenuItemClick(int itemId) {
-                if (itemId == MENU_OPEN_OUT) {
-                    Uri uri = Uri.parse(mUrl);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                } else if (itemId == MENU_OPEN_SHARE) {
-                    showShare(0);
-                }
-            }
-        });
-    }
+
+    };
 
     public static void startActivity(Context context, String url) {
         Intent intent = new Intent(context, WebViewActivity.class);

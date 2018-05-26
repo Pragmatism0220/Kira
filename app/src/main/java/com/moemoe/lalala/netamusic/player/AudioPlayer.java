@@ -19,11 +19,10 @@ import java.util.List;
 import java.util.Random;
 
 /**
- *
  * Created by yi on 2018/2/6.
  */
 
-public class AudioPlayer implements MediaPlayer.OnCompletionListener{
+public class AudioPlayer implements MediaPlayer.OnCompletionListener {
 
     private static final int STATE_IDLE = 0;
     private static final int STATE_PREPARING = 1;
@@ -31,7 +30,7 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener{
     private static final int STATE_PAUSE = 3;
 
     private static final long TIME_UPDATE = 300L;
-    
+
     private final NoisyAudioStreamReceiver mNoisyReceiver = new NoisyAudioStreamReceiver();
     private final IntentFilter mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 
@@ -58,9 +57,9 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener{
 
     public void init(Context context) {
         this.context = context.getApplicationContext();
-       // musicList = GreenDaoManager.getInstance().getSession().getMusicDao().queryBuilder().build().list();
+        // musicList = GreenDaoManager.getInstance().getSession().getMusicDao().queryBuilder().build().list();
         musicList = GreenDaoManager.getInstance().getSession().getMusicDao().queryBuilder().where(MusicDao.Properties.ListType.eq(MusicListType.TYPE_NORMAL)).build().list();
-       // position = MusicPreferences.getPlayPosition();
+        // position = MusicPreferences.getPlayPosition();
         position = 0;
         audioFocusManager = new AudioFocusManager(context);
         mediaPlayer = new MediaPlayer();
@@ -82,7 +81,7 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener{
         int position = musicList.indexOf(music);
         if (position < 0) {
             musicList.add(music);
-            if(MusicListType.TYPE_NORMAL.equals(music.getListType())){
+            if (MusicListType.TYPE_NORMAL.equals(music.getListType())) {
                 GreenDaoManager.getInstance().getSession().getMusicDao().insert(music);
             }
             position = musicList.size() - 1;
@@ -91,22 +90,22 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener{
         return position;
     }
 
-    public int add(Music music){
+    public int add(Music music) {
         int position = musicList.indexOf(music);
         if (position < 0) {
             musicList.add(music);
-            if(MusicListType.TYPE_NORMAL.equals(music.getListType())){
+            if (MusicListType.TYPE_NORMAL.equals(music.getListType())) {
                 GreenDaoManager.getInstance().getSession().getMusicDao().insert(music);
             }
         }
         return position;
     }
 
-    public void addAll(ArrayList<Music> music){
+    public void addAll(ArrayList<Music> music) {
         musicList.addAll(music);
     }
 
-    public void setShowNotify(boolean showNotify){
+    public void setShowNotify(boolean showNotify) {
         this.showNotify = showNotify;
     }
 
@@ -135,14 +134,14 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener{
             for (OnPlayerEventListener listener : listeners) {
                 listener.onChange(music);
             }
-            if(showNotify){
+            if (showNotify) {
                 Notifier.get().showPlay(music);
             }
             MediaSessionManager.get().updateMetaData(music);
             MediaSessionManager.get().updatePlaybackState();
         } catch (IOException e) {
             e.printStackTrace();
-            ToastUtils.showShortToast(context,"当前歌曲无法播放");
+            ToastUtils.showShortToast(context, "当前歌曲无法播放");
         }
     }
 
@@ -151,12 +150,12 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener{
         GreenDaoManager.getInstance().getSession().getMusicDao().delete(music);
     }
 
-    public void initList(String type){
+    public void initList(String type) {
         musicList = GreenDaoManager.getInstance().getSession().getMusicDao().queryBuilder().where(MusicDao.Properties.ListType.eq(type)).build().list();
     }
 
-    public void clearList(boolean del){
-        if(del){
+    public void clearList(boolean del) {
+        if (del) {
             GreenDaoManager.getInstance().getSession().getMusicDao().deleteInTx(musicList);
         }
         musicList.clear();
@@ -201,7 +200,7 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener{
             mediaPlayer.start();
             state = STATE_PLAYING;
             handler.post(mPublishRunnable);
-            if(showNotify){
+            if (showNotify) {
                 Notifier.get().showPlay(musicList.get(position));
             }
 
@@ -222,7 +221,7 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener{
         mediaPlayer.pause();
         state = STATE_PAUSE;
         handler.removeCallbacks(mPublishRunnable);
-        if(showNotify){
+        if (showNotify) {
             Notifier.get().showPause(musicList.get(position));
         }
         MediaSessionManager.get().updatePlaybackState();

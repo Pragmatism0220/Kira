@@ -1094,6 +1094,11 @@ public class DynamicActivity extends BaseAppCompatActivity implements DynamicCon
         }
         CommonTabLayout pageIndicator = coinV.findViewById(R.id.indicator_person_data);
         pageIndicator.setTabData(mTabEntities);
+        if (mDynamic.getComments() == 0) {
+            mRlPinLun.setVisibility(View.GONE);
+        } else {
+            mRlPinLun.setVisibility(View.VISIBLE);
+        }
         pageIndicator.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelect(int position) {
@@ -1102,7 +1107,11 @@ public class DynamicActivity extends BaseAppCompatActivity implements DynamicCon
                     mTvSort.setVisibility(View.GONE);
                     mRlPinLun.setVisibility(View.GONE);
                 } else if (commentType == 1) {
-                    mRlPinLun.setVisibility(View.VISIBLE);
+                    if (mDynamic.getComments() == 0) {
+                        mRlPinLun.setVisibility(View.GONE);
+                    } else {
+                        mRlPinLun.setVisibility(View.VISIBLE);
+                    }
                     mTvSort.setVisibility(View.VISIBLE);
                 } else if (commentType == 2) {
                     mTvSort.setVisibility(View.GONE);
@@ -1652,6 +1661,13 @@ public class DynamicActivity extends BaseAppCompatActivity implements DynamicCon
             String json = new Gson().toJson(commentV2Entities.get(i));
             normalEntity.setData(json);
             list.add(normalEntity);
+        }
+        if (commentType == 1) {
+            if (commentV2Entities == null || commentV2Entities.size() == 0) {
+                mRlPinLun.setVisibility(View.GONE);
+            } else {
+                mRlPinLun.setVisibility(View.VISIBLE);
+            }
         }
         if (isPull) {
             mAdapter.setList(list);

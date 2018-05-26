@@ -1102,4 +1102,20 @@ public interface ApiService {
 
     @GET("v2/kira/story/find/my/story/{groupId}")
     Observable<ApiResult<ArrayList<StoryListEntity>>> loadStoryFindList(@Path("groupId") String groupId);
+
+
+    @GET("v2/kira/house/list/all/user")
+    Observable<ApiResult<ArrayList<HomeEntity>>> loadHomeAllUser();
+
+    @GET("v2/kira/house/userDeskmate")
+    Observable<ApiResult<UserDeskmateEntity>> loadHousUserDeskmate();
+
+    @GET("v2/kira/house/inHouseFurnitures")
+    Observable<ApiResult<ArrayList<MapEntity>>> loadHouseInHouseFurnitures();
+
+    @GET("v2/kira/house/inHouseRubblish")
+    Observable<ApiResult<ArrayList<MapEntity>>> loadHouseInHouseRubblish();
+    
+    @GET("v2/kira/house/inHouseRoles")
+    Observable<ApiResult<ArrayList<MapEntity>>> loadHouseInHouseRoles();
 }

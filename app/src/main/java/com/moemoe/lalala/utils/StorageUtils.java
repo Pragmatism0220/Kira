@@ -75,8 +75,9 @@ public class StorageUtils {
     private static String sDirLive2d;
 
     private static String sDirSplash;
+    private static String sDirHouse;
+
     /**
-     *
      * @param context
      */
     public static final void initialStorageDir(Context context) {
@@ -107,6 +108,7 @@ public class StorageUtils {
 
         sDirLive2d = sDirRoot + ".live2d/";
         sDirSplash = sDirRoot + ".splash/";
+        sDirHouse = sDirRoot + ".house/";
 
         boolean check = checkDir(sDirRoot);
         check &= checkDir(sDirIconImage);
@@ -120,6 +122,7 @@ public class StorageUtils {
         check &= checkDir(sDirDownload);
         check &= checkDir(sDirLive2d);
         check &= checkDir(sDirVideo);
+        check &= checkDir(sDirHouse);
         //check &= checkDir(sDirLog);
 
         Logger.d("initialStorageDir = " + check + ", paths = " + sDirRoot + "; " + sDirTemp);
@@ -127,6 +130,7 @@ public class StorageUtils {
 
     /**
      * 获取数据文件地址
+     *
      * @param filename
      * @return
      * @author Ben
@@ -141,16 +145,20 @@ public class StorageUtils {
 
     /**
      * 获取相册照片根路径
+     *
      * @return
      */
     public static String getGalleryDirPath() {
         return sDirGalleryImage;
     }
 
-    public static String getImageCachePath(){ return sDirIconImage;}
+    public static String getImageCachePath() {
+        return sDirIconImage;
+    }
 
     /**
      * 获取zhiajidi目录下的相册图片
+     *
      * @param fileName
      * @return
      */
@@ -161,7 +169,6 @@ public class StorageUtils {
             return null;
         }
     }
-
 
 
     public static String getIconByFileName(String filename) {
@@ -186,6 +193,7 @@ public class StorageUtils {
 
     /**
      * 获取原图路径
+     *
      * @param filename
      * @return
      * @author Ben
@@ -208,10 +216,11 @@ public class StorageUtils {
 
     /**
      * 是否临时文件
+     *
      * @param filePath
      * @return
      */
-    public static boolean isTempFile(String filePath){
+    public static boolean isTempFile(String filePath) {
         boolean ret = false;
         if (!TextUtils.isEmpty(filePath) && filePath.contains(sDirTemp)) {
             ret = true;
@@ -223,35 +232,39 @@ public class StorageUtils {
         return sDirTemp;
     }
 
-    public static String getNovRootPath(){
+    public static String getNovRootPath() {
         return sDirTxt;
     }
 
-    public static String getMapRootPath(){
+    public static String getMapRootPath() {
         return sDirMap;
     }
-
-    public static String getEventRootPath(){
+    public static String getHouseRootPath(){
+        return sDirHouse;
+    }
+    public static String getEventRootPath() {
         return sDirEvent;
     }
 
-    public static String getVideoRootPath(){
+    public static String getVideoRootPath() {
         return sDirVideo;
     }
 
-    public static String getDownloadRootPath(){
+    public static String getDownloadRootPath() {
         return sDirDownload;
     }
 
-    public static String getRootPath(){
+    public static String getRootPath() {
         return sDirRoot;
     }
 
-    public static String getSplashRootPath(){
+    public static String getSplashRootPath() {
         return sDirSplash;
     }
 
-    public static String getLogRoot(){ return sDirLog;}
+    public static String getLogRoot() {
+        return sDirLog;
+    }
 
     public static File getLogFile(String name) {
         if (!TextUtils.isEmpty(name)) {
@@ -287,35 +300,37 @@ public class StorageUtils {
         return false;
     }
 
-    public static boolean isMusicExit(String name){
+    public static boolean isMusicExit(String name) {
         return FileUtil.isExists(sDirMusic + name);
     }
 
-    public static void deleteMusic(){
+    public static void deleteMusic() {
         File file = new File(sDirMusic);
         File[] files = file.listFiles();
-        if(files != null && files.length > 0){
-            for (File f : files){
+        if (files != null && files.length > 0) {
+            for (File f : files) {
                 f.delete();
             }
         }
     }
 
-    public static String getMusicRootPath(){
+    public static String getMusicRootPath() {
         return sDirMusic;
     }
 
-    public static String getMusicPath(String name){
+    public static String getMusicPath(String name) {
         return sDirMusic + name;
     }
 
-    public static String getLive2dRootPath(){return sDirLive2d;}
+    public static String getLive2dRootPath() {
+        return sDirLive2d;
+    }
 
-    public static String shareTemImg(String name){
+    public static String shareTemImg(String name) {
         return sDirTemp + name;
     }
 
-    public static String imgDir(String name){
+    public static String imgDir(String name) {
         return sDirGalleryImage + name;
     }
 }

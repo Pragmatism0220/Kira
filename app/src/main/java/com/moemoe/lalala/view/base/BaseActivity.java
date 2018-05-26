@@ -229,6 +229,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         Glide.with(this).resumeRequests();
         if (AppSetting.OpenUmeng) {
             MobclickAgent.onResume(this);
+//            TCAgent.onPageStart(this, this.getClass().getName());
         }
     }
 
@@ -238,6 +239,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         Glide.with(this).pauseRequests();
         if (AppSetting.OpenUmeng) {
             MobclickAgent.onPause(this);
+//            TCAgent.onPageEnd(this, this.getClass().getName());
         }
     }
 

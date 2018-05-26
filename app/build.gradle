@@ -29,8 +29,8 @@ android {
         applicationId "com.moemoe.lalala"
         minSdkVersion MINSDKVERSION as int
         targetSdkVersion TARGETSDKVERSION as int
-        versionCode 5800
-        versionName "5.8.0"
+        versionCode 5830
+        versionName "5.8.3"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "moemoe",
                                 GETUI_APP_ID       : "yJYiw8VtVO9wuMk0DgV6p4",
                                 GETUI_APP_KEY      : "WaKYr5EG2c7DIAib45aPy3",
@@ -74,10 +74,10 @@ android {
     }
     buildTypes {
         release {
-            // buildConfigField("String","BASE_URL","\"http://192.168.1.194:12333/\"")
-            buildConfigField("String", "BASE_URL", "\"http://2333.moemoe.la/\"")
-            // buildConfigField("String","BASE_URL","\"http://123.58.136.98:12333/\"")
-            buildConfigField("String", "NOT_FOUND_PAGE", "\"http://s.moemoe.la/404.html\"")
+//             buildConfigField("String","BASE_URL","\"http://192.168.1.180:12333/\"")
+//            buildConfigField("String", "BASE_URL", "\"http://2333.moemoe.la/\"")
+            buildConfigField("String", "BASE_URL", "\"http://106.75.210.68:12333/\"")
+            buildConfigField("String", "NOT_FOUND_PAGE", "\"http://s.moemoe0..la/404.html\"")
             //混淆
             minifyEnabled true
             //Zipalign优化
@@ -98,9 +98,9 @@ android {
             }
         }
         debug {
-            // buildConfigField("String","BASE_URL","\"http://192.168.1.194:12333/\"")//本地环境
-            //buildConfigField("String","BASE_URL","\"http://123.58.136.98:12333/\"")//测试环境
-            buildConfigField("String", "BASE_URL", "\"http://2333.moemoe.la/\"") //正式环境
+//             buildConfigField("String","BASE_URL","\"http://192.168.1.180:12333/\"")//本地环境
+            buildConfigField("String", "BASE_URL", "\"http://106.75.210.68:12333/\"")//测试环境
+//            buildConfigField("String", "BASE_URL", "\"http://2333.moemoe.la/\"") //正式环境
             buildConfigField("String", "NOT_FOUND_PAGE", "\"http://s.moemoe.la/404.html\"")
             //混淆
             minifyEnabled false
@@ -123,7 +123,7 @@ android {
         }
     }
     greendao {
-        schemaVersion 19
+        schemaVersion 29
         daoPackage 'com.moemoe.lalala.greendao.gen'
         targetGenDir 'src/main/java'
     }
@@ -276,8 +276,8 @@ dependencies {
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
 
-    //三方
-    // compile 'com.umeng.analytics:analytics:latest.integration'
+//    //三方
+    compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.qiniu:qiniu-android-sdk:7.2.1'
 
     compile 'com.github.florent37:viewtooltip:1.1.5'
@@ -360,7 +360,10 @@ dependencies {
     //implementation project(':kiragame')
     implementation project(':gsyVideoPlayer-java')
     implementation project(':lib:pingpp_ui')
-    implementation project(':kiragame')
+//    implementation project(':kiragame')
+
+//    //talkingData
+//    compile files('libs/TalkingdataAnalytics.jar')
 }
 
 static def buildTime() {

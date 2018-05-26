@@ -17,6 +17,15 @@ public class MapEntity {
     private String shows;// 时间段显示
     private String name;
     private String md5;
+    private int layer;//图片图层
+
+    public int getLayer() {
+        return layer;
+    }
+
+    public void setLayer(int layer) {
+        this.layer = layer;
+    }
 
     public String getId() {
         return id;

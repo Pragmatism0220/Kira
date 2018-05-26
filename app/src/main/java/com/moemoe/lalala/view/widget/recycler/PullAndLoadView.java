@@ -130,11 +130,7 @@ public class PullAndLoadView extends FrameLayout {
                 if (scrollY < 0) {
                     scrollY = 0;
                 }
-
                 EventBus.getDefault().post(new ScrollMessage(scrollY));
-
-
-
             }
         });
     }

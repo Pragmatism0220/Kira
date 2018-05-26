@@ -116,7 +116,7 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (getContext() instanceof NewBagV5Activity){
+                if (getContext() instanceof NewBagV5Activity) {
                     clickEvent("书包-发现-最新上传");
                 }
                 ShowFolderEntity entity = mAdapter.getItem(position);
@@ -175,7 +175,7 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
         topRoot.findViewById(R.id.ll_top_root).setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if (getContext() instanceof NewBagV5Activity){
+                if (getContext() instanceof NewBagV5Activity) {
                     clickEvent("书包-发现-分类");
                 }
                 startActivity(new Intent(getContext(), FeedBagSearchActivity.class));
@@ -184,7 +184,7 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
         topRoot.findViewById(R.id.ll_zh_root).setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if (getContext() instanceof NewBagV5Activity){
+                if (getContext() instanceof NewBagV5Activity) {
                     clickEvent("书包-发现-分类");
                 }
                 FeedBagTypeListActivity.startActivity(getContext(), FolderType.ZH.toString());
@@ -193,7 +193,7 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
         topRoot.findViewById(R.id.ll_tj_root).setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if (getContext() instanceof NewBagV5Activity){
+                if (getContext() instanceof NewBagV5Activity) {
                     clickEvent("书包-发现-分类");
                 }
                 FeedBagTypeListActivity.startActivity(getContext(), FolderType.TJ.toString());
@@ -202,7 +202,7 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
         topRoot.findViewById(R.id.ll_mh_root).setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if (getContext() instanceof NewBagV5Activity){
+                if (getContext() instanceof NewBagV5Activity) {
                     clickEvent("书包-发现-分类");
                 }
                 FeedBagTypeListActivity.startActivity(getContext(), FolderType.MH.toString());
@@ -211,7 +211,7 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
         topRoot.findViewById(R.id.ll_xs_root).setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if (getContext() instanceof NewBagV5Activity){
+                if (getContext() instanceof NewBagV5Activity) {
                     clickEvent("书包-发现-分类");
                 }
                 FeedBagTypeListActivity.startActivity(getContext(), FolderType.XS.toString());
@@ -220,7 +220,7 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
         topRoot.findViewById(R.id.ll_sp_root).setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if (getContext() instanceof NewBagV5Activity){
+                if (getContext() instanceof NewBagV5Activity) {
                     clickEvent("书包-发现-分类");
                 }
                 FeedBagTypeListActivity.startActivity(getContext(), FolderType.MOVIE.toString());
@@ -229,7 +229,7 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
         topRoot.findViewById(R.id.ll_yy_root).setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if (getContext() instanceof NewBagV5Activity){
+                if (getContext() instanceof NewBagV5Activity) {
                     clickEvent("书包-发现-分类");
                 }
                 FeedBagTypeListActivity.startActivity(getContext(), FolderType.MUSIC.toString());
@@ -280,9 +280,11 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
         });
 
     }
-    public  void setSmoothScrollToPosition(){
+
+    public void setSmoothScrollToPosition() {
         mListDocs.getRecyclerView().smoothScrollToPosition(0);
     }
+
     @Override
     public void onFailure(int code, String msg) {
         isLoading = false;
@@ -338,7 +340,7 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
             mTopAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    if (getContext() instanceof NewBagV5Activity){
+                    if (getContext() instanceof NewBagV5Activity) {
 
                         clickEvent("书包-发现-热门列表");
                     }
@@ -351,6 +353,14 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
                         NewFileManHuaActivity.startActivity(getContext(), FolderType.MH.toString(), entity.getFolderId(), entity.getCreateUser());
                     } else if (entity.getType().equals(FolderType.XS.toString())) {
                         NewFileXiaoshuoActivity.startActivity(getContext(), FolderType.XS.toString(), entity.getFolderId(), entity.getCreateUser());
+                    } else if (entity.getType().equals(FolderType.YY.toString())) {
+                        FileMovieActivity.startActivity(getContext(), FolderType.YY.toString(), entity.getFolderId(), entity.getCreateUser());
+                    } else if (entity.getType().equals(FolderType.SP.toString())) {
+                        FileMovieActivity.startActivity(getContext(), FolderType.SP.toString(), entity.getFolderId(), entity.getCreateUser());
+                    } else if ("MOVIE".equals(entity.getType())) {
+                        KiraVideoActivity.startActivity(getContext(), entity.getUuid(), entity.getFolderId(), entity.getFolderName(), entity.getCover());
+                    } else if ("MUSIC".equals(entity.getType())) {
+                        KiraMusicActivity.startActivity(getContext(), entity.getUuid(), entity.getFolderId(), entity.getFolderName(), entity.getCover());
                     }
                 }
 

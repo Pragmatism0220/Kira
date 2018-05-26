@@ -3,10 +3,12 @@ package com.moemoe.lalala.view.fragment;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.DownloadListener;
+import android.webkit.WebSettings;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
@@ -91,9 +93,14 @@ public class WebViewFragment extends BaseFragment {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-        mWebView.setWebViewClient(new CustomWebViewClient((BaseAppCompatActivity) getActivity()));
+        // android 5.0以上默认不支持Mixed Content
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            mWebView.getSettings().setMixedContentMode(
+//                    WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+//        }
         mChromeClient = new CustomWebChromeClient((BaseAppCompatActivity) getActivity(), nonVideoLayout, videoLayout, mWebView);
         mWebView.setWebChromeClient(mChromeClient, (BaseAppCompatActivity) getActivity());
+        mWebView.setWebViewClient(new CustomWebViewClient((BaseAppCompatActivity) getActivity()));
         mWebView.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
@@ -107,6 +114,7 @@ public class WebViewFragment extends BaseFragment {
 //            mWebView.setWebContentsDebuggingEnabled(true);
 //        }
         setUrl(mUrl);
+        
     }
 
 

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.moemoe.lalala.view.activity.PrincipalLineActivity.Presenter" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_home_plot_main_background_cover"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/status_bar_height"
+        tools:context="com.moemoe.lalala.view.activity.PrincipalLineActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_home_plot_topbackground">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/x20"
+                android:src="@drawable/ic_home_title_mystory_main" />
+
+            <Button
+                android:id="@+id/principal_line_back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/role_back_btn"
+                android:onClick="@{presenter.onClick}" />
+        </RelativeLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/principal_line_recycle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/x32"
+            android:layout_marginStart="@dimen/x32"
+            android:layout_marginTop="@dimen/y32"></android.support.v7.widget.RecyclerView>
+
+
+    </LinearLayout>
+</layout>

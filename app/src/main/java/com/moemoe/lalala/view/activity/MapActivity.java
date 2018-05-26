@@ -2,15 +2,21 @@ package com.moemoe.lalala.view.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.ActivityManager;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -24,11 +30,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.liulishuo.filedownloader.FileDownloader;
+import com.moemoe.lalala.BuildConfig;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.AppSetting;
 import com.moemoe.lalala.app.AppStatusConstant;
@@ -44,6 +52,8 @@ import com.moemoe.lalala.model.entity.AlarmClockEntity;
 import com.moemoe.lalala.model.entity.AppUpdateEntity;
 import com.moemoe.lalala.model.entity.AuthorInfo;
 import com.moemoe.lalala.model.entity.BuildEntity;
+import com.moemoe.lalala.model.entity.DeskmateImageEntity;
+import com.moemoe.lalala.model.entity.DeskmateUserEntils;
 import com.moemoe.lalala.model.entity.JuQIngStoryEntity;
 import com.moemoe.lalala.model.entity.JuQingDoneEntity;
 import com.moemoe.lalala.model.entity.JuQingTriggerEntity;
@@ -54,6 +64,7 @@ import com.moemoe.lalala.model.entity.MapMarkEntity;
 import com.moemoe.lalala.model.entity.NearUserEntity;
 import com.moemoe.lalala.model.entity.NetaEvent;
 import com.moemoe.lalala.model.entity.SplashEntity;
+import com.moemoe.lalala.model.entity.UserDeskmateEntity;
 import com.moemoe.lalala.model.entity.UserLocationEntity;
 import com.moemoe.lalala.presenter.MapContract;
 import com.moemoe.lalala.presenter.MapPresenter;
@@ -172,13 +183,9 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     @BindView(R.id.rl_map_new)
     View mMapNew;
     @BindView(R.id.ll_frist)
-    LinearLayout mLlFrist;
-    @BindView(R.id.ll_Second)
-    LinearLayout mLlSecond;
-    @BindView(R.id.iv_select)
-    ImageView mIvSelect;
-    @BindView(R.id.ll_comprehensive)
-    LinearLayout mLlComprehensive;
+    RelativeLayout mLlFrist;
+    @BindView(R.id.rl_renwu)
+    RelativeLayout mRlRenWu;
     @BindView(R.id.iv_left)
     ImageView mIvLeft;
     @BindView(R.id.iv_right)
@@ -189,8 +196,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     ImageView mIvPresonal;
     @BindView(R.id.tv_search)
     TextView mTvSearch;
-    @BindView(R.id.ll_comprehensive_child)
-    LinearLayout mLlComprehensiveChild;
 
     @Inject
     MapPresenter mPresenter;
@@ -209,20 +214,8 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     private Disposable initDisposable;
     private Disposable resolvDisposable;
     private TencentLocationManager locationManager;
-    private WindowManager.LayoutParams wmParams;
-    private ImageView imageView;
-    private int width;
-    private int height;
-    private static MapActivity mapActivity = null;
+    private UserDeskmateEntity deskmateEntity;
 
-    public synchronized static MapActivity getInstence() {
-        if (mapActivity == null) {
-            mapActivity = new MapActivity();
-        } else {
-            Log.e("eeee ", mapActivity + "");
-        }
-        return mapActivity;
-    }
 
     @Override
     protected int getLayoutId() {
@@ -277,130 +270,20 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         mPresenter.loadMapAllUser();
         mPresenter.loadMapBirthdayUser();
         mPresenter.loadMapTopUser();
-        mLlComprehensive.setOnClickListener(null);
-//        initWindowManager();
-//        initWindow();
-        MoeMoeApplication.getInstance().initWindowManager(getWindowManager());
+        mRlRenWu.setOnClickListener(null);
+//        if (MoeMoeApplication.getInstance().isWindow()) {
+//            MoeMoeApplication.getInstance().initWindowManager(this, getWindowManager());
+//        }
 
         Uri uri = intent.getData();
         if (uri != null) {
             String userId = uri.getQueryParameter("UserId");
             showToast(userId);
             Intent intent1 = new Intent(MapActivity.this, NewDocDetailActivity.class);
-            intent.putExtra("uuid",userId);
+            intent.putExtra("uuid", userId);
             startActivity(intent1);
         }
     }
-
-    private void initWindowManager() {
-
-        wmParams = new WindowManager.LayoutParams();
-        wmParams.type = WindowManager.LayoutParams.TYPE_TOAST;
-        wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        width = getWindowManager().getDefaultDisplay().getWidth();
-        height = getWindowManager().getDefaultDisplay().getHeight();
-        wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        wmParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-        //设置图片格式，效果为背景透明  
-        wmParams.format = PixelFormat.RGBA_8888;
-        wmParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
-        wmParams.x = 0;
-        wmParams.y = 0;
-
-//        inflate = LayoutInflater.from(this).inflate(R.layout.ac_window, null);
-        imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.btn_classmate_len_down);
-//        inflate.measure(View.MeasureSpec.makeMeasureSpec(0,
-//                View.MeasureSpec.UNSPECIFIED), View.MeasureSpec
-//                .makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        imageView.setOnTouchListener(new View.OnTouchListener() {
-            int lastx = 0;
-            int lasty = 0;
-            int movex = 0;
-            int movey = 0;
-            boolean isMove;
-
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        lastx = (int) event.getRawX();
-                        lasty = (int) event.getRawY();
-                        isMove = false;
-                        return false;
-                    case MotionEvent.ACTION_MOVE:
-
-
-                        int curx = (int) event.getRawX();
-                        int cury = (int) event.getRawY();
-
-
-                        int x;
-                        int y;
-                        x = Math.abs(curx - lastx);
-                        y = Math.abs(cury - lasty);
-                        if (x < 5 || y < 5) {
-                            isMove = false;
-                            return false;
-                        } else {
-                            isMove = true;
-                        }
-
-
-                        // getRawX是触摸位置相对于屏幕的坐标，getX是相对于按钮的坐标
-                        wmParams.x = curx - imageView.getMeasuredWidth() / 2;
-                        // 减25为状态栏的高度
-                        wmParams.y = cury - imageView.getMeasuredHeight() / 2;
-                        // 刷新
-                        getWindowManager().updateViewLayout(imageView, wmParams);
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        int finalX = (int) event.getRawX();
-                        int finalY = (int) event.getRawY();
-                        boolean isok = false;
-
-
-                        if (finalY < imageView.getMeasuredHeight()) {
-                            movey = 0;
-                            movex = finalX - imageView.getMeasuredWidth() / 2;
-                        }
-
-
-                        if (finalY > height - imageView.getMeasuredHeight()) {
-                            movey = height - imageView.getMeasuredHeight();
-                            movex = finalX - imageView.getMeasuredWidth() / 2;
-                        }
-
-
-                        if (finalY > imageView.getMeasuredHeight() && finalY < height - imageView.getMeasuredHeight()) {
-                            isok = true;
-                        }
-                        if (isok && finalX - imageView.getMeasuredWidth() / 2 < width / 2) {
-                            movex = 0;
-                            movey = finalY - imageView.getMeasuredHeight() / 2;
-                        } else if (isok && finalX - imageView.getMeasuredWidth() / 2 > width / 2) {
-                            movex = width - imageView.getMeasuredWidth();
-                            movey = finalY - imageView.getMeasuredHeight() / 2;
-                        }
-
-
-                        wmParams.x = movex;
-                        wmParams.y = movey;
-                        if (isMove) {
-                            getWindowManager().updateViewLayout(imageView, wmParams);
-                        }
-                        return isMove;//false 为点击 true 为移动
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
-
-    }
-
 
     private void refreshMap() {
         mPresenter.loadMapAllUser();
@@ -440,7 +323,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     @Override
     protected void onPause() {
         super.onPause();
-        MoeMoeApplication.getInstance().GoneWindowMager();
+        MoeMoeApplication.getInstance().GoneWindowMager(this);
         hideBtn();
         MapToolTipUtils.getInstance().stop();
     }
@@ -541,9 +424,15 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        MoeMoeApplication.getInstance().VisibilityWindowMager();
+        MoeMoeApplication.getInstance().VisibilityWindowMager(this);
         showBtn();
         MapToolTipUtils.getInstance().start();
         if (PreferenceUtils.getMessageDot(this, "neta") || PreferenceUtils.getMessageDot(this, "system") || PreferenceUtils.getMessageDot(this, "at_user") || PreferenceUtils.getMessageDot(this, "normal")) {//|| showDot){
@@ -640,6 +529,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                     .bitmapTransform(new CropCircleTransformation(this))
                     .into(mIvPresonal);
         }
+        mPresenter.loadHousUserDeskmate();
     }
 
     @Override
@@ -752,7 +642,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             public void onTouch(MapWidget v, MapTouchedEvent event) {
                 List<ObjectTouchEvent> objectTouchEvents = event.getTouchedObjectEvents();
                 if (objectTouchEvents.size() == 0) {
-                    if (!mIvSelect.isSelected()) {
+                    if (mRlRenWu.getVisibility() == View.GONE) {
                         if (mIsOut) {
                             imgIn();
                             mIsOut = false;
@@ -764,7 +654,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                         clickSelect();
                     }
                 } else {
-                    if (mIvSelect.isSelected()) {
+                    if (mRlRenWu.getVisibility() == View.VISIBLE) {
                         clickSelect();
                         return;
                     }
@@ -925,23 +815,20 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
             }
         });
+
+
         mIvLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mIvSelect.isSelected()) {
-                    clickSelect();
-                }
+                clickSelect();
                 //埋点统计：home
                 startActivity(new Intent(MapActivity.this, DormitoryActivity.class));
-
             }
         });
         mIvRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mIvSelect.isSelected()) {
-                    clickSelect();
-                }
+                clickSelect();
                 //埋点统计：社团
                 Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
                 startActivity(i3);
@@ -1006,23 +893,67 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     protected void initListeners() {
         initMapListeners();
         if (PreferenceUtils.isActivityFirstLaunch(this, "map")) {
-            Intent i = new Intent(this, MengXinActivity.class);
-            i.putExtra("type", "map");
-            ArrayList<String> res = new ArrayList<>();
-            res.add("1.jpg");
-            res.add("2.jpg");
-            res.add("3.jpg");
-            res.add("4.jpg");
-            res.add("5.jpg");
-            res.add("6.jpg");
-            res.add("7.jpg");
-            res.add("8.jpg");
-            res.add("9.jpg");
-            res.add("10.jpg");
-            res.add("11.jpg");
-            res.add("12.jpg");
-            i.putExtra("gui", res);
-            startActivity(i);
+            PreferenceUtils.setActivityFirstLaunch(this, "map", false);
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (!Settings.canDrawOverlays(this)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("提示");
+                    builder.setMessage("当前应用缺少开启悬浮框权限。请点击\"设置\"-\"权限\"-打开所需权限。");
+                    //拒绝，退出应用
+                    builder.setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+//                                    Toast.makeText(MapActivity.this, "“(´・ω・`)那个人好奇怪，不给权限还想找资源…”\n" +
+//                                            "\n" +
+//                                            "“就是说啊，也不知道怎么想的…눈_눈”", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                    builder.setPositiveButton("设置",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String sdk = android.os.Build.VERSION.SDK; // SDK号  
+
+                                    String model = android.os.Build.MODEL; // 手机型号  
+
+                                    String release = android.os.Build.VERSION.RELEASE; // android系统版本号  
+                                    String brand = Build.BRAND;//手机厂商  
+                                    if (TextUtils.equals(brand.toLowerCase(), "redmi") || TextUtils.equals(brand.toLowerCase(), "xiaomi")) {
+                                        gotoMiuiPermission();//小米  
+                                    } else if (TextUtils.equals(brand.toLowerCase(), "meizu")) {
+                                        gotoMeizuPermission();
+                                    } else if (TextUtils.equals(brand.toLowerCase(), "huawei") || TextUtils.equals(brand.toLowerCase(), "honor")) {
+                                        gotoHuaweiPermission();
+                                    } else {
+                                        startActivity(getAppDetailSettingIntent());
+                                    }
+//                                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"));
+//                                    startActivityForResult(intent, request_code);
+                                }
+                            });
+                    builder.setCancelable(false);
+                    builder.show();
+                }
+            }
+
+//            Intent i = new Intent(this, MengXinActivity.class);
+//            i.putExtra("type", "map");
+//            ArrayList<String> res = new ArrayList<>();
+//            res.add("1.jpg");
+//            res.add("2.jpg");
+//            res.add("3.jpg");
+//            res.add("4.jpg");
+//            res.add("5.jpg");
+//            res.add("6.jpg");
+//            res.add("7.jpg");
+//            res.add("8.jpg");
+//            res.add("9.jpg");
+//            res.add("10.jpg");
+//            res.add("11.jpg");
+//            res.add("12.jpg");
+//            i.putExtra("gui", res);
+//            startActivity(i);
         } else {
             if (!TextUtils.isEmpty(mSchema)) {
                 IntentUtils.toActivityFromUri(this, Uri.parse(mSchema), null);
@@ -1032,6 +963,78 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 startActivity(i3);
             }
         }
+    }
+
+    /**
+     * 获取应用详情页面intent（如果找不到要跳转的界面，<span style="font-size:18px;">也可以先把用户引导到系统设置页面</span>）
+     *
+     * @return
+     */
+    private Intent getAppDetailSettingIntent() {
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= 9) {
+            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+        } else if (Build.VERSION.SDK_INT <= 8) {
+            localIntent.setAction(Intent.ACTION_VIEW);
+            localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
+            localIntent.putExtra("com.android.settings.ApplicationPkgName", getPackageName());
+        }
+        return localIntent;
+    }
+
+    /**
+     * 跳转到miui的权限管理页面
+     */
+    private void gotoMiuiPermission() {
+        try { // MIUI 8  
+            Intent localIntent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+            localIntent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity");
+            localIntent.putExtra("extra_pkgname", getPackageName());
+            startActivity(localIntent);
+        } catch (Exception e) {
+            try { // MIUI 5/6/7  
+                Intent localIntent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+                localIntent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity");
+                localIntent.putExtra("extra_pkgname", getPackageName());
+                startActivity(localIntent);
+            } catch (Exception e1) { // 否则跳转到应用详情  
+                startActivity(getAppDetailSettingIntent());
+            }
+        }
+    }
+
+    /**
+     * 跳转到魅族的权限管理系统
+     */
+    private void gotoMeizuPermission() {
+        try {
+            Intent intent = new Intent("com.meizu.safe.security.SHOW_APPSEC");
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.putExtra("packageName", BuildConfig.APPLICATION_ID);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            startActivity(getAppDetailSettingIntent());
+        }
+    }
+
+    /**
+     * 华为的权限管理页面
+     */
+    private void gotoHuaweiPermission() {
+        try {
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ComponentName comp = new ComponentName("com.huawei.systemmanager", "com.huawei.permissionmanager.ui.MainActivity");//华为权限管理  
+            intent.setComponent(comp);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            startActivity(getAppDetailSettingIntent());
+        }
+
     }
 
     @Override
@@ -1405,6 +1408,53 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         });
     }
 
+    private void resolvErrorListDeskmate(ArrayList<DeskmateUserEntils> errorList, final String type) {
+        final ArrayList<DeskmateUserEntils> errorListTmp = new ArrayList<>();
+        final ArrayList<DeskmateUserEntils> res = new ArrayList<>();
+        MapUtil.checkAndDownloadDeskmate(this, false, errorList, type, new Observer<DeskmateUserEntils>() {
+
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                resolvDisposable = d;
+            }
+
+            @Override
+            public void onNext(@NonNull DeskmateUserEntils entils) {
+                File file = new File(StorageUtils.getMapRootPath() + entils.getFileName());
+                String md5 = entils.getMd5();
+                if (md5.length() < 32) {
+                    int n = 32 - md5.length();
+                    for (int i = 0; i < n; i++) {
+                        md5 = "0" + md5;
+                    }
+                }
+                if (!md5.equals(StringUtils.getFileMD5(file)) || entils.getDownloadState() == 3) {
+                    FileUtil.deleteFile(StorageUtils.getMapRootPath() + entils.getFileName());
+                    errorListTmp.add(entils);
+                } else {
+                    res.add(entils);
+                }
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                GreenDaoManager.getInstance().getSession().getDeskmateUserEntilsDao().insertOrReplaceInTx(res);
+                if (errorListTmp.size() > 0) {
+                    resolvErrorListDeskmate(errorListTmp, type);
+                } else {
+                    if ("deskmate".equals(type)) {
+                    MoeMoeApplication.getInstance().goGreenDao();
+                    }
+                }
+            }
+        });
+    }
+
     @Override
     public void showUpdateDialog(final AppUpdateEntity entity) {
         if (this.isFinishing()) return;
@@ -1441,7 +1491,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         ErrorCodeUtils.showErrorMsgByCode(MapActivity.this, code, msg);
     }
 
-    @OnClick({R.id.rl_main_list_root, R.id.tv_search, R.id.iv_personal, R.id.ll_shop_root, R.id.iv_create_dynamic, R.id.ll_sign_root, R.id.iv_create_wenzhang, R.id.iv_role, R.id.iv_live2d, R.id.ll_bag_root, R.id.ll_feed_v3_root, R.id.rl_luntan_root, R.id.rl_map_search, R.id.rl_map_refresh, R.id.tv_show_live2d, R.id.iv_select, R.id.ll_menu_root, R.id.ll_msg_root})
+    @OnClick({R.id.rl_main_list_root, R.id.tv_search, R.id.iv_personal, R.id.iv_shopping, R.id.iv_create_dynamic, R.id.iv_sign_root, R.id.iv_create_wenzhang, R.id.iv_role, R.id.iv_live2d, R.id.iv_bag, R.id.rl_luntan_root, R.id.rl_map_search, R.id.rl_map_refresh, R.id.tv_show_live2d, R.id.iv_phone_menu, R.id.iv_msg})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_main_list_root:
@@ -1484,7 +1534,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 startActivity(i);
                 // mOrientationListener.disable();
                 break;
-            case R.id.ll_bag_root:
+            case R.id.iv_bag:
                 clickSelect();
                 if (NetworkUtils.checkNetworkAndShowError(this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
                     if (PreferenceUtils.getAuthorInfo().isOpenBag()) {
@@ -1497,17 +1547,18 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                     }
                 }
                 break;
-            case R.id.ll_feed_v3_root:
-                if (DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
-//                    //埋点统计：我的地图形象
-//                    clickEvent("我的地图形象");
-//                    Intent i5 = new Intent(MapActivity.this, CreateMapImageActivity.class);
+//            case R.id.ll_feed_v3_root:
+//                clickSelect();
+//                if (DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+////                    //埋点统计：动态
+////                    clickEvent("我的地图形象");
+////                    Intent i5 = new Intent(MapActivity.this, CreateMapImageActivity.class);
+////                    startActivity(i5);
+//     
+//                    Intent i5 = new Intent(this, NewDynamicActivity.class);
 //                    startActivity(i5);
-
-                    Intent i5 = new Intent(this, NewDynamicActivity.class);
-                    startActivity(i5);
-                }
-                break;
+//                }
+//                break;
             case R.id.rl_luntan_root:
                 clickSelect();
                 //埋点统计：动态
@@ -1537,13 +1588,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 startActivity(i8);
                 // mOrientationListener.disable();
                 break;
-            case R.id.iv_select:
-                boolean isSelect = false;
-                mIvSelect.isSelected();
-                clickSelect();
-                mLlComprehensive.setVisibility(View.GONE);
-                break;
-            case R.id.ll_menu_root:
+            case R.id.iv_phone_menu:
                 clickSelect();
                 if (NetworkUtils.checkNetworkAndShowError(this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
                     //埋点统计：通讯录
@@ -1551,7 +1596,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                     startActivity(new Intent(this, PhoneMenuV3Activity.class));
                 }
                 break;
-            case R.id.ll_msg_root:
+            case R.id.iv_msg:
                 clickSelect();
                 if (NetworkUtils.checkNetworkAndShowError(this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
                     //埋点统计：手机聊天
@@ -1559,7 +1604,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                     NoticeActivity.startActivity(MapActivity.this, 1);
                 }
                 break;
-            case R.id.ll_sign_root:
+            case R.id.iv_sign_root:
                 clickSelect();
                 if (DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
 
@@ -1568,7 +1613,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                     DailyTaskActivity.startActivity(this);
                 }
                 break;
-            case R.id.ll_shop_root:
+            case R.id.iv_shopping:
                 clickSelect();
                 //埋点统计：手机商店
                 clickEvent("手机商店");
@@ -1595,9 +1640,12 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         }
     }
 
-    private void clickSelect() {
-//        mLlComprehensive.setVisibility(View.GONE);
-//        mIvSelect.setSelected(!mIvSelect.isSelected());
+
+    public void clickSelect() {
+        if (mRlRenWu != null && mRlRenWu.getVisibility() == View.VISIBLE) {
+            mRlRenWu.setVisibility(View.GONE);
+        }
+        MoeMoeApplication.getInstance().VisibilityWindowMager(this);
 //        if (mIvSelect.isSelected()) {
 //            ViewGroup.LayoutParams layoutParams = mLlComprehensive.getLayoutParams();
 //            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -1636,7 +1684,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 public void onNoDoubleClick(View v) {
                     //同桌小人
                     clickEvent("同桌小人");
-
                     clickRole();
                 }
             });
@@ -1804,9 +1851,151 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         }
     };
 
-    public void windowManagerOnclick() {
-        if (mLlComprehensive != null && mLlComprehensive.getVisibility() == View.GONE) {
-            mLlComprehensive.setVisibility(View.VISIBLE);
+    /**
+     * 扒边小人的数据
+     *
+     * @param entity
+     */
+    @Override
+    public void onLoadHousUserDeskmateSuccess(UserDeskmateEntity entity) {
+        deskmateEntity = entity;
+        final ArrayList<DeskmateUserEntils> res = new ArrayList<>();
+        final ArrayList<DeskmateUserEntils> errorList = new ArrayList<>();
+        if (entity != null) {
+            ArrayList<DeskmateImageEntity> pics = entity.getPics();
+            if (pics != null && pics.size() > 0) {
+                MapUtil.checkAndDownloadDeskmate(this, true, DeskmateUserEntils.toDb(pics, "deskmate"), "deskmate", new Observer<DeskmateUserEntils>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        initDisposable = d;
+                    }
+
+                    @Override
+                    public void onNext(DeskmateUserEntils deskmateUserEntils) {
+                        File file = new File(StorageUtils.getHouseRootPath() + deskmateUserEntils.getFileName());
+                        String md5 = deskmateUserEntils.getMd5();
+                        if (md5.length() < 32) {
+                            int n = 32 - md5.length();
+                            for (int i = 0; i < n; i++) {
+                                md5 = "0" + md5;
+                            }
+                        }
+                        if (deskmateUserEntils.getDownloadState() == 3 || !md5.equals(StringUtils.getFileMD5(file))) {
+                            FileUtil.deleteFile(StorageUtils.getHouseRootPath() + deskmateUserEntils.getFileName());
+                            errorList.add(deskmateUserEntils);
+                        } else {
+                            res.add(deskmateUserEntils);
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        GreenDaoManager.getInstance().getSession().getDeskmateUserEntilsDao().insertOrReplaceInTx(res);
+                        MoeMoeApplication.getInstance().goGreenDao();
+                        if (errorList.size() > 0) {
+                            resolvErrorListDeskmate(errorList, "deskmate");
+                        }
+                    }
+                });
+            }
+//            if (MoeMoeApplication.getInstance().isWindow()) {
+//                MoeMoeApplication.getInstance().activities.add(this);
+//                MoeMoeApplication.getInstance().initWindowManager(this, getWindowManager());
+//            }
+
+        }
+    }
+
+    public void windowManagerOnclick(int x, int y, int width, int height) {
+        if (mRlRenWu != null && mRlRenWu.getVisibility() == View.GONE) {
+            mRlRenWu.setVisibility(View.VISIBLE);
+            int mapY = getWindow().getWindowManager().getDefaultDisplay().getHeight();
+            int mapX = getWindow().getWindowManager().getDefaultDisplay().getWidth();
+            int marginHeight = height + (int) getResources().getDimension(R.dimen.status_bar_height);
+            if (x <= 0) {
+                if (y == 0) {
+                    mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
+                    mRlRenWu.setX(x + getResources().getDimension(R.dimen.x24));
+                    mRlRenWu.setY(y + marginHeight - (int) getResources().getDimension(R.dimen.status_bar_height));
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                    layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                    mLlFrist.setLayoutParams(layoutParams);
+                } else {
+                    if (y > mapY / 2) {
+                        mRlRenWu.setX(x + getResources().getDimension(R.dimen.x24));
+                        mRlRenWu.setY(y - marginHeight / 2);
+                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        mLlFrist.setLayoutParams(layoutParams);
+                    } else {
+                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
+                        mRlRenWu.setX(x + getResources().getDimension(R.dimen.x24));
+                        mRlRenWu.setY(y + marginHeight / 2);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        mLlFrist.setLayoutParams(layoutParams);
+                    }
+                }
+            } else if (x == 720) {
+                if (y > mapY / 2) {
+                    mRlRenWu.setX(x - getResources().getDimension(R.dimen.x428));
+                    mRlRenWu.setY(y - marginHeight / 2);
+                    mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                    layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                    mLlFrist.setLayoutParams(layoutParams);
+                } else {
+                    mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
+                    mRlRenWu.setX(x - getResources().getDimension(R.dimen.x428));
+                    mRlRenWu.setY(y + marginHeight / 2);
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                    layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                    mLlFrist.setLayoutParams(layoutParams);
+                }
+            } else {
+                if (y == 0) {
+                    if (x > (mapX - width / 2) / 2) {
+                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
+                        mRlRenWu.setX(x - width);
+                        mRlRenWu.setY(y + marginHeight - (int) getResources().getDimension(R.dimen.status_bar_height));
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        mLlFrist.setLayoutParams(layoutParams);
+                    } else {
+                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
+                        mRlRenWu.setX(x);
+                        mRlRenWu.setY(y + marginHeight - (int) getResources().getDimension(R.dimen.status_bar_height));
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        mLlFrist.setLayoutParams(layoutParams);
+                    }
+                } else if (y == 1280) {
+                    if (x > (mapX - width / 2) / 2) {
+                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
+                        mRlRenWu.setX(x - width);
+                        mRlRenWu.setY(y - getResources().getDimension(R.dimen.y320) - marginHeight / 2);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        mLlFrist.setLayoutParams(layoutParams);
+                    } else {
+                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
+                        mRlRenWu.setX(x);
+                        mRlRenWu.setY(y - getResources().getDimension(R.dimen.y320) - marginHeight / 2);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        mLlFrist.setLayoutParams(layoutParams);
+                    }
+                }
+            }
+        } else {
+            mRlRenWu.setVisibility(View.GONE);
         }
     }
 

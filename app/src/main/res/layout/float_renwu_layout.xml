@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_renwu"
+    android:layout_width="@dimen/x428"
+    android:layout_height="@dimen/y320"
+    android:background="@drawable/bg_classmate_menu_top_right"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+
+    <RelativeLayout
+        android:id="@+id/ll_frist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x12"
+        android:layout_marginTop="@dimen/y48">
+
+        <ImageView
+            android:id="@+id/iv_personal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x24"
+            android:src="@drawable/btn_classmate_menu_card_normal" />
+
+        <ImageView
+            android:id="@+id/iv_bag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/iv_personal"
+            android:layout_marginEnd="@dimen/x24"
+            android:layout_marginStart="@dimen/x24"
+            android:layout_toEndOf="@+id/iv_personal"
+            android:src="@drawable/btn_classmate_menu_bag_normal" />
+
+        <ImageView
+            android:id="@+id/iv_shopping"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/iv_personal"
+            android:layout_toEndOf="@+id/iv_bag"
+            android:src="@drawable/btn_classmate_menu_shop_normal" />
+
+        <ImageView
+            android:id="@+id/iv_sign_root"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_personal"
+            android:layout_marginStart="@dimen/x24"
+            android:layout_marginTop="@dimen/y16"
+            android:src="@drawable/btn_classmate_menu_mission_normal" />
+
+        <ImageView
+            android:id="@+id/iv_phone_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/iv_sign_root"
+            android:layout_below="@+id/iv_personal"
+            android:layout_marginEnd="@dimen/x24"
+            android:layout_marginStart="@dimen/x24"
+            android:layout_toEndOf="@+id/iv_sign_root"
+            android:src="@drawable/btn_classmate_menu_list_normal" />
+
+        <ImageView
+            android:id="@+id/iv_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/iv_sign_root"
+            android:layout_below="@+id/iv_personal"
+            android:layout_toEndOf="@+id/iv_phone_menu"
+            android:src="@drawable/btn_classmate_menu_message_normal" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

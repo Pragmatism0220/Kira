@@ -14,7 +14,6 @@ import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.di.components.DaggerGameComponent;
 import com.moemoe.lalala.di.modules.GameModule;
-import com.moemoe.lalala.kira.game.MapGameActivity;
 import com.moemoe.lalala.model.entity.GamePriceInfoEntity;
 import com.moemoe.lalala.model.entity.PayReqEntity;
 import com.moemoe.lalala.model.entity.PayResEntity;
@@ -30,10 +29,6 @@ import com.pingplusplus.android.Pingpp;
 import com.pingplusplus.ui.PaymentHandler;
 import com.pingplusplus.ui.PingppUI;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -281,45 +276,45 @@ public class SanGuoActivity extends BaseAppCompatActivity implements GameContrac
                     showToast("必须选择3个角色");
                     return;
                 }
-                try {
-                    Intent i = new Intent(this, MapGameActivity.class);
-                    JSONObject res = new JSONObject();
-                    res.put("userId", PreferenceUtils.getUUid());
-                    res.put("userName", PreferenceUtils.getAuthorInfo().getUserName());
-                    res.put("returnCoin", Integer.valueOf(mTvFuhuobi.getText().toString().replace("剩余复活币: ", "")));
-                    JSONArray array = new JSONArray();
-                    for (Integer name : selectRole) {
-                        array.put(name);
-                    }
-                    res.put("roles", array);
-                    if (hasGetVip && infoEntity != null) {
-                        res.put("buyVIP", infoEntity.getBuyVIP());
-                    }
-                    if (hasGetFuzi && infoEntity != null) {
-                        GamePriceInfoEntity.BuyRole role = getBuyRoleById(3);
-                        if (role != null) {
-                            JSONArray roleArry = new JSONArray();
-                            JSONObject object = new JSONObject();
-                            object.put("id", 3);
-                            object.put("price", role.getPrice());
-                            array.put(object);
-                            res.put("buyRoles", roleArry);
-                        }
-                    }
-                    JSONArray fuhuoArry = new JSONArray();
-                    fuhuoArry.put(getFuHuoNum);
-                    DecimalFormat decimalFormat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
-                    String p = decimalFormat.format((float) getFuHuoNum / 10);//format 返回的是字符串
-                    fuhuoArry.put(Float.valueOf(p));
-                    res.put("buyRevivalCoins", fuhuoArry);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("res", res.toString());
-                    i.putExtra("res", bundle);
-                    startActivity(i);
-                    finish();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    Intent i = new Intent(this, MapGameActivity.class);
+//                    JSONObject res = new JSONObject();
+//                    res.put("userId", PreferenceUtils.getUUid());
+//                    res.put("userName", PreferenceUtils.getAuthorInfo().getUserName());
+//                    res.put("returnCoin", Integer.valueOf(mTvFuhuobi.getText().toString().replace("剩余复活币: ", "")));
+//                    JSONArray array = new JSONArray();
+//                    for (Integer name : selectRole) {
+//                        array.put(name);
+//                    }
+//                    res.put("roles", array);
+//                    if (hasGetVip && infoEntity != null) {
+//                        res.put("buyVIP", infoEntity.getBuyVIP());
+//                    }
+//                    if (hasGetFuzi && infoEntity != null) {
+//                        GamePriceInfoEntity.BuyRole role = getBuyRoleById(3);
+//                        if (role != null) {
+//                            JSONArray roleArry = new JSONArray();
+//                            JSONObject object = new JSONObject();
+//                            object.put("id", 3);
+//                            object.put("price", role.getPrice());
+//                            array.put(object);
+//                            res.put("buyRoles", roleArry);
+//                        }
+//                    }
+//                    JSONArray fuhuoArry = new JSONArray();
+//                    fuhuoArry.put(getFuHuoNum);
+//                    DecimalFormat decimalFormat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+//                    String p = decimalFormat.format((float) getFuHuoNum / 10);//format 返回的是字符串
+//                    fuhuoArry.put(Float.valueOf(p));
+//                    res.put("buyRevivalCoins", fuhuoArry);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("res", res.toString());
+//                    i.putExtra("res", bundle);
+//                    startActivity(i);
+//                    finish();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
                 break;
             default:
                 break;

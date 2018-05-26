@@ -41,6 +41,7 @@ import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.utils.tag.TagControl;
+import com.moemoe.lalala.view.fragment.DepartmentFragment;
 import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
 import com.moemoe.lalala.view.widget.netamenu.MenuItem;
 import com.moemoe.lalala.view.widget.richtext.NetaRichEditor;
@@ -69,6 +70,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.moemoe.lalala.utils.StartActivityConstant.REQ_RECOMMEND_TAG;
+import static com.moemoe.lalala.utils.StartActivityConstant.REQ_WEN_ZHANG;
 
 /**
  * 富文本帖子创建
@@ -116,6 +118,10 @@ public class CreateRichDocActivity extends BaseAppCompatActivity implements Crea
     RelativeLayout mRlRelease;
     @BindView(R.id.tv_release_text)
     TextView mTvRelease;
+    @BindView(R.id.rl_wenzhang)
+    RelativeLayout RlWenZhangList;
+    @BindView(R.id.tv_select)
+    TextView mTvSelect;
 
     @Inject
     CreateRichDocPresenter mPresenter;
@@ -150,6 +156,7 @@ public class CreateRichDocActivity extends BaseAppCompatActivity implements Crea
         }
     };
     private boolean sendDoc = false;
+    private boolean select;
 
     @Override
     protected int getLayoutId() {
@@ -177,6 +184,7 @@ public class CreateRichDocActivity extends BaseAppCompatActivity implements Crea
         boolean from_type = i.getBooleanExtra("from_type", false);
         mDocType = i.getIntExtra(TYPE_QIU_MING_SHAN, 0);
         mDoc = i.getParcelableExtra("doc");
+        select = i.getBooleanExtra("select", false);
         mIvAddBag.setVisibility(View.VISIBLE);
         mIvAddHide.setVisibility(View.VISIBLE);
         mIvAddMusic.setVisibility(View.VISIBLE);
@@ -274,6 +282,11 @@ public class CreateRichDocActivity extends BaseAppCompatActivity implements Crea
         initPopupMenus();
         mTvRelease.setText(mFromName);
         handler.postDelayed(runnable, 5000);//每两秒执行一次runnable
+        if (select) {
+            RlWenZhangList.setVisibility(View.VISIBLE);
+        } else {
+            RlWenZhangList.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -615,7 +628,7 @@ public class CreateRichDocActivity extends BaseAppCompatActivity implements Crea
         }
     }
 
-    @OnClick({R.id.iv_add_img, R.id.iv_alt_user, R.id.iv_add_hide_doc, R.id.iv_add_bag, R.id.iv_add_music, R.id.tv_menu, R.id.rl_release_position})
+    @OnClick({R.id.iv_add_img, R.id.iv_alt_user, R.id.iv_add_hide_doc, R.id.iv_add_bag, R.id.iv_add_music, R.id.tv_menu, R.id.rl_release_position, R.id.tv_select})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_add_img:
@@ -670,6 +683,9 @@ public class CreateRichDocActivity extends BaseAppCompatActivity implements Crea
                 Intent intent = new Intent(CreateRichDocActivity.this, DocSelectActivity.class);
                 intent.putExtra("uuid", mTagId);
                 startActivityForResult(intent, REQUEST_CODE_SELECT);
+                break;
+            case R.id.tv_select:
+                NewFolderWenZhangActivity.startActivityForResult(CreateRichDocActivity.this, PreferenceUtils.getUUid(), FolderType.WZ.toString(), "my", true);
                 break;
         }
     }
@@ -751,6 +767,14 @@ public class CreateRichDocActivity extends BaseAppCompatActivity implements Crea
                 mTagId = data.getStringExtra("uuid");
                 mFromName = data.getStringExtra("context");
                 mTvRelease.setText(mFromName);
+            }
+        } else if (requestCode == REQ_WEN_ZHANG && resultCode == RESULT_OK) {
+            if (data != null) {
+                String docId = data.getStringExtra("docId");
+                Intent i = new Intent();
+                i.putExtra("docId", docId);
+                setResult(RESULT_OK, i);
+                finish();
             }
         } else {
             DialogUtils.handleImgChooseResult(this, requestCode, resultCode, data, new DialogUtils.OnPhotoGetListener() {
@@ -857,13 +881,23 @@ public class CreateRichDocActivity extends BaseAppCompatActivity implements Crea
             showToast(R.string.msg_create_doc_success);
         }
         if (!TextUtils.isEmpty(id)) {
+            if (select) {
+                Intent i = new Intent();
+                i.putExtra("docId", id);
+                setResult(RESULT_OK, i);
+                PreferenceUtils.saveDoc(CreateRichDocActivity.this, "");
+                finish();
+                return;
+            }
             final AlertDialogUtil dialogUtil = AlertDialogUtil.getInstance();
+            
             dialogUtil.createPromptNormalDialog(this, "是否分享到动态");
             dialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
                 @Override
                 public void CancelOnClick() {
                     Intent i = new Intent();
                     setResult(RESPONSE_CODE, i);
+                    PreferenceUtils.saveDoc(CreateRichDocActivity.this, "");
                     finish();
                     dialogUtil.dismissDialog();
                 }
@@ -898,6 +932,7 @@ public class CreateRichDocActivity extends BaseAppCompatActivity implements Crea
                     }
                     entity.setTexts(text);
                     CreateForwardActivity.startActivity(CreateRichDocActivity.this, entity);
+                    PreferenceUtils.saveDoc(CreateRichDocActivity.this, "");
                     dialogUtil.dismissDialog();
                     finish();
                 }

@@ -626,10 +626,10 @@ public class PersonalMainFragment extends BaseFragment implements PersonMainCont
         if (entity.getBadgeList().size() == 0) {
             mHuiZhangRoot.setVisibility(View.GONE);
             if (uuid.equals(PreferenceUtils.getUUid())) {
-                mAllHuizhangRoot.setVisibility(View.VISIBLE);
+                mAllHuizhangRoot.setVisibility(View.GONE);
             }
         } else {
-            mHuiZhangRoot.setVisibility(View.VISIBLE);
+            mHuiZhangRoot.setVisibility(View.GONE);
         }
         int len = 3;
         if (entity.getBadgeList().size() < 3) {

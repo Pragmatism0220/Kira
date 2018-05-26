@@ -200,7 +200,7 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
                         .bitmapTransform(new CropTransformation(FilesUploadActivity.this, (int) getResources().getDimension(R.dimen.y112), (int) getResources().getDimension(R.dimen.y112)))
                         .into(mIvBg);
             }
-        } else if (mFolderType.equals(FolderType.XS.toString())) {
+        } else if (mFolderType.equals(FolderType.XS.toString())|| mFolderType.equals(FolderType.SP.toString())) {
             mBgRoot.setVisibility(View.VISIBLE);
             mNameRoot.setVisibility(View.VISIBLE);
             mSelectAdapter.setSelectSize(1);
@@ -216,7 +216,7 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
             }
         }
 
-        if (mFolderType.equals(FolderType.YY.toString()) || mFolderType.equals(FolderType.SP.toString())) {
+        if (mFolderType.equals(FolderType.YY.toString())) {
             mBgRoot.setVisibility(View.VISIBLE);
             mTagRoot.setVisibility(View.VISIBLE);
             if (canCoin) mCoinRoot.setVisibility(View.VISIBLE);

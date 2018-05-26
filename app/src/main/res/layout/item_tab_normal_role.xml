@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_tab_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawablePadding="@dimen/y20"
+        android:drawableTop="@drawable/btn_classmate_len_kimono_1"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="迎春" />
+
+    <TextView
+        android:id="@+id/tv_tab_msg_dot"
+        android:layout_width="@dimen/y30"
+        android:layout_height="@dimen/y30"
+        android:layout_alignEnd="@+id/tv_tab_title"
+        android:layout_gravity="end"
+        android:layout_marginEnd="-9dp"
+        android:layout_marginTop="@dimen/y5"
+        android:background="@drawable/shape_dot_y18"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/y16"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_tab_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tv_tab_title"
+        android:layout_marginBottom="@dimen/y50"
+        android:layout_marginStart="-50dp"
+        android:layout_marginTop="@dimen/y232"
+        android:visibility="gone"
+        android:layout_toEndOf="@+id/tv_tab_title"
+        android:src="@drawable/ic_home_roleschoice_select" />
+</RelativeLayout> 

@@ -23,10 +23,41 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_wenzhang"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y80"
+        android:layout_below="@+id/top_root"
+        android:background="@color/orange_f2cc2c"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_community_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="选择已有文章直接发稿"
+            android:textColor="@color/white"
+            android:textSize="@dimen/y30" />
+
+        <TextView
+            android:id="@+id/tv_select"
+            android:layout_width="@dimen/size_50"
+            android:layout_height="@dimen/size_26"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/y36"
+            android:background="@drawable/bg_white_border_gray"
+            android:gravity="center"
+            android:text="选择"
+            android:textColor="@color/orange_f2cc2c"
+            android:textSize="@dimen/size_12" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/rl_type_root"
         android:layout_width="match_parent"
         android:layout_height="@dimen/y108"
-        android:layout_below="@+id/top_root"
+        android:layout_below="@+id/rl_wenzhang"
         android:background="@color/white"
         android:paddingEnd="@dimen/x36"
         android:paddingStart="@dimen/x36"

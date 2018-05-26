@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+
 /**
  * 下载管理列表
  * Created by yi on 2017/10/11.
@@ -52,7 +53,7 @@ public class DownLoadListActivity extends BaseAppCompatActivity {
     protected void initViews(Bundle savedInstanceState) {
         ViewUtils.setStatusBarLight(getWindow(), $(R.id.top_view));
         mListDocs.getSwipeRefreshLayout().setEnabled(false);
-        mListDocs.setPadding((int)getResources().getDimension(R.dimen.x24),0,(int)getResources().getDimension(R.dimen.x24),0);
+        mListDocs.setPadding((int) getResources().getDimension(R.dimen.x24), 0, (int) getResources().getDimension(R.dimen.x24), 0);
         mAdapter = new DownloadListV2Adapter();
         mListDocs.getRecyclerView().setAdapter(mAdapter);
         mListDocs.setLayoutManager(new LinearLayoutManager(this));
@@ -80,7 +81,7 @@ public class DownLoadListActivity extends BaseAppCompatActivity {
             public void onItemClick(View view, int position) {
                 DownloadEntity entity = mAdapter.getItem(position);
                 String type = entity.getType();
-                if("image".equals(type)){
+                if ("image".equals(type)) {
                     ArrayList<Image> temp = new ArrayList<>();
                     Image image = new Image();
                     String str = entity.getUrl();
@@ -91,9 +92,9 @@ public class DownLoadListActivity extends BaseAppCompatActivity {
                     intent.putExtra(ImageBigSelectActivity.EXTRAS_KEY_FIRST_PHTOT_INDEX,
                             0);
                     startActivity(intent);
-                }else if("txt".equals(type)){
-                    NewFileXiaoShuo2Activity.startActivity(DownLoadListActivity.this,entity.getPath());
-                }else if("movie".equals(type)){
+                } else if ("txt".equals(type)) {
+                    NewFileXiaoShuo2Activity.startActivity(DownLoadListActivity.this, entity.getPath());
+                } else if ("movie".equals(type)) {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     String type1 = "video/* ";
                     File file = new File(entity.getPath());
@@ -107,31 +108,31 @@ public class DownLoadListActivity extends BaseAppCompatActivity {
                     }
                     intent.setDataAndType(uri, type1);
                     startActivity(intent);
-                }else if(FolderType.MOVIE.toString().equals(type)){
+                } else if (FolderType.MOVIE.toString().equals(type)) {
 
                     String fileId = entity.getFileId();
-                    try{
+                    try {
                         JSONObject o = new JSONObject(entity.getAttr());
                         String folderId = o.getString("folderId");
                         String folderName = o.getString("folderName");
                         String cover = o.getString("cover");
-                        KiraVideoActivity.startActivity(DownLoadListActivity.this,folderId,fileId,folderName,cover);
-                    }catch (Exception e){
+                        KiraVideoActivity.startActivity(DownLoadListActivity.this, folderId, fileId, folderName, cover);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }else if(FolderType.MUSIC.toString().equals(type)){
+                } else if (FolderType.MUSIC.toString().equals(type)) {
 
                     String fileId = entity.getFileId();
-                    try{
+                    try {
                         JSONObject o = new JSONObject(entity.getAttr());
                         String folderId = o.getString("folderId");
                         String folderName = o.getString("folderName");
                         String cover = o.getString("cover");
-                        KiraMusicActivity.startActivity(DownLoadListActivity.this,folderId,fileId,folderName,cover);
-                    }catch (Exception e){
+                        KiraMusicActivity.startActivity(DownLoadListActivity.this, folderId, fileId, folderName, cover);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }else  {
+                } else {
                     showToast("不支持打开此文件");
                 }
             }
@@ -155,6 +156,6 @@ public class DownLoadListActivity extends BaseAppCompatActivity {
     }
 
     private void loadData() {
-            mAdapter.setList(TasksManager.getImpl().getAll());
+        mAdapter.setList(TasksManager.getImpl().getAll());
     }
 }

@@ -186,18 +186,33 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
         mFolderName = mManHualist.get(mPosition).getFolderName();
         mTvMenuLeft.setText(mFolderName);
         createBottomView();
+
+
+        mListDocs.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState); 
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
     private void initPopupMenus() {
         bottomMenuFragment = new BottomMenuFragment();
         ArrayList<MenuItem> items = new ArrayList<>();
+        MenuItem item = new MenuItem(4, "添加书签");
+        items.add(item);
         if (mUserId.equals(PreferenceUtils.getUUid())) {
-            MenuItem item = new MenuItem(1, "选择");
+            item = new MenuItem(1, "选择");
             items.add(item);
             item = new MenuItem(3, "编辑");
             items.add(item);
         } else {
-            MenuItem item = new MenuItem(2, "举报");
+            item = new MenuItem(2, "举报");
             items.add(item);
         }
         bottomMenuFragment.setMenuItems(items);
@@ -223,9 +238,11 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
                     mAdapter.setGrid(true);
                     mAdapter.notifyDataSetChanged();
                 } else if (itemId == 2) {
-
+                    // TODO: 2018/5/17 举报未完成 
                 } else if (itemId == 3) {
                     FilesUploadActivity.startActivityForResult(NewFileManHua2Activity.this, FolderType.MHD.toString(), mFolderId, mParentId, mManHualist.get(mPosition));
+                } else if (itemId == 4) {
+                    // TODO: 2018/5/17  添加标签
                 }
             }
         });

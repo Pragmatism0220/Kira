@@ -100,8 +100,7 @@ public class EncoderUtils {
     /**
      * 十六进制字符串 转换为 byte[]
      *
-     * @param hexString
-     *            the hex string
+     * @param hexString the hex string
      * @return byte[]
      */
     public static byte[] hexStringToBytes(String hexString) {
@@ -121,8 +120,7 @@ public class EncoderUtils {
     /**
      * Convert char to byte
      *
-     * @param c
-     *            char
+     * @param c char
      * @return byte
      */
     private static byte charToByte(char c) {
@@ -162,7 +160,7 @@ public class EncoderUtils {
      */
     public static String MD5(String inStr) {
         MessageDigest md5 = null;
-        if(TextUtils.isEmpty(inStr)){
+        if (TextUtils.isEmpty(inStr)) {
             return null;
         }
 

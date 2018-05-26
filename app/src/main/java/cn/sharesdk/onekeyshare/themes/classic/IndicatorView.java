@@ -48,7 +48,7 @@ public class IndicatorView extends View {
 		float distance = height * DESIGN_INDICATOR_DISTANCE / DESIGN_BOTTOM_HEIGHT;
 		float windowWidth = radius * 2 * count + distance * (count - 1);
 		float left = (getWidth() - windowWidth) / 2;
-		float cy = height / 2;
+		float cy = height / 2;    
 
 		canvas.drawColor(0xffffffff);
 		Paint paint = new Paint();

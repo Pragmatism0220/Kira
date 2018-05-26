@@ -78,20 +78,21 @@ public class StringUtils {
 
     private static Pattern sWebUrlPattern;
 
-    public static String toServerTimeString(long time){
+    public static String toServerTimeString(long time) {
         return sServerTime.format(new Date(time));
     }
 
     /**
      * 带位数限制的数字: 1000, 3 -> 999+
+     *
      * @param num
      * @param limit
      * @return
      */
-    public static String getNumberInLengthLimit(int num, int limit){
+    public static String getNumberInLengthLimit(int num, int limit) {
         String res = num + "";
-        int rl = (int)Math.pow(10, limit);
-        if(num > rl){
+        int rl = (int) Math.pow(10, limit);
+        if (num > rl) {
             res = (rl - 1) + "+";
         }
         return res;
@@ -100,38 +101,40 @@ public class StringUtils {
 
     /**
      * 判断是否是邮箱，支持“+”,"-"号
+     *
      * @param email
      * @return
      */
     public static boolean isEmailFormated(String email) {
         Matcher matcher = sEmailPattern.matcher(email);
-        boolean res =  matcher.matches();
+        boolean res = matcher.matches();
         return res;
     }
 
     /**
      * 昵称中不能包含特殊字符：`~!@#$%^&*()+=|{}':;',[].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？
+     *
      * @param nickName
      * @return
      */
-    public static boolean isLeagleNickName(String nickName){
-        if(sNickNamePattern == null){
+    public static boolean isLeagleNickName(String nickName) {
+        if (sNickNamePattern == null) {
             sNickNamePattern = Pattern.compile("[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？\n\\s]");
             //sNickNamePattern = Pattern.compile("^[A-Za-z0-9\u4e00-\u9fa5]+$");
         }
-        if(sNickNamePattern.matcher(nickName).find()){	// email
+        if (sNickNamePattern.matcher(nickName).find()) {    // email
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public static boolean isLeagleVCode(String vCode){
+    public static boolean isLeagleVCode(String vCode) {
         boolean res = false;
-        if(vCode.length() == 6){
+        if (vCode.length() == 6) {
             res = true;
-            for(int i = 0; i < vCode.length(); i++){
-                if(vCode.charAt(i) < '0' && vCode.charAt(i) > '9'){
+            for (int i = 0; i < vCode.length(); i++) {
+                if (vCode.charAt(i) < '0' && vCode.charAt(i) > '9') {
                     res = false;
                     break;
                 }
@@ -142,15 +145,16 @@ public class StringUtils {
 
     /**
      * 是否是合法的密码,规则是英文数字，常规特殊符号，不限制长度
+     *
      * @param password
      * @return
      */
-    public static boolean isLegalPassword(String password){
+    public static boolean isLegalPassword(String password) {
         boolean isLegal = false;
-        if(sPasswordPattern == null){
+        if (sPasswordPattern == null) {
             sPasswordPattern = Pattern.compile("\\w{6,15}$");
         }
-        if(!TextUtils.isEmpty(password)){
+        if (!TextUtils.isEmpty(password)) {
             isLegal = sPasswordPattern.matcher(password).matches();
         }
         return isLegal;
@@ -161,6 +165,7 @@ public class StringUtils {
      * 获取表示文件打下的字符串：
      * 10240 = 10kb
      * 1024 * 1024 * 3 = 3mb
+     *
      * @param fileSize
      * @return
      */
@@ -169,7 +174,7 @@ public class StringUtils {
         float nfs = fileSize;
         while (nfs / 1024 >= 1 && level < 4) {
             nfs = nfs / 1024;
-            level ++;
+            level++;
         }
         String ret = String.format("%.2f", nfs);
         if (level == 0) {
@@ -184,9 +189,9 @@ public class StringUtils {
         return ret;
     }
 
-    public static long parseSentenceTime(String timeStr){
+    public static long parseSentenceTime(String timeStr) {
         long time = 0;
-        if(!TextUtils.isEmpty(timeStr)){
+        if (!TextUtils.isEmpty(timeStr)) {
             String[] part = timeStr.split(":");
             int h = Integer.valueOf(part[0]);
             int m = Integer.valueOf(part[1]);
@@ -195,9 +200,9 @@ public class StringUtils {
         return time;
     }
 
-    public static long parseSentenceTimeSec(String timeStr){
+    public static long parseSentenceTimeSec(String timeStr) {
         long time = 0;
-        if(!TextUtils.isEmpty(timeStr)){
+        if (!TextUtils.isEmpty(timeStr)) {
             String[] part = timeStr.split(":");
             int h = Integer.valueOf(part[0]);
             int m = Integer.valueOf(part[1]);
@@ -207,135 +212,145 @@ public class StringUtils {
         return time;
     }
 
-    public static boolean matchCurrentTime(long start, long end){
+    public static boolean matchCurrentTime(long start, long end) {
         boolean res = false;
         Calendar time = Calendar.getInstance();
         int t = time.get(Calendar.HOUR_OF_DAY) * 3600 + time.get(Calendar.MINUTE) * 60;
-        if(t < end && t >= start){
+        if (t < end && t >= start) {
             res = true;
         }
         return res;
     }
 
-    public static boolean issyougo(){
+    public static boolean issyougo() {
         boolean res = false;
         boolean a = matchCurrentTime(parseSentenceTime("09:00"), parseSentenceTime("14:00"));
-        if(a){
+        if (a) {
             res = true;
         }
         return res;
     }
 
-    public static boolean isasa(){
+    public static boolean isasa() {
         boolean res = false;
         boolean a = matchCurrentTime(parseSentenceTime("05:00"), parseSentenceTime("10:00"));
-        if(a){
+        if (a) {
             res = true;
         }
         return res;
     }
 
-    public static boolean isgogo(){
+    public static boolean isgogo() {
         boolean res = false;
         boolean a = matchCurrentTime(parseSentenceTime("14:00"), parseSentenceTime("17:00"));
-        if(a){
+        if (a) {
             res = true;
         }
         return res;
     }
 
-    public static boolean istasogare(){
+    public static boolean istasogare() {
         boolean res = false;
         boolean a = matchCurrentTime(parseSentenceTime("17:00"), parseSentenceTime("19:00"));
-        if(a){
+        if (a) {
             res = true;
         }
         return res;
     }
 
-    public static boolean isyoru2(){
+    public static boolean isyoru2() {
         boolean res = false;
         boolean a = matchCurrentTime(parseSentenceTime("19:00"), parseSentenceTime("24:00"));
-        boolean b = matchCurrentTime(parseSentenceTime("00:00"),parseSentenceTime("01:00"));
-        if(a || b){
+        boolean b = matchCurrentTime(parseSentenceTime("00:00"), parseSentenceTime("01:00"));
+        if (a || b) {
             res = true;
         }
         return res;
     }
 
-    public static boolean ismayonaka(){
+    public static boolean ismayonaka() {
         boolean res = false;
         boolean a = matchCurrentTime(parseSentenceTime("01:00"), parseSentenceTime("05:00"));
-        if(a){
+        if (a) {
             res = true;
         }
         return res;
     }
 
-    public static boolean isyoru(){
+    public static boolean isyoru() {
         boolean res = false;
         boolean a = matchCurrentTime(parseSentenceTime("22:00"), parseSentenceTime("24:00"));
-        boolean b = matchCurrentTime(parseSentenceTime("00:00"),parseSentenceTime("06:00"));
-        if(a || b){
+        boolean b = matchCurrentTime(parseSentenceTime("00:00"), parseSentenceTime("06:00"));
+        if (a || b) {
             res = true;
         }
         return res;
     }
 
-    public static boolean isBackSchool(){
-        return matchCurrentTime(parseSentenceTime("22:00"),parseSentenceTime("23:00"));
+    public static boolean isBackSchool() {
+        return matchCurrentTime(parseSentenceTime("22:00"), parseSentenceTime("23:00"));
     }
 
-    public static boolean isKillEvent(){
-        return matchCurrentTime(parseSentenceTime("00:00"),parseSentenceTime("01:00"));
+    public static boolean isKillEvent() {
+        return matchCurrentTime(parseSentenceTime("00:00"), parseSentenceTime("01:00"));
     }
 
-    public static boolean isDayEvent(){
-        return matchCurrentTime(parseSentenceTime("06:00"),parseSentenceTime("10:00"));
+    public static boolean isDayEvent() {
+        return matchCurrentTime(parseSentenceTime("06:00"), parseSentenceTime("10:00"));
     }
-
-    public static boolean matchCurrentTime(String startTime,String endTime){
+    public static boolean matchCurrentTime1(String startTime, String endTime) {
+        long start = parseSentenceTime(startTime);
+        long end = parseSentenceTime(endTime);
+        boolean res = false;
+        Calendar time = Calendar.getInstance();
+        int t = time.get(Calendar.HOUR_OF_DAY) * 3600 + time.get(Calendar.MINUTE) * 60 + time.get(Calendar.SECOND);
+        if (t < end && t >= start) {
+            res = true;
+        }
+        return res;
+    }
+    public static boolean matchCurrentTime(String startTime, String endTime) {
         long start = parseSentenceTimeSec(startTime);
         long end = parseSentenceTimeSec(endTime);
         boolean res = false;
         Calendar time = Calendar.getInstance();
         int t = time.get(Calendar.HOUR_OF_DAY) * 3600 + time.get(Calendar.MINUTE) * 60 + time.get(Calendar.SECOND);
-        if(t < end && t >= start){
+        if (t < end && t >= start) {
             res = true;
         }
         return res;
     }
 
-    public static boolean matchCurrentTime(Calendar time,Calendar vipTime){
+    public static boolean matchCurrentTime(Calendar time, Calendar vipTime) {
         boolean res = false;
-        if(time.getTimeInMillis() <= vipTime.getTimeInMillis()){
+        if (time.getTimeInMillis() <= vipTime.getTimeInMillis()) {
             res = true;
         }
         return res;
     }
 
-    public static boolean matchCurrentTime(Calendar time,String startTime,String endTime){
+    public static boolean matchCurrentTime(Calendar time, String startTime, String endTime) {
         long start = parseSentenceTimeSec(startTime);
         long end = parseSentenceTimeSec(endTime);
         boolean res = false;
         int t = time.get(Calendar.HOUR_OF_DAY) * 3600 + time.get(Calendar.MINUTE) * 60 + time.get(Calendar.SECOND);
-        if(t < end && t >= start){
+        if (t < end && t >= start) {
             res = true;
         }
         return res;
     }
 
-    public static boolean matchYear(int start,int end){
+    public static boolean matchYear(int start, int end) {
         boolean res = false;
         Calendar time = Calendar.getInstance();
         int year = time.get(Calendar.YEAR);
-        if(year < end && year > start){
+        if (year < end && year > start) {
             res = true;
         }
         return res;
     }
 
-    public static boolean matchDate(Calendar time,String start,String end){
+    public static boolean matchDate(Calendar time, String start, String end) {
         boolean res = false;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Date parseStart = null;
@@ -343,7 +358,7 @@ public class StringUtils {
             parseStart = sdf.parse(start);
             Date parseEnd = sdf.parse(start);
             Date serviceTime = sdf.parse(sdf.format(time.getTime()));
-            if(serviceTime.getTime() >= parseStart.getTime() && serviceTime.getTime() <= parseEnd.getTime()){
+            if (serviceTime.getTime() >= parseStart.getTime() && serviceTime.getTime() <= parseEnd.getTime()) {
                 res = true;
             }
         } catch (ParseException e) {
@@ -352,10 +367,10 @@ public class StringUtils {
         return res;
     }
 
-    public static boolean matchYear(Calendar time,int start,int end){
+    public static boolean matchYear(Calendar time, int start, int end) {
         boolean res = false;
         int year = time.get(Calendar.YEAR);
-        if(year < end && year > start){
+        if (year < end && year > start) {
             res = true;
         }
         return res;
@@ -364,19 +379,20 @@ public class StringUtils {
 
     /**
      * 文本增加网址监听
+     *
      * @param context
      * @param text
      * @return
      */
-    public static SpannableString getUrlClickableText(Context context, String text){
-        if(sWebUrlPattern == null){
+    public static SpannableString getUrlClickableText(Context context, String text) {
+        if (sWebUrlPattern == null) {
             //sWebUrlPattern = Pattern.compile("((https://|http://)([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?)|www.(([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?)");
             sWebUrlPattern = Pattern.compile("(http|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
         }
-        if(!TextUtils.isEmpty(text)){
+        if (!TextUtils.isEmpty(text)) {
             SpannableString ss = new SpannableString(text);
             Matcher m = sWebUrlPattern.matcher(text);
-            while(m.find()){
+            while (m.find()) {
                 int start = m.start();
                 int end = m.end();
                 CustomUrlSpan span = new CustomUrlSpan(context, null, text.substring(start, end));
@@ -391,18 +407,19 @@ public class StringUtils {
 
     /**
      * 文本增加网址监听
+     *
      * @param context
      * @param text
      * @return
      */
-    public static SpannableStringBuilder getUrlClickableText(Context context, SpannableStringBuilder text){
-        if(sWebUrlPattern == null){
+    public static SpannableStringBuilder getUrlClickableText(Context context, SpannableStringBuilder text) {
+        if (sWebUrlPattern == null) {
             //sWebUrlPattern = Pattern.compile("((https://|http://)([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?)|www.(([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?)");
             sWebUrlPattern = Pattern.compile("(http|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
         }
-        if(!TextUtils.isEmpty(text)){
+        if (!TextUtils.isEmpty(text)) {
             Matcher m = sWebUrlPattern.matcher(text);
-            while(m.find()){
+            while (m.find()) {
                 int start = m.start();
                 int end = m.end();
                 CustomUrlSpan span = new CustomUrlSpan(context, null, text.subSequence(start, end).toString());
@@ -416,16 +433,17 @@ public class StringUtils {
 
     /**
      * 高亮关键字
+     *
      * @param value
      * @param keyWord
      * @return
      * @author Haru
      */
     @SuppressLint("DefaultLocale")
-    public static SpannableString highLightKeyWord(Context ctx,String value,String keyWord){
-        if(!TextUtils.isEmpty(keyWord) && !TextUtils.isEmpty(value)){
+    public static SpannableString highLightKeyWord(Context ctx, String value, String keyWord) {
+        if (!TextUtils.isEmpty(keyWord) && !TextUtils.isEmpty(value)) {
             SpannableString s = new SpannableString(value);
-            Pattern p = Pattern.compile(keyWord,Pattern.CASE_INSENSITIVE);
+            Pattern p = Pattern.compile(keyWord, Pattern.CASE_INSENSITIVE);
             Matcher m = p.matcher(s);
             int color = ctx.getResources().getColor(R.color.main_cyan);
             while (m.find()) {
@@ -453,14 +471,10 @@ public class StringUtils {
      * 在其中设置邮箱列表，如果不符合邮箱列表，则加载预置补全项
      *
      * @param context
-     * @param actv
-     *            AutoCompleteTextView
-     * @param newText
-     *            当前text in AutoCompleteTextView
-     * @param needSetDefault
-     *            当newText不符合邮箱格式时，是否需要设置默认补全adapter
-     * @param defaultAdapter
-     *            默认补全adapter
+     * @param actv           AutoCompleteTextView
+     * @param newText        当前text in AutoCompleteTextView
+     * @param needSetDefault 当newText不符合邮箱格式时，是否需要设置默认补全adapter
+     * @param defaultAdapter 默认补全adapter
      * @return true if 成功设置了email adpater， false if设置了defaut adpater；如果没有设置adpater，返回值与needSetDefault相同
      */
     public static boolean onEmailAutoCompleteTvTextChanged(Context context, AutoCompleteTextView actv, String newText,
@@ -490,53 +504,53 @@ public class StringUtils {
         return enable;
     }
 
-    private static String getFormatDate(String year, String month, String day){
+    private static String getFormatDate(String year, String month, String day) {
         StringBuffer sBuffer = new StringBuffer();
-        if(month.length() < 2){
+        if (month.length() < 2) {
             month = "0" + month;
         }
-        if(day.length() < 2){
+        if (day.length() < 2) {
             day = "0" + day;
         }
         sBuffer.append(year).append(month).append(day);
         return sBuffer.toString();
     }
 
-    private static String getFormateTime(Date time,String pares){
+    private static String getFormateTime(Date time, String pares) {
         return new SimpleDateFormat(pares, Locale.getDefault()).format(time);
     }
 
-    public static String timeFormat(long time){
-        if(time > 0L){
+    public static String timeFormat(long time) {
+        if (time > 0L) {
             try {
-                long second = (System.currentTimeMillis() - time)/1000;
+                long second = (System.currentTimeMillis() - time) / 1000;
                 String res = "";
-                if(second == 0){
+                if (second == 0) {
                     res = "刚刚";
-                }else if(second < 30){
+                } else if (second < 30) {
                     res = second + "秒以前";
-                }else if(second >=30 && second < 60){
+                } else if (second >= 30 && second < 60) {
                     res = "半分钟前";
-                }else if(second >= 60 && second < 60 * 60){
+                } else if (second >= 60 && second < 60 * 60) {
                     long minute = second / 60;
                     res = minute + "分钟前";
-                }else if(second >= 60 * 60 && second < 60 * 60 * 24){
+                } else if (second >= 60 * 60 && second < 60 * 60 * 24) {
                     long hour = (second / 60) / 60;
                     res = hour + "小时前";
-                }else {
+                } else {
                     Date date1 = new Date(time);
-                    res = getFormateTime(date1,"yyyy-MM-dd");
+                    res = getFormateTime(date1, "yyyy-MM-dd");
                 }
-                return res ;
-            }catch (Exception e){
+                return res;
+            } catch (Exception e) {
                 return "";
             }
         }
         return "";
     }
 
-    public static String timeFormat(String str){
-        if(!TextUtils.isEmpty(str)){
+    public static String timeFormat(String str) {
+        if (!TextUtils.isEmpty(str)) {
             try {
                 Calendar c = Calendar.getInstance();
                 try {
@@ -544,66 +558,66 @@ public class StringUtils {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                long second = (System.currentTimeMillis() - c.getTimeInMillis())/1000;
+                long second = (System.currentTimeMillis() - c.getTimeInMillis()) / 1000;
                 Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(str);
                 String res = "";
-                if(second == 0){
+                if (second == 0) {
                     res = "刚刚";
-                }else if(second < 30){
+                } else if (second < 30) {
                     res = second + "秒以前";
-                }else if(second >=30 && second < 60){
+                } else if (second >= 30 && second < 60) {
                     res = "半分钟前";
-                }else if(second >= 60 && second < 60 * 60){
+                } else if (second >= 60 && second < 60 * 60) {
                     long minute = second / 60;
                     res = minute + "分钟前";
-                }else if(second >= 60 * 60 && second < 60 * 60 * 24){
+                } else if (second >= 60 * 60 && second < 60 * 60 * 24) {
                     long hour = (second / 60) / 60;
                     res = hour + "小时前";
-                }else {
-                    res = getFormateTime(date,"yyyy-MM-dd");
+                } else {
+                    res = getFormateTime(date, "yyyy-MM-dd");
                 }
-                return res ;
-            }catch (Exception e){
+                return res;
+            } catch (Exception e) {
                 return "";
             }
         }
         return "";
     }
 
-    public static String getUrl(String path){
+    public static String getUrl(String path) {
         String res;
-        if(path.startsWith("http") || path.startsWith("https")){
+        if (path.startsWith("http") || path.startsWith("https")) {
             res = path;
-        }else {
+        } else {
             res = ApiService.URL_QINIU + path;
         }
         return res;
     }
 
-    public static String getUrl(Context context,String path,int width,int height,boolean isDocDetail,boolean isDoc){
-        if (TextUtils.isEmpty(path)){
+    public static String getUrl(Context context, String path, int width, int height, boolean isDocDetail, boolean isDoc) {
+        if (TextUtils.isEmpty(path)) {
             return "";
         }
         String res;
-        if(path.startsWith("http") || path.startsWith("https")){
+        if (path.startsWith("http") || path.startsWith("https")) {
             res = path;
-        }else {
+        } else {
             res = ApiService.URL_QINIU + path;
         }
         boolean isLow = !NetworkUtils.isWifi(context) && !AppSetting.IS_DOWNLOAD_LOW_IN_3G;
-        if(width > 0){
-            if(isLow){
+        if (width > 0) {
+            if (isLow) {
                 width = width / 2;
-                if(width > 600) width = 600;
+                if (width > 600) width = 600;
             }
-            if(isDoc && !isDocDetail){
+            if (isDoc && !isDocDetail) {
                 res = res + "?imageView2/1/w/" + width + "/h/" + height;// + "/format/jpg";
-            }else if(isDocDetail && isDoc){
+            } else if (isDocDetail && isDoc) {
                 res = res + "?imageView2/2/w/" + width + (isLow ? "/q/60" : "");
-            }else {
+            } else {
                 res = res + "?imageView2/0/w/" + width + "/h/" + height;
             }
-        }else{
+        } else {
             res = res + "?imageView2/2/w/" + width + (isLow ? "/q/60" : "");
         }
         return res;
@@ -648,13 +662,13 @@ public class StringUtils {
         return dh + ":" + dm + ":" + ds;
     }
 
-    public static String createImageFile(boolean isGif){
+    public static String createImageFile(boolean isGif) {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String timeStamp = format.format(new Date());
         String imageFileName;
-        if(isGif){
+        if (isGif) {
             imageFileName = "neta_" + timeStamp + ".gif";
-        }else {
+        } else {
             imageFileName = "neta_" + timeStamp + ".jpg";
         }
         return imageFileName;
@@ -662,6 +676,7 @@ public class StringUtils {
 
     /**
      * 解析16进制颜色字符串
+     *
      * @param str
      * @param defaultColor
      * @return
@@ -683,7 +698,7 @@ public class StringUtils {
 
     /**
      * 获取单个文件的MD5值！
-
+     *
      * @param file
      * @return
      */
@@ -709,9 +724,9 @@ public class StringUtils {
         }
         BigInteger bigInt = new BigInteger(1, digest.digest());
         String res = bigInt.toString(16);
-        if(res.length() < 32){
+        if (res.length() < 32) {
             int n = 32 - res.length();
-            for(int i = 0;i < n;i++){
+            for (int i = 0; i < n; i++) {
                 res = "0" + res;
             }
         }
@@ -722,8 +737,7 @@ public class StringUtils {
      * 获取文件夹中文件的MD5值
      *
      * @param file
-     * @param listChild
-     *            ;true递归子目录中的文件
+     * @param listChild ;true递归子目录中的文件
      * @return
      */
     public static Map<String, String> getDirMD5(File file, boolean listChild) {
@@ -747,31 +761,31 @@ public class StringUtils {
         return map;
     }
 
-    public static String buildDataAtUser(CharSequence sequence){
+    public static String buildDataAtUser(CharSequence sequence) {
         String res;
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(sequence);
-        CustomUrlSpan[] spen = stringBuilder.getSpans(0,stringBuilder.length(),CustomUrlSpan.class);
-        if(spen.length > 0){
+        CustomUrlSpan[] spen = stringBuilder.getSpans(0, stringBuilder.length(), CustomUrlSpan.class);
+        if (spen.length > 0) {
             res = stringBuilder.toString();
             int step = 0;
             for (CustomUrlSpan span : spen) {
                 int before = res.length();
-                String beginStr = res.substring(0,stringBuilder.getSpanStart(span) + step);
-                String str = res.substring(stringBuilder.getSpanStart(span) + step,stringBuilder.getSpanEnd(span) + step);
+                String beginStr = res.substring(0, stringBuilder.getSpanStart(span) + step);
+                String str = res.substring(stringBuilder.getSpanStart(span) + step, stringBuilder.getSpanEnd(span) + step);
                 String endStr = res.substring(stringBuilder.getSpanEnd(span) + step);
-                str = "<at_user user_id="+ span.getmUrl() + ">" + str + "</at_user>";
+                str = "<at_user user_id=" + span.getmUrl() + ">" + str + "</at_user>";
                 res = beginStr + str + endStr;
                 step += res.length() - before;
             }
-        }else {
+        } else {
             res = stringBuilder.toString();
         }
         return res;
     }
 
-    public static Set<String> getAtUserIds(CharSequence sequence){
+    public static Set<String> getAtUserIds(CharSequence sequence) {
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(sequence);
-        CustomUrlSpan[] spen = stringBuilder.getSpans(0,stringBuilder.length(),CustomUrlSpan.class);
+        CustomUrlSpan[] spen = stringBuilder.getSpans(0, stringBuilder.length(), CustomUrlSpan.class);
         Set<String> ids = new HashSet<>();
         for (CustomUrlSpan span : spen) {
             ids.add(span.getmUrl());
@@ -781,39 +795,40 @@ public class StringUtils {
 
     /**
      * 解析自定协议显示
+     *
      * @param s
      * @return
      */
-    public static SpannableStringBuilder buildAtUserToShow(Context context, String s){
-        s = s.replace(" ","&nbsp;").replace("<at_user&nbsp;","<at_user ");
+    public static SpannableStringBuilder buildAtUserToShow(Context context, String s) {
+        s = s.replace(" ", "&nbsp;").replace("<at_user&nbsp;", "<at_user ");
         Document document = Jsoup.parse(s);
         Elements elements = document.select("at_user");
-        DoubleKeyValueMap<String,Integer,Integer> map = new DoubleKeyValueMap<>();
-        for(Element element : elements){
+        DoubleKeyValueMap<String, Integer, Integer> map = new DoubleKeyValueMap<>();
+        for (Element element : elements) {
             String text = element.text();
             String id = element.attr("user_id");
-            String all = element.toString().replace("\n","")
-                    .replace("\"" + id + "\"",id)
-                    .replace(" ","")
-                    .replace("&nbsp;"," ");
-            if(!all.contains("<at_user>")){
-                all = all.replace("<at_user","<at_user ");
+            String all = element.toString().replace("\n", "")
+                    .replace("\"" + id + "\"", id)
+                    .replace(" ", "")
+                    .replace("&nbsp;", " ");
+            if (!all.contains("<at_user>")) {
+                all = all.replace("<at_user", "<at_user ");
             }
-            s = s.replace("&nbsp;"," ");
-            String beginStr = s.substring(0,s.indexOf(all));
+            s = s.replace("&nbsp;", " ");
+            String beginStr = s.substring(0, s.indexOf(all));
             String endStr = s.substring(s.indexOf(all) + all.length());
-            map.put(id,s.indexOf(all),s.indexOf(all) + text.length());
+            map.put(id, s.indexOf(all), s.indexOf(all) + text.length());
             s = beginStr + text + endStr;
-            s = s.replace(" ","&nbsp;").replace("<at_user&nbsp;","<at_user ");
+            s = s.replace(" ", "&nbsp;").replace("<at_user&nbsp;", "<at_user ");
         }
-        s = s.replace("&nbsp;"," ");
+        s = s.replace("&nbsp;", " ");
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(s);
-        for(String id : map.getFirstKeys()){
+        for (String id : map.getFirstKeys()) {
             ConcurrentHashMap<Integer, Integer> concurrentHashMap = map.get(id);
-            for(Integer begin : concurrentHashMap.keySet()){
+            for (Integer begin : concurrentHashMap.keySet()) {
                 int end = concurrentHashMap.get(begin);
-                CustomUrlSpan span = new CustomUrlSpan(context,null,id);
-                stringBuilder.setSpan(span,begin,end,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                CustomUrlSpan span = new CustomUrlSpan(context, null, id);
+                stringBuilder.setSpan(span, begin, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
         return stringBuilder;
@@ -821,46 +836,47 @@ public class StringUtils {
 
     /**
      * 解析自定协议显示
+     *
      * @param s
      * @return
      */
-    public static SpannableStringBuilder buildAtUserToEdit(Context context, String s){
-        s = s.replace(" ","&nbsp;").replace("<at_user&nbsp;","<at_user ");
+    public static SpannableStringBuilder buildAtUserToEdit(Context context, String s) {
+        s = s.replace(" ", "&nbsp;").replace("<at_user&nbsp;", "<at_user ");
         Document document = Jsoup.parse(s);
         Elements elements = document.select("at_user");
-        DoubleKeyValueMap<String,Integer,Integer> map = new DoubleKeyValueMap<>();
-        for(Element element : elements){
+        DoubleKeyValueMap<String, Integer, Integer> map = new DoubleKeyValueMap<>();
+        for (Element element : elements) {
             String text = element.text();
             String id = element.attr("user_id");
-            String all = element.toString().replace("\n","")
-                    .replace("\"" + id + "\"",id)
-                    .replace(" ","")
-                    .replace("&nbsp;"," ");
-            if(!all.contains("<at_user>")){
-                all = all.replace("<at_user","<at_user ");
+            String all = element.toString().replace("\n", "")
+                    .replace("\"" + id + "\"", id)
+                    .replace(" ", "")
+                    .replace("&nbsp;", " ");
+            if (!all.contains("<at_user>")) {
+                all = all.replace("<at_user", "<at_user ");
             }
-            s = s.replace("&nbsp;"," ");
-            String beginStr = s.substring(0,s.indexOf(all));
+            s = s.replace("&nbsp;", " ");
+            String beginStr = s.substring(0, s.indexOf(all));
             String endStr = s.substring(s.indexOf(all) + all.length());
-            map.put(id,s.indexOf(all),s.indexOf(all) + text.length());
+            map.put(id, s.indexOf(all), s.indexOf(all) + text.length());
             s = beginStr + text + endStr;
-            s = s.replace(" ","&nbsp;").replace("<at_user&nbsp;","<at_user ");
+            s = s.replace(" ", "&nbsp;").replace("<at_user&nbsp;", "<at_user ");
         }
-        s = s.replace("&nbsp;"," ");
+        s = s.replace("&nbsp;", " ");
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(s);
-        for(String id : map.getFirstKeys()){
+        for (String id : map.getFirstKeys()) {
             ConcurrentHashMap<Integer, Integer> concurrentHashMap = map.get(id);
-            for(Integer begin : concurrentHashMap.keySet()){
+            for (Integer begin : concurrentHashMap.keySet()) {
                 int end = concurrentHashMap.get(begin);
-                CustomUrlSpan span = new CustomUrlSpan(context,"",id);
-                stringBuilder.setSpan(span,begin,end,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                CustomUrlSpan span = new CustomUrlSpan(context, "", id);
+                stringBuilder.setSpan(span, begin, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
         return stringBuilder;
     }
 
 
-    public static boolean isThirdParty(String platform){
+    public static boolean isThirdParty(String platform) {
         return platform != null && (cn.sharesdk.tencent.qq.QQ.NAME.equals(platform)
                 || Wechat.NAME.equals(platform)
                 || SinaWeibo.NAME.equals(platform)
@@ -869,14 +885,14 @@ public class StringUtils {
                 || Constant.THIRD_LOGIN_WECHAT.equals(platform));
     }
 
-    public static String convertPlatform(String platform){
-        if(cn.sharesdk.tencent.qq.QQ.NAME.equals(platform)){
+    public static String convertPlatform(String platform) {
+        if (cn.sharesdk.tencent.qq.QQ.NAME.equals(platform)) {
             return Constant.THIRD_LOGIN_QQ;
         }
-        if(Wechat.NAME.equals(platform)){
+        if (Wechat.NAME.equals(platform)) {
             return Constant.THIRD_LOGIN_WECHAT;
         }
-        if(SinaWeibo.NAME.equals(platform)){
+        if (SinaWeibo.NAME.equals(platform)) {
             return Constant.THIRD_LOGIN_SINA;
         }
         return platform;
@@ -896,6 +912,51 @@ public class StringUtils {
             minute = hS + ":" + minS + ":" + secS;
         }
         return minute;
+//        if (time < 10) {
+//            return "00:0" + time;
+//        }
+//        if (time < 60) {
+//            return "00:" + time;
+//        }
+//        if (time < 3600) {
+//            int minute = time / 60;
+//            time = time - minute * 60;
+//            if (minute < 10) {
+//                if (time < 10) {
+//                    return "0" + minute + ":0" + time;
+//                }
+//                return "0" + minute + ":" + time;
+//            }
+//            if (time < 10) {
+//                return minute + ":0" + time;
+//            }
+//            return minute + ":" + time;
+//        }
+//        int hour = time / 3600;
+//        int minute = (time - hour * 3600) / 60;
+//        time = time - hour * 3600 - minute * 60;
+//        if (hour < 10) {
+//            if (minute < 10) {
+//                if (time < 10) {
+//                    return "0" + hour + ":0" + minute + ":0" + time;
+//                }
+//                return "0" + hour + ":0" + minute + ":" + time;
+//            }
+//            if (time < 10) {
+//                return "0" + hour + minute + ":0" + time;
+//            }
+//            return "0" + hour + minute + ":" + time;
+//        }
+//        if (minute < 10) {
+//            if (time < 10) {
+//                return hour + ":0" + minute + ":0" + time;
+//            }
+//            return hour + ":0" + minute + ":" + time;
+//        }
+//        if (time < 10) {
+//            return hour + minute + ":0" + time;
+//        }
+//        return hour + minute + ":" + time;
     }
 
 

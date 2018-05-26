@@ -26,8 +26,8 @@
 
             <ImageView
                 android:id="@+id/role_name_bg"
-                android:layout_width="wrap_content"
-                android:layout_height="68dp"
+                android:layout_width="@dimen/x320"
+                android:layout_height="@dimen/y141"
                 android:paddingLeft="@dimen/y32"
                 android:paddingTop="@dimen/y25"
                 android:src="@drawable/ic_home_roleschoice_title" />

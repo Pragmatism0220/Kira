@@ -105,6 +105,10 @@
         <attr name="kira_tl_text_size" format="dimension" />
         <attr name="kira_tl_textSelectColor" format="color" />
         <attr name="kira_tl_textUnSelectColor" format="color" />
+        <attr name="kira_tl_textSelectBackground" format="reference" />
+        <attr name="kira_tl_textUnSelectBackground" format="reference" />
+        <attr name="kira_tl_textSelectPaddingTop" format="dimension" />
+        <attr name="kira_tl_textUnSelectPaddingTop" format="dimension" />
         <attr name="kira_tl_textBold" format="enum">
             <enum name="NONE" value="0" />
             <enum name="SELECT" value="1" />
@@ -124,14 +128,14 @@
     </declare-styleable>
 
     <declare-styleable name="AbsRoundImageView">
-        <attr name="round_borderWidth" format="dimension|reference"/>
-        <attr name="round_borderColor" format="color|reference"/>
+        <attr name="round_borderWidth" format="dimension|reference" />
+        <attr name="round_borderColor" format="color|reference" />
     </declare-styleable>
 
     <declare-styleable name="RoundImageView">
-        <attr name="leftTopRadius" format="dimension|reference"/>
-        <attr name="rightTopRadius" format="dimension|reference"/>
-        <attr name="rightBottomRadius" format="dimension|reference"/>
-        <attr name="leftBottomRadius" format="dimension|reference"/>
+        <attr name="leftTopRadius" format="dimension|reference" />
+        <attr name="rightTopRadius" format="dimension|reference" />
+        <attr name="rightBottomRadius" format="dimension|reference" />
+        <attr name="leftBottomRadius" format="dimension|reference" />
     </declare-styleable>
 </resources>

@@ -16,6 +16,7 @@ import com.moemoe.lalala.model.entity.PersonalMainEntity;
 import com.moemoe.lalala.model.entity.SignEntity;
 import com.moemoe.lalala.model.entity.JuQingDoneEntity;
 import com.moemoe.lalala.model.entity.SplashEntity;
+import com.moemoe.lalala.model.entity.UserDeskmateEntity;
 import com.moemoe.lalala.model.entity.UserLocationEntity;
 import com.moemoe.lalala.view.widget.map.MapWidget;
 
@@ -48,6 +49,7 @@ public interface MapContract {
         void loadMapTopUser();
         void loadMapNearUser(double lat,double lon);
         void loadSplashList();
+        void loadHousUserDeskmate();
     }
 
     interface View extends BaseView{
@@ -69,5 +71,6 @@ public interface MapContract {
         void onLoadMapTopUser(NearUserEntity entities);
         void onLoadMapNearUser(NearUserEntity entities);
         void onLoadSplashSuccess(ArrayList<SplashEntity> entities);
+        void onLoadHousUserDeskmateSuccess(UserDeskmateEntity entity);
     }
 }

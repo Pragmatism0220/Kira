@@ -122,7 +122,8 @@ public class OldDocHolder extends ClickableViewHolder {
         });
 
         //user top
-        if (entity.getCreateUser().isVip()) {
+
+        if (entity.getCreateUser() != null && entity.getCreateUser().isVip()) {
             setVisible(R.id.iv_vip, true);
         } else {
             setVisible(R.id.iv_vip, false);
@@ -259,14 +260,14 @@ public class OldDocHolder extends ClickableViewHolder {
                             final DocTagEntity tagBean = entity.getTags().get(position);
                             TagLikeEntity bean = new TagLikeEntity(entity.getId(), tagBean.getId());
                             ((BaseAppCompatActivity) context).createDialog();
-                            if (context instanceof FeedV3Activity){
-                                ((FeedV3Activity) context).likeTag(tagBean.isLiked(), position, bean,paposition);
-                            }else if (context instanceof WenQuanActivity){
-                                ((WenQuanActivity) context).likeTag(tagBean.isLiked(), position, bean,paposition);
-                            }else if (context instanceof  PersonalV2Activity){
-                                ((PersonalV2Activity) context).likeTag(tagBean.isLiked(), position, bean,paposition);
-                            }else if (context instanceof CommunityV1Activity){
-                                ((CommunityV1Activity) context).likeTag(tagBean.isLiked(), position, bean,paposition);
+                            if (context instanceof FeedV3Activity) {
+                                ((FeedV3Activity) context).likeTag(tagBean.isLiked(), position, bean, paposition);
+                            } else if (context instanceof WenQuanActivity) {
+                                ((WenQuanActivity) context).likeTag(tagBean.isLiked(), position, bean, paposition);
+                            } else if (context instanceof PersonalV2Activity) {
+                                ((PersonalV2Activity) context).likeTag(tagBean.isLiked(), position, bean, paposition);
+                            } else if (context instanceof CommunityV1Activity) {
+                                ((CommunityV1Activity) context).likeTag(tagBean.isLiked(), position, bean, paposition);
                             }
                         }
                     }
@@ -436,7 +437,7 @@ public class OldDocHolder extends ClickableViewHolder {
 //                }
 //                context.startActivity(i);
 
-                CreateCommentV2Activity.startActivity(context, entity.getId(), false, "", 0,entity.getId());
+                CreateCommentV2Activity.startActivity(context, entity.getId(), false, "", 0, entity.getId());
             }
         });
         $(R.id.fl_tag_root_2).setOnClickListener(new NoDoubleClickListener() {

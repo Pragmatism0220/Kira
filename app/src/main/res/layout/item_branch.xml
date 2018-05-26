@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_branch_photo"
+    android:layout_width="@dimen/x210"
+    android:layout_height="@dimen/y280"
+    android:background="@drawable/ic_demo_example"
+    >
+
+    <ImageView
+        android:id="@+id/item_branch_bg"
+        android:layout_width="@dimen/x210"
+        android:layout_height="@dimen/y280"
+        android:background="@drawable/ic_home_plot_branch_cover_n_mini" />
+
+    <TextView
+        android:id="@+id/item_branch_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/y5"
+        android:layout_marginRight="@dimen/x10"
+        android:text="双树"
+        android:textColor="@color/white" />
+</RelativeLayout>

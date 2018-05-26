@@ -1,11 +1,15 @@
 package com.moemoe.lalala.view.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -95,6 +99,8 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
     LinearLayout mIncludeToolbar;
     @BindView(R.id.iv_personal)
     ImageView mIvPresonal;
+    @BindView(R.id.fl_container)
+    FrameLayout mFlContainer;
     @BindView(R.id.tool)
     LinearLayout mTitle;
 
@@ -116,6 +122,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         return R.layout.ac_feed_v3;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void initViews(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
@@ -197,9 +204,8 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
             @Override
             public void onClick(View v) {
 //                NoticeActivity.startActivity(FeedV3Activity.this, 0);
-
-
-                Intent intent = new Intent(FeedV3Activity.this, ShareSDKActivity.class);
+//                Intent intent = new Intent(FeedV3Activity.this, ShoppingActivity.class);
+                Intent intent = new Intent(FeedV3Activity.this, HouseActivity.class);
                 startActivity(intent);
             }
         });
@@ -225,35 +231,16 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
             @Override
             public void onGlobalLayout() {
 
+//        MoeMoeApplication.getInstance().activities.add(FeedV3Activity.this);
                 titleHeight = mTitle.getHeight();
             }
         });
         oldAlpha = mTitle.getAlpha();
-
-//        //设置listener
-//        mainV3Fragment.setScrollListener(new BaseFragment.onScrollListener() {
-//            private int titleTop, titleBottom;
-//            private boolean isFirst = true;
-//            private boolean hadGone = false;
-//
-//            @Override
-//            public void onScroll(int scrollY, int t, int oldT) {
-//                float ratio = scrollY < maxScroll ? (maxScroll - scrollY) / maxScroll : 0;
-//                float alpha = oldAlpha * ratio;
-//                mToolBar.setAlpha(alpha);
-//                if (isFirst) {
-//                    titleTop = mToolBar.getTop();
-//                    titleBottom = mToolBar.getBottom();
-//                    isFirst = false;
-//                }
-//                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mToolBar.getLayoutParams();
-//                params.topMargin = (int) (-mTitleHeight * (1 - ratio));
-//                mToolBar.setLayoutParams(params);
-//                mToolBar.invalidate();
-//            }
-//        });
-//
         EventBus.getDefault().register(this);
+//        if (MoeMoeApplication.getInstance().isWindow()) {
+//            MoeMoeApplication.getInstance().activities.add(FeedV3Activity.this);
+//            MoeMoeApplication.getInstance().initWindowManager(this, getWindowManager());
+//        }
     }
 
 
@@ -392,14 +379,14 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
     @Override
     protected void onPause() {
         super.onPause();
-        MoeMoeApplication.getInstance().GoneWindowMager();
+        MoeMoeApplication.getInstance().GoneWindowMager(this);
         pauseTime();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MoeMoeApplication.getInstance().VisibilityWindowMager();
+        MoeMoeApplication.getInstance().VisibilityWindowMager(this);
         startTime();
         if (!RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED)) {
             if (!TextUtils.isEmpty(PreferenceUtils.getAuthorInfo().getRcToken())) {
@@ -506,6 +493,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
 
     @Override
     protected void onDestroy() {
+        MoeMoeApplication.getInstance().activities.remove(FeedV3Activity.class.getName());
         EventBus.getDefault().post(new MapEevent());
         stayEvent("社团");
         EventBus.getDefault().unregister(this);

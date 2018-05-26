@@ -174,7 +174,7 @@ public class DepartmentV1Fragment extends BaseFragment {
 
     private boolean isShowTip = false;
 
-    public void setShowTip(boolean showTip){
+    public void setShowTip(boolean showTip) {
         this.isShowTip = showTip;
     }
 
@@ -246,7 +246,7 @@ public class DepartmentV1Fragment extends BaseFragment {
     private View mPreView;
 
     private void showTip(View view, String content) {
-        if(!isShowTip) return;
+        if (!isShowTip) return;
         //根据显示做调整位置
         if (mPreView != null) {
             ViewTooltip.on(mPreView)

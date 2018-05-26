@@ -44,7 +44,7 @@ import butterknife.BindView;
  * Created by yi on 2017/6/26.
  */
 
-public class CoinShopActivity extends BaseAppCompatActivity implements CoinShopContract.View{
+public class CoinShopActivity extends BaseAppCompatActivity implements CoinShopContract.View {
 
     @BindView(R.id.ll_root)
     LinearLayout mLlRoot;
@@ -99,7 +99,7 @@ public class CoinShopActivity extends BaseAppCompatActivity implements CoinShopC
 
     @Override
     protected void onDestroy() {
-        if(mPresenter != null) mPresenter.release();
+        if (mPresenter != null) mPresenter.release();
         super.onDestroy();
     }
 
@@ -112,7 +112,7 @@ public class CoinShopActivity extends BaseAppCompatActivity implements CoinShopC
                 finish();
             }
         });
-        mTitle.setTextColor(ContextCompat.getColor(this,R.color.main_cyan));
+        mTitle.setTextColor(ContextCompat.getColor(this, R.color.main_cyan));
         mTitle.setText(getString(R.string.label_coin_shop));
         mIvMenu.setVisibility(View.VISIBLE);
         final BottomMenuFragment bottomFragment = new BottomMenuFragment();
@@ -125,7 +125,7 @@ public class CoinShopActivity extends BaseAppCompatActivity implements CoinShopC
         bottomFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
             @Override
             public void OnMenuItemClick(int itemId) {
-                if(itemId == 0){
+                if (itemId == 0) {
                     Intent i = new Intent(CoinShopActivity.this, OrderListActivity.class);
                     startActivity(i);
                 }
@@ -134,7 +134,7 @@ public class CoinShopActivity extends BaseAppCompatActivity implements CoinShopC
         mIvMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomFragment.show(getSupportFragmentManager(),"BagMenu");
+                bottomFragment.show(getSupportFragmentManager(), "BagMenu");
             }
         });
     }
@@ -194,14 +194,14 @@ public class CoinShopActivity extends BaseAppCompatActivity implements CoinShopC
     public void onLoadShopListSuccess(ArrayList<CoinShopEntity> list, boolean isPull) {
         isLoading = false;
         mListDocs.setComplete();
-        if(list.size() >= ApiService.LENGHT){
+        if (list.size() >= ApiService.LENGHT) {
             mListDocs.setLoadMoreEnabled(true);
-        }else {
+        } else {
             mListDocs.setLoadMoreEnabled(false);
         }
-        if(isPull){
+        if (isPull) {
             mAdapter.setList(list);
-        }else {
+        } else {
             mAdapter.addList(list);
         }
     }
@@ -256,18 +256,18 @@ public class CoinShopActivity extends BaseAppCompatActivity implements CoinShopC
 //        }
 //    }
 
-    public void createOrder(final CoinShopEntity entity){
+    public void createOrder(final CoinShopEntity entity) {
 //        mPresenter.createOrder(entity);
 
 //        productId = entity.getId();
 //        Intent i = new Intent(this,SelectBookActivity.class);
 //        startActivityForResult(i,REQ_GET_FROM_SELECT_BOOK);
 
-        if(entity.getBuyLimit() == 1){
+        if (entity.getBuyLimit() == 1) {
             mPresenter.createOrder(entity);
-        }else {
+        } else {
             final AlertDialogUtil dialogUtil = AlertDialogUtil.getInstance();
-            dialogUtil.createEditDialog(this, entity.getBuyLimit(),2);
+            dialogUtil.createEditDialog(this, entity.getBuyLimit(), 2);
             dialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
                 @Override
                 public void CancelOnClick() {
@@ -278,17 +278,17 @@ public class CoinShopActivity extends BaseAppCompatActivity implements CoinShopC
                 public void ConfirmOnClick() {
                     String content = dialogUtil.getEditTextContent();
                     try {
-                        if(!TextUtils.isEmpty(content) && Integer.valueOf(content) > 0){
-                            if(entity.getBuyLimit() != 0 && Integer.valueOf(content) > entity.getBuyLimit()){
+                        if (!TextUtils.isEmpty(content) && Integer.valueOf(content) > 0) {
+                            if (entity.getBuyLimit() != 0 && Integer.valueOf(content) > entity.getBuyLimit()) {
                                 showToast("超过购买限制");
-                            }else {
-                                mPresenter.createOrder(entity,Integer.valueOf(content));
+                            } else {
+                                mPresenter.createOrder(entity, Integer.valueOf(content));
                                 dialogUtil.dismissDialog();
                             }
-                        }else {
+                        } else {
                             showToast(R.string.msg_input_err_coin);
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         showToast(R.string.msg_input_err_coin);
                     }
                 }
@@ -299,10 +299,10 @@ public class CoinShopActivity extends BaseAppCompatActivity implements CoinShopC
 
     @Override
     public void onCreateOrderSuccess(OrderEntity entity) {
-        Intent i = new Intent(this,OrderActivity.class);
-        i.putExtra("order",entity);
-        i.putExtra("show_top",true);
-        i.putExtra("show_status",false);
+        Intent i = new Intent(this, OrderActivity.class);
+        i.putExtra("order", entity);
+        i.putExtra("show_top", true);
+        i.putExtra("show_status", false);
         startActivity(i);
     }
 
@@ -310,11 +310,11 @@ public class CoinShopActivity extends BaseAppCompatActivity implements CoinShopC
     private int curOrder = 0;
 
     private Handler mHander = new Handler();
-    private Runnable mProgressCallback = new Runnable(){
+    private Runnable mProgressCallback = new Runnable() {
 
         @Override
         public void run() {
-            if(curOrder < jsonObjects.size()) {
+            if (curOrder < jsonObjects.size()) {
                 Pingpp.createPayment(CoinShopActivity.this, jsonObjects.get(curOrder).toString());
             }
         }

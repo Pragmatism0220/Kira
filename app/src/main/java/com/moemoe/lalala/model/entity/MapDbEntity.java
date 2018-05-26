@@ -30,6 +30,7 @@ public class MapDbEntity {
     private int downloadState;//1.未下载 2.下载完成 3.下载失败
     private String md5;
     private String type;//map allUser birthdayUser followUser nearUser
+    private int layer;//图片图层
 
     public MapDbEntity(MapEntity entity,String type){
         id = entity.getId();
@@ -46,12 +47,13 @@ public class MapDbEntity {
         md5 = entity.getMd5();
         downloadState = 1;
         this.type = type;
+        layer=entity.getLayer();
     }
 
-    @Generated(hash = 500748279)
+    @Generated(hash = 884975777)
     public MapDbEntity(String id, String name, String image_path, int image_w, int image_h,
             String schema, int pointX, int pointY, String text, String shows, String fileName,
-            int downloadState, String md5, String type) {
+            int downloadState, String md5, String type, int layer) {
         this.id = id;
         this.name = name;
         this.image_path = image_path;
@@ -66,6 +68,7 @@ public class MapDbEntity {
         this.downloadState = downloadState;
         this.md5 = md5;
         this.type = type;
+        this.layer = layer;
     }
 
     @Generated(hash = 921294398)
@@ -191,5 +194,13 @@ public class MapDbEntity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public int getLayer() {
+        return this.layer;
+    }
+
+    public void setLayer(int layer) {
+        this.layer = layer;
     }
 }

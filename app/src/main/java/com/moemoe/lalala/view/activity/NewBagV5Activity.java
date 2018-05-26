@@ -54,7 +54,7 @@ public class NewBagV5Activity extends BaseAppCompatActivity {
     protected void initViews(Bundle savedInstanceState) {
         clickEvent("书包");
         if (savedInstanceState != null) {
-            String FRAGMENTS_TAG = "android:support:fragments";     
+            String FRAGMENTS_TAG = "android:support:fragments";
             savedInstanceState.remove(FRAGMENTS_TAG);
         }
         ViewUtils.setStatusBarLight(getWindow(), $(R.id.top_view));
@@ -66,12 +66,13 @@ public class NewBagV5Activity extends BaseAppCompatActivity {
         List<BaseFragment> fragmentList = new ArrayList<>();
         feedBagFragment = FeedBagFragment.newInstance();
         fragmentList.add(feedBagFragment);
-        fragmentList.add(NewMyBagV5Fragment.newInstance(extra,true));
+        fragmentList.add(NewMyBagV5Fragment.newInstance(extra, true));
 
         List<String> titles = new ArrayList<>();
         titles.add(getString(R.string.label_find));
         titles.add(getString(R.string.label_mine));
 
+        
         mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragmentList, titles);
         mViewPager.setAdapter(mAdapter);
         mPageIndicator.setViewPager(mViewPager);
@@ -94,7 +95,7 @@ public class NewBagV5Activity extends BaseAppCompatActivity {
                 //埋点统计：搜索
                 clickEvent("搜索-书包");
                 Intent i3 = new Intent(NewBagV5Activity.this, AllSearchActivity.class);
-                i3.putExtra("type","folder");
+                i3.putExtra("type", "folder");
                 startActivity(i3);
             }
         });
@@ -105,7 +106,7 @@ public class NewBagV5Activity extends BaseAppCompatActivity {
         mPageIndicator.setmTabClick(new KiraTabLayout.OnTabViewClickListener() {
             @Override
             public void onTabClick(View tabView, int position) {
-                if (mViewPager.getCurrentItem()==0){
+                if (mViewPager.getCurrentItem() == 0) {
                     feedBagFragment.setSmoothScrollToPosition();
                 }
             }

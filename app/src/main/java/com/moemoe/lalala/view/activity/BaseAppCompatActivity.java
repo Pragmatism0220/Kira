@@ -2,21 +2,15 @@ package com.moemoe.lalala.view.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
@@ -26,7 +20,6 @@ import com.moemoe.lalala.app.AppStatusConstant;
 import com.moemoe.lalala.app.AppStatusManager;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
-import com.moemoe.lalala.utils.DensityUtil;
 import com.moemoe.lalala.utils.ToastUtils;
 import com.umeng.analytics.MobclickAgent;
 
@@ -236,6 +229,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         Glide.with(this).resumeRequests();
         if (AppSetting.OpenUmeng) {
             MobclickAgent.onResume(this);
+//            TCAgent.onPageStart(this, this.getClass().getName());
         }
     }
 
@@ -245,6 +239,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         Glide.with(this).pauseRequests();
         if (AppSetting.OpenUmeng) {
             MobclickAgent.onPause(this);
+//            TCAgent.onPageEnd(this, this.getClass().getName());
         }
     }
 

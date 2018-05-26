@@ -132,8 +132,8 @@ public class DocDetailPresenter implements DocDetailContract.Presenter {
                         }
                     });
         } else {
-            if (sortType==0){
-                apiService.loadComment(id,"default", ApiService.LENGHT, index)
+            if (sortType == 0) {
+                apiService.loadComment(id, "default", ApiService.LENGHT, index)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new NetResultSubscriber<ArrayList<CommentV2Entity>>() {
@@ -148,7 +148,7 @@ public class DocDetailPresenter implements DocDetailContract.Presenter {
                                 if (view != null) view.onFailure(code, msg);
                             }
                         });
-            }else if (sortType==1){
+            } else if (sortType == 1) {
                 apiService.loadComment(id, "like", ApiService.LENGHT, index)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -164,7 +164,7 @@ public class DocDetailPresenter implements DocDetailContract.Presenter {
                                 if (view != null) view.onFailure(code, msg);
                             }
                         });
-            }else if (sortType==2){
+            } else if (sortType == 2) {
                 apiService.loadComment(id, "time", ApiService.LENGHT, index)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -549,6 +549,7 @@ public class DocDetailPresenter implements DocDetailContract.Presenter {
                     }
                 });
     }
+
     @Override
     public void loadJoin(String tagId, final boolean join) {
         apiService.loadTagJoin(join, tagId)
@@ -569,13 +570,13 @@ public class DocDetailPresenter implements DocDetailContract.Presenter {
 
     @Override
     public void loadGetCommentsLz(String targetId, final int start) {
-        apiService.loadGetCommentsLz(targetId,ApiService.LENGHT,start)
+        apiService.loadGetCommentsLz(targetId, ApiService.LENGHT, start)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetResultSubscriber<ArrayList<CommentV2Entity>>() {
                     @Override
                     public void onSuccess(ArrayList<CommentV2Entity> entities) {
-                        if (view != null) view.onLoadGetCommentsLzSuccess(entities,start ==0);
+                        if (view != null) view.onLoadGetCommentsLzSuccess(entities, start == 0);
                     }
 
                     @Override
@@ -584,9 +585,10 @@ public class DocDetailPresenter implements DocDetailContract.Presenter {
                     }
                 });
     }
+
     @Override
     public void likeDoc(String id, final boolean isLike, final int position) {
-        apiService.loadDocLike(!isLike,id )
+        apiService.loadDocLike(!isLike, id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetSimpleResultSubscriber() {
@@ -601,15 +603,16 @@ public class DocDetailPresenter implements DocDetailContract.Presenter {
                     }
                 });
     }
+
     @Override
     public void loadDocLikeUsers(String targetId, final int start) {
-        apiService.loadDocLikeUsers(targetId,start,ApiService.LENGHT)
+        apiService.loadDocLikeUsers(targetId, start, ApiService.LENGHT)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetResultSubscriber<ArrayList<UserTopEntity>>() {
                     @Override
                     public void onSuccess(ArrayList<UserTopEntity> entities) {
-                        if (view != null) view.onLoadDocLikeUsers(entities,start ==0);
+                        if (view != null) view.onLoadDocLikeUsers(entities, start == 0);
                     }
 
                     @Override
@@ -618,8 +621,6 @@ public class DocDetailPresenter implements DocDetailContract.Presenter {
                     }
                 });
     }
-
-
 
 
     @Override

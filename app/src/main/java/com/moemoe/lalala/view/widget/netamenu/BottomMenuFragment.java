@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.moemoe.lalala.R;
@@ -27,12 +28,14 @@ import com.moemoe.lalala.view.adapter.OnItemClickListener;
 
 import java.util.ArrayList;
 
+import cn.sharesdk.framework.PlatformActionListener;
+
 /**
  * menu
  * Created by yi on 2017/6/6.
  */
 
-public class BottomMenuFragment extends DialogFragment{
+public class BottomMenuFragment extends DialogFragment implements View.OnClickListener {
 
     private final String TAG = "BottomMenuFragment";
     public static final int TYPE_HORIZONTAL = 0;
@@ -44,6 +47,14 @@ public class BottomMenuFragment extends DialogFragment{
     private MenuItemClickListener mClickListener;
     private MenuItemAdapter menuItemAdapter;
     private boolean showCancel = true;
+    private LinearLayout mLlShareRoot;
+    private LinearLayout mLlQQ;
+    private LinearLayout mLlQQZone;
+    private LinearLayout mLlWeChat;
+    private LinearLayout mLlPyq;
+    private LinearLayout mLlWeiBo;
+    private boolean isShare = false;
+    private ShareItemClickListener mShareItemClickListener;
 
     public BottomMenuFragment() {
         // Required empty public constructor
@@ -64,6 +75,7 @@ public class BottomMenuFragment extends DialogFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,6 +88,13 @@ public class BottomMenuFragment extends DialogFragment{
 
         //view.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.menu_appear));//添加一个加载动画，这样的问题是没办法添加消失动画，有待进一步研究
 
+        mLlShareRoot = (LinearLayout) view.findViewById(R.id.ll_share_root);
+        mLlQQ = (LinearLayout) view.findViewById(R.id.ll_qq);
+        mLlQQZone = (LinearLayout) view.findViewById(R.id.ll_qqZone);
+        mLlWeChat = (LinearLayout) view.findViewById(R.id.ll_wechat);
+        mLlPyq = (LinearLayout) view.findViewById(R.id.ll_pyq);
+        mLlWeiBo = (LinearLayout) view.findViewById(R.id.ll_weibo);
+
         TextView tv_cancel = (TextView) view.findViewById(R.id.tv_cancel);
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,31 +103,37 @@ public class BottomMenuFragment extends DialogFragment{
             }
         });
 
-        if(showTop && !TextUtils.isEmpty(topContent)){
+        if (showTop && !TextUtils.isEmpty(topContent)) {
             TextView top = (TextView) view.findViewById(R.id.tv_top);
             top.setVisibility(View.VISIBLE);
             top.setText(topContent);
         }
 
-        if(!showCancel){
+        if (!showCancel) {
             tv_cancel.setVisibility(View.GONE);
-        }else {
+        } else {
             tv_cancel.setVisibility(View.VISIBLE);
+        }
+
+        if (!isShare) {
+            mLlShareRoot.setVisibility(View.GONE);
+        } else {
+            mLlShareRoot.setVisibility(View.VISIBLE);
         }
 
         final RecyclerView rv = (RecyclerView) view.findViewById(R.id.rv_menu);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(menuType == TYPE_HORIZONTAL ? TYPE_HORIZONTAL : TYPE_VERTICAL);
         rv.setLayoutManager(layoutManager);
-        if(menuType == TYPE_HORIZONTAL){
-            rv.addItemDecoration(new MenuHItemDecoration(getResources().getDimensionPixelSize(R.dimen.y36),getResources().getDimensionPixelSize(R.dimen.x24)));
+        if (menuType == TYPE_HORIZONTAL) {
+            rv.addItemDecoration(new MenuHItemDecoration(getResources().getDimensionPixelSize(R.dimen.y36), getResources().getDimensionPixelSize(R.dimen.x24)));
         }
-        menuItemAdapter = new MenuItemAdapter(getContext(),menuType, this.menuItems);
+        menuItemAdapter = new MenuItemAdapter(getContext(), menuType, this.menuItems);
         menuItemAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 BottomMenuFragment.this.dismiss();
-                if(mClickListener != null){
+                if (mClickListener != null) {
                     mClickListener.OnMenuItemClick(menuItems.get(position).getId());
                 }
             }
@@ -119,7 +144,11 @@ public class BottomMenuFragment extends DialogFragment{
             }
         });
         rv.setAdapter(menuItemAdapter);
-
+        mLlQQ.setOnClickListener(this);
+        mLlQQZone.setOnClickListener(this);
+        mLlWeChat.setOnClickListener(this);
+        mLlPyq.setOnClickListener(this);
+        mLlWeiBo.setOnClickListener(this);
         return view;
     }
 
@@ -135,11 +164,11 @@ public class BottomMenuFragment extends DialogFragment{
     }
 
 
-    public void changeItemTextById(int id, String text,@DrawableRes int imgId) {
+    public void changeItemTextById(int id, String text, @DrawableRes int imgId) {
         int index = findItemIndex(id);
         if (index >= 0) {
             menuItems.remove(index);
-            menuItems.add(index, new MenuItem(id, text,imgId));
+            menuItems.add(index, new MenuItem(id, text, imgId));
         }
         menuItemAdapter.notifyItemChanged(index);
     }
@@ -177,10 +206,11 @@ public class BottomMenuFragment extends DialogFragment{
     }
 
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         super.onDestroyView();
 
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -197,8 +227,8 @@ public class BottomMenuFragment extends DialogFragment{
 
         //设置弹出框宽屏显示，适应屏幕宽度
         DisplayMetrics dm = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics( dm );
-        getDialog().getWindow().setLayout( dm.widthPixels, getDialog().getWindow().getAttributes().height );
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        getDialog().getWindow().setLayout(dm.widthPixels, getDialog().getWindow().getAttributes().height);
 
         //移动弹出菜单到底部
         WindowManager.LayoutParams wlp = getDialog().getWindow().getAttributes();
@@ -219,6 +249,47 @@ public class BottomMenuFragment extends DialogFragment{
 
     public void setmClickListener(MenuItemClickListener mClickListener) {
         this.mClickListener = mClickListener;
+    }
+
+    public void setIsShare(boolean isShare) {
+        this.isShare = isShare;
+    }
+
+    public boolean isShare() {
+        return isShare;
+    }
+
+    public ShareItemClickListener getmShareItemClickListener() {
+        return mShareItemClickListener;
+    }
+
+    public void setShareOnClickListener(ShareItemClickListener mShareItemClickListener) {
+        this.mShareItemClickListener = mShareItemClickListener;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ll_qq:
+                mShareItemClickListener.OnShareItemClick("QQ");
+                break;
+            case R.id.ll_qqZone:
+                mShareItemClickListener.OnShareItemClick("QQZone");
+                break;
+            case R.id.ll_wechat:
+                mShareItemClickListener.OnShareItemClick("WeChat");
+                break;
+            case R.id.ll_pyq:
+                mShareItemClickListener.OnShareItemClick("WeChatPyq");
+                break;
+            case R.id.ll_weibo:
+                mShareItemClickListener.OnShareItemClick("WeiBo");
+                break;
+        }
+    }
+
+    public interface ShareItemClickListener {
+        void OnShareItemClick(String shareName);
     }
 
     public interface MenuItemClickListener {

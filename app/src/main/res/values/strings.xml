@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">kira</string>
     <string name="label_copyright">© 2015 moemoe.la All Rights Reserved</string>
-    <string name="app_version">5.8.2_20180412</string>
-    <string name="app_version_code">5820</string>
+    <string name="app_version">6.0.0_20180412</string>
+    <string name="app_version_code">6000</string>
 
     <string name="label_scheme">neta</string>
     <string name="label_host">com.moemoe.lalala</string>
@@ -441,4 +441,10 @@
     <string name="community_apple">申请成为</string>
     <string name="member">成员</string>
     <string name="title_activity_dormitory_drama">DormitoryDramaActivity</string>
+    <string name="titlename">第二章 情人节的模样</string>
+    <string name="ciyuanbi">次元币</string>
+    <string name="commodity_info">次元币全新上线，可用于解锁同桌语音等！更多有趣的好玩的功能敬请期待~</string>
+    <string name="home_info">现代风格的电脑桌，有香蕉公司研发的最新电脑</string>
+    <string name="moc">Moc电脑</string>
+    <string name="label_lotter">抽奖</string>
 </resources>

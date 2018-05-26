@@ -67,9 +67,11 @@ public class Tooltip extends ViewGroup {
     public static final int TOP = 1;
     public static final int RIGHT = 2;
     public static final int BOTTOM = 3;
+
     @IntDef({LEFT, TOP, RIGHT, BOTTOM})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Position {}
+    public @interface Position {
+    }
 
     private TooltipAnimation animation;
     private boolean animate = false;
@@ -259,7 +261,7 @@ public class Tooltip extends ViewGroup {
                 // to left of anchor view
                 // align with horizontal axis
 
-              //  int diff = (anchorView.getHeight() - h) / 2;
+                //  int diff = (anchorView.getHeight() - h) / 2;
                 int diff = (this.h - h) / 2;
                 // We should pad right side
                 left -= (w + padding + (showTip ? tip.getHeight() : 0));
@@ -268,10 +270,10 @@ public class Tooltip extends ViewGroup {
 
                 if (showTip) {
                     px = left + w + tip.getHeight();
-                    py = top + h/2;
+                    py = top + h / 2;
                     tipPath.moveTo(px, py);
-                    tipPath.lineTo(px - tip.getHeight(), py + tip.getWidth()/2);
-                    tipPath.lineTo(px - tip.getHeight(), py - tip.getWidth()/2);
+                    tipPath.lineTo(px - tip.getHeight(), py + tip.getWidth() / 2);
+                    tipPath.lineTo(px - tip.getHeight(), py - tip.getWidth() / 2);
                     tipPath.lineTo(px, py);
                 }
 
@@ -281,20 +283,20 @@ public class Tooltip extends ViewGroup {
             case RIGHT: {
                 // to right of anchor view
                 // align with horizontal axis
-               // int diff = (anchorView.getHeight() - h) / 2;
+                // int diff = (anchorView.getHeight() - h) / 2;
                 int diff = (this.h - h) / 2;
                 // We should pad left side
-            //    left += (anchorView.getWidth() + padding + (showTip ? tip.getHeight() : 0));
+                //    left += (anchorView.getWidth() + padding + (showTip ? tip.getHeight() : 0));
                 left += (this.w + padding + (showTip ? tip.getHeight() : 0));
                 // Top and bottom padding is not required
                 top += diff;
 
                 if (showTip) {
                     px = left - tip.getHeight();
-                    py = top + h/2;
+                    py = top + h / 2;
                     tipPath.moveTo(px, py);
-                    tipPath.lineTo(px + tip.getHeight(), py + tip.getWidth()/2);
-                    tipPath.lineTo(px + tip.getHeight(), py - tip.getWidth()/2);
+                    tipPath.lineTo(px + tip.getHeight(), py + tip.getWidth() / 2);
+                    tipPath.lineTo(px + tip.getHeight(), py - tip.getWidth() / 2);
                     tipPath.lineTo(px, py);
                 }
 
@@ -304,7 +306,7 @@ public class Tooltip extends ViewGroup {
             case TOP: {
                 // to top of anchor view
                 // align with vertical axis
-              //  int diff = (anchorView.getWidth() - w) / 2;
+                //  int diff = (anchorView.getWidth() - w) / 2;
                 int diff = (this.w - w) / 2;
 
                 // Left and Right padding are not required.
@@ -328,14 +330,14 @@ public class Tooltip extends ViewGroup {
             case BOTTOM: {
                 // to top of anchor view
                 // align with vertical axis
-              //  int diff = (anchorView.getWidth() - w) / 2;
+                //  int diff = (anchorView.getWidth() - w) / 2;
                 int diff = (this.w - w) / 2;
 
                 // Left and Right padding are not required.
                 left += diff;
 
                 // We should only pad top
-             //   top += anchorView.getHeight() + padding + (showTip ? tip.getHeight() : 0);
+                //   top += anchorView.getHeight() + padding + (showTip ? tip.getHeight() : 0);
                 top += this.h + padding + (showTip ? tip.getHeight() : 0);
 
                 if (debug) {
@@ -404,11 +406,11 @@ public class Tooltip extends ViewGroup {
 
             switch (position) {
                 case TOP:
-                    px = left + child.getMeasuredWidth()/2;
+                    px = left + child.getMeasuredWidth() / 2;
                     py = top + child.getMeasuredHeight();
                     break;
                 case BOTTOM:
-                    px = left + child.getMeasuredWidth()/2;
+                    px = left + child.getMeasuredWidth() / 2;
                     py = top;
                     break;
                 case LEFT:
@@ -417,7 +419,7 @@ public class Tooltip extends ViewGroup {
                     break;
                 case RIGHT:
                     px = left;
-                    py = top + child.getMeasuredHeight()/2;
+                    py = top + child.getMeasuredHeight() / 2;
                     break;
             }
         }
@@ -480,6 +482,7 @@ public class Tooltip extends ViewGroup {
 
     /**
      * Dismiss and remove Tooltip from the view.
+     *
      * @param animate Animation is performed if true
      */
     public void dismiss(boolean animate) {
@@ -654,13 +657,13 @@ public class Tooltip extends ViewGroup {
 
         switch (position) {
             case BOTTOM:
-                return AnimationUtils.scaleY(contentView, size[0]/2, 0 , startScale, endScale, animation.getDuration());
+                return AnimationUtils.scaleY(contentView, size[0] / 2, 0, startScale, endScale, animation.getDuration());
             case TOP:
-                return AnimationUtils.scaleY(contentView, size[0]/2, size[1] , startScale, endScale, animation.getDuration());
+                return AnimationUtils.scaleY(contentView, size[0] / 2, size[1], startScale, endScale, animation.getDuration());
             case RIGHT:
-                return AnimationUtils.scaleX(contentView, 0, size[1]/2, startScale, endScale, animation.getDuration());
+                return AnimationUtils.scaleX(contentView, 0, size[1] / 2, startScale, endScale, animation.getDuration());
             case LEFT:
-                return AnimationUtils.scaleX(contentView, size[0], size[1]/2, startScale, endScale, animation.getDuration());
+                return AnimationUtils.scaleX(contentView, size[0], size[1] / 2, startScale, endScale, animation.getDuration());
             default:
                 return null;
         }
@@ -787,6 +790,7 @@ public class Tooltip extends ViewGroup {
 
         /**
          * set tooltip's content view
+         *
          * @param view Content of the tooltip
          * @return Builder
          */
@@ -797,6 +801,7 @@ public class Tooltip extends ViewGroup {
 
         /**
          * set tooltip's anchor with position {@link #TOP}
+         *
          * @param view Anchor view
          * @return Builder
          */
@@ -805,28 +810,30 @@ public class Tooltip extends ViewGroup {
             return this;
         }
 
-        public Builder x(int x){
+        public Builder x(int x) {
             this.x = x;
             return this;
         }
 
-        public Builder y(int y){
+        public Builder y(int y) {
             this.y = y;
             return this;
         }
 
-        public Builder w(int w){
+        public Builder w(int w) {
             this.w = w;
             return this;
         }
 
-        public Builder h(int h){
+        public Builder h(int h) {
             this.h = h;
             return this;
         }
+
         /**
          * Set tooltip's anchor with tooltip's relative position
-         * @param view Anchor view
+         *
+         * @param view     Anchor view
          * @param position position of tooltip relative to the anchor. {@link #TOP}, {@link #RIGHT},
          *                 {@link #BOTTOM}, {@link #LEFT}
          * @return Builder
@@ -839,6 +846,7 @@ public class Tooltip extends ViewGroup {
 
         /**
          * Add Tooltip in this view
+         *
          * @param viewGroup {@link ViewGroup} root view (parent view) for the tooltip
          * @return Builder
          */
@@ -849,6 +857,7 @@ public class Tooltip extends ViewGroup {
 
         /**
          * Whether the tooltip should be dismissed or not if clicked outside. Default it true
+         *
          * @param cancelable boolean
          * @return Builder
          */
@@ -881,6 +890,7 @@ public class Tooltip extends ViewGroup {
 
         /**
          * Attach dismiss listener
+         *
          * @param listener dismiss listener
          * @return Builder
          */
@@ -891,6 +901,7 @@ public class Tooltip extends ViewGroup {
 
         /**
          * Show Tip. If null, it doesn't show the tip.
+         *
          * @param tip {@link Tip}
          * @return Builder
          */
@@ -902,7 +913,7 @@ public class Tooltip extends ViewGroup {
         /**
          * If you want the tooltip to dismiss automatically after a certain amount of time,
          * set it in milliseconds. Values <= 0 are considered invalid and auto dismiss is turned off.
-         *
+         * <p>
          * Default is 0.
          *
          * @param timeInMilli dismiss time
@@ -937,6 +948,7 @@ public class Tooltip extends ViewGroup {
 
         /**
          * Show logs
+         *
          * @param debug boolean
          * @return Builder
          */
@@ -948,6 +960,7 @@ public class Tooltip extends ViewGroup {
         /**
          * Create a new instance of Tooltip. This method will throw {@link NullPointerException}
          * if {@link #anchorView} or {@link #rootView} or {@link #contentView} is not assigned.
+         *
          * @return {@link Tooltip}
          */
         public Tooltip build() {
@@ -981,12 +994,12 @@ public class Tooltip extends ViewGroup {
 
             int[] anchorLocation = new int[2];
             anchorView.getLocationInWindow(anchorLocation);
-           // Log.i(TAG, "anchor location before adding: " + anchorLocation[0] + ", " + anchorLocation[1]);
+            // Log.i(TAG, "anchor location before adding: " + anchorLocation[0] + ", " + anchorLocation[1]);
 
             rootView.addView(tooltip, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
             anchorView.getLocationInWindow(anchorLocation);
-          //  Log.i(TAG, "anchor location after adding: " + anchorLocation[0] + ", " + anchorLocation[1]);
+            //  Log.i(TAG, "anchor location after adding: " + anchorLocation[0] + ", " + anchorLocation[1]);
 
             if (autoCancelTime > NO_AUTO_CANCEL) {
                 handler.postDelayed(autoCancelRunnable, autoCancelTime);

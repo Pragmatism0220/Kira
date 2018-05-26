@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -44,6 +45,7 @@ import com.moemoe.lalala.utils.DensityUtil;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
+import com.moemoe.lalala.utils.ShareUtils;
 import com.moemoe.lalala.utils.SoftKeyboardUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
@@ -137,6 +139,7 @@ public class CommunityV1Activity extends BaseAppCompatActivity implements Commun
     private boolean join;
     private FeedFollowType2Entity mFeedFollow;
     private EmoticonTabAdapter mEmotionTabAdapter;
+    private BottomMenuFragment bottomMenuFragment;
 
     @Override
     protected int getLayoutId() {
@@ -162,6 +165,7 @@ public class CommunityV1Activity extends BaseAppCompatActivity implements Commun
         fragment = new BottomMenuFragment();
 
         initMenu();
+        initPopupMenus();
         int h = (int) getResources().getDimension(R.dimen.y100) + (int) getResources().getDimension(R.dimen.status_bar_height);
         ViewGroup.LayoutParams params = mToolbar.getLayoutParams();
         params.height = h;
@@ -170,7 +174,8 @@ public class CommunityV1Activity extends BaseAppCompatActivity implements Commun
         mMenuList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showShare();
+                if (bottomMenuFragment != null)
+                    bottomMenuFragment.show(getSupportFragmentManager(), "community");
             }
         });
         mIvCover.setOnClickListener(new View.OnClickListener() {
@@ -185,65 +190,96 @@ public class CommunityV1Activity extends BaseAppCompatActivity implements Commun
 
     }
 
-    private void showShare() {
-        final OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        oks.disableSSOWhenAuthorize();
-        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
-        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
-        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-        oks.setTitle("");
-        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-        String url;
-        if (BuildConfig.DEBUG) {
-            url = ApiService.SHARE_BASE_DEBUG + "";
-        } else {
-            url = ApiService.SHARE_BASE + "";
-        }
-        oks.setTitleUrl(url);
-        // text是分享文本，所有平台都需要这个字段
-        oks.setText("" + " " + url);
-        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-        oks.setImageUrl(ApiService.URL_QINIU + "");
-        // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl(url);
-        // site是分享此内容的网站名称，仅在QQ空间使用
-        oks.setSite(getString(R.string.app_name));
-        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl(url);
-        // 启动分享GUI
-        oks.setCallback(new PlatformActionListener() {
+    /**
+     * 分享
+     */
+    private void initPopupMenus() {
+        bottomMenuFragment = new BottomMenuFragment();
+        ArrayList<com.moemoe.lalala.view.widget.netamenu.MenuItem> items = new ArrayList<>();
+
+        MenuItem item = new MenuItem(1, "QQ", R.drawable.btn_doc_option_send_qq);
+        items.add(item);
+
+        item = new MenuItem(2, "QQ空间", R.drawable.btn_doc_option_send_qzone);
+        items.add(item);
+
+        item = new MenuItem(3, "微信", R.drawable.btn_doc_option_send_wechat);
+        items.add(item);
+
+        item = new MenuItem(4, "微信朋友圈", R.drawable.btn_doc_option_send_pengyouquan);
+        items.add(item);
+
+        item = new MenuItem(5, "微博", R.drawable.btn_doc_option_send_weibo);
+        items.add(item);
+
+
+        bottomMenuFragment.setShowTop(false);
+        bottomMenuFragment.setMenuItems(items);
+        bottomMenuFragment.setMenuType(BottomMenuFragment.TYPE_HORIZONTAL);
+        bottomMenuFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
             @Override
-            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-                MoeMoeApplication.getInstance().getNetComponent().getApiService().shareKpi("{\"doc\":\"" + "" + "\"}")//{"doc":"uuid"}
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(new NetSimpleResultSubscriber() {
-                            @Override
-                            public void onSuccess() {
+            public void OnMenuItemClick(int itemId) {
+                // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+                // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+                // text是分享文本，所有平台都需要这个字段
+                // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+                switch (itemId) {
+                    case 1:
+                        ShareUtils.shareQQ(CommunityV1Activity.this, "来来来，扭蛋机每天免费给你抽宝贝！", "http://prize.moemoe.la:8000/prize/share/", "异次元穿越而来的扭蛋机，每天三枚代币免费抽奖！隔三差五送出正版写真、一言不合秒充流量话费，" +
+                                "抽奖累积节操积分更能换取本子、高清、熟肉等”不可描述“珍稀资源。二次元没有骗局，前方真心高能！", "http://source.moemoe.la/static/image3/18.png", platformActionListener);
+                        break;
+                    case 2:
+                        ShareUtils.shareQQzone(CommunityV1Activity.this, "来来来，扭蛋机每天免费给你抽宝贝！", "http://prize.moemoe.la:8000/prize/share/", "异次元穿越而来的扭蛋机，每天三枚代币免费抽奖！隔三差五送出正版写真、一言不合秒充流量话费，" +
+                                "抽奖累积节操积分更能换取本子、高清、熟肉等”不可描述“珍稀资源。二次元没有骗局，前方真心高能！", "http://source.moemoe.la/static/image3/18.png", platformActionListener);
+                        ;
+                        break;
+                    case 3:
+                        ShareUtils.shareWechat(CommunityV1Activity.this, "来来来，扭蛋机每天免费给你抽宝贝！", "http://prize.moemoe.la:8000/prize/share/", "异次元穿越而来的扭蛋机，每天三枚代币免费抽奖！隔三差五送出正版写真、一言不合秒充流量话费，" +
+                                "抽奖累积节操积分更能换取本子、高清、熟肉等”不可描述“珍稀资源。二次元没有骗局，前方真心高能！", "http://source.moemoe.la/static/image3/18.png", platformActionListener);
+                        break;
+                    case 4:
+                        ShareUtils.sharepyq(CommunityV1Activity.this, "来来来，扭蛋机每天免费给你抽宝贝！", "http://prize.moemoe.la:8000/prize/share/", "异次元穿越而来的扭蛋机，每天三枚代币免费抽奖！隔三差五送出正版写真、一言不合秒充流量话费，" +
+                                "抽奖累积节操积分更能换取本子、高清、熟肉等”不可描述“珍稀资源。二次元没有骗局，前方真心高能！", "http://source.moemoe.la/static/image3/18.png", platformActionListener);
+                        break;
+                    case 5:
+                        ShareUtils.shareWeibo(CommunityV1Activity.this, "来来来，扭蛋机每天免费给你抽宝贝！", "http://prize.moemoe.la:8000/prize/share/", "异次元穿越而来的扭蛋机，每天三枚代币免费抽奖！隔三差五送出正版写真、一言不合秒充流量话费，" +
+                                "抽奖累积节操积分更能换取本子、高清、熟肉等”不可描述“珍稀资源。二次元没有骗局，前方真心高能！", "http://source.moemoe.la/static/image3/18.png", platformActionListener);
+                        break;
 
-                            }
-
-                            @Override
-                            public void onFail(int code, String msg) {
-
-                            }
-                        });
-//                mPresenter.shareDoc();
-            }
-
-            @Override
-            public void onError(Platform platform, int i, Throwable throwable) {
-
-            }
-
-            @Override
-            public void onCancel(Platform platform, int i) {
-
+                }
             }
         });
-        oks.show(this);
     }
+
+    /**
+     * 分享回调
+     */
+    PlatformActionListener platformActionListener = new PlatformActionListener() {
+        @Override
+        public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+            Log.e("kid", "分享成功");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
+
+        @Override
+        public void onError(Platform platform, int i, Throwable throwable) {
+            Log.e("kid", "分享失败");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
+
+        @Override
+        public void onCancel(Platform platform, int i) {
+            Log.e("kid", "分享取消");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
+
+    };
 
     private void initEmoticonTabs() {
         EmojiTab emojiTab = new EmojiTab();
@@ -823,6 +859,7 @@ public class CommunityV1Activity extends BaseAppCompatActivity implements Commun
 
     /**
      * 社区标签点赞
+     *
      * @param isLike
      * @param position
      * @param entity
@@ -833,6 +870,7 @@ public class CommunityV1Activity extends BaseAppCompatActivity implements Commun
             mItem2Fragment.likeTag(isLike, position, entity, parentPosition);
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

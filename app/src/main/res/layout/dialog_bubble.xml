@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_bobble"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/x24">
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:ellipsize="end"
+        android:maxEms="10"
+        android:singleLine="true"
+        android:text="jfdksjlkffjdslkjflksdjflkjdslkfjdslkjflkdsjflkjdslkfjdslkjflkdsjflkjdslkfjdslkjflkds" />
+
+    <TextView
+        android:id="@+id/iv_chakan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_content"
+        android:layout_marginEnd="@dimen/x36"
+        android:layout_marginTop="@dimen/x24"
+        android:background="@drawable/btn_image"
+        android:gravity="center"
+        android:text="查看"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/iv_canls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_content"
+        android:layout_marginEnd="@dimen/x36"
+        android:layout_marginStart="@dimen/x24"
+        android:layout_marginTop="@dimen/x24"
+        android:layout_toRightOf="@+id/iv_chakan"
+        android:background="@drawable/btn_image"
+        android:gravity="center"
+        android:text="忽略"
+        android:textColor="@color/white" />
+</RelativeLayout>

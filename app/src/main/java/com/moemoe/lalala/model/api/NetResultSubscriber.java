@@ -22,16 +22,16 @@ public abstract class NetResultSubscriber<T> implements Observer<ApiResult<T>> {
 
     @Override
     public void onComplete() {
-        if(mDisposable != null && !mDisposable.isDisposed()){
+        if (mDisposable != null && !mDisposable.isDisposed()) {
             mDisposable.dispose();
         }
     }
 
     @Override
     public void onError(Throwable e) {
-         onFail(-1,"");
+        onFail(-1, "");
         e.printStackTrace();
-        if(mDisposable != null && !mDisposable.isDisposed()){
+        if (mDisposable != null && !mDisposable.isDisposed()) {
             mDisposable.dispose();
         }
     }
@@ -40,12 +40,12 @@ public abstract class NetResultSubscriber<T> implements Observer<ApiResult<T>> {
     public void onNext(ApiResult<T> tApiResult) {
         if (tApiResult.getState() == 200) {
             onSuccess(tApiResult.getData());
-        }else{
-            onFail(tApiResult.getState(),tApiResult.getMessage());
+        } else {
+            onFail(tApiResult.getState(), tApiResult.getMessage());
         }
     }
 
     public abstract void onSuccess(T t);
 
-    public abstract void onFail(int code,String msg);
+    public abstract void onFail(int code, String msg);
 }

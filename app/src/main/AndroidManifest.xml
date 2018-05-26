@@ -55,7 +55,7 @@
             android:value="E52BZ-E5QW6-DKBSP-MCQLN-77XGK-C6BHC" />
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="559b89c267e58ee03e0021b7" />
+            android:value="5afbfb72f29d98287800002b" />
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
@@ -1395,9 +1395,13 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".view.activity.ShareSDKActivity" />
+        <activity
+            android:name=".view.activity.DemoAcitivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".view.activity.NewPhoneAlarmActivity" />
-        <activity android:name=".app.TestBindingActivity" />
         <activity
             android:name=".view.activity.RoleActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
@@ -1410,7 +1414,94 @@
             android:screenOrientation="portrait"
             android:theme="@style/MainColorTranslucentTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".view.activity.DormitoryDramaActivity"></activity>
+        <!-- <service -->
+        <!-- android:name="com.talkingdata.sdk.TDAntiCheatingService" -->
+        <!-- android:process="com.talkingdata.sdk.TDAntiCheatingService">  &lt;!&ndash;用户质量评估Service可以配置在主进程或者单独进程&ndash;&gt; -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.talkingdata.sdk.TDAntiCheatingService" /> -->
+        <!-- </intent-filter> -->
+        <!-- </service> -->
+
+
+        <!-- <meta-data -->
+        <!-- android:name="TD_APP_ID" -->
+        <!-- android:value="3276B337E83F44AC86B11750D9F6A6F6" /> -->
+        <!-- <meta-data -->
+        <!-- android:name="TD_CHANNEL_ID" -->
+        <!-- android:value="${UMENG_CHANNEL_VALUE}" /> -->
+
+        <activity
+            android:name=".view.activity.KiraDownloadVideoPlayerActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".view.activity.DormitoryDramaActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".view.activity.PrincipalLineActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".view.activity.PrincipalListActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".view.activity.BranchActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".view.activity.BranchInfoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".view.activity.EveryDayActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".view.activity.EveryDayInfoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".view.activity.StorageActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".view.activity.ShoppingActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".view.activity.ShoppingDetalisActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".view.activity.HouseActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
     </application>
 
 </manifest>

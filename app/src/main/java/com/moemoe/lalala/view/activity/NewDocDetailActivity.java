@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,12 +60,14 @@ import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.NetworkUtils;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
+import com.moemoe.lalala.utils.ShareUtils;
 import com.moemoe.lalala.utils.SoftKeyboardUtils;
 import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ToastUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.adapter.DocRecyclerViewAdapter;
+import com.moemoe.lalala.view.adapter.MusicListAdapter;
 import com.moemoe.lalala.view.adapter.OnItemClickListener;
 import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
 import com.moemoe.lalala.view.widget.netamenu.MenuItem;
@@ -196,6 +199,7 @@ public class NewDocDetailActivity extends BaseAppCompatActivity implements DocDe
             }
         }
     };
+    private boolean isHideShare = false;
 
     @Override
     protected int getLayoutId() {
@@ -294,6 +298,7 @@ public class NewDocDetailActivity extends BaseAppCompatActivity implements DocDe
             public void onNoDoubleClick(View v) {
                 if (bottomMenuFragment != null)
                     bottomMenuFragment.show(getSupportFragmentManager(), "DocDetailMenu");
+                isHideShare = false;
             }
         });
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
@@ -504,32 +509,34 @@ public class NewDocDetailActivity extends BaseAppCompatActivity implements DocDe
     }
 
     public void showShareToBuy() {
-        final OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        oks.disableSSOWhenAuthorize();
-        oks.setTitle(mShareTitle);
-        String url = "http://2333.moemoe.la/share/newDoc/" + mDocId;
-        oks.setTitleUrl(url);
-        oks.setText(mShareDesc + " " + url);
-        oks.setImageUrl(ApiService.URL_QINIU + mShareIcon);
-        oks.setUrl(url);
-        oks.setSite(getString(R.string.app_name));
-        oks.setSiteUrl(url);
-        oks.setCallback(new PlatformActionListener() {
-            @Override
-            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-            }
-
-            @Override
-            public void onError(Platform platform, int i, Throwable throwable) {
-
-            }
-
-            @Override
-            public void onCancel(Platform platform, int i) {
-
-            }
-        });
+        isHideShare = true;
+        if (bottomMenuFragment != null) bottomMenuFragment.show(getSupportFragmentManager(), "doc");
+//        final OnekeyShare oks = new OnekeyShare();
+//        //关闭sso授权
+//        oks.disableSSOWhenAuthorize();
+//        oks.setTitle(mShareTitle);
+//        String url = "http://2333.moemoe.la/share/newDoc/" + mDocId;
+//        oks.setTitleUrl(url);
+//        oks.setText(mShareDesc + " " + url);
+//        oks.setImageUrl(ApiService.URL_QINIU + mShareIcon);
+//        oks.setUrl(url);
+//        oks.setSite(getString(R.string.app_name));
+//        oks.setSiteUrl(url);
+//        oks.setCallback(new PlatformActionListener() {
+//            @Override
+//            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+//            }
+//
+//            @Override
+//            public void onError(Platform platform, int i, Throwable throwable) {
+//
+//            }
+//
+//            @Override
+//            public void onCancel(Platform platform, int i) {
+//
+//            }
+//        });
         MoeMoeApplication.getInstance().getNetComponent().getApiService().shareKpi("doc")
                 .subscribeOn(Schedulers.io())
                 .subscribe(new NetSimpleResultSubscriber() {
@@ -543,67 +550,67 @@ public class NewDocDetailActivity extends BaseAppCompatActivity implements DocDe
 
                     }
                 });
-        oks.show(this);
+//        oks.show(this);
     }
 
     private void showShare() {
-        final OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        oks.disableSSOWhenAuthorize();
-        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
-        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
-        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-        oks.setTitle(mShareTitle);
-        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-        String url;
-        if (BuildConfig.DEBUG) {
-            url = ApiService.SHARE_BASE_DEBUG + mDocId;
-        } else {
-            url = ApiService.SHARE_BASE + mDocId;
-        }
-        oks.setTitleUrl(url);
-        // text是分享文本，所有平台都需要这个字段
-        oks.setText(mShareDesc + " " + url);
-        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-        oks.setImageUrl(ApiService.URL_QINIU + mShareIcon);
-        // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl(url);
-        // site是分享此内容的网站名称，仅在QQ空间使用
-        oks.setSite(getString(R.string.app_name));
-        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl(url);
-        // 启动分享GUI
-        oks.setCallback(new PlatformActionListener() {
-            @Override
-            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-                MoeMoeApplication.getInstance().getNetComponent().getApiService().shareKpi("{\"doc\":\"" + mDocId + "\"}")//{"doc":"uuid"}
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(new NetSimpleResultSubscriber() {
-                            @Override
-                            public void onSuccess() {
-
-                            }
-
-                            @Override
-                            public void onFail(int code, String msg) {
-
-                            }
-                        });
-                mPresenter.shareDoc();
-            }
-
-            @Override
-            public void onError(Platform platform, int i, Throwable throwable) {
-
-            }
-
-            @Override
-            public void onCancel(Platform platform, int i) {
-
-            }
-        });
-        oks.show(this);
+//        final OnekeyShare oks = new OnekeyShare();
+//        //关闭sso授权
+//        oks.disableSSOWhenAuthorize();
+//        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
+//        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+//        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+//        oks.setTitle(mShareTitle);
+//        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+//        String url;
+//        if (BuildConfig.DEBUG) {
+//            url = ApiService.SHARE_BASE_DEBUG + mDocId;
+//        } else {
+//            url = ApiService.SHARE_BASE + mDocId;
+//        }
+//        oks.setTitleUrl(url);
+//        // text是分享文本，所有平台都需要这个字段
+//        oks.setText(mShareDesc + " " + url);
+//        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+//        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+//        oks.setImageUrl(ApiService.URL_QINIU + mShareIcon);
+//        // url仅在微信（包括好友和朋友圈）中使用
+//        oks.setUrl(url);
+//        // site是分享此内容的网站名称，仅在QQ空间使用
+//        oks.setSite(getString(R.string.app_name));
+//        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+//        oks.setSiteUrl(url);
+//        // 启动分享GUI
+//        oks.setCallback(new PlatformActionListener() {
+//            @Override
+//            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+//                MoeMoeApplication.getInstance().getNetComponent().getApiService().shareKpi("{\"doc\":\"" + mDocId + "\"}")//{"doc":"uuid"}
+//                        .subscribeOn(Schedulers.io())
+//                        .subscribe(new NetSimpleResultSubscriber() {
+//                            @Override
+//                            public void onSuccess() {
+//
+//                            }
+//
+//                            @Override
+//                            public void onFail(int code, String msg) {
+//
+//                            }
+//                        });
+//                mPresenter.shareDoc();
+//            }
+//
+//            @Override
+//            public void onError(Platform platform, int i, Throwable throwable) {
+//
+//            }
+//
+//            @Override
+//            public void onCancel(Platform platform, int i) {
+//
+//            }
+//        });
+//        oks.show(this);
     }
 
     @Override
@@ -1074,81 +1081,98 @@ public class NewDocDetailActivity extends BaseAppCompatActivity implements DocDe
         bottomMenuFragment = new BottomMenuFragment();
         ArrayList<MenuItem> items = new ArrayList<>();
         MenuItem item;
-
-        if (entity.getUserId().equals(PreferenceUtils.getUUid())) {
-            item = new MenuItem(TAG_DELETE, getString(R.string.label_tag_ctrl), R.drawable.btn_doc_option_tag);
+        if (isHideShare) {
+            item = new MenuItem(1, "QQ", R.drawable.btn_doc_option_send_qq);
             items.add(item);
 
-            item = new MenuItem(EDIT_DOC, getString(R.string.label_update_post), R.drawable.btn_doc_option_edit);
+            item = new MenuItem(2, "QQ空间", R.drawable.btn_doc_option_send_qzone);
             items.add(item);
 
-            item = new MenuItem(MENU_SUBMISSION, "投稿", R.drawable.btn_doc_option_contribute);
+            item = new MenuItem(3, "微信", R.drawable.btn_doc_option_send_wechat);
             items.add(item);
 
-            item = new MenuItem(MENU_DELETE, getString(R.string.label_delete), R.drawable.btn_doc_option_delete);
+            item = new MenuItem(4, "微信朋友圈", R.drawable.btn_doc_option_send_pengyouquan);
             items.add(item);
 
+            item = new MenuItem(5, "微博", R.drawable.btn_doc_option_send_weibo);
+            items.add(item);
         } else {
-            if (entity.isFavoriteFlag()) {
-                item = new MenuItem(MENU_FAVORITE, getString(R.string.label_cancel_favorite), R.drawable.btn_doc_option_collected);
+            if (entity.getUserId().equals(PreferenceUtils.getUUid())) {
+                item = new MenuItem(TAG_DELETE, getString(R.string.label_tag_ctrl), R.drawable.btn_doc_option_tag);
+                items.add(item);
+
+                item = new MenuItem(EDIT_DOC, getString(R.string.label_update_post), R.drawable.btn_doc_option_edit);
+                items.add(item);
+
+                item = new MenuItem(MENU_SUBMISSION, "投稿", R.drawable.btn_doc_option_contribute);
+                items.add(item);
+
+                item = new MenuItem(MENU_DELETE, getString(R.string.label_delete), R.drawable.btn_doc_option_delete);
+                items.add(item);
+
             } else {
-                item = new MenuItem(MENU_FAVORITE, getString(R.string.label_favorite), R.drawable.btn_doc_option_collect);
+                if (entity.isFavoriteFlag()) {
+                    item = new MenuItem(MENU_FAVORITE, getString(R.string.label_cancel_favorite), R.drawable.btn_doc_option_collected);
+                } else {
+                    item = new MenuItem(MENU_FAVORITE, getString(R.string.label_favorite), R.drawable.btn_doc_option_collect);
+                }
+                items.add(item);
+
+                item = new MenuItem(MENU_REPORT, getString(R.string.label_jubao), R.drawable.btn_doc_option_report);
+                items.add(item);
+
             }
+
+            item = new MenuItem(MENU_JUMPLZ, "跳转楼层", R.drawable.btn_doc_option_jump);
             items.add(item);
 
-            item = new MenuItem(MENU_REPORT, getString(R.string.label_jubao), R.drawable.btn_doc_option_report);
+            item = new MenuItem(MENU_FORWARD, "转发到动态", R.drawable.btn_doc_option_forward);
             items.add(item);
+//
+//            item = new MenuItem(MENU_SHARE, getString(R.string.label_share), R.drawable.btn_doc_option_share);
+//            items.add(item);
 
-        }
+            if (entity.getUserId().equals(PreferenceUtils.getUUid())) {
+                if (entity.isManager()) {
+                    if (entity.isTop()) {
+                        item = new MenuItem(MENU_TOP, "取消置顶", R.drawable.btn_doc_option_send_minister_post, true);
+                    } else {
+                        item = new MenuItem(MENU_TOP, "置顶", R.drawable.btn_doc_option_send_minister_post, true);
+                    }
+                    items.add(item);
 
-        item = new MenuItem(MENU_JUMPLZ, "跳转楼层", R.drawable.btn_doc_option_jump);
-        items.add(item);
-
-        item = new MenuItem(MENU_FORWARD, "转发到动态", R.drawable.btn_doc_option_forward);
-        items.add(item);
-
-        item = new MenuItem(MENU_SHARE, getString(R.string.label_share), R.drawable.btn_doc_option_share);
-        items.add(item);
-
-        if (entity.getUserId().equals(PreferenceUtils.getUUid())) {
-            if (entity.isManager()) {
-                if (entity.isTop()) {
-                    item = new MenuItem(MENU_TOP, "取消置顶", R.drawable.btn_doc_option_send_minister_post, true);
-                } else {
-                    item = new MenuItem(MENU_TOP, "置顶", R.drawable.btn_doc_option_send_minister_post, true);
-                }
-                items.add(item);
-
-                if (entity.isExcellent()) {
-                    item = new MenuItem(MENU_BOUTIQUE, "取消精品", R.drawable.btn_doc_option_send_minister_best, true);
-                } else {
-                    item = new MenuItem(MENU_BOUTIQUE, "设为精品", R.drawable.btn_doc_option_send_minister_best, true);
-                }
-                items.add(item);
+                    if (entity.isExcellent()) {
+                        item = new MenuItem(MENU_BOUTIQUE, "取消精品", R.drawable.btn_doc_option_send_minister_best, true);
+                    } else {
+                        item = new MenuItem(MENU_BOUTIQUE, "设为精品", R.drawable.btn_doc_option_send_minister_best, true);
+                    }
+                    items.add(item);
 
 //                item = new MenuItem(MENU_DELETE_V2, "违规删帖", R.drawable.btn_doc_option_send_minister_delete, true);
 //                items.add(item);
-            }
-        } else {
-            if (entity.isManager()) {
-                if (entity.isExcellent()) {
-                    item = new MenuItem(MENU_BOUTIQUE, "取消精品", R.drawable.btn_doc_option_send_minister_best, true);
-                } else {
-                    item = new MenuItem(MENU_BOUTIQUE, "设为精品", R.drawable.btn_doc_option_send_minister_best, true);
                 }
-                items.add(item);
+            } else {
+                if (entity.isManager()) {
+                    if (entity.isExcellent()) {
+                        item = new MenuItem(MENU_BOUTIQUE, "取消精品", R.drawable.btn_doc_option_send_minister_best, true);
+                    } else {
+                        item = new MenuItem(MENU_BOUTIQUE, "设为精品", R.drawable.btn_doc_option_send_minister_best, true);
+                    }
+                    items.add(item);
 
-                if (entity.isTop()) {
-                    item = new MenuItem(MENU_TOP, "取消置顶", R.drawable.btn_doc_option_send_minister_post, true);
-                } else {
-                    item = new MenuItem(MENU_TOP, "置顶", R.drawable.btn_doc_option_send_minister_post, true);
+                    if (entity.isTop()) {
+                        item = new MenuItem(MENU_TOP, "取消置顶", R.drawable.btn_doc_option_send_minister_post, true);
+                    } else {
+                        item = new MenuItem(MENU_TOP, "置顶", R.drawable.btn_doc_option_send_minister_post, true);
+                    }
+                    items.add(item);
+
+
+                    item = new MenuItem(MENU_DELETE_V2, "违规删帖", R.drawable.btn_doc_option_send_minister_delete, true);
+                    items.add(item);
                 }
-                items.add(item);
-
-
-                item = new MenuItem(MENU_DELETE_V2, "违规删帖", R.drawable.btn_doc_option_send_minister_delete, true);
-                items.add(item);
             }
+            bottomMenuFragment.setIsShare(true);
         }
         bottomMenuFragment.setShowTop(false);
         bottomMenuFragment.setMenuItems(items);
@@ -1158,106 +1182,216 @@ public class NewDocDetailActivity extends BaseAppCompatActivity implements DocDe
         bottomMenuFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
             @Override
             public void OnMenuItemClick(int itemId) {
-                if (itemId == MENU_FAVORITE) {
-                    favoriteDoc();
-                } else if (itemId == MENU_REPORT) {
-                    reportDoc();
-                } else if (itemId == MENU_SHARE) {
-                    if (hasLoaded) {
-                        showShare();
-                    } else {
-                        showToast(R.string.label_doc_not_loaded);
-                    }
-                } else if (itemId == MENU_DELETE) {
-                    deleteDoc();
-                } else if (itemId == TAG_DELETE) {
-                    if (mDocTags != null) {
-                        Intent i = new Intent(NewDocDetailActivity.this, TagControlActivity.class);
-                        i.putParcelableArrayListExtra("tags", mDocTags);
-                        i.putExtra(UUID, mDocId);
-                        startActivityForResult(i, REQ_DELETE_TAG);
-                    }
-                } else if (itemId == EDIT_DOC) {
-                    gotoEditDoc();
-                } else if (itemId == MENU_FORWARD) {
-                    ShareArticleEntity entity1 = new ShareArticleEntity();
-                    entity1.setDocId(mDoc.getId());
-                    entity1.setTitle(mDoc.getShare().getTitle());
-                    entity1.setContent(mDoc.getShare().getDesc());
-                    entity1.setCover(mDoc.getCover());
-                    entity1.setCreateTime(mDoc.getCreateTime());
-                    UserTopEntity entity2 = new UserTopEntity();
-                    if (mDoc.getBadgeList().size() > 0) {
-                        entity2.setBadge(mDoc.getBadgeList().get(0));
-                    } else {
-                        entity2.setBadge(null);
-                    }
-                    entity2.setHeadPath(mDoc.getUserIcon());
-                    entity2.setLevel(mDoc.getUserLevel());
-                    entity2.setLevelColor(mDoc.getUserLevelColor());
-                    entity2.setSex(mDoc.getUserSex());
-                    entity2.setUserId(mDoc.getUserId());
-                    entity2.setUserName(mDoc.getUserName());
-                    entity1.setDocCreateUser(entity2);
-                    entity1.setTexts(mDoc.getTexts());
-                    CreateForwardV2Activity.startActivity(NewDocDetailActivity.this, entity1);
-                } else if (itemId == MENU_SUBMISSION) {
-                    Intent i = new Intent(NewDocDetailActivity.this, SubmissionActivity.class);
-                    i.putExtra(UUID, mDocId);
-                    i.putExtra("doc_name", entity.getTitle());
-                    startActivity(i);
-                } else if (itemId == MENU_TOP) {
-                    mPresenter.loadDocTop(entity.isTop(), entity.getId());
-                } else if (itemId == MENU_BOUTIQUE) {
-                    mPresenter.loadDocExcellent(entity.isExcellent(), entity.getId());
-                } else if (itemId == MENU_JUMPLZ) {
-                    if (mAdapter.getSortType() != 1 && mDoc.getComments() > 0) {
-                        final AlertDialogUtil dialogUtil = AlertDialogUtil.getInstance();
-                        dialogUtil.createEditDialog(NewDocDetailActivity.this, mDoc.getComments(), 1);
-                        dialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
-                            @Override
-                            public void CancelOnClick() {
-                                dialogUtil.dismissDialog();
-                            }
+                if (isHideShare) {
+                    String url = "http://2333.moemoe.la/share/newDoc/" + mDocId;
+                    switch (itemId) {
+                        case 1:
+                            ShareUtils.shareQQ(NewDocDetailActivity.this, mShareTitle, url, mShareDesc + " " + url, ApiService.URL_QINIU + mShareIcon, platformActionListener);
+                            break;
+                        case 2:
+                            ShareUtils.shareQQzone(NewDocDetailActivity.this, mShareTitle, url, mShareDesc + " " + url, ApiService.URL_QINIU + mShareIcon, platformActionListener);
+                            ;
+                            break;
+                        case 3:
+                            ShareUtils.shareWechat(NewDocDetailActivity.this, mShareTitle, url, mShareDesc + " " + url, ApiService.URL_QINIU + mShareIcon, platformActionListener);
+                            break;
+                        case 4:
+                            ShareUtils.sharepyq(NewDocDetailActivity.this, mShareTitle, url, mShareDesc + " " + url, ApiService.URL_QINIU + mShareIcon, platformActionListener);
+                            break;
+                        case 5:
+                            ShareUtils.shareWeibo(NewDocDetailActivity.this, mShareTitle, url, mShareDesc + " " + url, ApiService.URL_QINIU + mShareIcon, platformActionListener);
+                            break;
 
-                            @Override
-                            public void ConfirmOnClick() {
-                                content = dialogUtil.getEditTextContent();
-                                try {
-                                    if (!TextUtils.isEmpty(content) && Integer.valueOf(content) > 0) {
-                                        if (mDoc.getComments() != 0 && Integer.valueOf(content) > mDoc.getComments()) {
-                                            showToast("超过当前楼层数");
-                                        } else {
-                                            if (mAdapter.getSortType() == 0) {
-                                                mPresenter.requestTopComment(mDocId, mAdapter.getCommentType(), mAdapter.getSortType(), Integer.valueOf(content) - 1, 0);
-                                            } else if (mAdapter.getSortType() == 2) {
-                                                mPresenter.requestTopComment(mDocId, mAdapter.getCommentType(), mAdapter.getSortType(), mDoc.getComments() - Integer.valueOf(content), 0);
+                    }
+                } else {
+                    if (itemId == MENU_FAVORITE) {
+                        favoriteDoc();
+                    } else if (itemId == MENU_REPORT) {
+                        reportDoc();
+                    } else if (itemId == MENU_SHARE) {
+                        if (hasLoaded) {
+                            showShare();
+                        } else {
+                            showToast(R.string.label_doc_not_loaded);
+                        }
+                    } else if (itemId == MENU_DELETE) {
+                        deleteDoc();
+                    } else if (itemId == TAG_DELETE) {
+                        if (mDocTags != null) {
+                            Intent i = new Intent(NewDocDetailActivity.this, TagControlActivity.class);
+                            i.putParcelableArrayListExtra("tags", mDocTags);
+                            i.putExtra(UUID, mDocId);
+                            startActivityForResult(i, REQ_DELETE_TAG);
+                        }
+                    } else if (itemId == EDIT_DOC) {
+                        gotoEditDoc();
+                    } else if (itemId == MENU_FORWARD) {
+                        ShareArticleEntity entity1 = new ShareArticleEntity();
+                        entity1.setDocId(mDoc.getId());
+                        entity1.setTitle(mDoc.getShare().getTitle());
+                        entity1.setContent(mDoc.getShare().getDesc());
+                        entity1.setCover(mDoc.getCover());
+                        entity1.setCreateTime(mDoc.getCreateTime());
+                        UserTopEntity entity2 = new UserTopEntity();
+                        if (mDoc.getBadgeList().size() > 0) {
+                            entity2.setBadge(mDoc.getBadgeList().get(0));
+                        } else {
+                            entity2.setBadge(null);
+                        }
+                        entity2.setHeadPath(mDoc.getUserIcon());
+                        entity2.setLevel(mDoc.getUserLevel());
+                        entity2.setLevelColor(mDoc.getUserLevelColor());
+                        entity2.setSex(mDoc.getUserSex());
+                        entity2.setUserId(mDoc.getUserId());
+                        entity2.setUserName(mDoc.getUserName());
+                        entity1.setDocCreateUser(entity2);
+                        entity1.setTexts(mDoc.getTexts());
+                        CreateForwardV2Activity.startActivity(NewDocDetailActivity.this, entity1);
+                    } else if (itemId == MENU_SUBMISSION) {
+                        Intent i = new Intent(NewDocDetailActivity.this, SubmissionActivity.class);
+                        i.putExtra(UUID, mDocId);
+                        i.putExtra("doc_name", entity.getTitle());
+                        startActivity(i);
+                    } else if (itemId == MENU_TOP) {
+                        mPresenter.loadDocTop(entity.isTop(), entity.getId());
+                    } else if (itemId == MENU_BOUTIQUE) {
+                        mPresenter.loadDocExcellent(entity.isExcellent(), entity.getId());
+                    } else if (itemId == MENU_JUMPLZ) {
+                        if (mAdapter.getSortType() != 1 && mDoc.getComments() > 0) {
+                            final AlertDialogUtil dialogUtil = AlertDialogUtil.getInstance();
+                            dialogUtil.createEditDialog(NewDocDetailActivity.this, mDoc.getComments(), 1);
+                            dialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+                                @Override
+                                public void CancelOnClick() {
+                                    dialogUtil.dismissDialog();
+                                }
+
+                                @Override
+                                public void ConfirmOnClick() {
+                                    content = dialogUtil.getEditTextContent();
+                                    try {
+                                        if (!TextUtils.isEmpty(content) && Integer.valueOf(content) > 0) {
+                                            if (mDoc.getComments() != 0 && Integer.valueOf(content) > mDoc.getComments()) {
+                                                showToast("超过当前楼层数");
+                                            } else {
+                                                if (mAdapter.getSortType() == 0) {
+                                                    mPresenter.requestTopComment(mDocId, mAdapter.getCommentType(), mAdapter.getSortType(), Integer.valueOf(content) - 1, 0);
+                                                } else if (mAdapter.getSortType() == 2) {
+                                                    mPresenter.requestTopComment(mDocId, mAdapter.getCommentType(), mAdapter.getSortType(), mDoc.getComments() - Integer.valueOf(content), 0);
+                                                }
+                                                dialogUtil.dismissDialog();
                                             }
-                                            dialogUtil.dismissDialog();
+                                        } else {
+                                            showToast("楼层数必须大于0");
                                         }
-                                    } else {
+                                    } catch (Exception e) {
                                         showToast("楼层数必须大于0");
                                     }
-                                } catch (Exception e) {
-                                    showToast("楼层数必须大于0");
                                 }
-                            }
-                        });
-                        dialogUtil.showDialog();
-                    } else {
-                        showToast("当前没有楼层");
+                            });
+                            dialogUtil.showDialog();
+                        } else {
+                            showToast("当前没有楼层");
+                        }
+                    } else if (itemId == MENU_DELETE_V2) {
+                        Intent intent = new Intent(NewDocDetailActivity.this, DeleteActivity.class);
+                        intent.putExtra(JuBaoActivity.EXTRA_NAME, mUserName);
+                        intent.putExtra(JuBaoActivity.EXTRA_CONTENT, mShareDesc);
+                        intent.putExtra(JuBaoActivity.UUID, mDocId);
+                        intent.putExtra(JuBaoActivity.EXTRA_TARGET, REPORT.DOC.toString());
+                        startActivity(intent);
                     }
-                } else if (itemId == MENU_DELETE_V2) {
-                    Intent intent = new Intent(NewDocDetailActivity.this, DeleteActivity.class);
-                    intent.putExtra(JuBaoActivity.EXTRA_NAME, mUserName);
-                    intent.putExtra(JuBaoActivity.EXTRA_CONTENT, mShareDesc);
-                    intent.putExtra(JuBaoActivity.UUID, mDocId);
-                    intent.putExtra(JuBaoActivity.EXTRA_TARGET, REPORT.DOC.toString());
-                    startActivity(intent);
                 }
             }
         });
+
+        bottomMenuFragment.setShareOnClickListener(new BottomMenuFragment.ShareItemClickListener() {
+            @Override
+            public void OnShareItemClick(String shareName) {
+                // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+                // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+                // text是分享文本，所有平台都需要这个字段
+                // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+                if (hasLoaded) {
+//                    showShare();
+                    String url;
+                    if (BuildConfig.DEBUG) {
+                        url = ApiService.SHARE_BASE_DEBUG + mDocId;
+                    } else {
+                        url = ApiService.SHARE_BASE + mDocId;
+                    }
+                    switch (shareName) {
+                        case "QQ":
+                            ShareUtils.shareQQ(NewDocDetailActivity.this, mShareTitle, url, mShareDesc + " " + url, ApiService.URL_QINIU + mShareIcon, platformActionListener);
+                            break;
+                        case "QQZone":
+                            ShareUtils.shareQQzone(NewDocDetailActivity.this, mShareTitle, url, mShareDesc + " " + url, ApiService.URL_QINIU + mShareIcon, platformActionListener);
+                            break;
+                        case "WeChat":
+                            ShareUtils.shareWechat(NewDocDetailActivity.this, mShareTitle, url, mShareDesc + " " + url, ApiService.URL_QINIU + mShareIcon, platformActionListener);
+                            break;
+                        case "WeChatPyq":
+                            ShareUtils.sharepyq(NewDocDetailActivity.this, mShareTitle, url, mShareDesc + " " + url, ApiService.URL_QINIU + mShareIcon, platformActionListener);
+                            break;
+                        case "WeiBo":
+                            ShareUtils.shareWeibo(NewDocDetailActivity.this, mShareTitle, url, mShareDesc + " " + url, ApiService.URL_QINIU + mShareIcon, platformActionListener);
+                            break;
+                    }
+                } else {
+                    showToast(R.string.label_doc_not_loaded);
+                }
+            }
+
+        });
+
     }
+
+    /**
+     * 分享回调
+     */
+    PlatformActionListener platformActionListener = new PlatformActionListener() {
+        @Override
+        public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+            Log.e("kid", "分享成功");
+            if (isHideShare) {
+
+            } else {
+                MoeMoeApplication.getInstance().getNetComponent().getApiService().shareKpi("{\"doc\":\"" + mDocId + "\"}")//{"doc":"uuid"}
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(new NetSimpleResultSubscriber() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onFail(int code, String msg) {
+
+                            }
+                        });
+                mPresenter.shareDoc();
+            }
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
+
+        @Override
+        public void onError(Platform platform, int i, Throwable throwable) {
+            Log.e("kid", "分享失败");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
+
+        @Override
+        public void onCancel(Platform platform, int i) {
+            Log.e("kid", "分享取消");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
+    };
 
     private void gotoEditDoc() {
         Intent i = new Intent(NewDocDetailActivity.this, CreateRichDocActivity.class);

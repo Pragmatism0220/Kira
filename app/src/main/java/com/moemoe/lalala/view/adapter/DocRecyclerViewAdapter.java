@@ -151,6 +151,7 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private int mPinLun;
     private boolean isCommentLz = true;
     private int sortType = 0;
+
     //    private Runnable mProgressCallback = new Runnable() {
 //        @Override
 //        public void run() {
@@ -645,8 +646,10 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBufferingUpdate(int percent) {
-        if (!isFirstClick && mMusicHolder != null) {
-            mMusicHolder.sbMusicTime.setSecondaryProgress(mMusicHolder.sbMusicTime.getMax() * 100 / percent);
+        if (percent != 0) {
+            if (!isFirstClick && mMusicHolder != null) {
+                mMusicHolder.sbMusicTime.setSecondaryProgress(mMusicHolder.sbMusicTime.getMax() * 100 / percent);
+            }
         }
     }
 
@@ -1081,7 +1084,7 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 //            if(curMusic != null){
 //                if(curMusic.getPath().equals(musicInfo.getPath())){
 //                    onSongUpdate(musicInfo);
-//                }
+//                } 
 //            }
             final Image image = music.getCover();
             if (image.getW() <= 0 || image.getH() <= 0) {
@@ -1640,8 +1643,9 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         TextView mTvCoinNum;
         TextView mSort;
         CommonTabLayout pageIndicator;
-        RelativeLayout mRlPinLun;
         TextView mTvCommentLz;
+        RelativeLayout mRlPinLun;
+        View mViewSep;
 
         FloorHolder(View itemView) {
             super(itemView);
@@ -1650,6 +1654,7 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             mSort = itemView.findViewById(R.id.tv_sort);
             pageIndicator = itemView.findViewById(R.id.indicator_person_data);
             mRlPinLun = itemView.findViewById(R.id.rl_pinlun);
+            mViewSep = itemView.findViewById(R.id.view_sep);
             mTvCommentLz = itemView.findViewById(R.id.tv_comment_lz);
         }
     }
@@ -1697,6 +1702,16 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         for (String title : mTitles) {
             mTabEntities.add(new TabEntity(title, R.drawable.ic_personal_bag, R.drawable.ic_personal_bag));
         }
+        if (mDocBean.getComments() == 0) {
+            ArrayList<DocDetailNormalEntity> entities = DocRecyclerViewAdapter.this.getmComments();
+            if (entities == null || entities.size() == 0) {
+                holder.mRlPinLun.setVisibility(View.GONE);
+                holder.mViewSep.setVisibility(View.GONE);
+            } else {
+                holder.mRlPinLun.setVisibility(View.VISIBLE);
+                holder.mViewSep.setVisibility(View.VISIBLE);
+            }
+        }
         holder.pageIndicator.setTabData(mTabEntities);
         holder.pageIndicator.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
@@ -1707,7 +1722,6 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     holder.mRlPinLun.setVisibility(View.GONE);
                 } else if (commentType == 1) {
                     holder.mRlPinLun.setVisibility(View.VISIBLE);
-//                    holder.mSort.setVisibility(View.VISIBLE);
                 } else if (commentType == 2) {
                     holder.mRlPinLun.setVisibility(View.GONE);
                 }
@@ -1716,6 +1730,16 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         ((NewDocDetailActivity) mContext).loadLikeRequst();
                     } else {
                         ((NewDocDetailActivity) mContext).requestComment();
+                        if (mDocBean.getComments() == 0) {
+                            ArrayList<DocDetailNormalEntity> entities = DocRecyclerViewAdapter.this.getmComments();
+                            if (entities == null || entities.size() == 0) {
+                                holder.mRlPinLun.setVisibility(View.GONE);
+                                holder.mViewSep.setVisibility(View.GONE);
+                            } else {
+                                holder.mRlPinLun.setVisibility(View.VISIBLE);
+                                holder.mViewSep.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
                 } else {
                     ArrayList<DocDetailNormalEntity> temp = mPreComments;
