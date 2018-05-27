@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.utils.MenuVItemDecoration;
-import com.moemoe.lalala.view.activity.ShoppingDetalisActivity;
 import com.moemoe.lalala.view.adapter.ShoppingItemAdapter;
 import com.moemoe.lalala.view.widget.recycler.PullAndLoadView;
 

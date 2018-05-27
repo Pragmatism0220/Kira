@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.model.entity.DocResponse;
-import com.moemoe.lalala.view.activity.ShoppingDetalisActivity;
 import com.moemoe.lalala.view.widget.adapter.ClickableViewHolder;
 
 /**
@@ -23,8 +22,8 @@ public class ShoppingItemHolder extends ClickableViewHolder {
         $(R.id.iv_go_shopping).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ShoppingDetalisActivity.class);
-                context.startActivity(intent);
+//                Intent intent = new Intent(context, ShoppingDetalisActivity.class);
+//                context.startActivity(intent);
             }
         });
     }

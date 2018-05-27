@@ -1,18 +1,14 @@
 package com.moemoe.lalala.view.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.event.OnItemListener;
-import com.moemoe.lalala.view.activity.BranchInfoActivity;
 import com.moemoe.lalala.view.adapter.BranchFragmentListAdapter;
 import com.moemoe.lalala.view.base.BranchItemBean;
-import com.moemoe.lalala.view.base.TestPrincipalInfo;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
 
 import java.util.ArrayList;
@@ -51,8 +47,8 @@ public class BranchFragment extends BaseFragment {
         mAdapter.setOnItemClickListener(new OnItemListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getContext(), BranchInfoActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(getContext(), BranchInfoActivity.class);
+//                startActivity(intent);
             }
         });
     }

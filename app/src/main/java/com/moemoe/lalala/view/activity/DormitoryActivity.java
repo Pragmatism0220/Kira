@@ -338,23 +338,23 @@ public class DormitoryActivity extends BaseAppCompatActivity implements Dormitor
         mRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DormitoryActivity.this, RoleActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(DormitoryActivity.this, RoleActivity.class);
+//                startActivity(intent);
             }
         });
         mStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DormitoryActivity.this, StorageActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(DormitoryActivity.this, StorageActivity.class);
+//                startActivity(intent);
 
             }
         });
         mDrama.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DormitoryActivity.this, DormitoryDramaActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(DormitoryActivity.this, DormitoryDramaActivity.class);
+//                startActivity(intent);
             }
         });
         mVisitorInfo.setOnClickListener(new View.OnClickListener() {
