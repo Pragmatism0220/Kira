@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.moemoe.lalala.view.activity.RoleActivity.Presenter" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:background="@drawable/ic_role_top_bg"
+        android:orientation="vertical"
+        tools:context="com.moemoe.lalala.view.activity.RoleActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y716">
+
+            <ImageView
+                android:id="@+id/role_back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/y48"
+                android:background="@drawable/role_back_btn"
+                android:onClick="@{presenter.onClick}" />
+
+            <ImageView
+                android:id="@+id/role_name_bg"
+                android:layout_width="@dimen/x320"
+                android:layout_height="@dimen/y141"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/x32"
+                android:layout_marginTop="@dimen/y24"
+                android:src="@drawable/ic_home_roleschoice_title" />
+
+            <ImageView
+                android:id="@+id/role_image"
+                android:layout_width="@dimen/x432"
+                android:layout_height="@dimen/y576"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/role_name_bg"
+                android:src="@drawable/btn_classmate_mei_uniform_1" />
+
+            <ImageButton
+                android:id="@+id/role_cloth_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="@dimen/y12"
+                android:layout_marginEnd="@dimen/x36"
+                android:background="@drawable/role_clothing_bg"
+                android:onClick="@{presenter.onClick}" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/role_back_btn"
+                android:layout_marginStart="@dimen/x52"
+                android:layout_marginTop="@dimen/y100"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/role_guanfang"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="官方角色"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x36" />
+
+                <TextView
+                    android:id="@+id/role_name_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/y8"
+                    android:text="美藤双树"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x75"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:layout_width="@dimen/x210"
+                    android:layout_height="@dimen/y44"
+                    android:layout_marginTop="@dimen/y14"
+                    android:background="@drawable/role_heart_bg">
+
+                    <ImageView
+                        android:id="@+id/role_heart_image"
+                        android:layout_width="@dimen/x58"
+                        android:layout_height="@dimen/y58"
+                        android:src="@drawable/ic_home_roles_heart_normal" />
+
+                    <TextView
+                        android:id="@+id/role_heart_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/role_heart_image"
+                        android:text="友好"
+                        android:textColor="@color/pink_d85d86"
+                        android:textSize="@dimen/x30"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/role_heart_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/role_heart_title"
+                        android:text="(42)"
+                        android:textColor="@color/pink_d85d86"
+                        android:textSize="15dp" />
+
+                </RelativeLayout>
+
+                <ImageButton
+                    android:id="@+id/put_house_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/y20"
+                    android:background="@drawable/ic_role_put_house_bg"
+                    android:onClick="@{presenter.onClick}" />
+
+                <ImageButton
+                    android:id="@+id/set_deskmake_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/y16"
+                    android:background="@drawable/ic_role_set_deskmake_bg"
+                    android:onClick="@{presenter.onClick}" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/role_list_bg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y618"
+            android:background="@drawable/ic_role_bottom_bg">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/role_list_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/y10"
+                android:layout_marginEnd="@dimen/y60"
+                android:paddingStart="@dimen/y60"
+                android:paddingTop="@dimen/y44" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</layout>

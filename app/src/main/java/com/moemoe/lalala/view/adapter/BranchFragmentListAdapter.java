@@ -65,12 +65,16 @@ public class BranchFragmentListAdapter extends RecyclerView.Adapter<BranchFragme
         private RelativeLayout mBranchPhoto;
         private ImageView mBranchBg;
         private TextView mBranchName;
+        private TextView mTitle;
+        private TextView mName;
 
         public BranchViewHolder(View itemView) {
             super(itemView);
             mBranchPhoto = itemView.findViewById(R.id.item_branch_photo);
             mBranchBg = itemView.findViewById(R.id.item_branch_bg);
             mBranchName = itemView.findViewById(R.id.item_branch_name);
+            mTitle = itemView.findViewById(R.id.item_branch_title);
+            mName = itemView.findViewById(R.id.item_branch_num);
         }
     }
 }

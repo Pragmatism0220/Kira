@@ -130,22 +130,22 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
+            <ImageView
                 android:id="@+id/dormitory_storage"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_storage_box_selector" />
 
-            <Button
+            <ImageView
                 android:id="@+id/dormitory_role"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_role_selector" />
 
-            <Button
+            <ImageView
                 android:id="@+id/dormitory_drama"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_drama_selector" />
         </LinearLayout>
     </RelativeLayout>

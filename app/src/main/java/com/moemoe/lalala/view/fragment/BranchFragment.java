@@ -1,5 +1,6 @@
 package com.moemoe.lalala.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +8,7 @@ import android.view.View;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.event.OnItemListener;
+import com.moemoe.lalala.view.activity.BranchInfoActivity;
 import com.moemoe.lalala.view.adapter.BranchFragmentListAdapter;
 import com.moemoe.lalala.view.base.BranchItemBean;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
@@ -28,6 +30,10 @@ public class BranchFragment extends BaseFragment {
     private BranchFragmentListAdapter mAdapter;
     private List<BranchItemBean> mlists;
 
+    public static BranchFragment newInstance() {
+        return new BranchFragment();
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.branch_fragment;
@@ -38,17 +44,15 @@ public class BranchFragment extends BaseFragment {
         getData();
         mAdapter = new BranchFragmentListAdapter(mlists, getContext());
         mRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        int rightSpace = 22;
-        int buttonSpace = 24;
-        int top = 32;
-        mRecycleView.addItemDecoration(new SpacesItemDecoration(buttonSpace, rightSpace, top));
+
+        mRecycleView.addItemDecoration(new SpacesItemDecoration(12, 12, 0));
         mRecycleView.setAdapter(mAdapter);
 
         mAdapter.setOnItemClickListener(new OnItemListener() {
             @Override
             public void onItemClick(View view, int position) {
-//                Intent intent = new Intent(getContext(), BranchInfoActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(getContext(), BranchInfoActivity.class);
+                startActivity(intent);
             }
         });
     }

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
@@ -76,11 +77,11 @@ public class DormitoryActivity extends BaseAppCompatActivity implements Dormitor
     @BindView(R.id.ll_tool_bar)
     LinearLayout mLlToolBar;
     @BindView(R.id.dormitory_storage)
-    Button mStorage;
+    ImageView mStorage;
     @BindView(R.id.dormitory_role)
-    Button mRole;
+    ImageView mRole;
     @BindView(R.id.dormitory_drama)
-    Button mDrama;
+    ImageView mDrama;
     @BindView(R.id.visitor_info)
     RelativeLayout mVisitorInfo;
     @BindView(R.id.visitor_count)
@@ -338,23 +339,22 @@ public class DormitoryActivity extends BaseAppCompatActivity implements Dormitor
         mRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(DormitoryActivity.this, RoleActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(DormitoryActivity.this, RoleActivity.class);
+                startActivity(intent);
             }
         });
         mStorage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(DormitoryActivity.this, StorageActivity.class);
-//                startActivity(intent);
-
+                Intent intent = new Intent(DormitoryActivity.this, StorageActivity.class);
+                startActivity(intent);
             }
         });
         mDrama.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(DormitoryActivity.this, DormitoryDramaActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(DormitoryActivity.this, DormitoryDramaActivity.class);
+                startActivity(intent);
             }
         });
         mVisitorInfo.setOnClickListener(new View.OnClickListener() {

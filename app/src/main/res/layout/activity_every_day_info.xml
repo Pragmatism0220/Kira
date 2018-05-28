@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.moemoe.lalala.view.activity.EveryDayInfoActivity.Presenter" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:background="@drawable/bg_home_plot_daily_background_cover"
+        android:orientation="vertical"
+        tools:context="com.moemoe.lalala.view.activity.EveryDayInfoActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_home_plot_topbackground">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/x20"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_home_title_mystory_daily" />
+
+            <ImageView
+                android:id="@+id/every_day_info_back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/role_back_btn"
+                android:onClick="@{presenter.onClick}" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/every_day_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/y58"
+            android:background="@drawable/bg_home_plot_detail_titel"
+            android:gravity="center_horizontal"
+            android:text="莲的日常"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/every_day_info_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/x44"
+            android:layout_marginStart="@dimen/x44"
+            android:layout_marginTop="@dimen/y38"></android.support.v7.widget.RecyclerView>
+
+
+    </LinearLayout>
+</layout>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_furniture_ll"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/item_furniture_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/item_furniture_check_btn"
+            android:layout_width="@dimen/x156"
+            android:layout_height="@dimen/y156"
+            android:background="@drawable/item_furniture_selector"
+            android:button="@null" />
+
+        <ImageView
+            android:id="@+id/item_furniture_image"
+            android:layout_width="@dimen/x130"
+            android:layout_height="@dimen/y130"
+            android:layout_gravity="center"
+            android:background="@drawable/test_image" />
+
+        <ImageView
+            android:id="@+id/item_furniture_using"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_home_items_furniture_using"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/item_furniture_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/y12"
+        android:text="电脑桌"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/item_furniture_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/y20"
+        android:layout_marginTop="@dimen/y8"
+        android:text="现代风格"
+        android:textColor="@color/black"
+        android:textSize="10dp" />
+
+
+</LinearLayout>

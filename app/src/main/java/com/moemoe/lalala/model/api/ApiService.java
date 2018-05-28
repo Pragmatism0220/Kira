@@ -1115,7 +1115,16 @@ public interface ApiService {
 
     @GET("v2/kira/house/inHouseRubblish")
     Observable<ApiResult<ArrayList<MapEntity>>> loadHouseInHouseRubblish();
-    
+
     @GET("v2/kira/house/inHouseRoles")
     Observable<ApiResult<ArrayList<MapEntity>>> loadHouseInHouseRoles();
+
+    @GET("/v2/kira/house/allRolesForUserSelect")
+    Observable<ApiResult<ArrayList<RoleInfoEntity>>> loadRoleInfo();
+
+    @POST("/v2/kira/house/user/role/deskmate/{roleId}")
+    Observable<ApiResult> setDeskMate(@Path("roleId") String roleId);
+
+    @POST("/v2/kira/house/user/role/putInHouse/{roleId}")
+    Observable<ApiResult> putInHoese(@Path("roleId") String roleId);
 }

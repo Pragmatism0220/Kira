@@ -6,67 +6,25 @@
     android:background="@drawable/ic_home_items_prop_back"
     android:orientation="vertical">
 
-    <RadioGroup
+    <com.moemoe.lalala.view.widget.view.KiraTabLayout
+        android:id="@+id/furniture_tab"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y110"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="@dimen/y104"
+        android:paddingLeft="@dimen/x12"
+        android:paddingRight="@dimen/x12"
+        app:kira_tl_indicator_margin_bottom="@dimen/x24"
+        app:kira_tl_indicator_margin_end="@dimen/x12"
+        app:kira_tl_indicator_margin_start="@dimen/x12"
+        app:kira_tl_indicator_margin_top="@dimen/x24"
+        app:kira_tl_indicator_style="BLOCK"
+        app:kira_tl_indicator_color="@color/white"
+        app:kira_tl_tab_layout="@layout/tag_furniture"
+        app:kira_tl_tab_padding="@dimen/x12"
+        app:kira_tl_textSelectColor="@color/yellow_ddb922"
+        app:kira_tl_textUnSelectColor="@color/white"
+        app:kira_tl_text_size="@dimen/x30">
+    </com.moemoe.lalala.view.widget.view.KiraTabLayout>
 
-        <RadioButton
-            android:layout_width="1dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
-            android:textColor="@drawable/rb_text_color"
-            android:gravity="center"
-            android:background="@drawable/item_btn_bg"
-            android:text="全部" />
-
-        <RadioButton
-            android:layout_width="1dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
-            android:textColor="@drawable/rb_text_color"
-            android:gravity="center"
-            android:text="套装" />
-
-        <RadioButton
-            android:layout_width="1dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
-            android:gravity="center"
-            android:text="桌子" />
-
-        <RadioButton
-            android:layout_width="1dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
-            android:gravity="center"
-            android:text="电脑" />
-
-        <RadioButton
-            android:layout_width="1dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
-            android:gravity="center"
-            android:text="电视机" />
-    </RadioGroup>
-
-
-    <!--<android.support.design.widget.TabLayout-->
-    <!--android:id="@+id/tab"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="@dimen/y110"-->
-    <!--app:tabBackground="@drawable/ic_white_bg"-->
-    <!--app:tabGravity="center"-->
-    <!--app:tabIndicatorHeight="0dp"-->
-    <!--app:tabMode="scrollable"-->
-    <!--app:tabSelectedTextColor="@color/yellow_ddb922"-->
-    <!--app:tabTextColor="@color/white"></android.support.design.widget.TabLayout>-->
 
     <android.support.v4.view.ViewPager
         android:id="@+id/furniture_viewpager"
