@@ -16,6 +16,8 @@ public interface RoleContract {
         void setDeskMate(String roleId);
 
         void putInHouse(String roleId);
+
+        void removeOutHouse(String roleId);
     }
 
     interface View extends BaseView {
@@ -24,5 +26,7 @@ public interface RoleContract {
         void setDeskMateSuccess();
 
         void putInHouseSuccess();
+
+        void removeOutHouseSuccess();
     }
 }

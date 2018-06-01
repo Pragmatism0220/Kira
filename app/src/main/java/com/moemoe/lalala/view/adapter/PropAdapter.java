@@ -13,8 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.event.OnItemListener;
+import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.entity.PropInfoEntity;
 import com.moemoe.lalala.view.base.PropInfo;
 
 import java.util.List;
@@ -27,12 +30,12 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
 
 
     private Context mContext;
-    private List<PropInfo> infos;
+    private List<PropInfoEntity> infos;
 
     private int mSelectedPos = -1;//保存当前选中的position 重点！
 
 
-    public PropAdapter(Context mContext, List<PropInfo> infos) {
+    public PropAdapter(Context mContext, List<PropInfoEntity> infos) {
         this.mContext = mContext;
         this.infos = infos;
     }
@@ -46,17 +49,26 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
 
     @Override
     public void onBindViewHolder(final PropViewHolder holder, final int position) {
-        final PropInfo data = infos.get(position);
-//        holder.mView.setImageResource(Integer.parseInt(data.getPhoto()));
-        holder.mName.setText(data.getName() + "");
-        holder.mNum.setText("数量:" + data.getNum());
+        final PropInfoEntity data = infos.get(position);
+        Log.i("PropFragment", "onBindViewHolder: " + data);
+        if (data.isUserHadTool()) {
+            Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).into(holder.mView);
+            holder.mName.setText(data.getName());
+            holder.mNum.setText("数量" + data.getToolCount());
+        } else {
+            holder.mName.setText(data.getName());
+            holder.mNum.setText("数量" + data.getToolCount());
+            Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).into(holder.mView);
+            holder.mView.setAlpha(0.5f);
+        }
+
+
         holder.mBg.setChecked(mSelectedPos == position);
         if (mOnItemListener != null) {
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mOnItemListener.onItemClick(holder.mView, position);
-//                    holder.mBg.setSelected(true);
                     if (mSelectedPos != position) {
                         holder.mBg.setChecked(true);
                         if (mSelectedPos != -1) {
@@ -64,22 +76,30 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
                         }
                         mSelectedPos = position;
                     }
-
-
                 }
             });
         }
-        holder.mBg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    String info = holder.mBg.getText().toString();
-                    Log.i("asd", "onCheckedChanged: "+info);
-                }
-            }
-        });
+//        holder.mBg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (isChecked){
+//                    String info = holder.mBg.getText().toString();
+//                    Log.i("asd", "onCheckedChanged: "+info);
+//                }
+//            }
+//        });
 
+    }
 
+    public void setData(List<PropInfoEntity> data) {
+
+        this.infos = data;
+        notifyDataSetChanged();
+    }
+
+    public void setRestore(List<PropInfoEntity> data) {
+        this.infos = data;
+        notifyDataSetChanged();
     }
 
     public int getSelectedPos() {

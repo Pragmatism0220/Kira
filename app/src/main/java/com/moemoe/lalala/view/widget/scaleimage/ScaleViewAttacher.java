@@ -21,7 +21,7 @@ public class ScaleViewAttacher implements IScaleView, View.OnTouchListener, Vers
 
     static final String LOG_TAG = "ScaleViewAttacher";
 
-    // let debug flag be dynamic, but still Proguard can be used to remove from
+    // let debug flag be dynamic, but still Proguard can be used to removeInHouse from
     // release builds
     static final boolean DEBUG = Log.isLoggable(LOG_TAG, Log.DEBUG);
 

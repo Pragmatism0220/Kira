@@ -528,7 +528,7 @@ public class ImageManager {
                         Position position = entry.getKey();
                         if (!(startRowKey <= position.row && position.row <= endRowKey && startColKey <= position.col && position.col <= endColKey)) {
                             imageiterator.remove();
-                            Log.d("nnnn", "position:" + position + " remove");
+                            Log.d("nnnn", "position:" + position + " removeInHouse");
                         } else {
                             Bitmap bitmap = entry.getValue();
                             tempPosition.set(position.row / 2 + (position.row % 2 == 0 ? 0 : 1), position.col / 2 + (position.col % 2 == 0 ? 0 : 1));

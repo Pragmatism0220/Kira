@@ -45,6 +45,8 @@ public class PhoneMenuListHolder extends ClickableViewHolder {
                 .placeholder(R.drawable.bg_default_circle)
                 .bitmapTransform(new CropCircleTransformation(itemView.getContext()))
                 .into((ImageView) $(R.id.iv_avatar));
+
+
         setText(R.id.tv_name, entity.getUserName());
         if (!TextUtils.isEmpty(entity.getUserSex())) {
             $(R.id.iv_sex).setVisibility(View.VISIBLE);

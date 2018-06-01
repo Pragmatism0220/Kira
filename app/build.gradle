@@ -7,7 +7,7 @@ android {
     compileSdkVersion COMPILESDKVERSION as int
     buildToolsVersion BUILDTOOLSVERSION as String
 
-    dataBinding{
+    dataBinding {
         enabled = true
     }
 

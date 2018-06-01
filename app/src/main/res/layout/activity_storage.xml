@@ -42,13 +42,21 @@
                 android:background="@drawable/role_back_btn"
                 android:onClick="@{presenter.onClick}" />
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/storage_commodity_image"
                 android:layout_width="@dimen/x200"
                 android:layout_height="@dimen/y200"
                 android:layout_marginStart="@dimen/x36"
                 android:layout_marginTop="@dimen/y186"
-                android:background="@drawable/btn_home_items_background_circle" />
+                android:background="@drawable/btn_home_items_background_circle">
+
+                <ImageView
+                    android:id="@+id/storage_image"
+                    android:layout_width="@dimen/x200"
+                    android:layout_height="@dimen/y200"
+                    android:layout_centerInParent="true" />
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/storage_commodity_name"
@@ -67,7 +75,7 @@
                 android:layout_width="@dimen/x96"
                 android:layout_height="@dimen/y48"
                 android:layout_marginStart="@dimen/x20"
-                android:layout_marginTop="@dimen/y186"
+                android:layout_marginTop="@dimen/y195"
                 android:layout_toEndOf="@+id/storage_commodity_name"
                 android:background="@drawable/ic_white_bg"
                 android:gravity="center"

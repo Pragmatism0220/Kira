@@ -221,7 +221,7 @@ public class RecommendTagActivity extends BaseAppCompatActivity implements Recom
                 break;
             case R.id.iv_1_close:
                 mRes.remove(mTvTag1.getText().toString());
-//                mRes.remove(0);
+//                mRes.removeInHouse(0);
 //                if (mTag3Root.getVisibility() == View.VISIBLE) {
 //                    mTag3Root.setVisibility(View.GONE);
 //                    mTvTag1.setText(mTvTag2.getText());
@@ -238,7 +238,7 @@ public class RecommendTagActivity extends BaseAppCompatActivity implements Recom
 //                }
                 break;
             case R.id.iv_2_close:
-//                mRes.remove(1);
+//                mRes.removeInHouse(1);
                 mRes.remove(mTvTag2.getText().toString());
 //                if (mTag3Root.getVisibility() == View.VISIBLE) {
 //                    mTag3Root.setVisibility(View.GONE);
@@ -250,7 +250,7 @@ public class RecommendTagActivity extends BaseAppCompatActivity implements Recom
 //                }
                 break;
             case R.id.iv_3_close:
-//                mRes.remove(3);
+//                mRes.removeInHouse(3);
                 mRes.remove(mTvTag3.getText().toString());
                 mTag3Root.setVisibility(View.GONE);
                 break;

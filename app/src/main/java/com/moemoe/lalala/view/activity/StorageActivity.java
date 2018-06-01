@@ -4,13 +4,18 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.databinding.ActivityStorageBinding;
+import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.entity.Image;
 import com.moemoe.lalala.view.adapter.TabPageAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.fragment.FurnitureFragment;
@@ -23,7 +28,7 @@ import java.util.List;
  * 储物柜界面
  */
 
-public class StorageActivity extends BaseActivity {
+public class StorageActivity extends BaseActivity implements PropFragment.CallBack {
 
     private ActivityStorageBinding binding;
 
@@ -34,6 +39,11 @@ public class StorageActivity extends BaseActivity {
 
     private List<Fragment> mFragmentLists;
     private TabPageAdapter mTabAdapter;
+
+    private String name;
+    private String describe;
+    private int toolCount;
+    private String id;
 
 
     @Override
@@ -46,6 +56,7 @@ public class StorageActivity extends BaseActivity {
     private void initViewPager() {
         mPropFragment = new PropFragment();
         mFurnitureFragment = new FurnitureFragment();
+        mPropFragment.setCallBack(this);
         mFragmentLists = new ArrayList<>();
         mFragmentLists.add(mPropFragment);
         mFragmentLists.add(mFurnitureFragment);
@@ -55,6 +66,20 @@ public class StorageActivity extends BaseActivity {
         binding.storageViewpager.setOnPageChangeListener(new myOnPageChangeListener());
         binding.radioGroup.setOnCheckedChangeListener(new myCheckChangeListener());
     }
+
+    @Override
+    public void getResult(String id, String name, String image, int toolCount) {
+        Log.i("StorageActivity", "getResult: " + id + "/" + name + "/" + image + "/" + toolCount);
+        binding.storageCommodityName.setText(name);
+        Glide.with(this).load(ApiService.URL_QINIU + image).into(binding.storageImage);
+        binding.storageCommodityNum.setText("X" + toolCount);
+        this.name = name;
+        this.id = id;
+        this.toolCount = toolCount;
+
+
+    }
+
 
     /**
      * RadioButton切换fragment
@@ -123,6 +148,17 @@ public class StorageActivity extends BaseActivity {
 
     @Override
     protected void initListeners() {
+        binding.storageCheckBoxBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mPropFragment.showNotHave();
+                } else {
+                    mPropFragment.showHave();
+                    Toast.makeText(getApplicationContext(), "显示拥有", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 
@@ -153,6 +189,8 @@ public class StorageActivity extends BaseActivity {
                     break;
             }
         }
+
+
     }
 
 

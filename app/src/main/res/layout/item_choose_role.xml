@@ -1,51 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/item_main"
         android:layout_width="@dimen/x200"
         android:layout_height="@dimen/y250"
-        android:background="@drawable/bg_home_roles_choice_back_official"
-        android:orientation="vertical">
+        android:background="@drawable/role_official_btn">
 
-        <RelativeLayout
+
+        <ImageView
+            android:id="@+id/item_choose_role_image"
+            android:layout_width="@dimen/x180"
+            android:layout_height="@dimen/y180"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/y10"
+            android:layout_marginStart="@dimen/y10"
+            android:layout_marginEnd="@dimen/y10"
+            android:src="@drawable/choose_role" />
+
+        <ImageView
+            android:id="@+id/item_choose_role_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/y10">
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_home_roleschoice_from_official" />
 
-            <ImageView
-                android:id="@+id/item_choose_role_image"
-                android:layout_width="@dimen/x180"
-                android:layout_height="@dimen/y180"
-                android:src="@drawable/choose_role" />
-
-            <ImageView
-                android:id="@+id/item_choose_role_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/ic_home_roleschoice_from_official" />
-
-            <ImageView
-                android:id="@+id/item_choose_role_zhai"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_home_roleschoice_inhome"
-                android:visibility="gone" />
-
-        </RelativeLayout>
+        <ImageView
+            android:id="@+id/item_choose_role_zhai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_home_roleschoice_inhome" />
 
         <TextView
             android:id="@+id/item_choose_role_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:text="莲莲莲"
-            android:layout_marginTop="@dimen/y10"
             android:textColor="@color/white"
             android:textStyle="bold" />
-
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

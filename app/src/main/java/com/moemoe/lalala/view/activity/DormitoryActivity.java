@@ -360,7 +360,8 @@ public class DormitoryActivity extends BaseAppCompatActivity implements Dormitor
         mVisitorInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(DormitoryActivity.this, VisitorsActivity.class);
+                startActivity(intent);
             }
         });
 

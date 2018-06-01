@@ -311,7 +311,7 @@ public class NewFolderWenZhangActivity extends BaseAppCompatActivity implements 
     public void onDeleteFoldersSuccess() {
 //        finalizeDialog();
 //        for(WenZhangFolderEntity entity : mSelectMap.values()){
-//            mAdapter.getList().remove(entity);
+//            mAdapter.getList().removeInHouse(entity);
 //        }
 //        mAdapter.notifyDataSetChanged();
 //        mSelectMap.clear();
@@ -322,7 +322,7 @@ public class NewFolderWenZhangActivity extends BaseAppCompatActivity implements 
 //        finalizeDialog();
 //        for (Integer i : mSelectMap.keySet()){
 //            mAdapter.getList().get(i).setSelect(false);
-//            WenZhangFolderEntity entity = mAdapter.getList().remove((int)i);
+//            WenZhangFolderEntity entity = mAdapter.getList().removeInHouse((int)i);
 //            mAdapter.getList().add(0,entity);
 //            mAdapter.notifyItemRangeChanged(0,i + 1);
 //        }

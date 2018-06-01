@@ -34,6 +34,7 @@ import com.moemoe.lalala.di.modules.PersonalModule;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.BadgeEntity;
 import com.moemoe.lalala.model.entity.Image;
+import com.moemoe.lalala.model.entity.SaveVisitorEntity;
 import com.moemoe.lalala.model.entity.TabEntity;
 import com.moemoe.lalala.model.entity.TagLikeEntity;
 import com.moemoe.lalala.model.entity.TagSendEntity;
@@ -465,6 +466,10 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
                 /**
                  * 她的宅屋
                  */
+                //TODO
+                SaveVisitorEntity entity = new SaveVisitorEntity(null, mInfo.getUserId(), 1);
+                Log.i("save", "onClick: " + mInfo.getUserId());
+                mPresenter.saveVisitor(entity);
                 Toast.makeText(getApplicationContext(), "她的宅屋", Toast.LENGTH_SHORT).show();
                 break;
             default:
@@ -482,6 +487,11 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
         mInfo.setBlack(isSave);
         bottomMenuFragment.changeItemTextById(4, isSave ? getString(R.string.label_user_cancel_reject) : getString(R.string.label_user_reject), 0);
         showToast("拉黑用户成功");
+    }
+
+    @Override
+    public void saveVisitorSuccess() {
+
     }
 
     @Override

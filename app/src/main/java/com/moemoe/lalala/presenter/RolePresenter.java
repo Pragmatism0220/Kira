@@ -66,13 +66,31 @@ public class RolePresenter implements RoleContract.Presenter {
 
     @Override
     public void putInHouse(String roleId) {
-        apiService.putInHoese(roleId)
+        apiService.putInHouse(roleId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetSimpleResultSubscriber() {
                     @Override
                     public void onSuccess() {
                         if (view != null) view.putInHouseSuccess();
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+    @Override
+    public void removeOutHouse(String roleId) {
+        apiService.removeInHouse(roleId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetSimpleResultSubscriber() {
+                    @Override
+                    public void onSuccess() {
+                        if (view != null) view.removeOutHouseSuccess();
                     }
 
                     @Override

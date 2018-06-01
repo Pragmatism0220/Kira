@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/y136"
+    android:background="@drawable/bg_normal_white_btn"
+    android:paddingEnd="@dimen/x32"
+    android:paddingStart="@dimen/x24">
+
+    <TextView
+        android:id="@+id/visitor_time"
+        android:layout_width="@dimen/x120"
+        android:layout_height="@dimen/y60"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/y36"
+        android:gravity="center"
+        android:text="1小时前"
+        android:textColor="#929292"
+        android:textSize="@dimen/x30" />
+
+    <ImageView
+        android:id="@+id/visitor_image"
+        android:layout_width="@dimen/x80"
+        android:layout_height="@dimen/x80"
+        android:layout_centerVertical="true"
+        android:src="@drawable/test_image" />
+
+    <LinearLayout
+        android:id="@+id/top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x16"
+        android:layout_marginTop="@dimen/y30"
+        android:layout_toEndOf="@+id/visitor_image"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/visitor_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="我的名字太长敌人看不"
+            android:textColor="@color/black_1e1e1e"
+            android:textSize="@dimen/x30"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/visitor_sex"
+            android:layout_width="@dimen/x30"
+            android:layout_height="@dimen/x30"
+            android:layout_marginStart="@dimen/x12"
+            android:src="@drawable/ic_user_girl" />
+
+        <TextView
+            android:id="@+id/visitor_level"
+            android:layout_width="@dimen/x52"
+            android:layout_height="@dimen/y26"
+            android:layout_marginStart="@dimen/x12"
+            android:gravity="center"
+            android:text="等级"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x20"
+            android:textStyle="italic" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/visitor_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top"
+        android:layout_marginStart="@dimen/x16"
+        android:layout_toEndOf="@+id/visitor_image"
+        android:text="拜访了宅屋"
+        android:textColor="@color/green_6fc93a"
+        android:textSize="@dimen/x24" />
+
+</RelativeLayout>

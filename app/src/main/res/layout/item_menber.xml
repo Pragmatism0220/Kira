@@ -17,7 +17,8 @@
         android:gravity="center"
         android:textColor="@color/main_cyan"
         android:textSize="@dimen/x24"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        />
 
     <ImageView
         android:id="@+id/iv_avatar"
@@ -61,7 +62,8 @@
             android:maxLines="1"
             android:textColor="@color/black_1e1e1e"
             android:textSize="@dimen/x30"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            />
 
         <ImageView
             android:id="@+id/iv_sex"
@@ -98,7 +100,7 @@
                 android:paddingLeft="@dimen/x8"
                 android:paddingRight="@dimen/x8"
                 android:paddingStart="@dimen/x8"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/x16"
                 android:textStyle="bold" />
         </FrameLayout>

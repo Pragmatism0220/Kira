@@ -2,6 +2,7 @@ package com.moemoe.lalala.view.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -10,10 +11,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.event.OnItemListener;
+import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.entity.AllFurnitureInfo;
+import com.moemoe.lalala.model.entity.FurnitureInfoEntity;
+import com.moemoe.lalala.model.entity.SuitFurnituresInfo;
 import com.moemoe.lalala.view.base.FurnitureInfo;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,11 +31,11 @@ import java.util.List;
 public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdapter.FurnitureHolder> {
 
     private Context mContext;
-    private List<FurnitureInfo> infos;
+    private List<AllFurnitureInfo> infos;
 
     private int mSelectedPos = -1;//保存当前选中的position 重点！
 
-    public FurnitureInfoAdapter(Context mContext, List<FurnitureInfo> infos) {
+    public FurnitureInfoAdapter(Context mContext, List<AllFurnitureInfo> infos) {
         this.mContext = mContext;
         this.infos = infos;
     }
@@ -41,14 +49,29 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
 
     @Override
     public void onBindViewHolder(final FurnitureHolder holder, final int position) {
-        FurnitureInfo data = infos.get(position);
-        if (!data.isUse()) {
+        AllFurnitureInfo data = infos.get(position);
+        Log.i("FurnitureInfoAdapter", "onBindViewHolder: " + data);
+
+
+
+        if (!data.isPutInHouse()) {
             holder.mFusing.setVisibility(View.VISIBLE);
         } else {
             holder.mFusing.setVisibility(View.GONE);
         }
         holder.mFName.setText(data.getName());
-        holder.mFStyle.setText(data.getStyle());
+        Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).into(holder.mFphoto);
+
+
+
+//        if (!data.isUse()) {
+//            holder.mFusing.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.mFusing.setVisibility(View.GONE);
+//        }
+//        holder.mFName.setText(data.getName());
+//        holder.mFStyle.setText(data.getStyle());
+
         holder.mFCheck.setChecked(mSelectedPos == position);
 
 

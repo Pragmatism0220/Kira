@@ -466,7 +466,7 @@ public class ReadActivity extends BaseAppCompatActivity implements FilesContract
 //                                                startRead = false;
 //                                                currentChapter = 1;
 //                                                showChapterRead(1);
-//                                                bookList.remove(0);
+//                                                bookList.removeInHouse(0);
 //                                                downloadSub.deleteServiceDownload(ApiService.URL_QINIU +  bookList.get(0).getPath(),false).subscribe();
 //                                            }
 //

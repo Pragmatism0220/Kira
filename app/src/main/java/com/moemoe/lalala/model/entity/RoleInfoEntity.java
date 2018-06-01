@@ -17,34 +17,27 @@ public class RoleInfoEntity {
     private String roleType;// 角色类型
     private int userLikeRoleDefine; //用户将角色房屋宅屋里收集的好感度累计值 ,
     private String userLikeRoleDefineTxt;//用户将角色房屋宅屋里收集的好感度累计值对应的好感评价
-
-
     private String showHeadIcon;//大图
+    private boolean isPutInHouse;// 是否放入宅屋，true：已经放入宅屋
 
 
-    public RoleInfoEntity() {
+    private boolean isSelected = false; //item选中 自加入
 
+
+    public boolean isSelected() {
+        return isSelected;
     }
 
-    public RoleInfoEntity(String headIcon, String headIconMd5, int headIconOrigHeight,
-                          int headIconOrigWidth, String id, boolean isUserDeskmate,
-                          boolean isUserHadRole, int maxPutInHouseNum,
-                          String name, String roleType,
-                          int userLikeRoleDefine, String userLikeRoleDefineTxt,
-                          String showHeadIcon) {
-        this.headIcon = headIcon;
-        this.headIconMd5 = headIconMd5;
-        this.headIconOrigHeight = headIconOrigHeight;
-        this.headIconOrigWidth = headIconOrigWidth;
-        this.id = id;
-        this.isUserDeskmate = isUserDeskmate;
-        this.isUserHadRole = isUserHadRole;
-        this.maxPutInHouseNum = maxPutInHouseNum;
-        this.name = name;
-        this.roleType = roleType;
-        this.userLikeRoleDefine = userLikeRoleDefine;
-        this.userLikeRoleDefineTxt = userLikeRoleDefineTxt;
-        this.showHeadIcon = showHeadIcon;
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public boolean getIsPutInHouse() {
+        return isPutInHouse;
+    }
+
+    public void setPutInHouse(boolean putInHouse) {
+        isPutInHouse = putInHouse;
     }
 
     public String getHeadIcon() {
@@ -87,19 +80,19 @@ public class RoleInfoEntity {
         this.id = id;
     }
 
-    public boolean isUserDeskmate() {
+    public boolean getIsUserDeskmate() {
         return isUserDeskmate;
     }
 
-    public void setUserDeskmate(boolean userDeskmate) {
+    public void setIsUserDeskmate(boolean userDeskmate) {
         isUserDeskmate = userDeskmate;
     }
 
-    public boolean isUserHadRole() {
+    public boolean getIsUserHadRole() {
         return isUserHadRole;
     }
 
-    public void setUserHadRole(boolean userHadRole) {
+    public void setIsUserHadRole(boolean userHadRole) {
         isUserHadRole = userHadRole;
     }
 
@@ -161,13 +154,14 @@ public class RoleInfoEntity {
                 ", headIconOrigWidth=" + headIconOrigWidth +
                 ", id='" + id + '\'' +
                 ", isUserDeskmate=" + isUserDeskmate +
-                ", isUserHadRole=" + isUserHadRole +
+                ", getIsUserHadRole=" + isUserHadRole +
                 ", maxPutInHouseNum=" + maxPutInHouseNum +
                 ", name='" + name + '\'' +
                 ", roleType='" + roleType + '\'' +
                 ", userLikeRoleDefine=" + userLikeRoleDefine +
                 ", userLikeRoleDefineTxt='" + userLikeRoleDefineTxt + '\'' +
                 ", showHeadIcon='" + showHeadIcon + '\'' +
+                ", getIsPutInHouse=" + isPutInHouse +
                 '}';
     }
 }

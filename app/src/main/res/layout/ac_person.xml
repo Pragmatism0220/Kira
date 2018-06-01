@@ -273,13 +273,13 @@
                         android:id="@+id/tv_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gray_929292"
-                        android:text="这位同学啥也没写"
-                        android:layout_marginTop="@dimen/y20"
                         android:layout_below="@+id/fl_cover"
                         android:layout_marginStart="@dimen/x28"
+                        android:layout_marginTop="@dimen/y20"
                         android:ellipsize="end"
                         android:maxLines="2"
+                        android:text="这位同学啥也没写"
+                        android:textColor="@color/gray_929292"
                         android:textSize="@dimen/y24" />
 
                     <TextView
@@ -336,7 +336,6 @@
 
                 <TextView
                     android:id="@+id/tv_huiyuan"
-                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/iv_background"
@@ -344,7 +343,8 @@
                     android:layout_marginBottom="@dimen/y20"
                     android:layout_marginTop="@dimen/y8"
                     android:textColor="@color/yellow_f2cc2c"
-                    android:textSize="@dimen/x18" />
+                    android:textSize="@dimen/x18"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/ll_follow_root"
@@ -440,9 +440,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:visibility="gone"
                         android:layout_marginEnd="@dimen/y24"
-                        android:src="@drawable/btn_toolbar_option" />
+                        android:src="@drawable/btn_toolbar_option"
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/iv_menu_list"
@@ -526,8 +526,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/y8"
                 android:layout_marginTop="@dimen/y8"
-                android:visibility="gone"
-                android:background="@color/gray_e8e8e8" />
+                android:background="@color/gray_e8e8e8"
+                android:visibility="visible" />
 
 
             <Button
@@ -537,9 +537,9 @@
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:gravity="center"
-                android:visibility="gone"
                 android:text="她的宅屋"
-                android:textColor="@color/main_selected_cyan" />
+                android:textColor="@color/main_selected_cyan"
+                android:visibility="visible" />
         </LinearLayout>
 
     </RelativeLayout>
