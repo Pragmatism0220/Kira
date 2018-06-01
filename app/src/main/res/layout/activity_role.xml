@@ -148,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/x60"
                 android:layout_marginStart="@dimen/x60"
-                android:layout_marginTop="@dimen/y44"></android.support.v7.widget.RecyclerView>
+                android:layout_marginTop="@dimen/y44"/>
         </RelativeLayout>
 
 

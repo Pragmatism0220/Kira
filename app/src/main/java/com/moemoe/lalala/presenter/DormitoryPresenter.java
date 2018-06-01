@@ -1,6 +1,8 @@
 package com.moemoe.lalala.presenter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -22,12 +24,17 @@ import com.moemoe.lalala.utils.GreenDaoManager;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.StringUtils;
+import com.moemoe.lalala.view.widget.map.MapLayout;
 import com.moemoe.lalala.view.widget.map.MapWidget;
 import com.moemoe.lalala.view.widget.map.interfaces.Layer;
 import com.moemoe.lalala.view.widget.map.model.MapObject;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -55,14 +62,14 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
     }
 
     @Override
-    public void loadHouseInHouseFurnitures() {
-        apiService.loadHouseInHouseFurnitures()
+    public void loadHouseObjects() {
+        apiService.loadHouseObjects()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetResultSubscriber<ArrayList<MapEntity>>() {
                     @Override
                     public void onSuccess(ArrayList<MapEntity> entities) {
-                        if (view != null) view.onLoadHouseInHouseFurnitures(entities);
+                        if (view != null) view.onLoadHouseObjects(entities);
                     }
 
                     @Override
@@ -72,42 +79,11 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                 });
     }
 
-    @Override
-    public void loadHouseInHouseRubblish() {
-        apiService.loadHouseInHouseRubblish()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new NetResultSubscriber<ArrayList<MapEntity>>() {
-                    @Override
-                    public void onSuccess(ArrayList<MapEntity> entities) {
-                        if (view != null) view.onLoadHouseInHouseRubblish(entities);
-                    }
-
-                    @Override
-                    public void onFail(int code, String msg) {
-                        if (view != null) view.onFailure(code, msg);
-                    }
-                });
-    }
-
-    @Override
-    public void loadHouseInHouseRoles() {
-        apiService.loadHouseInHouseRoles()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new NetResultSubscriber<ArrayList<MapEntity>>() {
-                    @Override
-                    public void onSuccess(ArrayList<MapEntity> entities) {
-                        if (view != null) view.onLoadHouseInHouseRoles(entities);
-                    }
-
-                    @Override
-                    public void onFail(int code, String msg) {
-                        if (view != null) view.onFailure(code, msg);
-                    }
-                });
-    }
-
+//    @Override
+//    public void addMapMark(Context context, MapMarkContainer container, MapLayout map, String type) {
+//        addMapMark(context, map, container, type);
+//        // view.onMapMarkLoaded(container);
+//    }
     @Override
     public void addMapMark(Context context, MapMarkContainer container, MapWidget map, String type) {
         addMapMark(context, map, container, type);
@@ -202,39 +178,13 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
 //        }
         // MapToolTipUtils.getInstance().updateList(container.getContainer());
     }
-    private void addMapMark(Context context, MapWidget map, MapMarkContainer container, String type) {
-        Layer layer;//0 全天可点击事件
-        if ("map".equals(type)) {
-            layer = map.createLayer(0);
-        } else if ("furnitures".equals(type)) {
-            Layer tmp = map.getLayerById(2);
-            if (tmp != null) map.removeLayer(2);
-            layer = map.createLayer(2);
-        } else if ("rubblish".equals(type)) {
-            Layer tmp = map.getLayerById(3);
-            if (tmp != null) map.removeLayer(3);
-            layer = map.createLayer(3);
-        } else if ("followUser".equals(type)) {
-            Layer tmp = map.getLayerById(4);
-            if (tmp != null) map.removeLayer(4);
-            layer = map.createLayer(4);
-        } else if ("nearUser".equals(type)) {
-            Layer tmp = map.getLayerById(5);
-            if (tmp != null) map.removeLayer(5);
-            layer = map.createLayer(5);
-        } else if ("topUser".equals(type)) {
-            Layer tmp = map.getLayerById(6);
-            if (tmp != null) map.removeLayer(6);
-            layer = map.createLayer(6);
-        } else {
-            Layer tmp = map.getLayerById(100);
-            if (tmp != null) map.removeLayer(100);
-            layer = map.createLayer(100);
-        }
+
+    private void addMapMark(Context context, final MapWidget map, MapMarkContainer container, String type) {
         ArrayList<MapDbEntity> mapPics = (ArrayList<MapDbEntity>) GreenDaoManager.getInstance().getSession().getMapDbEntityDao()
                 .queryBuilder()
-                .where(MapDbEntityDao.Properties.Type.eq(type))
+                .where(MapDbEntityDao.Properties.House.eq(type))
                 .list();
+        Layer layer;//0 全天可点击事件
         if (mapPics != null && mapPics.size() > 0) {
             if ("nearUser".equals(type)) {
                 String posStr = PreferenceUtils.getNearPosition(context);
@@ -253,7 +203,20 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                     mapPics = getRandom(mapPics, posList);
                 }
             }
+            Collections.sort(mapPics, new Comparator<MapDbEntity>() {
+                @Override
+                public int compare(MapDbEntity mapDbEntity, MapDbEntity t1) {
+                    int i = mapDbEntity.getLayer() - t1.getLayer();
+                    return i;
+                }
+            });
             for (MapDbEntity entity : mapPics) {
+//                Layer tmp = map.getLayerById(entity.getLayer());
+//                if (tmp != null) map.removeLayer(entity.getLayer());
+//                layer = map.createLayer(entity.getLayer());
+                Layer tmp = map.getLayerById(entity.getLayer());
+                if (tmp != null) map.removeLayer(entity.getLayer());
+                layer = map.createLayer(entity.getLayer());
                 String time = "-1";
                 if (StringUtils.isasa()) {
                     time = "1";
@@ -273,10 +236,10 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                 if (StringUtils.ismayonaka()) {
                     time = "6";
                 }
-                if (entity.getShows().contains(time)) {
+                if (entity.getShows() != null && entity.getShows().contains(time)) {
                     if (entity.getDownloadState() == 2) {
                         if (FileUtil.isExists(StorageUtils.getHouseRootPath() + entity.getFileName())) {
-                            MapMarkEntity entity1 = new MapMarkEntity(entity.getName(), entity.getPointX(), entity.getPointY(), entity.getSchema(), entity.getFileName(), entity.getImage_w(), entity.getImage_h(), entity.getText());
+                            MapMarkEntity entity1 = new MapMarkEntity(entity.getName(), entity.getPointX(), entity.getPointY(), entity.getSchema(), entity.getFileName(), entity.getImage_w(), entity.getImage_h(), entity.getText(), entity.getLayer(), entity.getType());
                             container.addMark(entity1);
                             addMarkToMap(context, entity1, layer);
                         }
@@ -286,6 +249,7 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
             }
         }
     }
+
     private ArrayList<MapDbEntity> getRandom(ArrayList<MapDbEntity> list, ArrayList<NearUserEntity.Point> posList) {
         ArrayList<MapDbEntity> res = new ArrayList<>();
         int size = list.size();
@@ -302,6 +266,7 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
         }
         return res;
     }
+
     private void addMarkToMap(Context context, MapMarkEntity entity, Layer layer) {
         Drawable drawable;
         if (!TextUtils.isEmpty(entity.getPath())) {
@@ -327,4 +292,111 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
         }
     }
 
+    private void addMapMark(Context context, final MapLayout map, MapMarkContainer container, String type) {
+        ArrayList<MapDbEntity> mapPics = (ArrayList<MapDbEntity>) GreenDaoManager.getInstance().getSession().getMapDbEntityDao()
+                .queryBuilder()
+                .where(MapDbEntityDao.Properties.House.eq(type))
+                .list();
+        Layer layer;//0 全天可点击事件
+        if (mapPics != null && mapPics.size() > 0) {
+            if ("nearUser".equals(type)) {
+                String posStr = PreferenceUtils.getNearPosition(context);
+                Gson gson = new Gson();
+                ArrayList<NearUserEntity.Point> posList = gson.fromJson(posStr, new TypeToken<ArrayList<NearUserEntity.Point>>() {
+                }.getType());
+                if (posList != null) {
+                    mapPics = getRandom(mapPics, posList);
+                }
+            } else if ("topUser".equals(type)) {
+                String posStr = PreferenceUtils.getTopUserPosition(context);
+                Gson gson = new Gson();
+                ArrayList<NearUserEntity.Point> posList = gson.fromJson(posStr, new TypeToken<ArrayList<NearUserEntity.Point>>() {
+                }.getType());
+                if (posList != null) {
+                    mapPics = getRandom(mapPics, posList);
+                }
+            }
+            Collections.sort(mapPics, new Comparator<MapDbEntity>() {
+                @Override
+                public int compare(MapDbEntity mapDbEntity, MapDbEntity t1) {
+                    int i = mapDbEntity.getLayer() - t1.getLayer();
+                    return i;
+                }
+            });
+            for (int i = 0; i < mapPics.size(); i++) {
+                MapDbEntity entity = mapPics.get(i);
+//                Layer tmp = map.getLayerById(entity.getLayer());
+//                if (tmp != null) map.removeLayer(entity.getLayer());
+//                layer = map.createLayer(entity.getLayer());
+//                Layer tmp = map.getLayerById(entity.getLayer());
+//                if (tmp != null) map.removeLayer(entity.getLayer());
+//                layer = map.createLayer(entity.getLayer());
+                String time = "-1";
+                if (StringUtils.isasa()) {
+                    time = "1";
+                }
+                if (StringUtils.issyougo()) {
+                    time = "2";
+                }
+                if (StringUtils.isgogo()) {
+                    time = "3";
+                }
+                if (StringUtils.istasogare()) {
+                    time = "4";
+                }
+                if (StringUtils.isyoru2()) {
+                    time = "5";
+                }
+                if (StringUtils.ismayonaka()) {
+                    time = "6";
+                }
+                if (entity.getShows() != null && entity.getShows().contains(time)) {
+                    if (entity.getDownloadState() == 2) {
+                        if (FileUtil.isExists(StorageUtils.getHouseRootPath() + entity.getFileName())) {
+                            MapMarkEntity entity1 = new MapMarkEntity(entity.getName(), entity.getPointX(), entity.getPointY(), entity.getSchema(), entity.getFileName(), entity.getImage_w(), entity.getImage_h(), entity.getText(), entity.getLayer(), entity.getType());
+                            container.addMark(entity1);
+                            if (mapPics.size() - 1 == i) {
+                                Drawable drawable;
+                                if (!TextUtils.isEmpty(entity1.getPath())) {
+                                    drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity1.getPath());
+                                } else {
+                                    if (entity1.getBg() == 0) return;
+                                    drawable = ContextCompat.getDrawable(context, entity1.getBg());
+                                }
+                                if (drawable != null) {
+                                    map.setImageDrawable(drawable);
+                                    map.setTouchImageViewWidthOrHeight(entity.getImage_w(),entity.getImage_h());
+                                } else {
+                                    FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity1.getPath());
+                                }
+//                                map.setMapResource(R.drawable.big_house);
+                                return;
+                            }
+                            addMarkToMap(context, entity1, map, i, mapPics.size());
+                        }
+                    }
+                }
+                // MapToolTipUtils.getInstance().updateList(container.getContainer());
+            }
+        }
+    }
+
+    private void addMarkToMap(Context context, MapMarkEntity entity, MapLayout layer, int i, int size) {
+        Drawable drawable;
+        if (!TextUtils.isEmpty(entity.getPath())) {
+            drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getPath());
+        } else {
+            if (entity.getBg() == 0) return;
+            drawable = ContextCompat.getDrawable(context, entity.getBg());
+        }
+        if (drawable != null) {
+            if (i == size - 1) {
+//                layer.setImageDrawable(drawable);
+            } else {
+                layer.addMapMarkView(drawable, (float) (entity.getX()/3600.0), (float) (entity.getY()/1920.0), entity.getW(), entity.getH(), entity.getSchema(), entity.getContent(), entity.getType(), null);
+            }
+        } else {
+            FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getPath());
+        }
+    }
 }

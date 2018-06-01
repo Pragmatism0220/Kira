@@ -12,21 +12,15 @@ import java.util.ArrayList;
 public interface RoleContract {
     interface Presenter extends BasePresenter {
         void getRoleInfo();
-
         void setDeskMate(String roleId);
-
         void putInHouse(String roleId);
-
         void removeOutHouse(String roleId);
     }
 
     interface View extends BaseView {
         void getRoleInfo(ArrayList<RoleInfoEntity> entities);
-
         void setDeskMateSuccess();
-
         void putInHouseSuccess();
-
         void removeOutHouseSuccess();
     }
 }

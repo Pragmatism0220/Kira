@@ -5,9 +5,11 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.multidex.BuildConfig;
 import android.support.multidex.MultiDex;
@@ -20,31 +22,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.di.components.DaggerNetComponent;
 import com.moemoe.lalala.di.components.NetComponent;
 import com.moemoe.lalala.di.modules.NetModule;
-import com.moemoe.lalala.greendao.gen.DeskmateUserEntilsDao;
-import com.moemoe.lalala.model.entity.DeskmateImageEntity;
-import com.moemoe.lalala.model.entity.DeskmateUserEntils;
+import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
+import com.moemoe.lalala.greendao.gen.MySQLiteOpenHelper;
+import com.moemoe.lalala.model.entity.DeskmateEntils;
 import com.moemoe.lalala.netamusic.player.MusicPreferences;
+import com.moemoe.lalala.utils.DialogUtils;
 import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.GreenDaoManager;
+import com.moemoe.lalala.utils.NetworkUtils;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.StorageUtils;
-import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.UnCaughtException;
 import com.moemoe.lalala.utils.VideoConfig;
 import com.moemoe.lalala.utils.tag.TagControl;
+import com.moemoe.lalala.view.activity.BagOpenActivity;
+import com.moemoe.lalala.view.activity.CoinShopActivity;
+import com.moemoe.lalala.view.activity.DailyTaskActivity;
 import com.moemoe.lalala.view.activity.MapActivity;
-import com.moemoe.lalala.view.widget.map.model.MapObject;
-import com.moemoe.lalala.view.widget.tooltip.TooltipAnimation;
+import com.moemoe.lalala.view.activity.NewBagV5Activity;
+import com.moemoe.lalala.view.activity.NoticeActivity;
+import com.moemoe.lalala.view.activity.PersonalV2Activity;
+import com.moemoe.lalala.view.activity.PhoneMenuV3Activity;
+import com.moemoe.lalala.view.widget.view.WindowView;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
@@ -54,9 +63,8 @@ import java.net.Proxy;
 import java.util.ArrayList;
 
 import io.rong.imkit.RongIM;
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
-import jp.wasabeef.glide.transformations.CropTransformation;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
+import static com.moemoe.lalala.view.activity.BaseAppCompatActivity.UUID;
 
 /**
  * 应用类
@@ -76,16 +84,21 @@ public class MoeMoeApplication extends Application {
     private int height;
     private WindowManager windowManager;
     public ArrayList<Activity> activities = new ArrayList<>();
-    private TextView mIvBubble;
     private View inflate;
     private boolean isWindow;
     private int functionalX;
     private int functionalY;
-    private DeskmateUserEntils entilsTop;
-    private DeskmateUserEntils entilsBottom;
-    private DeskmateUserEntils entilsLeft;
-    private DeskmateUserEntils entilsRight;
-    private DeskmateUserEntils entilsDrag;
+    private DeskmateEntils entilsTop;
+    private DeskmateEntils entilsBottom;
+    private DeskmateEntils entilsLeft;
+    private DeskmateEntils entilsRight;
+    private DeskmateEntils entilsDrag;
+    private WindowManager.LayoutParams wmParamsTwo;
+    private View inflateTwo;
+    private RelativeLayout mRlRenWu;
+    private RelativeLayout mLlFrist;
+    private ImageView mPersonal, mBag, mShopping, mSignRoot, mPhoneMenu, mIvMsg;
+    private boolean isMove;
 
     @Override
     public void onCreate() {
@@ -122,20 +135,33 @@ public class MoeMoeApplication extends Application {
     public void GoneWindowMager(Context context) {
         if (windowManager != null && inflate != null && wmParams != null) {
 //            imageView.setVisibility(View.GONE);
-            inflate.setVisibility(View.GONE);
+            imageView.setVisibility(View.GONE);
         }
     }
 
+    public void GoneMenu() {
+        if (windowManager != null && inflateTwo != null && inflateTwo.getVisibility() == View.VISIBLE) {
+            inflateTwo.setVisibility(View.GONE);
+        }
+    }
+
+    public boolean isMenu() {
+        if (windowManager != null && inflateTwo != null && inflateTwo.getVisibility() == View.VISIBLE) {
+            return true;
+        }
+        return false;
+    }
     public void VisibilityWindowMager(Context context) {
         if (windowManager != null && inflate != null && wmParams != null) {
 //            imageView.setVisibility(View.VISIBLE);
-            inflate.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.VISIBLE);
         }
     }
 
     public void removeWindowMager() {
-        if (windowManager != null && inflate != null) {
+        if (windowManager != null && inflate != null && inflateTwo != null) {
             windowManager.removeViewImmediate(inflate);
+            windowManager.removeViewImmediate(inflateTwo);
         }
     }
 
@@ -148,7 +174,7 @@ public class MoeMoeApplication extends Application {
     }
 
     @SuppressLint({"NewApi", "ClickableViewAccessibility"})
-    public void initWindowManager(final Context context, WindowManager mWindowManager) {
+    public void initWindowManager(final Context context, final WindowManager mWindowManager) {
         if (Build.VERSION.SDK_INT >= 23) {
             if (!Settings.canDrawOverlays(this)) {
                 return;
@@ -162,17 +188,12 @@ public class MoeMoeApplication extends Application {
         windowManager = mWindowManager;
         wmParams = new WindowManager.LayoutParams();
         //重点，类型设置为dialog类型,可无视权限!
-        wmParams.type = WindowManager.LayoutParams.TYPE_PHONE;
 
-//        //重点,必须设置此参数，用于窗口机制验证
-//        if (context instanceof FeedV3Activity) {
-//            IBinder windowToken = ((FeedV3Activity) context).getWindow().getDecorView().getWindowToken();
-//            wmParams.token = windowToken;
-//        } else if (context instanceof MapActivity) {
-//            IBinder windowToken = ((MapActivity) context).getWindow().getDecorView().getWindowToken();
-//            wmParams.token = windowToken;
-//
-//        }
+        if (Build.VERSION.SDK_INT >= 26) {//8.0新特性
+            wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            wmParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        }
         wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         width = windowManager.getDefaultDisplay().getWidth();
         height = windowManager.getDefaultDisplay().getHeight();
@@ -182,44 +203,66 @@ public class MoeMoeApplication extends Application {
         //设置图片格式，效果为背景透明  
         wmParams.format = PixelFormat.RGBA_8888;
         wmParams.gravity = Gravity.LEFT | Gravity.TOP;
-        wmParams.x = width;
+//        wmParams.x = 0;
+//        wmParams.y = 0;
+        DeskmateEntils entity = entilsRight;
+        wmParams.x = width - (int) getResources().getDimension(R.dimen.x225);
         wmParams.y = height / 2 - (int) getResources().getDimension(R.dimen.x110);
-        functionalX = width;
-        functionalY = height / 2 - (int) getResources().getDimension(R.dimen.x110);
+
         inflate = LayoutInflater.from(context).inflate(R.layout.ac_window, null);
-        mIvBubble = inflate.findViewById(R.id.tv_bottom_left);
         imageView = inflate.findViewById(R.id.imageView);
-        imageView.measure(View.MeasureSpec.makeMeasureSpec(0,
-                View.MeasureSpec.UNSPECIFIED), View.MeasureSpec
-                .makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-        layoutParams.addRule(RelativeLayout.BELOW, R.id.tv_bottom_left);
-        if (getActivity(MapActivity.class.getName()) instanceof MapActivity) {
-            windowManager.addView(inflate, wmParams);
-        }
-        DeskmateUserEntils entity = entilsLeft;
         Drawable drawable;
         if (!TextUtils.isEmpty(entity.getPath())) {
-            drawable = Drawable.createFromPath(StorageUtils.getMapRootPath() + entity.getPath());
+            drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
         } else {
             drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_right);
         }
         if (drawable != null) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-            params.width = (int) entity.getW();
-            params.height = (int) entity.getH();
-            imageView.setLayoutParams(params);
             imageView.setImageDrawable(drawable);
         } else {
-            FileUtil.deleteFile(StorageUtils.getMapRootPath() + entity.getFileName());
+            FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
+        }
+        functionalX = width - (int) getResources().getDimension(R.dimen.x225);
+        functionalY = height / 2 - (int) getResources().getDimension(R.dimen.x110);
+        if (getActivity(MapActivity.class.getName()) instanceof MapActivity) {
+            windowManager.addView(this.inflate, wmParams);
+        }
+
+
+        wmParamsTwo = new WindowManager.LayoutParams();
+        //重点，类型设置为dialog类型,可无视权限!
+        if (Build.VERSION.SDK_INT >= 26) {//8.0新特性
+            wmParamsTwo.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            wmParamsTwo.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        }
+        wmParamsTwo.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        wmParamsTwo.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        wmParamsTwo.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        //设置图片格式，效果为背景透明  
+        wmParamsTwo.format = PixelFormat.RGBA_8888;
+        wmParamsTwo.gravity = Gravity.LEFT | Gravity.TOP;
+        wmParamsTwo.x = 0;
+        wmParamsTwo.y = 0;
+        inflateTwo = LayoutInflater.from(context).inflate(R.layout.float_renwu_layout, null);
+        inflateTwo.setVisibility(View.GONE);
+        mRlRenWu = inflateTwo.findViewById(R.id.rl_renwu);
+        mLlFrist = inflateTwo.findViewById(R.id.ll_frist);
+        mPersonal = inflateTwo.findViewById(R.id.iv_personal);
+        mBag = inflateTwo.findViewById(R.id.iv_bag);
+        mShopping = inflateTwo.findViewById(R.id.iv_shopping);
+        mSignRoot = inflateTwo.findViewById(R.id.iv_sign_root);
+        mPhoneMenu = inflateTwo.findViewById(R.id.iv_phone_menu);
+        mIvMsg = inflateTwo.findViewById(R.id.iv_msg);
+        if (getActivity(MapActivity.class.getName()) instanceof MapActivity) {
+            windowManager.addView(inflateTwo, wmParamsTwo);
         }
         imageView.setOnTouchListener(new View.OnTouchListener() {
             int lastx = 0;
             int lasty = 0;
             int movex = 0;
             int movey = 0;
-            boolean isMove;
-
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -244,21 +287,18 @@ public class MoeMoeApplication extends Application {
                             if (getActivity(MapActivity.class.getName()) instanceof MapActivity && isActivityTop(MapActivity.class, context)) {
                                 ((MapActivity) getActivity(MapActivity.class.getName())).clickSelect();
                             }
-                            DeskmateUserEntils entity = entilsDrag;
+                            inflateTwo.setVisibility(View.GONE);
+                            DeskmateEntils entity = entilsDrag;
                             Drawable drawable;
                             if (!TextUtils.isEmpty(entity.getPath())) {
-                                drawable = Drawable.createFromPath(StorageUtils.getMapRootPath() + entity.getPath());
+                                drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
                             } else {
                                 drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_drop);
                             }
                             if (drawable != null) {
-                                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-                                params.width = (int) entity.getW();
-                                params.height = (int) entity.getH();
-                                imageView.setLayoutParams(params);
                                 imageView.setImageDrawable(drawable);
                             } else {
-                                FileUtil.deleteFile(StorageUtils.getMapRootPath() + entity.getFileName());
+                                FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
                             }
                         }
 
@@ -274,92 +314,225 @@ public class MoeMoeApplication extends Application {
                         int finalY = (int) event.getRawY();
                         boolean isok = false;
 
-                        if (finalY < inflate.getMeasuredHeight()) {
-                            movey = 0;
-                            movex = finalX - inflate.getMeasuredWidth() / 2;
-                            DeskmateUserEntils entity = entilsTop;
-                            Drawable drawable;
-                            if (!TextUtils.isEmpty(entity.getPath())) {
-                                drawable = Drawable.createFromPath(StorageUtils.getMapRootPath() + entity.getPath());
+//                        if (finalY < inflate.getMeasuredHeight()) {
+//                            DeskmateEntils entity = entilsTop;
+//                            Drawable drawable;
+//                            if (!TextUtils.isEmpty(entity.getPath())) {
+//                                drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
+//                            } else {
+//                                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_top);
+//                            }
+//                            if (drawable != null) {
+//                                imageView.setImageDrawable(drawable);
+//                            } else {
+//                                FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
+//                            }
+//                            movey = 0;
+//                            if (finalX > width - inflate.getMeasuredWidth()) {
+//                                movex = width - inflate.getMeasuredWidth();
+//                            } else {
+//                                movex = finalX;
+//                            }
+//                        }
+//
+//
+//                        if (finalY > height - inflate.getMeasuredHeight()) {
+//                            DeskmateEntils entity = entilsBottom;
+//                            Drawable drawable;
+//                            if (!TextUtils.isEmpty(entity.getPath())) {
+//                                drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
+//                            } else {
+//                                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_down);
+//                            }
+//                            if (drawable != null) {
+//                                imageView.setImageDrawable(drawable);
+//                            } else {
+//                                FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
+//                            }
+//                            movey = height - inflate.getMeasuredHeight();
+//                            if (finalX > width - imageView.getMeasuredWidth()) {
+//                                movex = width - imageView.getMeasuredWidth();
+//                            } else {
+//                                movex = finalX;
+//                            }
+//                        }
+//
+//                        if (finalY > inflate.getMeasuredHeight() && finalY < height - inflate.getMeasuredHeight()) {
+//                            isok = true;
+//                        }
+//                        if (isok && finalX - inflate.getMeasuredWidth() / 2 < width / 2) {
+//                            movex = 0;
+//                            movey = finalY - inflate.getMeasuredHeight() / 2;
+//                            DeskmateEntils entity = entilsLeft;
+//                            Drawable drawable;
+//                            if (!TextUtils.isEmpty(entity.getPath())) {
+//                                drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
+//                            } else {
+//                                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_left);
+//                            }
+//                            if (drawable != null) {
+//                                imageView.setImageDrawable(drawable);
+//                            } else {
+//                                FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
+//                            }
+//                        } else if (isok && finalX - inflate.getMeasuredWidth() / 2 > width / 2) {
+//
+//                            DeskmateEntils entity = entilsRight;
+//                            Drawable drawable;
+//                            if (!TextUtils.isEmpty(entity.getPath())) {
+//                                drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
+//                            } else {
+//                                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_right);
+//                            }
+//                            if (drawable != null) {
+//                                imageView.setImageDrawable(drawable);
+//                            } else {
+//                                FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
+//                            }
+//                            movex = width - inflate.getMeasuredWidth();
+//                            movey = finalY - inflate.getMeasuredHeight() / 2;
+//                        }
+                        if (finalX > width / 2) {
+                            if (finalY > height / 2) {
+                                if (width - finalX > height - finalY) {
+                                    //bootem
+                                    DeskmateEntils entity = entilsBottom;
+                                    Drawable drawable;
+                                    if (!TextUtils.isEmpty(entity.getPath())) {
+                                        drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    } else {
+                                        drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_down);
+                                    }
+                                    if (drawable != null) {
+                                        imageView.setImageDrawable(drawable);
+                                    } else {
+                                        FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    }
+                                    movex = finalX;
+                                    movey = height - imageView.getMeasuredHeight();
+                                } else {
+                                    //right
+                                    DeskmateEntils entity = entilsRight;
+                                    Drawable drawable;
+                                    if (!TextUtils.isEmpty(entity.getPath())) {
+                                        drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    } else {
+                                        drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_right);
+                                    }
+                                    if (drawable != null) {
+                                        imageView.setImageDrawable(drawable);
+                                    } else {
+                                        FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    }
+                                    movex = width - imageView.getMeasuredWidth();
+                                    movey = finalY;
+                                }
                             } else {
-                                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_top);
+                                if (width - finalX > finalY) {
+                                    //top
+                                    DeskmateEntils entity = entilsTop;
+                                    Drawable drawable;
+                                    if (!TextUtils.isEmpty(entity.getPath())) {
+                                        drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    } else {
+                                        drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_top);
+                                    }
+                                    if (drawable != null) {
+                                        imageView.setImageDrawable(drawable);
+                                    } else {
+                                        FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    }
+                                    movex = finalX;
+                                    movey = 0;
+                                } else {
+                                    //right
+                                    DeskmateEntils entity = entilsRight;
+                                    Drawable drawable;
+                                    if (!TextUtils.isEmpty(entity.getPath())) {
+                                        drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    } else {
+                                        drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_right);
+                                    }
+                                    if (drawable != null) {
+                                        imageView.setImageDrawable(drawable);
+                                    } else {
+                                        FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    }
+                                    movex = width - imageView.getMeasuredWidth();
+                                    movey = finalY;
+                                }
                             }
-                            if (drawable != null) {
-                                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-                                params.width = (int) entity.getW();
-                                params.height = (int) entity.getH();
-                                imageView.setLayoutParams(params);
-                                imageView.setImageDrawable(drawable);
+                        } else {
+                            if (finalY > height / 2) {
+                                if (finalX > height - finalY) {
+                                    //bottem
+                                    DeskmateEntils entity = entilsBottom;
+                                    Drawable drawable;
+                                    if (!TextUtils.isEmpty(entity.getPath())) {
+                                        drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    } else {
+                                        drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_down);
+                                    }
+                                    if (drawable != null) {
+                                        imageView.setImageDrawable(drawable);
+                                    } else {
+                                        FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    }
+                                    movex = finalX;
+                                    movey = height - imageView.getMeasuredHeight();
+                                } else {
+                                    //left
+                                    DeskmateEntils entity = entilsLeft;
+                                    Drawable drawable;
+                                    if (!TextUtils.isEmpty(entity.getPath())) {
+                                        drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    } else {
+                                        drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_left);
+                                    }
+                                    if (drawable != null) {
+                                        imageView.setImageDrawable(drawable);
+                                    } else {
+                                        FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    }
+                                    movex = 0;
+                                    movey = finalY;
+                                }
                             } else {
-                                FileUtil.deleteFile(StorageUtils.getMapRootPath() + entity.getFileName());
+                                if (finalX > finalY) {
+                                    //top 
+                                    DeskmateEntils entity = entilsTop;
+                                    Drawable drawable;
+                                    if (!TextUtils.isEmpty(entity.getPath())) {
+                                        drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    } else {
+                                        drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_top);
+                                    }
+                                    if (drawable != null) {
+                                        imageView.setImageDrawable(drawable);
+                                    } else {
+                                        FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    }
+                                    movex = finalX;
+                                    movey = 0;
+                                } else {
+                                    //left
+                                    DeskmateEntils entity = entilsLeft;
+                                    Drawable drawable;
+                                    if (!TextUtils.isEmpty(entity.getPath())) {
+                                        drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    } else {
+                                        drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_left);
+                                    }
+                                    if (drawable != null) {
+                                        imageView.setImageDrawable(drawable);
+                                    } else {
+                                        FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
+                                    }
+                                    movex = 0;
+                                    movey = finalY;
+                                }
                             }
                         }
-
-
-                        if (finalY > height - inflate.getMeasuredHeight()) {
-                            movey = height;
-                            movex = finalX - inflate.getMeasuredWidth() / 2;
-                            DeskmateUserEntils entity = entilsBottom;
-                            Drawable drawable;
-                            if (!TextUtils.isEmpty(entity.getPath())) {
-                                drawable = Drawable.createFromPath(StorageUtils.getMapRootPath() + entity.getPath());
-                            } else {
-                                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_down);
-                            }
-                            if (drawable != null) {
-                                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-                                params.width = (int) entity.getW();
-                                params.height = (int) entity.getH();
-                                imageView.setLayoutParams(params);
-                                imageView.setImageDrawable(drawable);
-                            } else {
-                                FileUtil.deleteFile(StorageUtils.getMapRootPath() + entity.getFileName());
-                            }
-                        }
-
-                        if (finalY > inflate.getMeasuredHeight() && finalY < height - inflate.getMeasuredHeight()) {
-                            isok = true;
-                        }
-                        if (isok && finalX - inflate.getMeasuredWidth() / 2 < width / 2) {
-                            movex = 0;
-                            movey = finalY - inflate.getMeasuredHeight() / 2;
-                            DeskmateUserEntils entity = entilsLeft;
-                            Drawable drawable;
-                            if (!TextUtils.isEmpty(entity.getPath())) {
-                                drawable = Drawable.createFromPath(StorageUtils.getMapRootPath() + entity.getPath());
-                            } else {
-                                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_left);
-                            }
-                            if (drawable != null) {
-                                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-                                params.width = (int) entity.getW();
-                                params.height = (int) entity.getH();
-                                imageView.setLayoutParams(params);
-                                imageView.setImageDrawable(drawable);
-                            } else {
-                                FileUtil.deleteFile(StorageUtils.getMapRootPath() + entity.getFileName());
-                            }
-                        } else if (isok && finalX - inflate.getMeasuredWidth() / 2 > width / 2) {
-                            movex = width;
-                            movey = finalY - inflate.getMeasuredHeight() / 2;
-                            DeskmateUserEntils entity = entilsRight;
-                            Drawable drawable;
-                            if (!TextUtils.isEmpty(entity.getPath())) {
-                                drawable = Drawable.createFromPath(StorageUtils.getMapRootPath() + entity.getPath());
-                            } else {
-                                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_right);
-                            }
-                            if (drawable != null) {
-                                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-                                params.width = (int) entity.getW();
-                                params.height = (int) entity.getH();
-                                imageView.setLayoutParams(params);
-                                imageView.setImageDrawable(drawable);
-                            } else {
-                                FileUtil.deleteFile(StorageUtils.getMapRootPath() + entity.getFileName());
-                            }
-                        }
-
                         wmParams.x = movex;
                         wmParams.y = movey;
                         if (isMove) {
@@ -378,24 +551,207 @@ public class MoeMoeApplication extends Application {
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (getActivity(MapActivity.class.getName()) instanceof MapActivity && isActivityTop(MapActivity.class, context)) {
-                        ((MapActivity) getActivity(MapActivity.class.getName())).windowManagerOnclick(functionalX, functionalY, inflate.getMeasuredWidth(), inflate.getMeasuredHeight());
+//                    if (getActivity(MapActivity.class.getName()) instanceof MapActivity && isActivityTop(MapActivity.class, context)) {
+//                        ((MapActivity) getActivity(MapActivity.class.getName())).windowManagerOnclick(functionalX, functionalY, inflate.getMeasuredWidth(), inflate.getMeasuredHeight());
+//                    }
+                    if (!isMove) {
+                        windowManagerOnclick(functionalX, functionalY, inflate.getMeasuredWidth(), inflate.getMeasuredHeight());
                     }
                 }
             });
+        }
+        mPersonal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (NetworkUtils.checkNetworkAndShowError(context) && DialogUtils.checkLoginAndShowDlg(context)) {
+                    //埋点统计：手机个人中心
+                    Intent i1 = new Intent(context, PersonalV2Activity.class);
+                    i1.putExtra(UUID, PreferenceUtils.getUUid());
+                    startActivity(i1);
+                }
+                inflateTwo.setVisibility(View.GONE);
+            }
+        });
+        mBag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (NetworkUtils.checkNetworkAndShowError(context) && DialogUtils.checkLoginAndShowDlg(context)) {
+                    if (PreferenceUtils.getAuthorInfo().isOpenBag()) {
+                        Intent i4 = new Intent(context, NewBagV5Activity.class);
+                        i4.putExtra("uuid", PreferenceUtils.getUUid());
+                        startActivity(i4);
+                    } else {
+                        Intent i4 = new Intent(context, BagOpenActivity.class);
+                        startActivity(i4);
+                    }
+                }
+                inflateTwo.setVisibility(View.GONE);
+            }
+        });
+        mShopping.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i7 = new Intent(context, CoinShopActivity.class);
+                startActivity(i7);
+                inflateTwo.setVisibility(View.GONE);
+            }
+        });
+        mSignRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (DialogUtils.checkLoginAndShowDlg(context)) {
+                    DailyTaskActivity.startActivity(context);
+                }
+                inflateTwo.setVisibility(View.GONE);
+            }
+        });
+        mPhoneMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (NetworkUtils.checkNetworkAndShowError(context) && DialogUtils.checkLoginAndShowDlg(context)) {
+                    //埋点统计：通讯录
+                    startActivity(new Intent(context, PhoneMenuV3Activity.class));
+                }
+                inflateTwo.setVisibility(View.GONE);
+            }
+        });
+        mIvMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (NetworkUtils.checkNetworkAndShowError(context) && DialogUtils.checkLoginAndShowDlg(context)) {
+                    //埋点统计：手机聊天
+                    NoticeActivity.startActivity(context, 1);
+                }
+                inflateTwo.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    public void windowManagerOnclick(int x, int y, int width, int height) {
+        if (mRlRenWu != null && inflateTwo.getVisibility() == View.GONE) {
+            inflateTwo.setVisibility(View.VISIBLE);
+            int mapX = this.width;
+            int mapY = this.height;
+            int marginHeight = height + (int) getResources().getDimension(R.dimen.status_bar_height);
+            if (x <= 0) {
+                if (y == 0) {
+                    mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
+//                    mRlRenWu.setX(x + getResources().getDimension(R.dimen.x24));
+//                    mRlRenWu.setY(y + height - (int) getResources().getDimension(R.dimen.status_bar_height));
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                    layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                    mLlFrist.setLayoutParams(layoutParams);
+                    wmParamsTwo.x = (int) (x + getResources().getDimension(R.dimen.x24));
+                    wmParamsTwo.y = y + height - (int) getResources().getDimension(R.dimen.status_bar_height);
+                    windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
+                } else {
+                    if (y > mapY / 2) {
+//                        mRlRenWu.setX(x + getResources().getDimension(R.dimen.x24));
+//                        mRlRenWu.setY(y - marginHeight / 2 - getResources().getDimension(R.dimen.y24));
+                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        mLlFrist.setLayoutParams(layoutParams);
+                        wmParamsTwo.x = (int) (x + getResources().getDimension(R.dimen.x24));
+                        wmParamsTwo.y = (int) (y - marginHeight / 2 - getResources().getDimension(R.dimen.y24));
+                        windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
+                    } else {
+                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
+//                        mRlRenWu.setX(x + getResources().getDimension(R.dimen.x24));
+//                        mRlRenWu.setY(y + marginHeight / 2 - getResources().getDimension(R.dimen.y24));
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        mLlFrist.setLayoutParams(layoutParams);
+                        wmParamsTwo.x = (int) (x + getResources().getDimension(R.dimen.x24));
+                        wmParamsTwo.y = (int) (y + marginHeight / 2 - getResources().getDimension(R.dimen.y24));
+                        windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
+                    }
+                }
+            } else if (x == 504) {
+                if (y > (mapY - getResources().getDimension(R.dimen.status_bar_height)) / 2) {
+//                    mRlRenWu.setX(x - getResources().getDimension(R.dimen.x428) + width - getResources().getDimension(R.dimen.x24));
+//                    mRlRenWu.setY(y - height / 2 - getResources().getDimension(R.dimen.y24));
+                    mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                    layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                    mLlFrist.setLayoutParams(layoutParams);
+                    wmParamsTwo.x = (int) (x - getResources().getDimension(R.dimen.x428) + width - getResources().getDimension(R.dimen.x24));
+                    wmParamsTwo.y = (int) (y - height / 2 - getResources().getDimension(R.dimen.y24));
+                    windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
+                } else {
+                    mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
+//                    mRlRenWu.setX(x - (int) getResources().getDimension(R.dimen.x428) + width - getResources().getDimension(R.dimen.x24));
+//                    mRlRenWu.setY(y + height / 2 - getResources().getDimension(R.dimen.y24));
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                    layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                    mLlFrist.setLayoutParams(layoutParams);
+                    wmParamsTwo.x = (int) (x - (int) getResources().getDimension(R.dimen.x428) + width - getResources().getDimension(R.dimen.x24));
+                    wmParamsTwo.y = (int) (y + height / 2 - getResources().getDimension(R.dimen.y24));
+                    windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
+                }
+            } else {
+                if (y == 0) {
+                    if (x > (mapX - width) / 2) {
+                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
+//                        mRlRenWu.setX(x - width);
+//                        mRlRenWu.setY(y + height - getResources().getDimension(R.dimen.status_bar_height));
+                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        mLlFrist.setLayoutParams(layoutParams);
+                        wmParamsTwo.x = (int) (x - width);
+                        wmParamsTwo.y = (int) (y + height - getResources().getDimension(R.dimen.status_bar_height));
+                        windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
+                    } else {
+//                        mRlRenWu.setX(x + width / 2);
+//                        mRlRenWu.setY(y + height - getResources().getDimension(R.dimen.status_bar_height));
+                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        mLlFrist.setLayoutParams(layoutParams);
+                        wmParamsTwo.x = (int) (x - (int) getResources().getDimension(R.dimen.x24));
+                        wmParamsTwo.y = (int) (y + height - getResources().getDimension(R.dimen.status_bar_height));
+                        windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
+                    }
+                } else if (y == 1016) {
+                    if (x > (mapX - width) / 2) {
+                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
+//                        mRlRenWu.setX(x - width);
+//                        mRlRenWu.setY(y - height + getResources().getDimension(R.dimen.y24));
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        mLlFrist.setLayoutParams(layoutParams);
+                        wmParamsTwo.x = x - width;
+                        wmParamsTwo.y = (int) (y - height);
+                        windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
+                    } else {
+                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
+//                        mRlRenWu.setX(x);
+//                        mRlRenWu.setY(y - height + getResources().getDimension(R.dimen.y24));
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        mLlFrist.setLayoutParams(layoutParams);
+                        wmParamsTwo.x = x;
+                        wmParamsTwo.y = (int) (y - height);
+                        windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
+                    }
+                }
+            }
+        } else {
+            inflateTwo.setVisibility(View.GONE);
         }
     }
 
     /**
      * 数据压制
      */
-    public void goGreenDao() {
-        ArrayList<DeskmateUserEntils> entilsDao = (ArrayList<DeskmateUserEntils>) GreenDaoManager.getInstance().getSession().getDeskmateUserEntilsDao()
+    public int goGreenDao() {
+        ArrayList<DeskmateEntils> entilsDao = (ArrayList<DeskmateEntils>) GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao()
                 .queryBuilder()
-                .where(DeskmateUserEntilsDao.Properties.Id.eq("deskmate"))
+                .where(DeskmateEntilsDao.Properties.Type.eq("HousUser"))
                 .list();
         if (entilsDao != null && entilsDao.size() > 0) {
-            for (DeskmateUserEntils entils : entilsDao) {
+            for (DeskmateEntils entils : entilsDao) {
                 if (entils.getRemark().equals("top")) {
                     entilsTop = entils;
                 } else if (entils.getRemark().equals("bottom")) {
@@ -409,6 +765,7 @@ public class MoeMoeApplication extends Application {
                 }
             }
         }
+        return entilsDao.size() > 0 ? entilsDao.size() : 0;
     }
 
     /**

@@ -54,8 +54,8 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     }
 
     private void initViewPager() {
-        mPropFragment = new PropFragment();
-        mFurnitureFragment = new FurnitureFragment();
+        mPropFragment = PropFragment.newInstance();
+        mFurnitureFragment = FurnitureFragment.newInstance();
         mPropFragment.setCallBack(this);
         mFragmentLists = new ArrayList<>();
         mFragmentLists.add(mPropFragment);
@@ -69,7 +69,6 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
 
     @Override
     public void getResult(String id, String name, String image, int toolCount) {
-        Log.i("StorageActivity", "getResult: " + id + "/" + name + "/" + image + "/" + toolCount);
         binding.storageCommodityName.setText(name);
         Glide.with(this).load(ApiService.URL_QINIU + image).into(binding.storageImage);
         binding.storageCommodityNum.setText("X" + toolCount);
@@ -91,12 +90,10 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
             switch (checkedId) {
                 case R.id.choose_prop_btn:
                     binding.topBg.setBackgroundResource(R.drawable.bg_home_items_prop_background);
-                    Toast.makeText(getApplicationContext(), "道具", Toast.LENGTH_SHORT).show();
                     binding.storageViewpager.setCurrentItem(0, false);
                     break;
                 case R.id.choose_furniture_btn:
                     binding.topBg.setBackgroundResource(R.drawable.ic_role_top_bg);
-                    Toast.makeText(getApplicationContext(), "家具", Toast.LENGTH_SHORT).show();
                     binding.storageViewpager.setCurrentItem(1, false);
                     break;
                 default:
@@ -155,7 +152,6 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     mPropFragment.showNotHave();
                 } else {
                     mPropFragment.showHave();
-                    Toast.makeText(getApplicationContext(), "显示拥有", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -180,10 +176,8 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     finish();
                     break;
                 case R.id.storage_commodity_buy_btn:
-                    Toast.makeText(getApplicationContext(), "购买", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.storage_commodity_use_btn:
-                    Toast.makeText(getApplicationContext(), "使用", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;

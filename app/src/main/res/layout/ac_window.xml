@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.moemoe.lalala.view.widget.view.WindowView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_main"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/transparent">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_bottom_left"
+        android:layout_width="@dimen/x225"
+        android:layout_height="@dimen/y275"
         android:src="@drawable/btn_classmate_len_right" />
-
-    <TextView
-        android:id="@+id/tv_bottom_left"
-        android:layout_width="wrap_content"
-        
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_classmate_talkbg_bottom_left"
-        android:gravity="center"
-        android:maxLines="1"
-        android:text="jflkjdslkjflkajflkdjslkfjdslkjdfsf fds flkdjsa;lkf"
-        android:visibility="gone" />
-</RelativeLayout> 
+</com.moemoe.lalala.view.widget.view.WindowView> 

@@ -50,8 +50,12 @@ public class PropFragment extends BaseFragment implements PropContract.View {
 
     private CallBack callBack;
 
-    @Override
 
+    public static PropFragment newInstance() {
+        return new PropFragment();
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.prop_fragment;
     }
@@ -74,10 +78,8 @@ public class PropFragment extends BaseFragment implements PropContract.View {
 
     @Override
     public void getPropInfoSuccess(ArrayList<PropInfoEntity> propInfoEntities) {
-            Log.i("PropFragment", "getPropInfoSuccess: " + propInfoEntities);
         lists = new ArrayList<>();
         this.lists = propInfoEntities;
-        Log.i("PropFragment", "getPropInfoSuccess:newLists " + lists);
 
 
         mAdapter = new PropAdapter(getContext(), lists);
@@ -88,14 +90,11 @@ public class PropFragment extends BaseFragment implements PropContract.View {
         mAdapter.setOnItemClickListener(new OnItemListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(getContext(), lists.get(position).getName() + "", Toast.LENGTH_SHORT).show();
                 String id = lists.get(position).getId();
                 String name = lists.get(position).getName();
                 String image = lists.get(position).getImage();
                 int toolCount = lists.get(position).getToolCount();
-                Log.i("PropFragment", "onItemClick: " + id + name + image);
                 callBack.getResult(id, name, image, toolCount);
-                Log.i("PropFragment", "getResult: " + id + "/" + name + "/" + image);
             }
         });
         mAdapter.notifyDataSetChanged();
@@ -105,7 +104,6 @@ public class PropFragment extends BaseFragment implements PropContract.View {
      * 显示未拥有
      */
     public void showNotHave() {
-        Log.i("asd", "showNotHave: " + lists);
         newLists = new ArrayList<>();
         if (lists != null && lists.size() > 0) {
             for (int i = 0; i < lists.size(); i++) {
@@ -121,7 +119,6 @@ public class PropFragment extends BaseFragment implements PropContract.View {
      * 显示拥有
      */
     public void showHave() {
-        Log.i("asd", "showHave: " + lists);
         mAdapter.setRestore(lists);
     }
 

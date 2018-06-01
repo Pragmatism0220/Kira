@@ -9,7 +9,7 @@ import com.moemoe.lalala.model.entity.PhoneFukuEntity;
 import com.moemoe.lalala.view.adapter.TabFragmentPagerV3Adapter;
 import com.moemoe.lalala.view.fragment.BaseFragment;
 import com.moemoe.lalala.view.fragment.RoleFragment;
-import com.moemoe.lalala.view.widget.view.KiraRoleTabLayout;
+import com.moemoe.lalala.view.widget.view.KiraTabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class DemoAcitivity extends BaseAppCompatActivity {
     @BindView(R.id.view_pager)
     ViewPager mViewPager;
     @BindView(R.id.kira_bar)
-    KiraRoleTabLayout mTabLayout;
+    KiraTabLayout mTabLayout;
     private TabFragmentPagerV3Adapter mAdapter;
 
     @Override

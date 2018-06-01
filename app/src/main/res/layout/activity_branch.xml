@@ -73,7 +73,7 @@
             app:kira_tl_tab_padding="@dimen/x12"
             app:kira_tl_textSelectColor="@color/white"
             app:kira_tl_textUnSelectColor="@color/pink_fb7ba2"
-            app:kira_tl_text_size="@dimen/x30"></com.moemoe.lalala.view.widget.view.KiraTabLayout>
+            app:kira_tl_text_size="@dimen/x30"/>
 
 
         <android.support.v4.view.ViewPager
@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/branch_bottom"
-            android:layout_below="@+id/branch_tab_layout"></android.support.v4.view.ViewPager>
+            android:layout_below="@+id/branch_tab_layout"/>
 
 
         <RelativeLayout

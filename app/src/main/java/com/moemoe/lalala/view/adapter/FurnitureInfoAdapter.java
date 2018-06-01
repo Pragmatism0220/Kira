@@ -35,13 +35,17 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
 
     private int mSelectedPos = -1;//保存当前选中的position 重点！
 
-    public FurnitureInfoAdapter(Context mContext, List<AllFurnitureInfo> infos) {
+    public FurnitureInfoAdapter(Context mContext) {
         this.mContext = mContext;
-        this.infos = infos;
+        this.infos = new ArrayList<>();
+    }
+
+    public void setList(List<AllFurnitureInfo> mData) {
+        this.infos = mData;
+        notifyDataSetChanged();
     }
 
     @Override
-
     public FurnitureHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         FurnitureHolder holder = new FurnitureHolder(View.inflate(mContext, R.layout.item_furniture_info, null));
         return holder;
@@ -50,30 +54,24 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
     @Override
     public void onBindViewHolder(final FurnitureHolder holder, final int position) {
         AllFurnitureInfo data = infos.get(position);
-        Log.i("FurnitureInfoAdapter", "onBindViewHolder: " + data);
-
-
-
+        
         if (!data.isPutInHouse()) {
             holder.mFusing.setVisibility(View.VISIBLE);
         } else {
             holder.mFusing.setVisibility(View.GONE);
         }
-        holder.mFName.setText(data.getName());
-        Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).into(holder.mFphoto);
-
-
-
-//        if (!data.isUse()) {
-//            holder.mFusing.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.mFusing.setVisibility(View.GONE);
-//        }
-//        holder.mFName.setText(data.getName());
-//        holder.mFStyle.setText(data.getStyle());
-
-        holder.mFCheck.setChecked(mSelectedPos == position);
-
+        
+        if (data.getType().equals("套装")){
+            holder.mFName.setText(data.getSuitTypeName());
+            holder.mFCheck.setChecked(mSelectedPos == position);
+            Glide.with(mContext).load(ApiService.URL_QINIU + data.getSuitTypeImage()).into(holder.mFphoto);
+            holder.mFStyle.setText(data.getSuitTypeDescribe());
+        }else {
+            holder.mFName.setText(data.getName());
+            holder.mFCheck.setChecked(mSelectedPos == position);
+            Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).into(holder.mFphoto);
+            holder.mFStyle.setText(data.getSuitTypeName());
+        }
 
         if (mOnItemListener != null) {
             holder.mFphoto.setOnClickListener(new View.OnClickListener() {

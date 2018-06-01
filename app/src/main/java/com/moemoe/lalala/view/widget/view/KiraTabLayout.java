@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
@@ -38,7 +39,7 @@ import java.lang.annotation.RetentionPolicy;
  * Created by yi on 2018/1/11.
  */
 
-public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnPageChangeListener{
+public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnPageChangeListener {
 
     private Context mContext;
     private ViewPager mViewPager;
@@ -59,14 +60,19 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
     private static final int STYLE_TRIANGLE = 1;
     private static final int STYLE_BLOCK = 2;
     private int mIndicatorStyle = STYLE_NORMAL;
+    private float mTextSelectPaddingTop;
+    private float mTextUnSelectPaddingTop;
+    private Drawable mTextSelectBackground;
+    private Drawable mTextUnSelectBackground;
 
-    @IntDef(flag = true,value = {
+    @IntDef(flag = true, value = {
             STYLE_NORMAL,
             STYLE_TRIANGLE,
             STYLE_BLOCK
     })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface IndicatorStyle{}
+    public @interface IndicatorStyle {
+    }
 
     private float mTabPadding;
     private boolean mTabSpaceEqual;//item 等分
@@ -115,13 +121,14 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
     private float mDotTextSize;
     private int mDotWidth;
 
-    @IntDef(flag = true,value = {
+    @IntDef(flag = true, value = {
             TEXT_BOLD_NONE,
             TEXT_BOLD_WHEN_SELECT,
             TEXT_BOLD_BOTH
     })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface TextBold{}
+    public @interface TextBold {
+    }
 
     private float mTextSize;
     private int mTextSelectColor;
@@ -138,23 +145,27 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
 
     private OnTabSelectedListener mListener;
     private OnTabViewClickListener mTabClick;
-    public interface OnTabViewClickListener{
-        void onTabClick(View tabView,int position);
+
+    public interface OnTabViewClickListener {
+        void onTabClick(View tabView, int position);
     }
+
     public interface OnTabSelectedListener {
         void onTabSelect(View tabView, int position);
+
         void onTabReselect(View tabView, int position);
     }
 
-    public void setmTabClick(OnTabViewClickListener mTabClick){
-         this.mTabClick=mTabClick;
+    public void setmTabClick(OnTabViewClickListener mTabClick) {
+        this.mTabClick = mTabClick;
     }
+
     public KiraTabLayout(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public KiraTabLayout(Context context, AttributeSet attrs) {
-        this(context,attrs,0);
+        this(context, attrs, 0);
     }
 
     public KiraTabLayout(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -167,67 +178,71 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
         mTabsContainer = new LinearLayout(context);
         addView(mTabsContainer);//scrollview 必须且只能有一个子view
 
-        obtainAttributes(context,attrs);
+        obtainAttributes(context, attrs);
 
         //get layout_height
-        String height = attrs.getAttributeValue("http://schemas.android.com/apk/res/android","layout_height");
-        if(!(ViewGroup.LayoutParams.MATCH_PARENT + "").equals(height)
-                && !(ViewGroup.LayoutParams.WRAP_CONTENT + "").equals(height)){
+        String height = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "layout_height");
+        if (!(ViewGroup.LayoutParams.MATCH_PARENT + "").equals(height)
+                && !(ViewGroup.LayoutParams.WRAP_CONTENT + "").equals(height)) {
             int[] systemAttrs = {android.R.attr.layout_height};
-            TypedArray a = context.obtainStyledAttributes(attrs,systemAttrs);
-            mHeight = a.getDimensionPixelSize(0,ViewGroup.LayoutParams.WRAP_CONTENT);
+            TypedArray a = context.obtainStyledAttributes(attrs, systemAttrs);
+            mHeight = a.getDimensionPixelSize(0, ViewGroup.LayoutParams.WRAP_CONTENT);
             a.recycle();
         }
     }
 
     /**
-     *  读取xml中属性
+     * 读取xml中属性
      */
-    private void obtainAttributes(Context context,AttributeSet attrs){
+    private void obtainAttributes(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.KiraTabLayout);
 
-        mIndicatorStyle = a.getInt(R.styleable.KiraTabLayout_kira_tl_indicator_style,STYLE_NORMAL);
-        mIndicatorColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_indicator_color, ContextCompat.getColor(context,R.color.main_cyan));
+        mIndicatorStyle = a.getInt(R.styleable.KiraTabLayout_kira_tl_indicator_style, STYLE_NORMAL);
+        mIndicatorColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_indicator_color, ContextCompat.getColor(context, R.color.main_cyan));
         mIndicatorHeight = a.getDimension(R.styleable.KiraTabLayout_kira_tl_indicator_height,
                 mIndicatorStyle == STYLE_TRIANGLE ? 4 : (mIndicatorStyle == STYLE_BLOCK ? -1 : 2));
-        mIndicatorWidth = a.getDimension(R.styleable.KiraTabLayout_kira_tl_indicator_width,mIndicatorStyle == STYLE_TRIANGLE ? 10 : -1);
-        mIndicatorCornerRadius = a.getDimension(R.styleable.KiraTabLayout_kira_tl_indicator_corner_radius,mIndicatorStyle == STYLE_BLOCK ? -1 : 0);
-        mIndicatorMarginStart = a.getDimension(R.styleable.KiraTabLayout_kira_tl_indicator_margin_start,0);
-        mIndicatorMarginTop = a.getDimension(R.styleable.KiraTabLayout_kira_tl_indicator_margin_top,0);
-        mIndicatorMarginEnd = a.getDimension(R.styleable.KiraTabLayout_kira_tl_indicator_margin_end,0);
-        mIndicatorMarginBottom = a.getDimension(R.styleable.KiraTabLayout_kira_tl_indicator_margin_bottom,0);
+        mIndicatorWidth = a.getDimension(R.styleable.KiraTabLayout_kira_tl_indicator_width, mIndicatorStyle == STYLE_TRIANGLE ? 10 : -1);
+        mIndicatorCornerRadius = a.getDimension(R.styleable.KiraTabLayout_kira_tl_indicator_corner_radius, mIndicatorStyle == STYLE_BLOCK ? -1 : 0);
+        mIndicatorMarginStart = a.getDimension(R.styleable.KiraTabLayout_kira_tl_indicator_margin_start, 0);
+        mIndicatorMarginTop = a.getDimension(R.styleable.KiraTabLayout_kira_tl_indicator_margin_top, 0);
+        mIndicatorMarginEnd = a.getDimension(R.styleable.KiraTabLayout_kira_tl_indicator_margin_end, 0);
+        mIndicatorMarginBottom = a.getDimension(R.styleable.KiraTabLayout_kira_tl_indicator_margin_bottom, 0);
         mIndicatorGravity = a.getInt(R.styleable.KiraTabLayout_kira_tl_indicator_gravity, Gravity.BOTTOM);
-        mIndicatorWidthEqualTitle = a.getBoolean(R.styleable.KiraTabLayout_kira_tl_indicator_width_equal_title,false);
+        mIndicatorWidthEqualTitle = a.getBoolean(R.styleable.KiraTabLayout_kira_tl_indicator_width_equal_title, false);
 
-        mUnderlineColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_underline_color, ContextCompat.getColor(context,R.color.main_cyan));
-        mUnderlineHeight = a.getDimension(R.styleable.KiraTabLayout_kira_tl_underline_height,0);
-        mUnderlineGravity = a.getInt(R.styleable.KiraTabLayout_kira_tl_underline_gravity,Gravity.BOTTOM);
+        mUnderlineColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_underline_color, ContextCompat.getColor(context, R.color.main_cyan));
+        mUnderlineHeight = a.getDimension(R.styleable.KiraTabLayout_kira_tl_underline_height, 0);
+        mUnderlineGravity = a.getInt(R.styleable.KiraTabLayout_kira_tl_underline_gravity, Gravity.BOTTOM);
 
-        mDividerColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_divider_color, ContextCompat.getColor(context,R.color.gray_e8e8e8));
-        mDividerWidth = a.getDimension(R.styleable.KiraTabLayout_kira_tl_divider_width,0);
-        mDividerPadding = a.getDimension(R.styleable.KiraTabLayout_kira_tl_divider_padding,0);
+        mDividerColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_divider_color, ContextCompat.getColor(context, R.color.gray_e8e8e8));
+        mDividerWidth = a.getDimension(R.styleable.KiraTabLayout_kira_tl_divider_width, 0);
+        mDividerPadding = a.getDimension(R.styleable.KiraTabLayout_kira_tl_divider_padding, 0);
 
-        mTextSize = a.getDimensionPixelSize(R.styleable.KiraTabLayout_kira_tl_text_size,24);
-        mTextSelectColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_textSelectColor, ContextCompat.getColor(context,R.color.main_cyan));
-        mTextUnSelectColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_textUnSelectColor, ContextCompat.getColor(context,R.color.main_cyan_50));
-        mTextBold = a.getInt(R.styleable.KiraTabLayout_kira_tl_textBold,TEXT_BOLD_NONE);
-        mTextAllCaps = a.getBoolean(R.styleable.KiraTabLayout_kira_tl_textAllCaps,false);
+        mTextSize = a.getDimensionPixelSize(R.styleable.KiraTabLayout_kira_tl_text_size, 24);
+        mTextSelectColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_textSelectColor, ContextCompat.getColor(context, R.color.main_cyan));
+        mTextUnSelectColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_textUnSelectColor, ContextCompat.getColor(context, R.color.main_cyan_50));
+        mTextBold = a.getInt(R.styleable.KiraTabLayout_kira_tl_textBold, TEXT_BOLD_NONE);
+        mTextSelectPaddingTop = a.getDimension(R.styleable.KiraTabLayout_kira_tl_textSelectPaddingTop, 0);
+        mTextUnSelectPaddingTop = a.getDimension(R.styleable.KiraTabLayout_kira_tl_textUnSelectPaddingTop, 0);
+        mTextSelectBackground = a.getDrawable(R.styleable.KiraTabLayout_kira_tl_textSelectBackground);
+        mTextUnSelectBackground = a.getDrawable(R.styleable.KiraTabLayout_kira_tl_textUnSelectBackground);
+        mTextAllCaps = a.getBoolean(R.styleable.KiraTabLayout_kira_tl_textAllCaps, false);
 
-        mTabSpaceEqual = a.getBoolean(R.styleable.KiraTabLayout_kira_tl_tab_space_equal,false);
-        mTabWidth = a.getDimension(R.styleable.KiraTabLayout_kira_tl_tab_width,-1);
-        mTabPadding = a.getDimension(R.styleable.KiraTabLayout_kira_tl_tab_padding,0);
+        mTabSpaceEqual = a.getBoolean(R.styleable.KiraTabLayout_kira_tl_tab_space_equal, false);
+        mTabWidth = a.getDimension(R.styleable.KiraTabLayout_kira_tl_tab_width, -1);
+        mTabPadding = a.getDimension(R.styleable.KiraTabLayout_kira_tl_tab_padding, 0);
 
-        mTabLayoutId = a.getResourceId(R.styleable.KiraTabLayout_kira_tl_tab_layout,R.layout.item_tab_normal);
+        mTabLayoutId = a.getResourceId(R.styleable.KiraTabLayout_kira_tl_tab_layout, R.layout.item_tab_normal);
 
-        mDotBgColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_dot_bg_color, ContextCompat.getColor(context,R.color.main_red));
-        mDotTextColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_dot_text_color, ContextCompat.getColor(context,R.color.white));
-        mDotTextSize = a.getDimension(R.styleable.KiraTabLayout_kira_tl_dot_text_size,mTextSize / 2);
-        mDotWidth = a.getDimensionPixelSize(R.styleable.KiraTabLayout_kira_tl_dot_width,0);
+        mDotBgColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_dot_bg_color, ContextCompat.getColor(context, R.color.main_red));
+        mDotTextColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_dot_text_color, ContextCompat.getColor(context, R.color.white));
+        mDotTextSize = a.getDimension(R.styleable.KiraTabLayout_kira_tl_dot_text_size, mTextSize / 2);
+        mDotWidth = a.getDimensionPixelSize(R.styleable.KiraTabLayout_kira_tl_dot_width, 0);
         a.recycle();
     }
 
-    public void setViewPager(ViewPager vp){
-        if(vp == null || vp.getAdapter() == null){
+    public void setViewPager(ViewPager vp) {
+        if (vp == null || vp.getAdapter() == null) {
             throw new IllegalStateException("Viewpager or ViewPager Adapter can not be null");
         }
         this.mViewPager = vp;
@@ -236,79 +251,81 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
         notifyDataSetChanged();
     }
 
-    public void notifyDataSetChanged(){
+    public void notifyDataSetChanged() {
         mTabsContainer.removeAllViews();
         this.mTabCount = mViewPager.getAdapter().getCount();
         View tabView;
-        for(int i = 0;i < mTabCount;i++){
-            tabView = View.inflate(mContext,mTabLayoutId,null);
+        for (int i = 0; i < mTabCount; i++) {
+            tabView = View.inflate(mContext, mTabLayoutId, null);
             String title = mViewPager.getAdapter().getPageTitle(i).toString();
-            addTab(i,title,tabView);
+            addTab(i, title, tabView);
         }
         updateTabStyles();
     }
 
-    private void addTab(final int position,String title,View tabView){
+    private void addTab(final int position, String title, View tabView) {
         TextView tv_title = tabView.findViewById(R.id.tv_tab_title);
-        if(tv_title == null){
+        if (tv_title == null) {
             throw new IllegalStateException("title textView id must be tv_tab_title");
         }
-        if(!TextUtils.isEmpty(title)){
+        if (!TextUtils.isEmpty(title)) {
             tv_title.setText(title);
         }
 
         tabView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(position != -1){
-                    if(mViewPager.getCurrentItem() != position){
-                        if(mSnapOntabClick){
-                            mViewPager.setCurrentItem(position,false);
-                        }else {
+                if (position != -1) {
+                    if (mViewPager.getCurrentItem() != position) {
+                        if (mSnapOntabClick) {
+                            mViewPager.setCurrentItem(position, false);
+                        } else {
                             mViewPager.setCurrentItem(position);
                         }
-                        if(mListener != null){
-                            mListener.onTabSelect(v,position);
+                        if (mListener != null) {
+                            mListener.onTabSelect(v, position);
                         }
-                    }else {
-                        if(mListener != null){
-                            mListener.onTabReselect(v,position);
+                    } else {
+                        if (mListener != null) {
+                            mListener.onTabReselect(v, position);
                         }
                     }
                 }
-                if (mTabClick!=null){
-                    mTabClick.onTabClick(v,position);
+                if (mTabClick != null) {
+                    mTabClick.onTabClick(v, position);
                 }
             }
         });
 
         LinearLayout.LayoutParams lp = mTabSpaceEqual ?
-                new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT,1.0f) :
+                new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f) :
                 new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        if(mTabWidth > 0){
+        if (mTabWidth > 0) {
             lp = new LinearLayout.LayoutParams((int) mTabWidth, ViewGroup.LayoutParams.MATCH_PARENT);
         }
-        tabView.setPadding((int)mTabPadding,0,(int)mTabPadding,0);
-        mTabsContainer.addView(tabView,position,lp);
+        tabView.setPadding((int) mTabPadding, 0, (int) mTabPadding, 0);
+        mTabsContainer.addView(tabView, position, lp);
     }
 
-    private void updateTabStyles(){
-        for(int i = 0;i < mTabCount;i++){
+    private void updateTabStyles() {
+        for (int i = 0; i < mTabCount; i++) {
             View v = mTabsContainer.getChildAt(i);
             TextView tv_title = v.findViewById(R.id.tv_tab_title);
-            if(tv_title == null){
+            if (tv_title == null) {
                 throw new IllegalStateException("title textView id must be tv_tab_title");
             }
             tv_title.setTextColor(i == mCurrentTab ? mTextSelectColor : mTextUnSelectColor);
-            tv_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,mTextSize);
-           // tv_title.setPadding((int) mTabPadding,0, (int) mTabPadding,0);
-            if(mTextAllCaps){
+            tv_title.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
+//            tv_title.setPadding(0, (int) (i == mCurrentTab ? mTextSelectPaddingTop : mTextUnSelectPaddingTop), 0, 0);
+            tv_title.setBackground(i == mCurrentTab ? mTextSelectBackground : mTextUnSelectBackground);
+            // tv_title.setPadding((int) mTabPadding,0, (int) mTabPadding,0);
+            if (mTextAllCaps) {
                 tv_title.setText(tv_title.getText().toString().toUpperCase());
             }
 
-            if(mTextBold == TEXT_BOLD_BOTH){
+            if (mTextBold == TEXT_BOLD_BOTH) {
                 tv_title.getPaint().setFakeBoldText(true);
-            }else if(mTextBold == TEXT_BOLD_NONE){
+            } else if (mTextBold == TEXT_BOLD_NONE) {
                 tv_title.getPaint().setFakeBoldText(false);
             }
         }
@@ -334,34 +351,36 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
     /**
      * 滚动到当前tab，并居中显示
      */
-    private void scrollToCurrentTab(){
-        if(mTabCount <= 0){
+    private void scrollToCurrentTab() {
+        if (mTabCount <= 0) {
             return;
         }
         int offset = (int) (mCurrentPositionOffset * mTabsContainer.getChildAt(mCurrentTab).getWidth());
         int newScrollX = mTabsContainer.getChildAt(mCurrentTab).getLeft() + offset;
-        if(mCurrentTab > 0 || offset > 0){
+        if (mCurrentTab > 0 || offset > 0) {
             newScrollX -= getWidth() / 2 - getPaddingStart();
             calcIndicatorRect();
             newScrollX += ((mTabRect.right - mTabRect.left) / 2);
         }
 
-        if(newScrollX != mLastScrollX){
+        if (newScrollX != mLastScrollX) {
             mLastScrollX = newScrollX;
-            scrollTo(newScrollX,0);
+            scrollTo(newScrollX, 0);
         }
     }
 
-    private void updateTabSelection(int position){
-        for(int i = 0;i < mTabCount;i++){
+    private void updateTabSelection(int position) {
+        for (int i = 0; i < mTabCount; i++) {
             View tabView = mTabsContainer.getChildAt(i);
             final boolean isSelect = i == position;
             TextView tv_title = tabView.findViewById(R.id.tv_tab_title);
-            if(tv_title == null){
+            if (tv_title == null) {
                 throw new IllegalStateException("title textView id must be tv_tab_title");
             }
             tv_title.setTextColor(isSelect ? mTextSelectColor : mTextUnSelectColor);
-            if(mTextBold == TEXT_BOLD_WHEN_SELECT){
+//            tv_title.setPadding(0, (int) (isSelect ? mTextSelectPaddingTop : mTextUnSelectPaddingTop), 0, 0);
+            tv_title.setBackground(isSelect ? mTextSelectBackground : mTextUnSelectBackground);
+            if (mTextBold == TEXT_BOLD_WHEN_SELECT) {
                 tv_title.getPaint().setFakeBoldText(isSelect);
             }
         }
@@ -370,19 +389,19 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
     private float margin;
     private Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);//msg dot
 
-    private void calcIndicatorRect(){
+    private void calcIndicatorRect() {
         View currentTabView = mTabsContainer.getChildAt(mCurrentTab);
         float left = currentTabView.getLeft();
         float right = currentTabView.getRight();
 
-        if(mIndicatorStyle == STYLE_NORMAL && mIndicatorWidthEqualTitle){
+        if (mIndicatorStyle == STYLE_NORMAL && mIndicatorWidthEqualTitle) {
             TextView tv_title = currentTabView.findViewById(R.id.tv_tab_title);
             mTextPaint.setTextSize(mTextSize);
             float textWidth = mTextPaint.measureText(tv_title.getText().toString());
             margin = (right - left - textWidth) / 2;
         }
 
-        if(mCurrentTab < mTabCount - 1){
+        if (mCurrentTab < mTabCount - 1) {
             View nextTabView = mTabsContainer.getChildAt(this.mCurrentTab + 1);
             float nextTabLeft = nextTabView.getLeft();
             float nextTabRight = nextTabView.getRight();
@@ -428,36 +447,36 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if(isInEditMode() || mTabCount <= 0){
+        if (isInEditMode() || mTabCount <= 0) {
             return;
         }
         int height = getHeight();
         int paddingStart = getPaddingStart();
 
         //draw divider
-        if(mDividerWidth > 0){
+        if (mDividerWidth > 0) {
             mDividerPaint.setStrokeWidth(mDividerWidth);
             mDividerPaint.setColor(mDividerColor);
-            for(int i = 0;i < mTabCount - 1;i++){
+            for (int i = 0; i < mTabCount - 1; i++) {
                 View tab = mTabsContainer.getChildAt(i);
-                canvas.drawLine(paddingStart + tab.getRight(),mDividerPadding , paddingStart + tab.getRight(),height - mDividerPadding,mDividerPaint);
+                canvas.drawLine(paddingStart + tab.getRight(), mDividerPadding, paddingStart + tab.getRight(), height - mDividerPadding, mDividerPaint);
             }
         }
 
         //draw underline
-        if(mUnderlineHeight > 0){
+        if (mUnderlineHeight > 0) {
             mRectPaint.setColor(mUnderlineColor);
-            if(mUnderlineGravity == Gravity.BOTTOM){
-                canvas.drawRect(paddingStart,height - mUnderlineHeight,mTabsContainer.getWidth() + paddingStart,height,mRectPaint);
-            }else {
-                canvas.drawRect(paddingStart,0,mTabsContainer.getWidth() + paddingStart,mUnderlineHeight,mRectPaint);
+            if (mUnderlineGravity == Gravity.BOTTOM) {
+                canvas.drawRect(paddingStart, height - mUnderlineHeight, mTabsContainer.getWidth() + paddingStart, height, mRectPaint);
+            } else {
+                canvas.drawRect(paddingStart, 0, mTabsContainer.getWidth() + paddingStart, mUnderlineHeight, mRectPaint);
             }
         }
 
         //draw indicator
         calcIndicatorRect();
-        if(mIndicatorStyle == STYLE_TRIANGLE){
-            if(mIndicatorHeight > 0){
+        if (mIndicatorStyle == STYLE_TRIANGLE) {
+            if (mIndicatorHeight > 0) {
                 mTrianglePaint.setColor(mIndicatorColor);
                 mTrianglePath.reset();
                 mTrianglePath.moveTo(paddingStart + mIndicatorRect.left, height);
@@ -466,7 +485,7 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
                 mTrianglePath.close();
                 canvas.drawPath(mTrianglePath, mTrianglePaint);
             }
-        }else if(mIndicatorStyle == STYLE_BLOCK){
+        } else if (mIndicatorStyle == STYLE_BLOCK) {
             if (mIndicatorHeight < 0) {
                 mIndicatorHeight = height - mIndicatorMarginTop - mIndicatorMarginBottom;
             }
@@ -482,7 +501,7 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
                 mIndicatorDrawable.setCornerRadius(mIndicatorCornerRadius);
                 mIndicatorDrawable.draw(canvas);
             }
-        }else {
+        } else {
             if (mIndicatorHeight > 0) {
                 mIndicatorDrawable.setColor(mIndicatorColor);
                 if (mIndicatorGravity == Gravity.BOTTOM) {
@@ -503,8 +522,9 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
     }
 
     private SparseArray<Boolean> mInitSetMap = new SparseArray<>();
-    public  void onShowMsg(int position,int num){
-        if (position >=mTabCount || position <0){
+
+    public void onShowMsg(int position, int num) {
+        if (position >= mTabCount || position < 0) {
             return;
         }
         View tabView = mTabsContainer.getChildAt(position);
@@ -513,12 +533,12 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
 //        RelativeLayout.LayoutParams parm = (RelativeLayout.LayoutParams) msgView.getLayoutParams();
 //        parm.addRule(RelativeLayout.END_OF, tv_tab_title.getId());
 //        msgView.setLayoutParams(parm);
-        if(msgView != null){
+        if (msgView != null) {
             msgView.setVisibility(VISIBLE);
 //            msgView.setTextColor(mDotTextColor);
 //            msgView.setTextSize(TypedValue.COMPLEX_UNIT_PX,mDotTextSize);
 
-            setV2Msg(msgView,num);
+            setV2Msg(msgView, num);
             if (mInitSetMap.get(position) != null && mInitSetMap.get(position)) {
                 return;
             }
@@ -526,18 +546,19 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
             mInitSetMap.put(position, true);
         }
     }
-    private void setV2Msg(TextView msg,int num){
+
+    private void setV2Msg(TextView msg, int num) {
 //        RelativeLayout.LayoutParams lp;
 //        GradientDrawable dotBg = new GradientDrawable();
 //        dotBg.setColor(mDotBgColor);
-        if(num > 0){
-            if(num > 99){
+        if (num > 0) {
+            if (num > 99) {
                 num = 99;//最多显示99
             }
 //            lp = new RelativeLayout.LayoutParams(mDotWidth,mDotWidth);
             msg.setText("" + num);
 //            dotBg.setCornerRadius(mDotWidth / 2);
-        }else {
+        } else {
             int size = 10;
 //            lp = new RelativeLayout.LayoutParams(size,size);
             msg.setText("");
@@ -546,24 +567,26 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
 //        msg.setLayoutParams(lp);
 //        msg.setBackground(dotBg);
     }
+
     /**
      * 显示未读消息
+     *
      * @param position 位置
-     * @param num 小于等于0显示点，大于0显示具体数字
+     * @param num      小于等于0显示点，大于0显示具体数字
      */
-    public void showMsg(int position,int num){
-        if(position >= mTabCount || position < 0){
+    public void showMsg(int position, int num) {
+        if (position >= mTabCount || position < 0) {
             return;
         }
         View tabView = mTabsContainer.getChildAt(position);
         TextView msgView = tabView.findViewById(R.id.tv_tab_msg_dot);
         TextView tv_tab_title = tabView.findViewById(R.id.tv_tab_title);
-        if(msgView != null){
+        if (msgView != null) {
             msgView.setVisibility(VISIBLE);
             msgView.setTextColor(mDotTextColor);
-            msgView.setTextSize(TypedValue.COMPLEX_UNIT_PX,mDotTextSize);
+            msgView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mDotTextSize);
 
-            setMsg(msgView,num);
+            setMsg(msgView, num);
             if (mInitSetMap.get(position) != null && mInitSetMap.get(position)) {
                 return;
             }
@@ -572,24 +595,24 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
         }
     }
 
-    public void showMsg(int position){
-        showMsg(position,0);
+    public void showMsg(int position) {
+        showMsg(position, 0);
     }
 
-    private void setMsg(TextView msg,int num){
+    private void setMsg(TextView msg, int num) {
         RelativeLayout.LayoutParams lp;
         GradientDrawable dotBg = new GradientDrawable();
         dotBg.setColor(mDotBgColor);
-        if(num > 0){
-            if(num > 99){
+        if (num > 0) {
+            if (num > 99) {
                 num = 99;//最多显示99
             }
-            lp = new RelativeLayout.LayoutParams(mDotWidth,mDotWidth);
+            lp = new RelativeLayout.LayoutParams(mDotWidth, mDotWidth);
             msg.setText("" + num);
             dotBg.setCornerRadius(mDotWidth / 2);
-        }else {
+        } else {
             int size = 10;
-            lp = new RelativeLayout.LayoutParams(size,size);
+            lp = new RelativeLayout.LayoutParams(size, size);
             msg.setText("");
             dotBg.setCornerRadius(size / 2);
         }
@@ -597,21 +620,21 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
         msg.setBackground(dotBg);
     }
 
-    public void hideMsg(int position){
-        if(position > mTabCount - 1 || position < 0){
+    public void hideMsg(int position) {
+        if (position > mTabCount - 1 || position < 0) {
             return;
         }
         View tabView = mTabsContainer.getChildAt(position);
         TextView msgView = tabView.findViewById(R.id.tv_tab_msg_dot);
-        if(msgView != null){
+        if (msgView != null) {
             msgView.setVisibility(GONE);
         }
     }
 
-    private void setMsgMargin(int position){
+    private void setMsgMargin(int position) {
         View tabView = mTabsContainer.getChildAt(position);
         TextView msgView = tabView.findViewById(R.id.tv_tab_msg_dot);
-        if(msgView != null){
+        if (msgView != null) {
             TextView tv_tab_title = tabView.findViewById(R.id.tv_tab_title);
             mTextPaint.setTextSize(mTextSize);
             float textWidth = mTextPaint.measureText(tv_tab_title.getText().toString());
@@ -626,8 +649,8 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
     /**
      * 自定义tabItem时
      */
-    public View getTabView(int position){
-        if(position > mTabCount - 1 || position < 0){
+    public View getTabView(int position) {
+        if (position > mTabCount - 1 || position < 0) {
             return null;
         }
         return mTabsContainer.getChildAt(position);

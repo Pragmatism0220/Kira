@@ -9,21 +9,19 @@ import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.AppSetting;
 import com.moemoe.lalala.event.SystemMessageEvent;
 import com.moemoe.lalala.greendao.gen.AuthorInfoDao;
-import com.moemoe.lalala.greendao.gen.DeskmateUserEntilsDao;
+import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
 import com.moemoe.lalala.model.entity.AuthorInfo;
+import com.moemoe.lalala.model.entity.DeskmateEntils;
 import com.moemoe.lalala.model.entity.DeskmateImageEntity;
-import com.moemoe.lalala.model.entity.DeskmateUserEntils;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
 
 /**
  * Created by yi on 2016/11/28.
  */
 
 public class PreferenceUtils {
-    private static DeskmateUserEntils sDeskmateUserEntils;
+    private static DeskmateEntils sDeskmateUserEntils;
     private static final String FILE_NAME = "settings";
     private static AuthorInfo sAuthorInfo;
     private PreferenceUtils() {}
@@ -34,9 +32,9 @@ public class PreferenceUtils {
         return sAuthorInfo;
     }
     
-    public static DeskmateUserEntils getDeskmateUserEntils(){
+    public static DeskmateEntils getDeskmateUserEntils(){
         if (sDeskmateUserEntils == null){
-            sDeskmateUserEntils = new DeskmateUserEntils();
+            sDeskmateUserEntils = new DeskmateEntils();
         }
         return sDeskmateUserEntils;
     }
@@ -49,12 +47,12 @@ public class PreferenceUtils {
     }
     public static void clearDeskmateUserEntils(){
         if (sDeskmateUserEntils != null) {
-            DeskmateUserEntilsDao dao = GreenDaoManager.getInstance().getSession().getDeskmateUserEntilsDao();
+            DeskmateEntilsDao dao = GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao();
              dao.deleteByKey("");
             sDeskmateUserEntils = null;
         }
     }
-    public static void setDeskmateUserEntils(DeskmateUserEntils info) {
+    public static void setDeskmateUserEntils(DeskmateEntils info) {
         if (sDeskmateUserEntils == null) {
             sDeskmateUserEntils = info;
         } else {
@@ -76,7 +74,7 @@ public class PreferenceUtils {
             }
         }
         sDeskmateUserEntils.setId(info.getId());
-        DeskmateUserEntilsDao dao = GreenDaoManager.getInstance().getSession().getDeskmateUserEntilsDao();
+        DeskmateEntilsDao dao = GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao();
         dao.insertOrReplace(sDeskmateUserEntils);
     }
     public static void setAuthorInfo(AuthorInfo info) {

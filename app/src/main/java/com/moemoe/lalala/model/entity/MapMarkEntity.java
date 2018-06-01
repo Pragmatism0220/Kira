@@ -19,7 +19,8 @@ public class MapMarkEntity {
     private ArrayList<String> contents;
     private int bg;
     private String path;
-
+    private int layer;
+    private String type;
     public MapMarkEntity(String id, int x, int y, String schema, ArrayList<String> contents, int bg) {
         this.id = id;
         this.x = x;
@@ -56,7 +57,18 @@ public class MapMarkEntity {
         this.h = h;
         this.content = content;
     }
-
+    public MapMarkEntity(String id, int x, int y, String schema, String path, int w, int h, String content,int layer,String type) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.schema = schema;
+        this.path = path;
+        this.w = w;
+        this.h = h;
+        this.content = content;
+        this.layer=layer;
+        this.type=type;
+    }
     public MapMarkEntity(String id, int x, int y, String schema, int bg, int w, int h) {
         this.id = id;
         this.x = x;
@@ -65,6 +77,22 @@ public class MapMarkEntity {
         this.bg = bg;
         this.w = w;
         this.h = h;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getLayer() {
+        return layer;
+    }
+
+    public void setLayer(int layer) {
+        this.layer = layer;
     }
 
     public String getPath() {

@@ -36,6 +36,7 @@ import com.moemoe.lalala.view.fragment.FeedDynamicV3Fragment;
 import com.moemoe.lalala.view.fragment.FeedFollowV4Fragment;
 import com.moemoe.lalala.view.fragment.NewCommunityFragment;
 import com.moemoe.lalala.view.fragment.NewFollowMainV3Fragment;
+import com.moemoe.lalala.view.widget.map.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -205,7 +206,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
             public void onClick(View v) {
 //                NoticeActivity.startActivity(FeedV3Activity.this, 0);
 //                Intent intent = new Intent(FeedV3Activity.this, ShoppingActivity.class);
-                Intent intent = new Intent(FeedV3Activity.this, HouseActivity.class);
+                Intent intent = new Intent(FeedV3Activity.this, DormitoryActivity.class);
                 startActivity(intent);
             }
         });
@@ -289,7 +290,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         mIvRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(FeedV3Activity.this, DormitoryActivity.class));
+                startActivity(new Intent(FeedV3Activity.this, HouseActivity.class));
                 finish();
             }
         });
@@ -305,6 +306,11 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
                 startActivityForResult(intent, REQUEST_CODE_CREATE_DOC);
             }
         });
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
     }
 
     public void likeTag(boolean isLike, int position, TagLikeEntity entity, int parentPosition) {
@@ -381,6 +387,15 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         super.onPause();
         MoeMoeApplication.getInstance().GoneWindowMager(this);
         pauseTime();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (MoeMoeApplication.getInstance().isMenu()) {
+            MoeMoeApplication.getInstance().GoneMenu();
+            return true;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override

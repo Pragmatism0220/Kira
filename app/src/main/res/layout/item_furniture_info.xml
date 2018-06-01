@@ -40,9 +40,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/y12"
-        android:text="电脑桌"
         android:textColor="@color/black"
-        android:textSize="15dp"
+        android:textSize="@dimen/x30"
         android:textStyle="bold" />
 
 
@@ -53,9 +52,8 @@
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/y20"
         android:layout_marginTop="@dimen/y8"
-        android:text="现代风格"
         android:textColor="@color/black"
-        android:textSize="10dp" />
+        android:textSize="@dimen/x20" />
 
 
 </LinearLayout>

@@ -266,6 +266,5 @@
     <include layout="@layout/float_send_layout" />
 
     <!--<include layout="@layout/float_comprehensive_layout" />-->
-
-    <include layout="@layout/float_renwu_layout" />
+    
 </RelativeLayout>

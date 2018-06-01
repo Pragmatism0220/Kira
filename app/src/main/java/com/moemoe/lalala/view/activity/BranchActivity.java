@@ -33,7 +33,7 @@ public class BranchActivity extends BaseActivity {
     protected void initComponent() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_branch);
         binding.setPresenter(new Presenter());
-        mTab = findViewById(R.id.branch_tab_layout);
+//        mTab = findViewById(R.id.branch_tab_layout);
     }
 
 

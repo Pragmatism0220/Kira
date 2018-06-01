@@ -6,6 +6,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 
 import java.util.ArrayList;
+
 import org.greenrobot.greendao.annotation.Generated;
 
 /**
@@ -31,29 +32,33 @@ public class MapDbEntity {
     private String md5;
     private String type;//map allUser birthdayUser followUser nearUser
     private int layer;//图片图层
+    private String house;
 
-    public MapDbEntity(MapEntity entity,String type){
+    public MapDbEntity(MapEntity entity, String type) {
         id = entity.getId();
-        image_path = entity.getImage().getPath();
-        image_w = entity.getImage().getW();
-        image_h = entity.getImage().getH();
+        if (!("" + entity.getType()).equals("3")) {
+            image_path = entity.getImage().getPath();
+            image_w = entity.getImage().getW();
+            image_h = entity.getImage().getH();
+            fileName = entity.getId() + image_path.substring(image_path.lastIndexOf("."));
+        }
         schema = entity.getSchema();
         pointX = entity.getPointX();
         pointY = entity.getPointY();
         text = entity.getText();
         shows = entity.getShows();
         name = entity.getName();
-        fileName = entity.getId() + image_path.substring(image_path.lastIndexOf("."));
         md5 = entity.getMd5();
         downloadState = 1;
-        this.type = type;
-        layer=entity.getLayer();
+        this.type = "" + entity.getType();
+        house = type;
+        layer = entity.getLayer();
     }
 
-    @Generated(hash = 884975777)
-    public MapDbEntity(String id, String name, String image_path, int image_w, int image_h,
-            String schema, int pointX, int pointY, String text, String shows, String fileName,
-            int downloadState, String md5, String type, int layer) {
+    @Generated(hash = 1615130461)
+    public MapDbEntity(String id, String name, String image_path, int image_w, int image_h, String schema,
+            int pointX, int pointY, String text, String shows, String fileName, int downloadState, String md5,
+            String type, int layer, String house) {
         this.id = id;
         this.name = name;
         this.image_path = image_path;
@@ -69,19 +74,32 @@ public class MapDbEntity {
         this.md5 = md5;
         this.type = type;
         this.layer = layer;
+        this.house = house;
     }
 
     @Generated(hash = 921294398)
     public MapDbEntity() {
     }
 
-    public static ArrayList<MapDbEntity> toDb(ArrayList<MapEntity> entities,String type){
+    public static ArrayList<MapDbEntity> toDb(ArrayList<MapEntity> entities, String type) {
         ArrayList<MapDbEntity> res = new ArrayList<>();
-        for(MapEntity entity : entities){
-         MapDbEntity entity1 = new MapDbEntity(entity,type);
+        for (MapEntity entity : entities) {
+            MapDbEntity entity1 = new MapDbEntity(entity, type);
             res.add(entity1);
         }
         return res;
+    }
+
+    public void setHouse(String house) {
+        this.house = house;
+    }
+
+    public String getHouse() {
+        return house;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getMd5() {
@@ -190,10 +208,6 @@ public class MapDbEntity {
 
     public String getType() {
         return this.type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public int getLayer() {

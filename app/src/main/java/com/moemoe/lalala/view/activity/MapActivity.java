@@ -2,7 +2,6 @@ package com.moemoe.lalala.view.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.ActivityManager;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -10,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,19 +16,15 @@ import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -52,8 +46,8 @@ import com.moemoe.lalala.model.entity.AlarmClockEntity;
 import com.moemoe.lalala.model.entity.AppUpdateEntity;
 import com.moemoe.lalala.model.entity.AuthorInfo;
 import com.moemoe.lalala.model.entity.BuildEntity;
+import com.moemoe.lalala.model.entity.DeskmateEntils;
 import com.moemoe.lalala.model.entity.DeskmateImageEntity;
-import com.moemoe.lalala.model.entity.DeskmateUserEntils;
 import com.moemoe.lalala.model.entity.JuQIngStoryEntity;
 import com.moemoe.lalala.model.entity.JuQingDoneEntity;
 import com.moemoe.lalala.model.entity.JuQingTriggerEntity;
@@ -68,6 +62,7 @@ import com.moemoe.lalala.model.entity.UserDeskmateEntity;
 import com.moemoe.lalala.model.entity.UserLocationEntity;
 import com.moemoe.lalala.presenter.MapContract;
 import com.moemoe.lalala.presenter.MapPresenter;
+import com.moemoe.lalala.rongyun.MoeMoeImagePlugin;
 import com.moemoe.lalala.service.DaemonService;
 import com.moemoe.lalala.utils.AlertDialogUtil;
 import com.moemoe.lalala.utils.DialogUtils;
@@ -182,18 +177,13 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     View mLuntanRoot;
     @BindView(R.id.rl_map_new)
     View mMapNew;
-    @BindView(R.id.ll_frist)
-    RelativeLayout mLlFrist;
-    @BindView(R.id.rl_renwu)
-    RelativeLayout mRlRenWu;
     @BindView(R.id.iv_left)
     ImageView mIvLeft;
     @BindView(R.id.iv_right)
     ImageView mIvRight;
     @BindView(R.id.ll_tool_bar)
     LinearLayout mLlToolBar;
-    @BindView(R.id.iv_personal)
-    ImageView mIvPresonal;
+
     @BindView(R.id.tv_search)
     TextView mTvSearch;
 
@@ -210,6 +200,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     private boolean mIsOut = false;
     public static long mUpdateDownloadId = Integer.MIN_VALUE;
     private MapMarkContainer mContainer;
+
     private BottomMenuFragment menuFragment;
     private Disposable initDisposable;
     private Disposable resolvDisposable;
@@ -270,7 +261,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         mPresenter.loadMapAllUser();
         mPresenter.loadMapBirthdayUser();
         mPresenter.loadMapTopUser();
-        mRlRenWu.setOnClickListener(null);
 //        if (MoeMoeApplication.getInstance().isWindow()) {
 //            MoeMoeApplication.getInstance().initWindowManager(this, getWindowManager());
 //        }
@@ -518,17 +508,17 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 mPresenter.loadRcToken();
             }
         }
-        if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
-            mIvPresonal.setImageResource(R.drawable.bg_default_circle);
-        } else {
-            int size = (int) getResources().getDimension(R.dimen.x64);
-            Glide.with(this)
-                    .load(StringUtils.getUrl(this, PreferenceUtils.getAuthorInfo().getHeadPath(), size, size, false, true))
-                    .error(R.drawable.bg_default_circle)
-                    .placeholder(R.drawable.bg_default_circle)
-                    .bitmapTransform(new CropCircleTransformation(this))
-                    .into(mIvPresonal);
-        }
+//        if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
+//            mIvPresonal.setImageResource(R.drawable.bg_default_circle);
+//        } else {
+//            int size = (int) getResources().getDimension(R.dimen.x64);
+//            Glide.with(this)
+//                    .load(StringUtils.getUrl(this, PreferenceUtils.getAuthorInfo().getHeadPath(), size, size, false, true))
+//                    .error(R.drawable.bg_default_circle)
+//                    .placeholder(R.drawable.bg_default_circle)
+//                    .bitmapTransform(new CropCircleTransformation(this))
+//                    .into(mIvPresonal);
+//        }
         mPresenter.loadHousUserDeskmate();
     }
 
@@ -642,7 +632,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             public void onTouch(MapWidget v, MapTouchedEvent event) {
                 List<ObjectTouchEvent> objectTouchEvents = event.getTouchedObjectEvents();
                 if (objectTouchEvents.size() == 0) {
-                    if (mRlRenWu.getVisibility() == View.GONE) {
+                    if (!MoeMoeApplication.getInstance().isMenu()) {
                         if (mIsOut) {
                             imgIn();
                             mIsOut = false;
@@ -654,7 +644,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                         clickSelect();
                     }
                 } else {
-                    if (mRlRenWu.getVisibility() == View.VISIBLE) {
+                    if (MoeMoeApplication.getInstance().isMenu()) {
                         clickSelect();
                         return;
                     }
@@ -1408,10 +1398,10 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         });
     }
 
-    private void resolvErrorListDeskmate(ArrayList<DeskmateUserEntils> errorList, final String type) {
-        final ArrayList<DeskmateUserEntils> errorListTmp = new ArrayList<>();
-        final ArrayList<DeskmateUserEntils> res = new ArrayList<>();
-        MapUtil.checkAndDownloadDeskmate(this, false, errorList, type, new Observer<DeskmateUserEntils>() {
+    private void resolvErrorListDeskmate(ArrayList<DeskmateEntils> errorList, final String type) {
+        final ArrayList<DeskmateEntils> errorListTmp = new ArrayList<>();
+        final ArrayList<DeskmateEntils> res = new ArrayList<>();
+        MapUtil.checkAndDownloadDeskmate(this, false, errorList, "HousUser", new Observer<DeskmateEntils>() {
 
             @Override
             public void onSubscribe(@NonNull Disposable d) {
@@ -1419,7 +1409,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             }
 
             @Override
-            public void onNext(@NonNull DeskmateUserEntils entils) {
+            public void onNext(@NonNull DeskmateEntils entils) {
                 File file = new File(StorageUtils.getMapRootPath() + entils.getFileName());
                 String md5 = entils.getMd5();
                 if (md5.length() < 32) {
@@ -1443,12 +1433,12 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
             @Override
             public void onComplete() {
-                GreenDaoManager.getInstance().getSession().getDeskmateUserEntilsDao().insertOrReplaceInTx(res);
+                GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao().insertOrReplaceInTx(res);
                 if (errorListTmp.size() > 0) {
                     resolvErrorListDeskmate(errorListTmp, type);
                 } else {
-                    if ("deskmate".equals(type)) {
-                    MoeMoeApplication.getInstance().goGreenDao();
+                    if ("HousUser".equals(type)) {
+                        MoeMoeApplication.getInstance().goGreenDao();
                     }
                 }
             }
@@ -1491,7 +1481,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         ErrorCodeUtils.showErrorMsgByCode(MapActivity.this, code, msg);
     }
 
-    @OnClick({R.id.rl_main_list_root, R.id.tv_search, R.id.iv_personal, R.id.iv_shopping, R.id.iv_create_dynamic, R.id.iv_sign_root, R.id.iv_create_wenzhang, R.id.iv_role, R.id.iv_live2d, R.id.iv_bag, R.id.rl_luntan_root, R.id.rl_map_search, R.id.rl_map_refresh, R.id.tv_show_live2d, R.id.iv_phone_menu, R.id.iv_msg})
+    @OnClick({R.id.rl_main_list_root, R.id.tv_search, R.id.iv_create_dynamic, R.id.iv_create_wenzhang, R.id.iv_role, R.id.iv_live2d, R.id.rl_luntan_root, R.id.rl_map_search, R.id.rl_map_refresh, R.id.tv_show_live2d})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_main_list_root:
@@ -1534,19 +1524,19 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 startActivity(i);
                 // mOrientationListener.disable();
                 break;
-            case R.id.iv_bag:
-                clickSelect();
-                if (NetworkUtils.checkNetworkAndShowError(this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
-                    if (PreferenceUtils.getAuthorInfo().isOpenBag()) {
-                        Intent i4 = new Intent(this, NewBagV5Activity.class);
-                        i4.putExtra("uuid", PreferenceUtils.getUUid());
-                        startActivity(i4);
-                    } else {
-                        Intent i4 = new Intent(this, BagOpenActivity.class);
-                        startActivity(i4);
-                    }
-                }
-                break;
+//            case R.id.iv_bag:
+//                clickSelect();
+//                if (NetworkUtils.checkNetworkAndShowError(this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+//                if (PreferenceUtils.getAuthorInfo().isOpenBag()) {
+//                    Intent i4 = new Intent(this, NewBagV5Activity.class);
+//                    i4.putExtra("uuid", PreferenceUtils.getUUid());
+//                    startActivity(i4);
+//                } else {
+//                    Intent i4 = new Intent(this, BagOpenActivity.class);
+//                    startActivity(i4);
+//                }
+//            }
+//                break;
 //            case R.id.ll_feed_v3_root:
 //                clickSelect();
 //                if (DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
@@ -1588,47 +1578,47 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 startActivity(i8);
                 // mOrientationListener.disable();
                 break;
-            case R.id.iv_phone_menu:
-                clickSelect();
-                if (NetworkUtils.checkNetworkAndShowError(this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
-                    //埋点统计：通讯录
-                    clickEvent("通讯录");
-                    startActivity(new Intent(this, PhoneMenuV3Activity.class));
-                }
-                break;
-            case R.id.iv_msg:
-                clickSelect();
-                if (NetworkUtils.checkNetworkAndShowError(this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
-                    //埋点统计：手机聊天
-                    clickEvent("手机聊天");
-                    NoticeActivity.startActivity(MapActivity.this, 1);
-                }
-                break;
-            case R.id.iv_sign_root:
-                clickSelect();
-                if (DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
-
-                    //埋点统计：手机每日任务
-                    clickEvent("手机每日任务");
-                    DailyTaskActivity.startActivity(this);
-                }
-                break;
-            case R.id.iv_shopping:
-                clickSelect();
-                //埋点统计：手机商店
-                clickEvent("手机商店");
-                Intent i7 = new Intent(MapActivity.this, CoinShopActivity.class);
-                startActivity(i7);
-                break;
-            case R.id.iv_personal:
-                if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
-                    //埋点统计：手机个人中心
-                    clickEvent("个人中心");
-                    Intent i1 = new Intent(MapActivity.this, PersonalV2Activity.class);
-                    i1.putExtra(UUID, PreferenceUtils.getUUid());
-                    startActivity(i1);
-                }
-                break;
+//            case R.id.iv_phone_menu:
+//                clickSelect();
+//                if (NetworkUtils.checkNetworkAndShowError(this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+//                    //埋点统计：通讯录
+//                    clickEvent("通讯录");
+//                    startActivity(new Intent(this, PhoneMenuV3Activity.class));
+//                }
+//                break;
+//            case R.id.iv_msg:
+//                clickSelect();
+//                if (NetworkUtils.checkNetworkAndShowError(this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+//                    //埋点统计：手机聊天
+//                    clickEvent("手机聊天");
+//                    NoticeActivity.startActivity(MapActivity.this, 1);
+//                }
+//                break;
+//            case R.id.iv_sign_root:
+//                clickSelect();
+//                if (DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+//
+//                    //埋点统计：手机每日任务
+//                    clickEvent("手机每日任务");
+//                    DailyTaskActivity.startActivity(this);
+//                }
+//                break;
+//            case R.id.iv_shopping:
+//                clickSelect();
+//                //埋点统计：手机商店
+//                clickEvent("手机商店");
+//                Intent i7 = new Intent(MapActivity.this, CoinShopActivity.class);
+//                startActivity(i7);
+//                break;
+//            case R.id.iv_personal:
+//                if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+//                    //埋点统计：手机个人中心
+//                    clickEvent("个人中心");
+//                    Intent i1 = new Intent(MapActivity.this, PersonalV2Activity.class);
+//                    i1.putExtra(UUID, PreferenceUtils.getUUid());
+//                    startActivity(i1);
+//                }
+//                break;
             case R.id.tv_search:
                 if (DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
                     clickEvent("地图-搜索");
@@ -1642,10 +1632,9 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
 
     public void clickSelect() {
-        if (mRlRenWu != null && mRlRenWu.getVisibility() == View.VISIBLE) {
-            mRlRenWu.setVisibility(View.GONE);
+        if (MoeMoeApplication.getInstance().isMenu()) {
+            MoeMoeApplication.getInstance().GoneMenu();
         }
-        MoeMoeApplication.getInstance().VisibilityWindowMager(this);
 //        if (mIvSelect.isSelected()) {
 //            ViewGroup.LayoutParams layoutParams = mLlComprehensive.getLayoutParams();
 //            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -1859,19 +1848,19 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     @Override
     public void onLoadHousUserDeskmateSuccess(UserDeskmateEntity entity) {
         deskmateEntity = entity;
-        final ArrayList<DeskmateUserEntils> res = new ArrayList<>();
-        final ArrayList<DeskmateUserEntils> errorList = new ArrayList<>();
+        final ArrayList<DeskmateEntils> res = new ArrayList<>();
+        final ArrayList<DeskmateEntils> errorList = new ArrayList<>();
         if (entity != null) {
             ArrayList<DeskmateImageEntity> pics = entity.getPics();
             if (pics != null && pics.size() > 0) {
-                MapUtil.checkAndDownloadDeskmate(this, true, DeskmateUserEntils.toDb(pics, "deskmate"), "deskmate", new Observer<DeskmateUserEntils>() {
+                MapUtil.checkAndDownloadDeskmate(this, true, DeskmateEntils.toDb(pics, "HousUser"), "HousUser", new Observer<DeskmateEntils>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         initDisposable = d;
                     }
 
                     @Override
-                    public void onNext(DeskmateUserEntils deskmateUserEntils) {
+                    public void onNext(DeskmateEntils deskmateUserEntils) {
                         File file = new File(StorageUtils.getHouseRootPath() + deskmateUserEntils.getFileName());
                         String md5 = deskmateUserEntils.getMd5();
                         if (md5.length() < 32) {
@@ -1896,109 +1885,23 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
                     @Override
                     public void onComplete() {
-                        GreenDaoManager.getInstance().getSession().getDeskmateUserEntilsDao().insertOrReplaceInTx(res);
-                        MoeMoeApplication.getInstance().goGreenDao();
+                        GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao().insertOrReplaceInTx(res);
+                        int i = MoeMoeApplication.getInstance().goGreenDao();
+                        if (i == 5) {
+                            if (MoeMoeApplication.getInstance().isWindow()) {
+                                MoeMoeApplication.getInstance().activities.add(MapActivity.this);
+                                MoeMoeApplication.getInstance().initWindowManager(MapActivity.this, getWindowManager());
+                            }
+                        }
                         if (errorList.size() > 0) {
-                            resolvErrorListDeskmate(errorList, "deskmate");
+                            resolvErrorListDeskmate(errorList, "HousUser");
                         }
                     }
                 });
             }
-//            if (MoeMoeApplication.getInstance().isWindow()) {
-//                MoeMoeApplication.getInstance().activities.add(this);
-//                MoeMoeApplication.getInstance().initWindowManager(this, getWindowManager());
-//            }
 
         }
     }
-
-    public void windowManagerOnclick(int x, int y, int width, int height) {
-        if (mRlRenWu != null && mRlRenWu.getVisibility() == View.GONE) {
-            mRlRenWu.setVisibility(View.VISIBLE);
-            int mapY = getWindow().getWindowManager().getDefaultDisplay().getHeight();
-            int mapX = getWindow().getWindowManager().getDefaultDisplay().getWidth();
-            int marginHeight = height + (int) getResources().getDimension(R.dimen.status_bar_height);
-            if (x <= 0) {
-                if (y == 0) {
-                    mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
-                    mRlRenWu.setX(x + getResources().getDimension(R.dimen.x24));
-                    mRlRenWu.setY(y + marginHeight - (int) getResources().getDimension(R.dimen.status_bar_height));
-                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
-                    layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
-                    mLlFrist.setLayoutParams(layoutParams);
-                } else {
-                    if (y > mapY / 2) {
-                        mRlRenWu.setX(x + getResources().getDimension(R.dimen.x24));
-                        mRlRenWu.setY(y - marginHeight / 2);
-                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
-                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
-                        mLlFrist.setLayoutParams(layoutParams);
-                    } else {
-                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
-                        mRlRenWu.setX(x + getResources().getDimension(R.dimen.x24));
-                        mRlRenWu.setY(y + marginHeight / 2);
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
-                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
-                        mLlFrist.setLayoutParams(layoutParams);
-                    }
-                }
-            } else if (x == 720) {
-                if (y > mapY / 2) {
-                    mRlRenWu.setX(x - getResources().getDimension(R.dimen.x428));
-                    mRlRenWu.setY(y - marginHeight / 2);
-                    mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
-                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
-                    layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
-                    mLlFrist.setLayoutParams(layoutParams);
-                } else {
-                    mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
-                    mRlRenWu.setX(x - getResources().getDimension(R.dimen.x428));
-                    mRlRenWu.setY(y + marginHeight / 2);
-                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
-                    layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
-                    mLlFrist.setLayoutParams(layoutParams);
-                }
-            } else {
-                if (y == 0) {
-                    if (x > (mapX - width / 2) / 2) {
-                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
-                        mRlRenWu.setX(x - width);
-                        mRlRenWu.setY(y + marginHeight - (int) getResources().getDimension(R.dimen.status_bar_height));
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
-                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
-                        mLlFrist.setLayoutParams(layoutParams);
-                    } else {
-                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
-                        mRlRenWu.setX(x);
-                        mRlRenWu.setY(y + marginHeight - (int) getResources().getDimension(R.dimen.status_bar_height));
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
-                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
-                        mLlFrist.setLayoutParams(layoutParams);
-                    }
-                } else if (y == 1280) {
-                    if (x > (mapX - width / 2) / 2) {
-                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
-                        mRlRenWu.setX(x - width);
-                        mRlRenWu.setY(y - getResources().getDimension(R.dimen.y320) - marginHeight / 2);
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
-                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
-                        mLlFrist.setLayoutParams(layoutParams);
-                    } else {
-                        mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
-                        mRlRenWu.setX(x);
-                        mRlRenWu.setY(y - getResources().getDimension(R.dimen.y320) - marginHeight / 2);
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
-                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
-                        mLlFrist.setLayoutParams(layoutParams);
-                    }
-                }
-            }
-        } else {
-            mRlRenWu.setVisibility(View.GONE);
-        }
-    }
-
 
     @Override
     protected void restartApp() {
@@ -2034,6 +1937,15 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (MoeMoeApplication.getInstance().isMenu()) {
+            MoeMoeApplication.getInstance().GoneMenu();
+            return true;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
     public void onLocationChanged(TencentLocation tencentLocation, int error, String s) {
         if (TencentLocation.ERROR_OK == error) {
             UserLocationEntity entity = new UserLocationEntity(tencentLocation.getLatitude(), tencentLocation.getLongitude());
@@ -2054,16 +1966,16 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         if (PreferenceUtils.isLogin()) {
             AlertDialogUtil.getInstance().dismissDialog();
         }
-        if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
-            mIvPresonal.setImageResource(R.drawable.bg_default_circle);
-        } else {
-            int size = (int) getResources().getDimension(R.dimen.x64);
-            Glide.with(this)
-                    .load(StringUtils.getUrl(this, PreferenceUtils.getAuthorInfo().getHeadPath(), size, size, false, true))
-                    .error(R.drawable.bg_default_circle)
-                    .placeholder(R.drawable.bg_default_circle)
-                    .bitmapTransform(new CropCircleTransformation(this))
-                    .into(mIvPresonal);
-        }
+//        if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
+//            mIvPresonal.setImageResource(R.drawable.bg_default_circle);
+//        } else {
+//            int size = (int) getResources().getDimension(R.dimen.x64);
+//            Glide.with(this)
+//                    .load(StringUtils.getUrl(this, PreferenceUtils.getAuthorInfo().getHeadPath(), size, size, false, true))
+//                    .error(R.drawable.bg_default_circle)
+//                    .placeholder(R.drawable.bg_default_circle)
+//                    .bitmapTransform(new CropCircleTransformation(this))
+//                    .into(mIvPresonal);
+//        }
     }
 }

@@ -1,5 +1,7 @@
 package com.moemoe.lalala.model.entity;
 
+import android.support.annotation.VisibleForTesting;
+
 import java.util.ArrayList;
 
 /**
@@ -18,6 +20,15 @@ public class MapEntity {
     private String name;
     private String md5;
     private int layer;//图片图层
+    private int type;//类型：1，家具 2.角色 3，垃圾
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public int getLayer() {
         return layer;

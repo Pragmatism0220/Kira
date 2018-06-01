@@ -213,7 +213,7 @@ public interface ApiService {
     @POST("api/dustbinV2/{type}/favorite/{id}")
     Observable<ApiResult> favoriteTrash(@Path("type") String type, @Path("id") String id);
 
-    @POST("api/dustbinV2/removeInHouse/{type}/favorite/{id}")
+    @POST("api/dustbinV2/remove/{type}/favorite/{id}")
     Observable<ApiResult> cancelFavoriteTrash(@Path("type") String type, @Path("id") String id);
 
     @GET("api/dustbinV2/sotText")
@@ -376,7 +376,7 @@ public interface ApiService {
     @POST("api/tag/delete")
     Observable<ApiResult> delTags(@Body DelTagEntity entity);
 
-    @POST("v2/kira/tag/removeInHouse")
+    @POST("v2/kira/tag/remove")
     Observable<ApiResult> delTagsV2(@Body DelTagEntity entity);
 
     @POST("api/doc/reply/info")
@@ -424,7 +424,7 @@ public interface ApiService {
     @POST("api/user/save/black/{userId}")
     Observable<ApiResult> saveBlackUser(@Path("userId") String userId);
 
-    @POST("api/user/removeInHouse/black/{userId}")
+    @POST("api/user/remove/black/{userId}")
     Observable<ApiResult> removeBlackUser(@Path("userId") String userId);
 
     @GET("api/user/list/black")
@@ -436,7 +436,7 @@ public interface ApiService {
     @POST("api/doc/post/{docId}/egg")
     Observable<ApiResult> postEgg(@Path("docId") String docId);
 
-    @POST("api/doc/removeInHouse/{docId}/egg")
+    @POST("api/doc/remove/{docId}/egg")
     Observable<ApiResult> removeEgg(@Path("docId") String docId);
 
     @GET("api/shop/list")
@@ -532,7 +532,7 @@ public interface ApiService {
     @POST("v2/kira/bag/top/{folderId}/folder/{type}/file/{fileId}")
     Observable<ApiResult> topFile(@Path("folderId") String folderId, @Path("type") String type, @Path("fileId") String fileId);
 
-    @POST("v2/kira/bag/removeInHouse/{userId}/folder/{type}/{folderId}/follow")
+    @POST("v2/kira/bag/remove/{userId}/folder/{type}/{folderId}/follow")
     Observable<ApiResult> removeFollowFolder(@Path("userId") String userId, @Path("type") String type, @Path("folderId") String folderId);
 
     @POST("v2/kira/bag/{userId}/folder/{type}/{folderId}/follow")
@@ -628,10 +628,10 @@ public interface ApiService {
     @GET("v2/kira/comment/get/sec/{orderBy}/{targetId}/comments")
     Observable<ApiResult<ArrayList<CommentV2SecEntity>>> loadCommentSec(@Path("targetId") String targetId, @Path("orderBy") String orderBy, @Query("size") int size, @Query("start") int index);
 
-    @POST("v2/kira/comment/removeInHouse/{type}/{targetId}/comment/{commentId}")
+    @POST("v2/kira/comment/remove/{type}/{targetId}/comment/{commentId}")
     Observable<ApiResult> deleteComment(@Path("targetId") String targetId, @Path("type") String type, @Path("commentId") String commentId);
 
-    @POST("v2/kira/comment/{parentId}/sec/{targetId}/removeInHouse/{commentId}/comment")
+    @POST("v2/kira/comment/{parentId}/sec/{targetId}/remove/{commentId}/comment")
     Observable<ApiResult> deleteCommentSec(@Path("targetId") String targetId, @Path("parentId") String parentId, @Path("commentId") String commentId);
 
     @POST("v2/kira/comment/like/{flag}/{targetId}/comment/{commentId}")
@@ -802,7 +802,7 @@ public interface ApiService {
     @GET("v2/kira/group/{groupId}/user/list")
     Observable<ApiResult<ArrayList<UserTopEntity>>> loadGroupMemberList(@Path("groupId") String groupId, @Query("index") int index, @Query("size") int size);
 
-    @POST("v2/kira/group/removeInHouse/member")
+    @POST("v2/kira/group/remove/member")
     Observable<ApiResult> delGroupMember(@Body GroupMemberDelEntity entity);
 
     @GET("v2/kira/map/list/place")
@@ -862,7 +862,7 @@ public interface ApiService {
     @POST("v2/kira/user/pic/{flag}/likeV2/for/{artworkId}")
     Observable<ApiResult> likeUserMapRole(@Path("flag") boolean flag, @Path("artworkId") String artworkId);
 
-    @POST("v2/kira/user/removeInHouse/artwork")
+    @POST("v2/kira/user/remove/artwork")
     Observable<ApiResult> deleteHistoryMapRole(@Body SimpleListSend object);
 
     @GET("v2/kira/app/get/all")
@@ -1010,7 +1010,7 @@ public interface ApiService {
     @POST("v2/kira/bag/favorite/{folderType}/{folderId}/file/{fileId}")
     Observable<ApiResult> favMoiveOrMusic(@Path("folderType") String folderType, @Path("folderId") String folderId, @Path("fileId") String fileId);
 
-    @POST("v2/kira/bag/removeInHouse/{folderType}/favorite/{folderId}/file/{fileId}")
+    @POST("v2/kira/bag/remove/{folderType}/favorite/{folderId}/file/{fileId}")
     Observable<ApiResult> cancelFavMoiveOrMusic(@Path("folderType") String folderType, @Path("folderId") String folderId, @Path("fileId") String fileId);
 
     @POST("v2/kira/bag/folder/{folderId}/file/{fileType}/{fileId}/buy")
@@ -1115,7 +1115,7 @@ public interface ApiService {
 
     @GET("v2/kira/house/inHouseRubblish")
     Observable<ApiResult<ArrayList<MapEntity>>> loadHouseInHouseRubblish();
-
+    
     @GET("v2/kira/house/inHouseRoles")
     Observable<ApiResult<ArrayList<MapEntity>>> loadHouseInHouseRoles();
 
@@ -1143,4 +1143,7 @@ public interface ApiService {
     @GET("/v2/kira/house/visitor/page/{size}/{start}")
     Observable<ApiResult<ArrayList<VisitorsEntity>>> loadVisitor(@Path("size") int size, @Path("start") int start);
 
+
+    @GET("v2/kira/house/inHouseObjects")
+    Observable<ApiResult<ArrayList<MapEntity>>> loadHouseObjects();
 }

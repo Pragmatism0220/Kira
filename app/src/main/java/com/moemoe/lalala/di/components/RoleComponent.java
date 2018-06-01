@@ -12,6 +12,6 @@ import dagger.Component;
 
 @UserScope
 @Component(modules = RoleModule.class, dependencies = NetComponent.class)
-public interface RolComponent {
+public interface RoleComponent {
     void inject(RoleActivity activity);
 }

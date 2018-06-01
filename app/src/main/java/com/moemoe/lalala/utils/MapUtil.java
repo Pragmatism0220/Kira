@@ -4,20 +4,15 @@ import android.content.Context;
 
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
-import com.liulishuo.filedownloader.FileDownloadQueueSet;
 import com.liulishuo.filedownloader.FileDownloader;
-import com.moemoe.lalala.app.MoeMoeApplication;
-import com.moemoe.lalala.greendao.gen.DeskmateUserEntilsDao;
+import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
 import com.moemoe.lalala.greendao.gen.MapDbEntityDao;
 import com.moemoe.lalala.model.api.ApiService;
-import com.moemoe.lalala.model.api.NetTResultSubscriber;
-import com.moemoe.lalala.model.entity.DeskmateUserEntils;
+import com.moemoe.lalala.model.entity.DeskmateEntils;
 import com.moemoe.lalala.model.entity.MapDbEntity;
-import com.moemoe.lalala.view.activity.ImageBigSelectActivity;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -26,7 +21,6 @@ import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
@@ -169,7 +163,7 @@ public class MapUtil {
         final MapDbEntityDao dao = GreenDaoManager.getInstance().getSession().getMapDbEntityDao();
         if (del) {
             ArrayList<MapDbEntity> mapList = (ArrayList<MapDbEntity>) dao.queryBuilder()
-                    .where(MapDbEntityDao.Properties.Type.eq(type))
+                    .where(MapDbEntityDao.Properties.House.eq(type))
                     .list(); 
             if (mapList != null) {
                 dao.deleteInTx(mapList);
@@ -248,8 +242,8 @@ public class MapUtil {
                 .subscribe(callback);
     }
    
-    public static void checkAndDownloadDeskmate(Context context, boolean del, ArrayList<DeskmateUserEntils> entities, String type, Observer<DeskmateUserEntils> callback) {//1.未下载 2.下载完成 3.下载失败
-        for (DeskmateUserEntils entity : entities) {
+    public static void checkAndDownloadDeskmate(Context context, boolean del, ArrayList<DeskmateEntils> entities, String type, Observer<DeskmateEntils> callback) {//1.未下载 2.下载完成 3.下载失败
+        for (DeskmateEntils entity : entities) {
             //文件是否存在
             if (FileUtil.isExists(StorageUtils.getHouseRootPath() + entity.getFileName())) {
                 File file = new File(StorageUtils.getHouseRootPath() + entity.getFileName());
@@ -271,10 +265,10 @@ public class MapUtil {
             }
         }
         //检查文件是否更改
-        final DeskmateUserEntilsDao dao = GreenDaoManager.getInstance().getSession().getDeskmateUserEntilsDao();
+        DeskmateEntilsDao dao = GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao();
         if (del) {
-            ArrayList<DeskmateUserEntils> mapList = (ArrayList<DeskmateUserEntils>) dao.queryBuilder()
-                    .where(DeskmateUserEntilsDao.Properties.Id.eq(type))
+            ArrayList<DeskmateEntils> mapList = (ArrayList<DeskmateEntils>) dao.queryBuilder()
+                    .where(DeskmateEntilsDao.Properties.Type.eq(type))
                     .list();
             if (mapList != null) {
                 dao.deleteInTx(mapList);
@@ -286,12 +280,12 @@ public class MapUtil {
         downLoadFilesDeskmate(context, entities, callback);
     }
 
-    public static void downLoadFilesDeskmate(Context context, ArrayList<DeskmateUserEntils> tasks, Observer<DeskmateUserEntils> callback) {//1.未下载 2.下载完成 3.下载失败
+    public static void downLoadFilesDeskmate(Context context, ArrayList<DeskmateEntils> tasks, Observer<DeskmateEntils> callback) {//1.未下载 2.下载完成 3.下载失败
 
         Observable.fromIterable(tasks)
-                .filter(new Predicate<DeskmateUserEntils>() {
+                .filter(new Predicate<DeskmateEntils>() {
                     @Override
-                    public boolean test(@NonNull DeskmateUserEntils deskmateUserEntils) throws Exception {
+                    public boolean test(@NonNull DeskmateEntils deskmateUserEntils) throws Exception {
                         if (deskmateUserEntils.getDownloadState() != 2) {
                             return true;
                         } else {
@@ -300,12 +294,12 @@ public class MapUtil {
                     }
                 })
                 .subscribeOn(Schedulers.io())
-                .flatMap(new Function<DeskmateUserEntils, ObservableSource<DeskmateUserEntils>>() {
+                .flatMap(new Function<DeskmateEntils, ObservableSource<DeskmateEntils>>() {
                     @Override
-                    public ObservableSource<DeskmateUserEntils> apply(@NonNull final DeskmateUserEntils deskmateUserEntils) throws Exception {
-                        return Observable.create(new ObservableOnSubscribe<DeskmateUserEntils>() {
+                    public ObservableSource<DeskmateEntils> apply(@NonNull final DeskmateEntils deskmateUserEntils) throws Exception {
+                        return Observable.create(new ObservableOnSubscribe<DeskmateEntils>() {
                             @Override
-                            public void subscribe(@NonNull final ObservableEmitter<DeskmateUserEntils> res) throws Exception {
+                            public void subscribe(@NonNull final ObservableEmitter<DeskmateEntils> res) throws Exception {
                                 FileDownloader.getImpl().create(ApiService.URL_QINIU + deskmateUserEntils.getPath())
                                         .setPath(StorageUtils.getHouseRootPath() + deskmateUserEntils.getFileName())
                                         .setCallbackProgressTimes(1)

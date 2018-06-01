@@ -1,6 +1,5 @@
 package com.moemoe.lalala.di.modules;
 
-import com.moemoe.lalala.presenter.RoleContract;
 import com.moemoe.lalala.presenter.VisitorsContract;
 
 import dagger.Module;

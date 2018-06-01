@@ -25,8 +25,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -51,11 +53,7 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
 
     private TabFragmentPagerAdapter mAdapter;
 
-    private List<FurnitureInfoEntity> lists;
-    private List<AllFurnitureInfo> allFurnitureInfoList = new ArrayList<>();
-
-
-    private static FurnitureFragment newInstance() {
+    public static FurnitureFragment newInstance() {
         return new FurnitureFragment();
     }
 
@@ -86,36 +84,35 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
 
     @Override
     public void getFurnitureInfoSuccess(FurnitureInfoEntity furnitureInfoEntity) {
-        Log.i(TAG, "getFurnitureInfoSuccess: " + furnitureInfoEntity);
-        lists = new ArrayList<>();
-        lists.add(furnitureInfoEntity);
+        Map<String, ArrayList<AllFurnitureInfo>> map = new HashMap<>();
 
-        /**
-         * Map的Key(title)
-         */
+        Map<String, ArrayList<AllFurnitureInfo>> allFurnitures = furnitureInfoEntity.getAllFurnitures();
+        ArrayList<AllFurnitureInfo> allList = new ArrayList<>();
+        for (String key : allFurnitures.keySet()) {
+            ArrayList<AllFurnitureInfo> infos = allFurnitures.get(key);
+            for (AllFurnitureInfo allFurnitureInfo : infos) {
+                allFurnitureInfo.setType("单品");
+            }
+            allList.addAll(infos);
+        }
+        map.put("全部", allList);
+        ArrayList<AllFurnitureInfo> suitFurnitures = furnitureInfoEntity.getSuitFurnitures();
+        for (AllFurnitureInfo allFurnitureInfo : suitFurnitures) {
+            allFurnitureInfo.setType("套装");
+        }
+        map.put("套装", suitFurnitures);
+
         ArrayList<String> mTitle = new ArrayList<>();
         mTitle.add("全部");
         mTitle.add("套装");
-        Iterator<String> iterator = furnitureInfoEntity.getAllFurnitures().keySet().iterator();
-        while (iterator.hasNext()) {
-            mTitle.add(iterator.next());
+        for (String key : allFurnitures.keySet()) {
+            mTitle.add(key);
+            map.put(key, allFurnitures.get(key));
         }
-
-        /**
-         * Map的value
-         */
-        Iterator<ArrayList<AllFurnitureInfo>> arrayListIterator = furnitureInfoEntity.getAllFurnitures().values().iterator();
-        while (arrayListIterator.hasNext()) {
-            allFurnitureInfoList.addAll(arrayListIterator.next());
-        }
-
-        Log.i(TAG, "Map的Key(title): " + mTitle);
-        Log.i(TAG, "Map的value: "+allFurnitureInfoList);
-
-        if (allFurnitureInfoList != null) {
+        if (map != null) {
             List<BaseFragment> fragmentList = new ArrayList<>();
             for (int i = 0; i < mTitle.size(); i++) {
-                fragmentList.add(FurnitureInfoFragment.newInstance());
+                fragmentList.add(FurnitureInfoFragment.newInstance(map.get(mTitle.get(i))));
             }
             if (mAdapter == null) {
                 mAdapter = new TabFragmentPagerAdapter(getChildFragmentManager(), fragmentList, mTitle);
@@ -124,11 +121,7 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
             }
             mFurnitureViewPager.setAdapter(mAdapter);
             mTab.setViewPager(mFurnitureViewPager);
-            mFurnitureViewPager.setCurrentItem(0);
         }
-
-        EventBus.getDefault().post(furnitureInfoEntity);
-
     }
 
     @Override

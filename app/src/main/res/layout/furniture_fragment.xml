@@ -9,6 +9,7 @@
     <com.moemoe.lalala.view.widget.view.KiraTabLayout
         android:id="@+id/furniture_tab"
         android:layout_width="match_parent"
+        android:background="@color/transparent"
         android:layout_height="@dimen/y104"
         android:paddingLeft="@dimen/x12"
         android:paddingRight="@dimen/x12"
@@ -22,8 +23,7 @@
         app:kira_tl_tab_padding="@dimen/x12"
         app:kira_tl_textSelectColor="@color/yellow_ddb922"
         app:kira_tl_textUnSelectColor="@color/white"
-        app:kira_tl_text_size="@dimen/x30">
-    </com.moemoe.lalala.view.widget.view.KiraTabLayout>
+        app:kira_tl_text_size="@dimen/x30"/>
 
 
     <android.support.v4.view.ViewPager

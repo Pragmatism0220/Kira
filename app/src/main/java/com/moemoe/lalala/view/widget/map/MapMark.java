@@ -12,17 +12,19 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.AppSetting;
+import com.moemoe.lalala.di.components.NetComponent;
 import com.moemoe.lalala.model.entity.AuthorInfo;
+import com.moemoe.lalala.utils.DensityUtil;
 import com.moemoe.lalala.utils.DialogUtils;
 import com.moemoe.lalala.utils.IntentUtils;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
-import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ToolTipUtils;
 import com.moemoe.lalala.view.activity.MapActivity;
@@ -31,6 +33,8 @@ import com.moemoe.lalala.view.widget.tooltip.TooltipAnimation;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Hygge on 2018/5/24.
@@ -52,23 +56,24 @@ public class MapMark extends ImageView {
 
     public MapMark(final Context context) {
         super(context);
-        final int wrapContent = ViewGroup.LayoutParams.WRAP_CONTENT;
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(wrapContent, wrapContent);
+        int wrapContent = ViewGroup.LayoutParams.WRAP_CONTENT;
+//        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(DensityUtil.px2dip(context,width),DensityUtil.px2dip(context,height));
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         this.setLayoutParams(params);
         this.setClickable(true);
-
         setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
+
                 if (!TextUtils.isEmpty(schame)) {
                     String temp = schame;
-                    if (!TextUtils.isEmpty(content) && content.equals("抽奖")) {
+                    if (!TextUtils.isEmpty(content) && content.equals(getContext().getString(R.string.label_lotter))) {
                         if (DialogUtils.checkLoginAndShowDlg(context)) {
-//                            AuthorInfo authorInfo = PreferenceUtils.getInstance(getContext()).getThirdPartyLoginMsg();
+//                            AuthorInfo authorInfo =  PreferenceManager.getInstance(getContext()).getAuthorInfo();
 //                            try {
-//                                temp += "?user_id=" + authorInfo.getmUUid()
-//                                        + "&nickname=" + URLEncoder.encode(authorInfo.getmUserName(), "UTF-8")
-//                                        + "&token=" + authorInfo.getmToken();
+//                                temp += "?user_id=" + authorInfo.getUserId()
+//                                        + "&nickname=" + (TextUtils.isEmpty(authorInfo.getUserName())? "" : URLEncoder.encode(authorInfo.getUserName(),"UTF-8"))
+//                                        + "&token=" + PreferenceManager.getToken();
 //                                Uri uri = Uri.parse(temp);
 //                                IntentUtils.haveShareWeb(getContext(), uri, v);
 //                            } catch (UnsupportedEncodingException e) {
@@ -78,6 +83,18 @@ public class MapMark extends ImageView {
                             return;
                         }
                     } else {
+                        if (temp.contains("http://prize.moemoe.la:8000/mt")) {
+//                            AuthorInfo authorInfo =  PreferenceManager.getInstance(getContext()).getAuthorInfo();
+//                            temp +="?user_id=" + authorInfo.getUserId() + "&nickname="+authorInfo.getUserName();
+                        }
+                        if (temp.contains("http://prize.moemoe.la:8000/netaopera/chap")) {
+//                            AuthorInfo authorInfo =  PreferenceManager.getInstance(getContext()).getAuthorInfo();
+//                            temp +="?pass=" + PreferenceManager.getInstance(getContext()).getPassEvent() + "&user_id=" + authorInfo.getUserId();
+                        }
+                        if (temp.contains("http://neta.facehub.me/")) {
+//                            AuthorInfo authorInfo =  PreferenceManager.getInstance(getContext()).getAuthorInfo();
+//                            temp +="?open_id=" + authorInfo.getUserId() + "&nickname=" + authorInfo.getUserName() + "&full_screen";
+                        }
                         Uri uri = Uri.parse(temp);
                         IntentUtils.toActivityFromUri(getContext(), uri, v);
                     }
@@ -85,7 +102,6 @@ public class MapMark extends ImageView {
                     if (StringUtils.isKillEvent() && !AppSetting.isEnterEventToday) {
                         return;
                     }
-                    // if(showTime == 2 || (showTime == 1 && StringUtils.isyoru()) || (showTime == 0 && !StringUtils.isyoru())){
                     if (matchTime()) {
                         TextView textView = (TextView) LayoutInflater.from(context).inflate(R.layout.tooltip_textview, null);
                         int viewHeight = ((MapLayout) getParent()).getViewHeight();
@@ -97,13 +113,34 @@ public class MapMark extends ImageView {
                         } else {
                             type = Tooltip.TOP;
                         }
-//                        ToolTipUtils.showTooltip(context, ((MapActivity) context).getRoot(), textView, v, content, type, true,
-//                                TooltipAnimation.SCALE_AND_FADE,
-//                                ViewGroup.LayoutParams.WRAP_CONTENT,
-//                                ViewGroup.LayoutParams.WRAP_CONTENT,
-//                                ContextCompat.getColor(context, R.color.main_title_cyan));
+                        if (TextUtils.isEmpty(content)) {
+                            ArrayList<String> temp = new ArrayList<>();
+                            temp.add("听说塔里有个体力值翻倍的道具，有了那个我体育考试就能及格了！！");
+                            temp.add("唔…某度说，红血瓶+250体力、蓝血瓶+500体力；红水晶+3攻击、蓝水晶+3防御。");
+                            temp.add("注意安全啊莲，尽量加“防御”吧，一定要平安回来！");
+                            temp.add("邱枳实学长和千世大小姐已经摸清楚里面的情况了，尽量找他们获取帮助吧，真不愧是Neta的精英！");
+                            temp.add("最终之战开启后，就无法回头了…");
+                            temp.add("有一种怪物会自爆的说，是很危险的存在，叫做“灰烬…法师”？");
+                            temp.add("如果没有实力战胜怪物，也找不到补给的话，就会被的永远困在里面了，好可怕。");
+                            temp.add("分享可以赚到100金币，但我连进去的勇气都没有…");
+                            Random random = new Random();
+                            int i = random.nextInt(8);
+//                            ToolTipUtils.showTooltip(context, ((MapActivity) context).getRoot(), textView, v, temp.get(i),type, true,
+//                                    TooltipAnimation.SCALE_AND_FADE,
+//                                    ViewGroup.LayoutParams.WRAP_CONTENT,
+//                                    ViewGroup.LayoutParams.WRAP_CONTENT,
+//                                    ContextCompat.getColor(context, R.color.main_title_cyan));
+                        } else {
+//                            ToolTipUtils.showTooltip(context, ((MapActivity) context).getRoot(), textView, v, content,type, true,
+//                                    TooltipAnimation.SCALE_AND_FADE,
+//                                    ViewGroup.LayoutParams.WRAP_CONTENT,
+//                                    ViewGroup.LayoutParams.WRAP_CONTENT,
+//                                    ContextCompat.getColor(context, R.color.main_title_cyan));
+                        }
                     }
                 }
+
+
             }
         });
     }
@@ -178,7 +215,8 @@ public class MapMark extends ImageView {
     }
 
     public boolean matchTime() {
-        return StringUtils.matchCurrentTime1(startTime, endTime) || StringUtils.matchCurrentTime1(startTime1, endTime1);
+//        return StringUtils.matchCurrentTime(startTime,endTime) || StringUtils.matchCurrentTime(startTime1,endTime1);
+        return true;
     }
 
     public interface RenderDelegate {

@@ -2,10 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_renwu"
     android:layout_width="@dimen/x428"
+    android:background="@drawable/bg_classmate_menu_top_left"
     android:layout_height="@dimen/y320"
-    android:background="@drawable/bg_classmate_menu_top_right"
-    android:orientation="vertical"
-    android:visibility="gone">
+    android:orientation="vertical">
 
 
     <RelativeLayout

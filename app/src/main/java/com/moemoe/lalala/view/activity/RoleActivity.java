@@ -3,28 +3,21 @@ package com.moemoe.lalala.view.activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityRoleBinding;
-import com.moemoe.lalala.di.components.DaggerRolComponent;
+import com.moemoe.lalala.di.components.DaggerRoleComponent;
 import com.moemoe.lalala.di.modules.RoleModule;
-import com.moemoe.lalala.event.OnItemListener;
-import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.RoleInfoEntity;
 import com.moemoe.lalala.presenter.RoleContract;
 import com.moemoe.lalala.presenter.RolePresenter;
-import com.moemoe.lalala.utils.PreferenceUtils;
-import com.moemoe.lalala.utils.ToastUtils;
 import com.moemoe.lalala.view.adapter.RoleAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -47,7 +40,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
     @Override
     protected void initComponent() {
-        DaggerRolComponent.builder()
+        DaggerRoleComponent.builder()
                 .roleModule(new RoleModule(this))
                 .netComponent(MoeMoeApplication.getInstance().getNetComponent())
                 .build()
@@ -60,14 +53,12 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
     public void getRoleInfo(final ArrayList<RoleInfoEntity> entities) {
         this.entities = entities;
         mAdapter = new RoleAdapter(entities, this);
-        Log.i("RoleActivity", "initAdapter: " + entities);
         binding.roleListRv.setLayoutManager(new GridLayoutManager(this, 3));
         binding.roleListRv.addItemDecoration(new SpacesItemDecoration(0, 16, 0));
         binding.roleListRv.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(new RoleAdapter.RoleItemClickListener() {
             @Override
             public void onClick(View v, int position, int which) {
-                Toast.makeText(getApplicationContext(), entities.get(position).getName(), Toast.LENGTH_SHORT).show();
                 binding.roleNameText.setText(entities.get(position).getName());
                 roleId = entities.get(position).getId();
                 isPut = entities.get(position).getIsPutInHouse();

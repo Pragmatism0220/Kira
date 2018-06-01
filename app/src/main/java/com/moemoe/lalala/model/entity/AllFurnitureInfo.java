@@ -21,42 +21,20 @@ public class AllFurnitureInfo implements Serializable {
     private boolean isPutInHouse;// 家具是否（使用）放入宅屋，true：已经放入宅屋 ,
     private boolean isUserFurnitureHad;//家具是否拥有，true：拥有当前家具
     private String name;//名称
+    private boolean isSuitPutInHouse;//套装是否（使用）放入宅屋，true：已经放入宅屋 ,
+    private boolean isUserSuitFurnitureHad;// 套装是否拥有，true：拥有当前家具 ,
+    private String suitTypeDescribe;//套装风格描述
+    private String suitTypeImage;//套装风格封面图片
+    private String suitTypeName;//套装风格名称
+    private String type;//区分套装
 
+    public void setType(String type) {
+        this.type = type;
+    }
 
-//    public static final Parcelable.Creator<AllFurnitureInfo> CREATOR = new Parcelable.Creator<AllFurnitureInfo>() {
-//        @Override
-//        public AllFurnitureInfo createFromParcel(Parcel in) {
-//            AllFurnitureInfo entity = new AllFurnitureInfo();
-//            Bundle bundle;
-//            bundle = in.readBundle(getClass().getClassLoader());
-//            entity.describe = bundle.getString("describe");
-//            entity.furnitureType = bundle.getString("furnitureType");
-//            entity.id = bundle.getString("id");
-//            entity.image = bundle.getString("image");
-//            entity.isPutInHouse = bundle.getBoolean("isPutInHouse");
-//            entity.isUserFurnitureHad = bundle.getBoolean("isUserFurnitureHad");
-//            entity.name = bundle.getString("name");
-//            return entity;
-//        }
-//
-//        @Override
-//        public AllFurnitureInfo[] newArray(int size) {
-//            return new AllFurnitureInfo[size];
-//        }
-//    };
-//
-//    @Override
-//    public void writeToParcel(Parcel dest, int flags) {
-//        Bundle bundle = new Bundle();
-//        bundle.putString("furnitureType", describe);
-//        bundle.putString("describe", furnitureType);
-//        bundle.putString("id", id);
-//        bundle.putString("image", image);
-//        bundle.putBoolean("isPutInHouse", isPutInHouse);
-//        bundle.putBoolean("isUserFurnitureHad", isUserFurnitureHad);
-//        bundle.putString("name", name);
-//        dest.writeBundle(bundle);
-//    }
+    public String getType() {
+        return type;
+    }
 
     public String getDescribe() {
         return describe;
@@ -114,23 +92,43 @@ public class AllFurnitureInfo implements Serializable {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "AllFurnitureInfo{" +
-                "describe='" + describe + '\'' +
-                ", furnitureType='" + furnitureType + '\'' +
-                ", id='" + id + '\'' +
-                ", image='" + image + '\'' +
-                ", isPutInHouse=" + isPutInHouse +
-                ", isUserFurnitureHad=" + isUserFurnitureHad +
-                ", name='" + name + '\'' +
-                '}';
+    public boolean isSuitPutInHouse() {
+        return isSuitPutInHouse;
     }
-//
-//    @Override
-//    public int describeContents() {
-//        return 0;
-//    }
 
+    public boolean isUserSuitFurnitureHad() {
+        return isUserSuitFurnitureHad;
+    }
 
+    public String getSuitTypeDescribe() {
+        return suitTypeDescribe;
+    }
+
+    public String getSuitTypeImage() {
+        return suitTypeImage;
+    }
+
+    public String getSuitTypeName() {
+        return suitTypeName;
+    }
+
+    public void setSuitPutInHouse(boolean suitPutInHouse) {
+        isSuitPutInHouse = suitPutInHouse;
+    }
+
+    public void setUserSuitFurnitureHad(boolean userSuitFurnitureHad) {
+        isUserSuitFurnitureHad = userSuitFurnitureHad;
+    }
+
+    public void setSuitTypeDescribe(String suitTypeDescribe) {
+        this.suitTypeDescribe = suitTypeDescribe;
+    }
+
+    public void setSuitTypeImage(String suitTypeImage) {
+        this.suitTypeImage = suitTypeImage;
+    }
+
+    public void setSuitTypeName(String suitTypeName) {
+        this.suitTypeName = suitTypeName;
+    }
 }

@@ -1,8 +1,8 @@
 package com.moemoe.lalala.model.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 import java.util.ArrayList;
 
@@ -10,28 +10,31 @@ import java.util.ArrayList;
  * Created by Hygge on 2018/5/25.
  */
 @Entity
-public class DeskmateUserEntils {
+public class DeskmateEntils {
+
+
     @Id
     private String id;
-    private long h;
+    private int h;
     private String path;
     private String remark;
-    private long size;
-    private long w;
+    private int size;
+    private int w;
     private String fileName;
     private int downloadState;//1.未下载 2.下载完成 3.下载失败
     private String md5;
-
-    public static ArrayList<DeskmateUserEntils> toDb(ArrayList<DeskmateImageEntity> entities, String type) {
-        ArrayList<DeskmateUserEntils> res = new ArrayList<>();
+    private String type;
+    
+    public static ArrayList<DeskmateEntils> toDb(ArrayList<DeskmateImageEntity> entities, String type) {
+        ArrayList<DeskmateEntils> res = new ArrayList<>();
         for (DeskmateImageEntity entity : entities) {
-            DeskmateUserEntils entity1 = new DeskmateUserEntils(entity, type);
+            DeskmateEntils entity1 = new DeskmateEntils(entity, type);
             res.add(entity1);
         }
         return res;
     }
 
-    public DeskmateUserEntils(DeskmateImageEntity entity, String type) {
+    public DeskmateEntils(DeskmateImageEntity entity, String type) {
         path = entity.getPath();
         size = entity.getSize();
         remark = entity.getRemark();
@@ -40,12 +43,14 @@ public class DeskmateUserEntils {
         md5 = entity.getMd5();
         fileName = entity.getMd5() + path.substring(path.lastIndexOf("."));
         downloadState = 1;
-        id = type;
+        String[] split = entity.getPath().split("/");
+        id = split[2] + "";
+        this.type = type;
     }
 
-    @Generated(hash = 795643714)
-    public DeskmateUserEntils(String id, long h, String path, String remark, long size, long w, String fileName,
-            int downloadState, String md5) {
+    @Generated(hash = 1784232591)
+    public DeskmateEntils(String id, int h, String path, String remark, int size, int w,
+            String fileName, int downloadState, String md5, String type) {
         this.id = id;
         this.h = h;
         this.path = path;
@@ -55,10 +60,19 @@ public class DeskmateUserEntils {
         this.fileName = fileName;
         this.downloadState = downloadState;
         this.md5 = md5;
+        this.type = type;
     }
 
-    @Generated(hash = 1804757978)
-    public DeskmateUserEntils() {
+    @Generated(hash = 1644829858)
+    public DeskmateEntils() {
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setFileName(String fileName) {
@@ -89,7 +103,7 @@ public class DeskmateUserEntils {
         return id;
     }
 
-    public long getH() {
+    public int getH() {
         return h;
     }
 
@@ -101,11 +115,11 @@ public class DeskmateUserEntils {
         return remark;
     }
 
-    public long getSize() {
+    public int getSize() {
         return size;
     }
 
-    public long getW() {
+    public int getW() {
         return w;
     }
 
@@ -113,7 +127,7 @@ public class DeskmateUserEntils {
         this.id = id;
     }
 
-    public void setH(long h) {
+    public void setH(int h) {
         this.h = h;
     }
 
@@ -125,11 +139,11 @@ public class DeskmateUserEntils {
         this.remark = remark;
     }
 
-    public void setSize(long size) {
+    public void setSize(int size) {
         this.size = size;
     }
 
-    public void setW(long w) {
+    public void setW(int w) {
         this.w = w;
     }
 }

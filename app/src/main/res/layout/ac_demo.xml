@@ -31,7 +31,7 @@
             android:src="@drawable/btn_home_roleschoice_switch_right_normal" />
     </FrameLayout>
 
-    <com.moemoe.lalala.view.widget.view.KiraRoleTabLayout
+    <com.moemoe.lalala.view.widget.view.KiraTabLayout
         android:id="@+id/kira_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

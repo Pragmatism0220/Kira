@@ -44,7 +44,7 @@ import butterknife.BindView;
  * Created by yi on 2017/8/18.
  */
 
-public class NewFolderActivity extends BaseAppCompatActivity implements NewFolderContract.View{
+public class NewFolderActivity extends BaseAppCompatActivity implements NewFolderContract.View {
 
     @BindView(R.id.iv_back)
     ImageView mIvBack;
@@ -74,7 +74,7 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
     private boolean isLoading = false;
     private BottomMenuFragment bottomMenuFragment;
     private boolean mIsSelect;
-    private HashMap<Integer,ShowFolderEntity> mSelectMap;
+    private HashMap<Integer, ShowFolderEntity> mSelectMap;
 
     @Override
     protected int getLayoutId() {
@@ -83,15 +83,15 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
 
     @Override
     protected void onDestroy() {
-        if(mPresenter != null) mPresenter.release();
+        if (mPresenter != null) mPresenter.release();
         super.onDestroy();
     }
 
-    public static void startActivity(Context context,String userId,String folderType,String type){
-        Intent i = new Intent(context,NewFolderActivity.class);
-        i.putExtra(UUID,userId);
-        i.putExtra("folderType",folderType);
-        i.putExtra("type",type);
+    public static void startActivity(Context context, String userId, String folderType, String type) {
+        Intent i = new Intent(context, NewFolderActivity.class);
+        i.putExtra(UUID, userId);
+        i.putExtra("folderType", folderType);
+        i.putExtra("type", type);
         context.startActivity(i);
     }
 
@@ -110,20 +110,20 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
         String title = "";
         mSelectMap = new HashMap<>();
         mTvTop.setText("置顶");
-        mTvTop.setTextColor(ContextCompat.getColor(this,R.color.txt_gray_main));
-        if(mFolderType.equals(FolderType.ZH.toString())){
+        mTvTop.setTextColor(ContextCompat.getColor(this, R.color.txt_gray_main));
+        if (mFolderType.equals(FolderType.ZH.toString())) {
             title = "综合";
-        }else if(mFolderType.equals(FolderType.TJ.toString())){
+        } else if (mFolderType.equals(FolderType.TJ.toString())) {
             title = "图集";
-        }else if(mFolderType.equals(FolderType.MH.toString())){
+        } else if (mFolderType.equals(FolderType.MH.toString())) {
             title = "漫画";
-        }else if(mFolderType.equals(FolderType.XS.toString())){
+        } else if (mFolderType.equals(FolderType.XS.toString())) {
             title = "小说";
-        }else if(mFolderType.equals(FolderType.WZ.toString())){
+        } else if (mFolderType.equals(FolderType.WZ.toString())) {
             title = "文章";
-        }else if(mFolderType.equals(FolderType.YY.toString())){
+        } else if (mFolderType.equals(FolderType.YY.toString())) {
             title = "音乐集";
-        }else if(mFolderType.equals(FolderType.SP.toString())){
+        } else if (mFolderType.equals(FolderType.SP.toString())) {
             title = "视频";
             mExamineSp.setOnClickListener(new NoDoubleClickListener() {
                 @Override
@@ -133,27 +133,27 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
             });
         }
         mTitle.setText(title);
-        if(mUserId.equals(PreferenceUtils.getUUid())){
-            if (mFolderType.equals(FolderType.SP.toString())){
+        if (mUserId.equals(PreferenceUtils.getUUid())) {
+            if (mFolderType.equals(FolderType.SP.toString())) {
                 mExamineSp.setVisibility(View.VISIBLE);
             }
             mIvAdd.setVisibility(View.VISIBLE);
-            if(mFolderType.equals(FolderType.WZ.toString())){
+            if (mFolderType.equals(FolderType.WZ.toString())) {
                 mIvAdd.setImageResource(R.drawable.btn_add_folder_item);
-            }else {
+            } else {
                 mIvAdd.setImageResource(R.drawable.btn_create_folder);
             }
             mIvAdd.setOnClickListener(new NoDoubleClickListener() {
                 @Override
                 public void onNoDoubleClick(View v) {
-                    if(mFolderType.equals(FolderType.WZ.toString())){
+                    if (mFolderType.equals(FolderType.WZ.toString())) {
 
-                    }else {
-                        NewFolderEditActivity.startActivity(NewFolderActivity.this,"create",mFolderType,null);
+                    } else {
+                        NewFolderEditActivity.startActivity(NewFolderActivity.this, "create", mFolderType, null);
                     }
                 }
             });
-        }else {
+        } else {
             mExamineSp.setVisibility(View.GONE);
             mIvAdd.setVisibility(View.GONE);
         }
@@ -161,45 +161,45 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
         mAdapter = new BagCollectionTopAdapter();
         mListDocs.getRecyclerView().setAdapter(mAdapter);
         RecyclerView.LayoutManager manager;
-        if(mFolderType.equals(FolderType.WZ.toString())){
+        if (mFolderType.equals(FolderType.WZ.toString())) {
             manager = new LinearLayoutManager(this);
-        }else {
-            manager = new GridLayoutManager(this,3);
+        } else {
+            manager = new GridLayoutManager(this, 3);
             mListDocs.getRecyclerView().addItemDecoration(new FolderDecoration());
         }
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 ShowFolderEntity entity = mAdapter.getItem(position);
-                if(!mIsSelect){
-                    if(mFolderType.equals(FolderType.ZH.toString())){
-                        NewFileCommonActivity.startActivity(NewFolderActivity.this,FolderType.ZH.toString(),entity.getFolderId(),entity.getCreateUser());
-                    }else if(mFolderType.equals(FolderType.TJ.toString())){
-                        NewFileCommonActivity.startActivity(NewFolderActivity.this,FolderType.TJ.toString(),entity.getFolderId(),entity.getCreateUser());
-                    }else if(mFolderType.equals(FolderType.MH.toString())){
-                        NewFileManHuaActivity.startActivity(NewFolderActivity.this,FolderType.MH.toString(),entity.getFolderId(),entity.getCreateUser());
-                    }else if(mFolderType.equals(FolderType.XS.toString())){
-                        NewFileXiaoshuoActivity.startActivity(NewFolderActivity.this,FolderType.XS.toString(),entity.getFolderId(),entity.getCreateUser());
-                    }else if(mFolderType.equals(FolderType.YY.toString())){
-                        FileMovieActivity.startActivity(NewFolderActivity.this,FolderType.YY.toString(),entity.getFolderId(),entity.getCreateUser(),"11111111-1111-1111-1111-111111111111".equals(entity.getFolderId()));
-                    }else if(mFolderType.equals(FolderType.SP.toString())){
-                        FileMovieActivity.startActivity(NewFolderActivity.this,FolderType.SP.toString(),entity.getFolderId(),entity.getCreateUser(),"11111111-1111-1111-1111-111111111111".equals(entity.getFolderId()));
+                if (!mIsSelect) {
+                    if (mFolderType.equals(FolderType.ZH.toString())) {
+                        NewFileCommonActivity.startActivity(NewFolderActivity.this, FolderType.ZH.toString(), entity.getFolderId(), entity.getCreateUser());
+                    } else if (mFolderType.equals(FolderType.TJ.toString())) {
+                        NewFileCommonActivity.startActivity(NewFolderActivity.this, FolderType.TJ.toString(), entity.getFolderId(), entity.getCreateUser());
+                    } else if (mFolderType.equals(FolderType.MH.toString())) {
+                        NewFileManHuaActivity.startActivity(NewFolderActivity.this, FolderType.MH.toString(), entity.getFolderId(), entity.getCreateUser());
+                    } else if (mFolderType.equals(FolderType.XS.toString())) {
+                        NewFileXiaoshuoActivity.startActivity(NewFolderActivity.this, FolderType.XS.toString(), entity.getFolderId(), entity.getCreateUser());
+                    } else if (mFolderType.equals(FolderType.YY.toString())) {
+                        FileMovieActivity.startActivity(NewFolderActivity.this, FolderType.YY.toString(), entity.getFolderId(), entity.getCreateUser(), "11111111-1111-1111-1111-111111111111".equals(entity.getFolderId()));
+                    } else if (mFolderType.equals(FolderType.SP.toString())) {
+                        FileMovieActivity.startActivity(NewFolderActivity.this, FolderType.SP.toString(), entity.getFolderId(), entity.getCreateUser(), "11111111-1111-1111-1111-111111111111".equals(entity.getFolderId()));
                     }
-                }else {
-                    if(entity.isSelect()){
+                } else {
+                    if (entity.isSelect()) {
                         mSelectMap.remove(position);
                         entity.setSelect(false);
-                    }else {
-                        mSelectMap.put(position,entity);
+                    } else {
+                        mSelectMap.put(position, entity);
                         entity.setSelect(true);
                     }
                     mAdapter.notifyItemChanged(position);
-                    if(mSelectMap.size() > 1){
+                    if (mSelectMap.size() > 1) {
                         mTvTop.setEnabled(false);
-                        mTvTop.setTextColor(ContextCompat.getColor(NewFolderActivity.this,R.color.gray_929292));
-                    }else {
+                        mTvTop.setTextColor(ContextCompat.getColor(NewFolderActivity.this, R.color.gray_929292));
+                    } else {
                         mTvTop.setEnabled(true);
-                        mTvTop.setTextColor(ContextCompat.getColor(NewFolderActivity.this,R.color.main_cyan));
+                        mTvTop.setTextColor(ContextCompat.getColor(NewFolderActivity.this, R.color.main_cyan));
                     }
                 }
             }
@@ -215,13 +215,13 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
             @Override
             public void onLoadMore() {
                 isLoading = true;
-                mPresenter.loadFolderList(mFolderType,mAdapter.getItemCount(),mUserId,mType);
+                mPresenter.loadFolderList(mFolderType, mAdapter.getItemCount(), mUserId, mType);
             }
 
             @Override
             public void onRefresh() {
                 isLoading = true;
-                mPresenter.loadFolderList(mFolderType,0,mUserId,mType);
+                mPresenter.loadFolderList(mFolderType, 0, mUserId, mType);
             }
 
             @Override
@@ -234,13 +234,13 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
                 return false;
             }
         });
-        if(mUserId.equals(PreferenceUtils.getUUid())){
+        if (mUserId.equals(PreferenceUtils.getUUid())) {
             initPopupMenus();
             mIvMenu.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mIvMenu.setVisibility(View.GONE);
         }
-        mPresenter.loadFolderList(mFolderType,0,mUserId,mType);
+        mPresenter.loadFolderList(mFolderType, 0, mUserId, mType);
     }
 
     private void initPopupMenus() {
@@ -260,11 +260,11 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
                     mTvMenuLeft.setVisibility(View.VISIBLE);
                     ViewUtils.setLeftMargins(mTvMenuLeft, getResources().getDimensionPixelSize(R.dimen.x36));
                     mTvMenuLeft.setText(getString(R.string.label_give_up));
-                    mTvMenuLeft.setTextColor(ContextCompat.getColor(NewFolderActivity.this,R.color.black_1e1e1e));
+                    mTvMenuLeft.setTextColor(ContextCompat.getColor(NewFolderActivity.this, R.color.black_1e1e1e));
                     mTvMenuRight.setVisibility(View.VISIBLE);
                     ViewUtils.setRightMargins(mTvMenuRight, getResources().getDimensionPixelSize(R.dimen.x36));
                     mTvMenuRight.setText(getString(R.string.label_delete));
-                    mTvMenuRight.setTextColor(ContextCompat.getColor(NewFolderActivity.this,R.color.main_cyan));
+                    mTvMenuRight.setTextColor(ContextCompat.getColor(NewFolderActivity.this, R.color.main_cyan));
                     mTvTop.setVisibility(View.VISIBLE);
                     mIsSelect = !mIsSelect;
                     mAdapter.setSelect(mIsSelect);
@@ -288,7 +288,8 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
         mIvMenu.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if(bottomMenuFragment != null) bottomMenuFragment.show(getSupportFragmentManager(),"Folder");
+                if (bottomMenuFragment != null)
+                    bottomMenuFragment.show(getSupportFragmentManager(), "Folder");
             }
         });
         mTvMenuLeft.setOnClickListener(new NoDoubleClickListener() {
@@ -300,7 +301,7 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
                 mTvMenuRight.setVisibility(View.GONE);
                 mTvTop.setVisibility(View.GONE);
                 mIsSelect = !mIsSelect;
-                for(ShowFolderEntity entity : mAdapter.getList()){
+                for (ShowFolderEntity entity : mAdapter.getList()) {
                     entity.setSelect(false);
                 }
                 mSelectMap.clear();
@@ -311,22 +312,22 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
         mTvMenuRight.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if(mSelectMap.size() > 0){
+                if (mSelectMap.size() > 0) {
                     createDialog();
                     ArrayList<String> ids = new ArrayList<>();
-                    for(ShowFolderEntity id : mSelectMap.values()){
+                    for (ShowFolderEntity id : mSelectMap.values()) {
                         ids.add(id.getFolderId());
                     }
-                    mPresenter.deleteFolders(ids,mFolderType);
+                    mPresenter.deleteFolders(ids, mFolderType);
                 }
             }
         });
         mTvTop.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if(mSelectMap.size() == 1){
+                if (mSelectMap.size() == 1) {
                     createDialog();
-                    for(ShowFolderEntity entity : mSelectMap.values()){
+                    for (ShowFolderEntity entity : mSelectMap.values()) {
                         mPresenter.topFolder(entity.getFolderId());
                     }
                 }
@@ -347,7 +348,7 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
     @Override
     public void onFailure(int code, String msg) {
         finalizeDialog();
-        ErrorCodeUtils.showErrorMsgByCode(this,code,msg);
+        ErrorCodeUtils.showErrorMsgByCode(this, code, msg);
         isLoading = false;
         mListDocs.setComplete();
     }
@@ -357,14 +358,14 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
         isLoading = false;
         mListDocs.setComplete();
         ArrayList<ShowFolderEntity> entities = (ArrayList<ShowFolderEntity>) o;
-        if(entities.size() >= ApiService.LENGHT){
+        if (entities.size() >= ApiService.LENGHT) {
             mListDocs.setLoadMoreEnabled(true);
-        }else {
+        } else {
             mListDocs.setLoadMoreEnabled(false);
         }
-        if(isPull){
+        if (isPull) {
             mAdapter.setList(entities);
-        }else {
+        } else {
             mAdapter.addList(entities);
         }
     }
@@ -372,7 +373,7 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
     @Override
     public void onDeleteFoldersSuccess() {
         finalizeDialog();
-        for(ShowFolderEntity entity : mSelectMap.values()){
+        for (ShowFolderEntity entity : mSelectMap.values()) {
             mAdapter.getList().remove(entity);
         }
         mAdapter.notifyDataSetChanged();
@@ -382,11 +383,11 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
     @Override
     public void onTopFolderSuccess() {
         finalizeDialog();
-        for (Integer i : mSelectMap.keySet()){
+        for (Integer i : mSelectMap.keySet()) {
             mAdapter.getList().get(i).setSelect(false);
-            ShowFolderEntity entity = mAdapter.getList().remove((int)i);
-            mAdapter.getList().add(0,entity);
-            mAdapter.notifyItemRangeChanged(0,i + 1);
+            ShowFolderEntity entity = mAdapter.getList().remove((int) i);
+            mAdapter.getList().add(0, entity);
+            mAdapter.notifyItemRangeChanged(0, i + 1);
         }
         mSelectMap.clear();
     }
