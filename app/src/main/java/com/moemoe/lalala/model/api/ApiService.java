@@ -1103,21 +1103,11 @@ public interface ApiService {
     @GET("v2/kira/story/find/my/story/{groupId}")
     Observable<ApiResult<ArrayList<StoryListEntity>>> loadStoryFindList(@Path("groupId") String groupId);
 
-
     @GET("v2/kira/house/list/all/user")
     Observable<ApiResult<ArrayList<HomeEntity>>> loadHomeAllUser();
 
     @GET("v2/kira/house/userDeskmate")
     Observable<ApiResult<UserDeskmateEntity>> loadHousUserDeskmate();
-
-    @GET("v2/kira/house/inHouseFurnitures")
-    Observable<ApiResult<ArrayList<MapEntity>>> loadHouseInHouseFurnitures();
-
-    @GET("v2/kira/house/inHouseRubblish")
-    Observable<ApiResult<ArrayList<MapEntity>>> loadHouseInHouseRubblish();
-    
-    @GET("v2/kira/house/inHouseRoles")
-    Observable<ApiResult<ArrayList<MapEntity>>> loadHouseInHouseRoles();
 
     @GET("/v2/kira/house/allRolesForUserSelect")
     Observable<ApiResult<ArrayList<RoleInfoEntity>>> loadRoleInfo();
@@ -1143,7 +1133,12 @@ public interface ApiService {
     @GET("/v2/kira/house/visitor/page/{size}/{start}")
     Observable<ApiResult<ArrayList<VisitorsEntity>>> loadVisitor(@Path("size") int size, @Path("start") int start);
 
-
     @GET("v2/kira/house/inHouseObjects")
     Observable<ApiResult<ArrayList<MapEntity>>> loadHouseObjects();
+    
+    @GET("v2/kira/house/user/clothes/all/{roleId}")
+    Observable<ApiResult<ArrayList<ClothingEntity>>> loadHouseClothesAll(@Path("roleId")String roleId);
+    
+    @POST("v2/kira/house/user/role/colthes/select/{roleId}/{clothesId}")
+    Observable<ApiResult> loadRoleColthesSelect(@Path("roleId")String roleId,@Path("clothesId") String  clothesId);
 }

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.moemoe.lalala.view.activity.ClothingActivity.Presenter" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_home_roleschoice_background"
+        android:orientation="vertical"
+        tools:context="com.moemoe.lalala.view.activity.ClothingActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_frist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/status_bar_height">
+
+                    <ImageView
+                        android:id="@+id/iv_cloth_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/x24"
+                        android:src="@drawable/ic_home_roles_clothes_title" />
+
+                    <ImageView
+                        android:id="@+id/iv_cloth_back_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/role_back_btn"
+                        android:onClick="@{presenter.onClick}" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/y20"
+                    android:layout_weight="1">
+
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/view_pager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <ImageButton
+                        android:id="@+id/iv_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/x58"
+                        android:background="@drawable/reloading_room_left_btn"
+                        android:onClick="@{presenter.onClick}" />
+
+                    <ImageButton
+                        android:id="@+id/iv_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/x58"
+                        android:background="@drawable/reloading_room_right_btn"
+                        android:onClick="@{presenter.onClick}" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/y44"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/x64"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/iv_cloth_name_select"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/x8"
+                        android:layout_toEndOf="@+id/tv_name"
+                        android:src="@drawable/ic_home_roleschoice_select"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_acquisition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/y40"
+                        android:background="@drawable/shape_main_acquciton_warith"
+                        android:gravity="center"
+                        android:paddingEnd="@dimen/x20"
+                        android:paddingStart="@dimen/x20"
+                        android:text="获取方式"
+                        android:textColor="@color/pink_fb7ba2"
+                        android:textSize="@dimen/x24" />
+
+                    <TextView
+                        android:id="@+id/tv_acquisiton_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/x12"
+                        android:gravity="center_vertical"
+                        android:text="默认拥有"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/x30" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_cloth_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/x64"
+                    android:layout_marginStart="@dimen/x64"
+                    android:ellipsize="none"
+                    android:gravity="center"
+                    android:lines="3"
+                    android:maxLines="3"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x24" />
+
+                <Button
+                    android:id="@+id/iv_cloth_select"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/y28"
+                    android:background="@drawable/cloth_select_btn"
+                    android:gravity="center"
+                    android:onClick="@{presenter.onClick}"
+                    android:text="@string/label_select"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x36"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <com.moemoe.lalala.view.widget.view.KiraClothTabLayout
+            android:id="@+id/kira_bar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_home_clothes_background_bottpom"
+            android:paddingEnd="@dimen/x20"
+            android:paddingStart="@dimen/x20"
+            app:kira_tl_indicator_color="@color/transparent"
+            app:kira_tl_indicator_width_equal_title="true"
+            app:kira_tl_tab_padding="@dimen/x8"
+            app:kira_tl_textSelectColor="@color/black"
+            app:kira_tl_textUnSelectColor="@color/white"
+            app:kira_tl_text_size="@dimen/x24" />
+    </LinearLayout>
+</layout>

@@ -447,4 +447,6 @@
     <string name="home_info">现代风格的电脑桌，有香蕉公司研发的最新电脑</string>
     <string name="moc">Moc电脑</string>
     <string name="label_lotter">抽奖</string>
+    <string name="label_select">选择</string>
+        
 </resources>

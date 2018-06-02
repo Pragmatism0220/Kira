@@ -5,6 +5,8 @@ package com.moemoe.lalala.model.entity;
  */
 
 public class PhoneFukuEntity {
+    
+    
     private String clothesName;
     private String condition;
     private String desc;

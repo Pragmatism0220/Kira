@@ -20,25 +20,30 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.event.KiraTabLayoutEvent;
+import com.moemoe.lalala.model.entity.ClothingEntity;
+import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.view.adapter.TabFragmentPagerV3Adapter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import io.rong.eventbus.EventBus;
 
 /**
  * 自定义tabLayout用于多种布局
  * Created by yi on 2018/1/11.
  */
 
-public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnPageChangeListener {
+public class KiraClothTabLayout extends HorizontalScrollView implements ViewPager.OnPageChangeListener {
 
     private Context mContext;
     private ViewPager mViewPager;
@@ -160,15 +165,15 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
         this.mTabClick = mTabClick;
     }
 
-    public KiraTabLayout(Context context) {
+    public KiraClothTabLayout(Context context) {
         this(context, null);
     }
 
-    public KiraTabLayout(Context context, AttributeSet attrs) {
+    public KiraClothTabLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public KiraTabLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public KiraClothTabLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setFillViewport(true);
         setWillNotDraw(false);//重写onDraw
@@ -232,7 +237,7 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
         mTabWidth = a.getDimension(R.styleable.KiraTabLayout_kira_tl_tab_width, -1);
         mTabPadding = a.getDimension(R.styleable.KiraTabLayout_kira_tl_tab_padding, 0);
 
-        mTabLayoutId = a.getResourceId(R.styleable.KiraTabLayout_kira_tl_tab_layout, R.layout.item_tab_normal);
+        mTabLayoutId = a.getResourceId(R.styleable.KiraTabLayout_kira_tl_tab_layout, R.layout.item_tab_normal_cloth);
 
         mDotBgColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_dot_bg_color, ContextCompat.getColor(context, R.color.main_red));
         mDotTextColor = a.getColor(R.styleable.KiraTabLayout_kira_tl_dot_text_color, ContextCompat.getColor(context, R.color.white));
@@ -257,46 +262,53 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
         View tabView;
         for (int i = 0; i < mTabCount; i++) {
             tabView = View.inflate(mContext, mTabLayoutId, null);
-            String title = mViewPager.getAdapter().getPageTitle(i).toString();
-            addTab(i, title, tabView);
+//            String title = mViewPager.getAdapter().getPageTitle(i).toString();
+            ClothingEntity entity = ((TabFragmentPagerV3Adapter) mViewPager.getAdapter()).getList().get(i);
+            addTab(i, tabView, entity);
         }
         updateTabStyles();
     }
 
-    private void addTab(final int position, String title, View tabView) {
+    private void addTab(final int position, View tabView, ClothingEntity entity) {
         TextView tv_title = tabView.findViewById(R.id.tv_tab_title);
+        ImageView mIvCover = tabView.findViewById(R.id.iv_cover);
+        ImageView mIvSelect = tabView.findViewById(R.id.iv_select);
         if (tv_title == null) {
             throw new IllegalStateException("title textView id must be tv_tab_title");
         }
-        if (!TextUtils.isEmpty(title)) {
-            tv_title.setText(title);
+        if (mIvCover == null) {
+            throw new IllegalStateException("title imageView id must be iv_cover");
         }
-
+        if (mIvSelect == null) {
+            throw new IllegalStateException("title imageView id must be iv_select");
+        }
+        if (!TextUtils.isEmpty(entity.getName())) {
+            tv_title.setText(entity.getName());
+        }
+        Glide.with(getContext())
+                .load(StringUtils.getUrl(entity.getImage()))
+                .error(R.drawable.shape_gray_e8e8e8_background)
+                .placeholder(R.drawable.shape_gray_e8e8e8_background)
+                .into(mIvCover);
+        if (entity.isUse()) {
+            mIvSelect.setVisibility(VISIBLE);
+        } else {
+            mIvSelect.setVisibility(GONE);
+        }
+        if (entity.isUserClothesHad()) {
+            mIvCover.setAlpha(1.0f);
+            tv_title.setAlpha(1.0f);
+        } else {
+            mIvCover.setAlpha(0.5f);
+            tv_title.setAlpha(0.5f);
+        }
         tabView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (position != -1) {
-                    if (mViewPager.getCurrentItem() != position) {
-                        if (mSnapOntabClick) {
-                            mViewPager.setCurrentItem(position, false);
-                        } else {
-                            mViewPager.setCurrentItem(position);
-                        }
-                        if (mListener != null) {
-                            mListener.onTabSelect(v, position);
-                        }
-                    } else {
-                        if (mListener != null) {
-                            mListener.onTabReselect(v, position);
-                        }
-                    }
-                }
-                if (mTabClick != null) {
-                    mTabClick.onTabClick(v, position);
-                }
+                setOnTabClick(v, position);
             }
         });
-
+        
         LinearLayout.LayoutParams lp = mTabSpaceEqual ?
                 new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f) :
                 new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -306,13 +318,43 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
         tabView.setPadding((int) mTabPadding, 0, (int) mTabPadding, 0);
         mTabsContainer.addView(tabView, position, lp);
     }
+   
+    public void setOnTabClick(View v, int position) {
+        if (position != -1) {
+            if (mViewPager.getCurrentItem() != position) {
+                if (mSnapOntabClick) {
+                    mViewPager.setCurrentItem(position, false);
+                } else {
+                    mViewPager.setCurrentItem(position);
+                }
+                if (mListener != null) {
+                    mListener.onTabSelect(v, position);
+                }
+            } else {
+                if (mListener != null) {
+                    mListener.onTabReselect(v, position);
+                }
+            }
+        }
+        if (mTabClick != null) {
+            mTabClick.onTabClick(v, position);
+        }
+    }
 
     private void updateTabStyles() {
         for (int i = 0; i < mTabCount; i++) {
             View v = mTabsContainer.getChildAt(i);
             TextView tv_title = v.findViewById(R.id.tv_tab_title);
+            ImageView mIvCover = v.findViewById(R.id.iv_cover);
+            ImageView mIvSelect = v.findViewById(R.id.iv_select);
             if (tv_title == null) {
                 throw new IllegalStateException("title textView id must be tv_tab_title");
+            }
+            if (mIvCover == null) {
+                throw new IllegalStateException("title imageView id must be iv_cover");
+            }
+            if (mIvSelect == null) {
+                throw new IllegalStateException("title imageView id must be iv_select");
             }
             tv_title.setTextColor(i == mCurrentTab ? mTextSelectColor : mTextUnSelectColor);
             tv_title.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
@@ -344,6 +386,11 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
     public void onPageSelected(int position) {
         select = position;
         updateTabSelection(position);
+        EventBus.getDefault().post(new KiraTabLayoutEvent(position));
+    }
+
+    public int getViewPosition() {
+        return select;
     }
 
     @Override
@@ -371,13 +418,21 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
         }
     }
 
-    private void updateTabSelection(int position) {
+    public void updateTabSelection(int position) {
         for (int i = 0; i < mTabCount; i++) {
             View tabView = mTabsContainer.getChildAt(i);
             final boolean isSelect = i == position;
             TextView tv_title = tabView.findViewById(R.id.tv_tab_title);
+            ImageView mIvCover = tabView.findViewById(R.id.iv_cover);
+            ImageView mIvSelect = tabView.findViewById(R.id.iv_select);
             if (tv_title == null) {
                 throw new IllegalStateException("title textView id must be tv_tab_title");
+            }
+            if (mIvCover == null) {
+                throw new IllegalStateException("title imageView id must be iv_cover");
+            }
+            if (mIvSelect == null) {
+                throw new IllegalStateException("title imageView id must be iv_select");
             }
             tv_title.setTextColor(isSelect ? mTextSelectColor : mTextUnSelectColor);
 //            tv_title.setPadding(0, (int) (isSelect ? mTextSelectPaddingTop : mTextUnSelectPaddingTop), 0, 0);

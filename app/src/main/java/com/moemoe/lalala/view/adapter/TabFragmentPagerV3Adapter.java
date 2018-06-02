@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 
+import com.moemoe.lalala.model.entity.ClothingEntity;
 import com.moemoe.lalala.model.entity.PhoneFukuEntity;
 import com.moemoe.lalala.view.fragment.BaseFragment;
 
@@ -18,17 +19,17 @@ import java.util.List;
 public class TabFragmentPagerV3Adapter extends FragmentPagerAdapter {
 
     List<BaseFragment> fragmentList = new ArrayList<>();
-    private List<PhoneFukuEntity> mTitles;
+    private ArrayList<ClothingEntity> mTitles;
     private String signId = "";
 
-    public TabFragmentPagerV3Adapter(FragmentManager fm, List<BaseFragment> fragmentList, List<PhoneFukuEntity> mTitles) {
+    public TabFragmentPagerV3Adapter(FragmentManager fm, List<BaseFragment> fragmentList, ArrayList<ClothingEntity> mTitles) {
         super(fm);
         this.mTitles = mTitles;
         setFragments(fm, fragmentList, mTitles);
     }
 
     //刷新fragment
-    public void setFragments(FragmentManager fm, List<BaseFragment> fragments, List<PhoneFukuEntity> mTitles) {
+    public void setFragments(FragmentManager fm, List<BaseFragment> fragments, ArrayList<ClothingEntity> mTitles) {
         this.mTitles = mTitles;
         if (this.fragmentList != null) {
             FragmentTransaction ft = fm.beginTransaction();
@@ -43,9 +44,15 @@ public class TabFragmentPagerV3Adapter extends FragmentPagerAdapter {
         notifyDataSetChanged();
     }
 
+    public List<ClothingEntity> getList() {
+        return mTitles;
+    }
+    public void setList(ArrayList<ClothingEntity> entities) {
+        this.mTitles = entities;
+    }
     @Override
     public CharSequence getPageTitle(int position) {
-        return mTitles != null ? mTitles.get(position).getClothesName() : "";
+        return mTitles != null ? mTitles.get(position).getName() : "";
     }
 
     public void setSignId(String signId) {

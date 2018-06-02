@@ -3,6 +3,7 @@ package com.moemoe.lalala.model.entity;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.method.SingleLineTransformationMethod;
 
 import java.io.Serializable;
 
@@ -27,6 +28,15 @@ public class AllFurnitureInfo implements Serializable {
     private String suitTypeImage;//套装风格封面图片
     private String suitTypeName;//套装风格名称
     private String type;//区分套装
+    private int sortId;//排序值
+
+    public int getSortId() {
+        return sortId;
+    }
+
+    public void setSortId(int sortId) {
+        this.sortId = sortId;
+    }
 
     public void setType(String type) {
         this.type = type;

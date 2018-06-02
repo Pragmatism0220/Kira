@@ -133,24 +133,20 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     if (roleId != null) {
                         if (!isPut) {
                             mPresenter.putInHouse(roleId);
-                            Toast.makeText(getApplicationContext(), "放入宅屋", Toast.LENGTH_SHORT).show();
                         } else {
                             mPresenter.removeOutHouse(roleId);
-                            Toast.makeText(getApplicationContext(), "移除宅屋", Toast.LENGTH_SHORT).show();
                         }
                     }
                     break;
                 case R.id.set_deskmake_btn:
                     if (roleId != null) {
                         mPresenter.setDeskMate(roleId);
-                        Toast.makeText(getApplicationContext(), "设为同桌", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.check_cloth_btn:
-                    Toast.makeText(getApplicationContext(), "服装", Toast.LENGTH_SHORT).show();
+                    ClothingActivity.startActivity(RoleActivity.this, roleId);
                     break;
                 case R.id.role_diary_btn:
-                    Toast.makeText(getApplicationContext(), "羁绊日记", Toast.LENGTH_SHORT).show();
                 default:
                     break;
             }

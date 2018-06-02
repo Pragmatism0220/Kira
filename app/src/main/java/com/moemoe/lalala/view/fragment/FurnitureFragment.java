@@ -14,6 +14,7 @@ import com.moemoe.lalala.di.components.DaggerFurnitureComponent;
 import com.moemoe.lalala.di.modules.FurnitureModule;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
 import com.moemoe.lalala.model.entity.FurnitureInfoEntity;
+import com.moemoe.lalala.model.entity.MapDbEntity;
 import com.moemoe.lalala.presenter.FurnitureContract;
 import com.moemoe.lalala.presenter.FurniturePresenter;
 import com.moemoe.lalala.view.adapter.FurnitureAdapter;
@@ -25,6 +26,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -95,6 +98,13 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
             }
             allList.addAll(infos);
         }
+        Collections.sort(allList, new Comparator<AllFurnitureInfo>() {
+            @Override
+            public int compare(AllFurnitureInfo mapDbEntity, AllFurnitureInfo t1) {
+                int i = mapDbEntity.getSortId() - t1.getSortId();
+                return i;
+            }
+        });
         map.put("全部", allList);
         ArrayList<AllFurnitureInfo> suitFurnitures = furnitureInfoEntity.getSuitFurnitures();
         for (AllFurnitureInfo allFurnitureInfo : suitFurnitures) {
