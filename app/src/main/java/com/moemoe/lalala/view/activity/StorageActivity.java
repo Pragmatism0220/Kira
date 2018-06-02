@@ -17,7 +17,9 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityStorageBinding;
 import com.moemoe.lalala.di.components.DaggerStorageComponents;
 import com.moemoe.lalala.di.modules.StorageModule;
+import com.moemoe.lalala.event.FurnitureEvent;
 import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.entity.AllFurnitureInfo;
 import com.moemoe.lalala.presenter.StorageContract;
 import com.moemoe.lalala.presenter.StoragePresenter;
 import com.moemoe.lalala.view.adapter.TabPageAdapter;
@@ -25,6 +27,7 @@ import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.fragment.FurnitureFragment;
 import com.moemoe.lalala.view.fragment.FurnitureInfoFragment;
 import com.moemoe.lalala.view.fragment.PropFragment;
+import com.moemoe.lalala.view.widget.tooltip.TooltipAnimation;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -57,10 +60,10 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     private String id;
     private boolean isUserHadTool;
 
-    private String furnitureId;//单件家具的ID
 
     @Inject
     StoragePresenter mPresenter;
+    private AllFurnitureInfo furnitureInfo;
 
 
     @Override
@@ -123,28 +126,26 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
 
     }
 
+    /**
+     * 单品家具使用
+     */
     @Override
-    public void furnitureUseSuccess() {
-        Toast.makeText(getApplicationContext(), "家具购买成功", Toast.LENGTH_SHORT).show();
+    public void furnitureUseSuccess(int position) {
+        EventBus.getDefault().post(new FurnitureEvent(position, furnitureInfo.getType()));
     }
 
+    /**
+     * 套装家具使用
+     */
     @Override
-    public void suitUseSuccess() {
-
+    public void suitUseSuccess(int position) {
+        EventBus.getDefault().post(new FurnitureEvent(position,furnitureInfo.getType()));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.POSTING)
-    public void onEvent(String furnitureId) {
-        if (furnitureId != null) {
-            this.furnitureId = furnitureId;
-        }
-
     }
 
     /**
@@ -157,12 +158,10 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
             switch (checkedId) {
                 case R.id.choose_prop_btn:
                     binding.topBg.setBackgroundResource(R.drawable.bg_home_items_prop_background);
-                    Toast.makeText(getApplicationContext(), "道具", Toast.LENGTH_SHORT).show();
                     binding.storageViewpager.setCurrentItem(0, false);
                     break;
                 case R.id.choose_furniture_btn:
                     binding.topBg.setBackgroundResource(R.drawable.ic_role_top_bg);
-                    Toast.makeText(getApplicationContext(), "家具", Toast.LENGTH_SHORT).show();
                     binding.storageViewpager.setCurrentItem(1, false);
                     break;
                 default:
@@ -221,7 +220,6 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     mPropFragment.showNotHave();
                 } else {
                     mPropFragment.showHave();
-                    Toast.makeText(getApplicationContext(), "显示拥有", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -249,22 +247,48 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     if (!isUserHadTool) {
                         return;
                     }
-                    Toast.makeText(getApplicationContext(), "购买", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.storage_commodity_use_btn:
-                    Log.i("asd", "onEvent: " + furnitureId);
-                    if (furnitureId != null) {
-                        mPresenter.furnitureUse(furnitureId);
+                    if (furnitureInfo != null) {
+                        if (furnitureInfo.equals("套装")) {
+                            if (furnitureInfo.isUserSuitFurnitureHad()) {
+                                if (!furnitureInfo.isSuitPutInHouse()) {
+                                    mPresenter.suitUse(furnitureInfo.getSuitTypeId(), furnitureInfo.getPosition());
+                                }
+                            } else {
+                                showToast("还未拥有该套装家具哦~~~~~");
+                            }
+                        } else {
+                            if (furnitureInfo.isUserFurnitureHad()) {
+                                if (!furnitureInfo.isPutInHouse()) {
+                                    mPresenter.furnitureUse(furnitureInfo.getId(), furnitureInfo.getPosition());
+                                }
+                            } else {
+                                showToast("还未拥有该家具哦~~~~~");
+                            }
+                        }
                     }
-                    Toast.makeText(getApplicationContext(), "使用", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
             }
         }
-
-
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void allFurnitureInfo(AllFurnitureInfo event) {
+        if (event != null) {
+            furnitureInfo = event;
+            if (event.getType().equals("套装")) {
+                binding.storageCommodityName.setText(event.getSuitTypeName());
+                Glide.with(this).load(ApiService.URL_QINIU + event.getSuitTypeImage()).into(binding.storageImage);
+                binding.storageCommodityInfo.setText(event.getSuitTypeDescribe());
+            } else {
+                binding.storageCommodityName.setText(event.getName());
+                Glide.with(this).load(ApiService.URL_QINIU + event.getImage()).into(binding.storageImage);
+                binding.storageCommodityInfo.setText(event.getDescribe());
+            }
+        }
+    }
 
 }

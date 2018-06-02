@@ -17,9 +17,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.event.ScrollMessage;
+import com.moemoe.lalala.model.entity.ReceiverInfo;
+import com.moemoe.lalala.model.entity.StageLineEntity;
 import com.moemoe.lalala.model.entity.TagLikeEntity;
 import com.moemoe.lalala.model.entity.TagSendEntity;
 import com.moemoe.lalala.utils.DialogUtils;

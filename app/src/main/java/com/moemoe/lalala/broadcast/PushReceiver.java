@@ -18,10 +18,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.google.gson.Gson;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.AppSetting;
+import com.moemoe.lalala.event.StageLineEvent;
 import com.moemoe.lalala.event.SystemMessageEvent;
 import com.moemoe.lalala.model.entity.ReceiverInfo;
+import com.moemoe.lalala.model.entity.StageLineEntity;
 import com.moemoe.lalala.utils.IntentUtils;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.view.activity.SplashActivity;
@@ -46,9 +49,14 @@ public class PushReceiver extends BroadcastReceiver {
                 int dotNum = PreferenceUtils.getGroupDotNum(context) + 1;
                 PreferenceUtils.setGroupDotNum(context, dotNum);
             }
+            if (!TextUtils.isEmpty(info.messageType) && "house_stage_line".equals(info.messageType)) {
+                PreferenceUtils.setStageLine(context, info.content);
+                EventBus.getDefault().post(new StageLineEvent(info.content));
+            }
             if (info.showNotify) {
                 showNotification(context, info);
             }
+
         } else if (info.type.equals("COMMAND")) {//命令
             if (info.schema.equals("CLEAR_DATA")) {//清理数据
                 // DataCleanManager.cleanApplicationData(context);

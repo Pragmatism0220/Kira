@@ -24,20 +24,24 @@ public class PreferenceUtils {
     private static DeskmateEntils sDeskmateUserEntils;
     private static final String FILE_NAME = "settings";
     private static AuthorInfo sAuthorInfo;
-    private PreferenceUtils() {}
+
+    private PreferenceUtils() {
+    }
+
     public static AuthorInfo getAuthorInfo() {
         if (sAuthorInfo == null) {
             sAuthorInfo = new AuthorInfo();
         }
         return sAuthorInfo;
     }
-    
-    public static DeskmateEntils getDeskmateUserEntils(){
-        if (sDeskmateUserEntils == null){
+
+    public static DeskmateEntils getDeskmateUserEntils() {
+        if (sDeskmateUserEntils == null) {
             sDeskmateUserEntils = new DeskmateEntils();
         }
         return sDeskmateUserEntils;
     }
+
     public static void clearAuthorInfo() {
         if (sAuthorInfo != null) {
             AuthorInfoDao dao = GreenDaoManager.getInstance().getSession().getAuthorInfoDao();
@@ -45,18 +49,20 @@ public class PreferenceUtils {
             sAuthorInfo = null;
         }
     }
-    public static void clearDeskmateUserEntils(){
+
+    public static void clearDeskmateUserEntils() {
         if (sDeskmateUserEntils != null) {
             DeskmateEntilsDao dao = GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao();
-             dao.deleteByKey("");
+            dao.deleteByKey("");
             sDeskmateUserEntils = null;
         }
     }
+
     public static void setDeskmateUserEntils(DeskmateEntils info) {
         if (sDeskmateUserEntils == null) {
             sDeskmateUserEntils = info;
         } else {
-            
+
             if (!TextUtils.isEmpty(info.getPath())) {
                 sDeskmateUserEntils.setPath(info.getPath());
             }
@@ -77,6 +83,7 @@ public class PreferenceUtils {
         DeskmateEntilsDao dao = GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao();
         dao.insertOrReplace(sDeskmateUserEntils);
     }
+
     public static void setAuthorInfo(AuthorInfo info) {
         if (sAuthorInfo == null) {
             sAuthorInfo = info;
@@ -129,6 +136,7 @@ public class PreferenceUtils {
         AuthorInfoDao dao = GreenDaoManager.getInstance().getSession().getAuthorInfoDao();
         dao.insertOrReplace(sAuthorInfo);
     }
+
     public static String getToken() {
         return sAuthorInfo == null ? "" : sAuthorInfo.getToken();
     }
@@ -811,123 +819,17 @@ public class PreferenceUtils {
         return sp.getInt("doc_position", 0);
     }
 
-    public static void setUserDeskmateLeft(Context context, int h, String path, String remark, int size, int w) {
+    public static void setStageLine(Context context, String stageLine) {
         SharedPreferences sp = context.getSharedPreferences(
                 FILE_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt("user_deskmate_left_h", h);
-        editor.putString("user_deskmate_left_path", path);
-        editor.putString("user_deskmate_left_remark", remark);
-        editor.putInt("user_deskmate_left_size", size);
-        editor.putInt("user_deskmate_left_w", w);
+        editor.putString("stage_line", stageLine);
         editor.commit();
     }
 
-    public static DeskmateImageEntity getUserDeskmateLeft(Context context) {
+    public static String getStageLine(Context context) {
         SharedPreferences sp = context.getSharedPreferences(
                 FILE_NAME, Activity.MODE_PRIVATE);
-        DeskmateImageEntity entity = new DeskmateImageEntity();
-        entity.setH(sp.getInt("user_deskmate_left_h", 0));
-        entity.setPath(sp.getString("user_deskmate_left_path", ""));
-        entity.setRemark(sp.getString("user_deskmate_left_remark", ""));
-        entity.setSize(sp.getInt("user_deskmate_left_size", 0));
-        entity.setW(sp.getInt("user_deskmate_left_w", 0));
-        return entity;
-    }
-
-    public static void setUserDeskmateRight(Context context, int h, String path, String remark, int size, int w) {
-        SharedPreferences sp = context.getSharedPreferences(
-                FILE_NAME, Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt("user_deskmate_right_h", h);
-        editor.putString("user_deskmate_right_path", path);
-        editor.putString("user_deskmate_right_remark", remark);
-        editor.putInt("user_deskmate_right_size", size);
-        editor.putInt("user_deskmate_right_w", w);
-        editor.commit();
-    }
-
-    public static DeskmateImageEntity getUserDeskmateRight(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(
-                FILE_NAME, Activity.MODE_PRIVATE);
-        DeskmateImageEntity entity = new DeskmateImageEntity();
-        entity.setH(sp.getInt("user_deskmate_right_h", 0));
-        entity.setPath(sp.getString("user_deskmate_right_path", ""));
-        entity.setRemark(sp.getString("user_deskmate_right_remark", ""));
-        entity.setSize(sp.getInt("user_deskmate_right_size", 0));
-        entity.setW(sp.getInt("user_deskmate_right_w", 0));
-        return entity;
-    }
-
-    public static void setUserDeskmateTop(Context context, int h, String path, String remark, int size, int w) {
-        SharedPreferences sp = context.getSharedPreferences(
-                FILE_NAME, Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt("user_deskmate_top_h", h);
-        editor.putString("user_deskmate_top_path", path);
-        editor.putString("user_deskmate_top_remark", remark);
-        editor.putInt("user_deskmate_top_size", size);
-        editor.putInt("user_deskmate_top_w", w);
-        editor.commit();
-    }
-
-    public static DeskmateImageEntity getUserDeskmateTop(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(
-                FILE_NAME, Activity.MODE_PRIVATE);
-        DeskmateImageEntity entities = new DeskmateImageEntity();
-        entities.setH(sp.getInt("user_deskmate_top_h", 0));
-        entities.setPath(sp.getString("user_deskmate_top_path", ""));
-        entities.setRemark(sp.getString("user_deskmate_top_remark", ""));
-        entities.setSize(sp.getInt("user_deskmate_top_size", 0));
-        entities.setW(sp.getInt("user_deskmate_top_w", 0));
-        return entities;
-    }
-
-    public static void setUserDeskmateBottom(Context context, int h, String path, String remark, int size, int w) {
-        SharedPreferences sp = context.getSharedPreferences(
-                FILE_NAME, Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt("user_deskmate_bottom_h", h);
-        editor.putString("user_deskmate_bottom_path", path);
-        editor.putString("user_deskmate_bottom_remark", remark);
-        editor.putInt("user_deskmate_bottom_size", size);
-        editor.putInt("user_deskmate_bottom_w", w);
-        editor.commit();
-    }
-
-    public static DeskmateImageEntity getUserDeskmateBottom(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(
-                FILE_NAME, Activity.MODE_PRIVATE);
-        DeskmateImageEntity entity = new DeskmateImageEntity();
-        entity.setH(sp.getInt("user_deskmate_bottom_h", 0));
-        entity.setPath(sp.getString("user_deskmate_bottom_path", ""));
-        entity.setRemark(sp.getString("user_deskmate_bottom_remark", ""));
-        entity.setSize(sp.getInt("user_deskmate_bottom_size", 0));
-        entity.setW(sp.getInt("user_deskmate_bottom_w", 0));
-        return entity;
-    }
-
-    public static void setUserDeskmateDrag(Context context, int h, String path, String remark, int size, int w) {
-        SharedPreferences sp = context.getSharedPreferences(
-                FILE_NAME, Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt("user_deskmate_drag_h", h);
-        editor.putString("user_deskmate_drag_path", path);
-        editor.putString("user_deskmate_drag_remark", remark);
-        editor.putInt("user_deskmate_drag_size", size);
-        editor.putInt("user_deskmate_drag_w", w);
-        editor.commit();
-    }
-
-    public static DeskmateImageEntity getUserDeskmateDrag(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(
-                FILE_NAME, Activity.MODE_PRIVATE);
-        DeskmateImageEntity entity = new DeskmateImageEntity();
-        entity.setH(sp.getInt("user_deskmate_drag_h", 0));
-        entity.setPath(sp.getString("user_deskmate_drag_path", ""));
-        entity.setRemark(sp.getString("user_deskmate_drag_remark", ""));
-        entity.setSize(sp.getInt("user_deskmate_drag_size", 0));
-        entity.setW(sp.getInt("user_deskmate_drag_w", 0));
-        return entity;
+        return sp.getString("stage_line", "");
     }
 }

@@ -95,7 +95,7 @@
                 android:layout_toEndOf="@+id/storage_commodity_image"
                 android:text="@string/commodity_info"
                 android:textColor="@color/white"
-                android:textSize="15dp" />
+                android:textSize="@dimen/x30" />
 
             <ImageView
                 android:id="@+id/storage_commodity_buy_btn"

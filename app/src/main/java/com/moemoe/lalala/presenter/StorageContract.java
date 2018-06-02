@@ -6,17 +6,13 @@ package com.moemoe.lalala.presenter;
 
 public interface StorageContract {
 
-
     interface Presenter extends BasePresenter {
-
-        void furnitureUse(String furnitureId);
-
-        void suitUse(String suitTypeId);
-
+        void furnitureUse(String furnitureId,int position);
+        void suitUse(String suitTypeId,int position);
     }
 
     interface View extends BaseView {
-        void furnitureUseSuccess();
-        void suitUseSuccess();
+        void furnitureUseSuccess(int position);
+        void suitUseSuccess(int position);
     }
 }

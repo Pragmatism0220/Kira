@@ -2,19 +2,15 @@ package com.moemoe.lalala.view.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.moemoe.lalala.R;
+import com.moemoe.lalala.event.FurnitureEvent;
 import com.moemoe.lalala.event.OnItemListener;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
-import com.moemoe.lalala.model.entity.FurnitureInfoEntity;
 import com.moemoe.lalala.view.adapter.FurnitureInfoAdapter;
-import com.moemoe.lalala.view.base.FurnitureInfo;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,8 +18,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -74,13 +68,25 @@ public class FurnitureInfoFragment extends BaseFragment {
         mAdapter.setOnItemClickListener(new OnItemListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(getContext(), info.get(position).getName(), Toast.LENGTH_SHORT).show();
-                String furnitureId = info.get(position).getId();
-                EventBus.getDefault().post(furnitureId);
-
+                AllFurnitureInfo infoEvent = info.get(position);
+                infoEvent.setPosition(position);
+                EventBus.getDefault().post(infoEvent);
             }
         });
         mAdapter.setList(info);
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void furnitureEvent(FurnitureEvent event) {
+        if (event != null) {
+            if (event.getType().equals("套装")) {
+                mAdapter.getList().get(event.getPosition()).setSuitPutInHouse(true);
+            } else {
+                mAdapter.getList().get(event.getPosition()).setPutInHouse(true);
+            }
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

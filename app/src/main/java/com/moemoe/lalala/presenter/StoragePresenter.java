@@ -25,14 +25,14 @@ public class StoragePresenter implements StorageContract.Presenter {
 
 
     @Override
-    public void furnitureUse(String furnitureId) {
+    public void furnitureUse(String furnitureId, final int position) {
         apiService.furnitureUse(furnitureId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetSimpleResultSubscriber() {
                     @Override
                     public void onSuccess() {
-                        if (view != null) view.furnitureUseSuccess();
+                        if (view != null) view.furnitureUseSuccess(position);
                     }
 
                     @Override
@@ -43,14 +43,14 @@ public class StoragePresenter implements StorageContract.Presenter {
     }
 
     @Override
-    public void suitUse(String suitTypeId) {
+    public void suitUse(String suitTypeId, final int position) {
         apiService.suitUse(suitTypeId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetSimpleResultSubscriber() {
                     @Override
                     public void onSuccess() {
-                        if (view != null) view.suitUseSuccess();
+                        if (view != null) view.suitUseSuccess(position);
                     }
 
                     @Override

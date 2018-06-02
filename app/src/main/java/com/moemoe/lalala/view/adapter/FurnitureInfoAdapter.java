@@ -32,7 +32,7 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
 
     private Context mContext;
     private List<AllFurnitureInfo> infos;
-
+    private int position;
     private int mSelectedPos = -1;//保存当前选中的position 重点！
 
     public FurnitureInfoAdapter(Context mContext) {
@@ -45,6 +45,10 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
         notifyDataSetChanged();
     }
 
+    public List<AllFurnitureInfo> getList() {
+        return infos;
+    }
+
     @Override
     public FurnitureHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         FurnitureHolder holder = new FurnitureHolder(View.inflate(mContext, R.layout.item_furniture_info, null));
@@ -53,20 +57,24 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
 
     @Override
     public void onBindViewHolder(final FurnitureHolder holder, final int position) {
+        this.position = position;
         AllFurnitureInfo data = infos.get(position);
-        
-        if (!data.isPutInHouse()) {
+        if (data.isSuitPutInHouse()) {
             holder.mFusing.setVisibility(View.VISIBLE);
         } else {
             holder.mFusing.setVisibility(View.GONE);
         }
-        
-        if (data.getType().equals("套装")){
+        if (data.isPutInHouse()) {
+            holder.mFusing.setVisibility(View.VISIBLE);
+        } else {
+            holder.mFusing.setVisibility(View.GONE);
+        }
+
+        if (data.getType().equals("套装")) {
             holder.mFName.setText(data.getSuitTypeName());
             holder.mFCheck.setChecked(mSelectedPos == position);
             Glide.with(mContext).load(ApiService.URL_QINIU + data.getSuitTypeImage()).into(holder.mFphoto);
-//            holder.mFStyle.setText(data.getSuitTypeDescribe());
-        }else {
+        } else {
             holder.mFName.setText(data.getName());
             holder.mFCheck.setChecked(mSelectedPos == position);
             Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).into(holder.mFphoto);

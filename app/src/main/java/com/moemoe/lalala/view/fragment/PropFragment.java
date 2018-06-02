@@ -74,10 +74,8 @@ public class PropFragment extends BaseFragment implements PropContract.View {
 
     @Override
     public void getPropInfoSuccess(final ArrayList<PropInfoEntity> propInfoEntities) {
-        Log.i("PropFragment", "getPropInfoSuccess: " + propInfoEntities);
         lists = new ArrayList<>();
         this.lists = propInfoEntities;
-        Log.i("PropFragment", "getPropInfoSuccess:newLists " + lists);
 
         String firstImage = propInfoEntities.get(0).getImage();
         String name = propInfoEntities.get(0).getName();
@@ -95,21 +93,16 @@ public class PropFragment extends BaseFragment implements PropContract.View {
         mAdapter.setOnItemClickListener(new PropAdapter.RoleItemClickListener() {
             @Override
             public void onClick(View v, int position, int which) {
-                Toast.makeText(getContext(), lists.get(position).getName() + "", Toast.LENGTH_SHORT).show();
                 String id = lists.get(position).getId();
                 String name = lists.get(position).getName();
                 String image = lists.get(position).getImage();
                 int toolCount = lists.get(position).getToolCount();
                 String describe = lists.get(position).getDescribe();
                 boolean isUserHadTool = lists.get(position).isUserHadTool();
-                Log.i("PropFragment", "onItemClick: " + id + name + image);
                 callBack.getResult(id, name, image, toolCount, describe, isUserHadTool);
-                Log.i("PropFragment", "getResult: " + id + "/" + name + "/" + image + "/" + describe);
-
                 for (int i = 0; i < propInfoEntities.size(); i++) {
                     propInfoEntities.get(i).setSelected(i == which);
                 }
-
                 mAdapter.notifyDataSetChanged();
             }
         });

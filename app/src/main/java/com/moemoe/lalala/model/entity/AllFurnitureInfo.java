@@ -29,9 +29,27 @@ public class AllFurnitureInfo implements Serializable {
     private String suitTypeName;//套装风格名称
     private String type;//区分套装
     private int sortId;//排序值
+    private String suitTypeId;// 套装风格ID ,
+    private int position;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
     public int getSortId() {
         return sortId;
+    }
+
+    public String getSuitTypeId() {
+        return suitTypeId;
+    }
+
+    public void setSuitTypeId(String suitTypeId) {
+        this.suitTypeId = suitTypeId;
     }
 
     public void setSortId(int sortId) {

@@ -12,10 +12,13 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +43,7 @@ import com.moemoe.lalala.di.modules.MapModule;
 import com.moemoe.lalala.event.BackSchoolEvent;
 import com.moemoe.lalala.event.EventDoneEvent;
 import com.moemoe.lalala.event.MateChangeEvent;
+import com.moemoe.lalala.event.StageLineEvent;
 import com.moemoe.lalala.event.SystemMessageEvent;
 import com.moemoe.lalala.greendao.gen.AlarmClockEntityDao;
 import com.moemoe.lalala.model.entity.AlarmClockEntity;
@@ -58,6 +62,7 @@ import com.moemoe.lalala.model.entity.MapMarkEntity;
 import com.moemoe.lalala.model.entity.NearUserEntity;
 import com.moemoe.lalala.model.entity.NetaEvent;
 import com.moemoe.lalala.model.entity.SplashEntity;
+import com.moemoe.lalala.model.entity.StageLineEntity;
 import com.moemoe.lalala.model.entity.UserDeskmateEntity;
 import com.moemoe.lalala.model.entity.UserLocationEntity;
 import com.moemoe.lalala.presenter.MapContract;
@@ -102,6 +107,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1961,6 +1967,56 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void stageLineEvent(StageLineEvent event) {
+        if (event != null) {
+            String stageLine = PreferenceUtils.getStageLine(MapActivity.this);
+            Gson gson = new Gson();
+            StageLineEntity entity = gson.fromJson(stageLine, StageLineEntity.class);
+            if (deskmateEntity.getId().equals(entity.getRoleId())) {
+                mHandler.post(sRunnable);
+            }
+        }
+    }
+
+    private final MyHandler mHandler = new MyHandler(this);
+
+    /**
+     * 静态的匿名内部类不会持有外部类的引用 
+     */
+    private final Runnable sRunnable = new Runnable() {
+        @Override
+        public void run() {
+            MoeMoeApplication.getInstance().VisibleDiaLog(MapActivity.this);
+            Message message = new Message();
+            mHandler.handleMessage(message);
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+    /**
+     * 声明一个静态的Handler内部类，并持有外部类的弱引用 
+     */
+    private static class MyHandler extends Handler {
+
+        private final WeakReference<MapActivity> mActivty;
+
+        private MyHandler(MapActivity mActivty) {
+            this.mActivty = new WeakReference<MapActivity>(mActivty);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            MapActivity activity = mActivty.get();
+            if (activity != null){
+                MoeMoeApplication.getInstance().GoneDiaLog();
+            }
+        }
+    }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void mapEevent(MapEevent event) {
         if (PreferenceUtils.isLogin()) {

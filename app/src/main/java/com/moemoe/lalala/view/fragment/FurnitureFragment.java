@@ -17,6 +17,7 @@ import com.moemoe.lalala.model.entity.FurnitureInfoEntity;
 import com.moemoe.lalala.model.entity.MapDbEntity;
 import com.moemoe.lalala.presenter.FurnitureContract;
 import com.moemoe.lalala.presenter.FurniturePresenter;
+import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.view.adapter.FurnitureAdapter;
 import com.moemoe.lalala.view.adapter.TabFragmentPagerAdapter;
 import com.moemoe.lalala.view.widget.view.KiraTabLayout;
@@ -77,10 +78,9 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
         mPresenter.getFurnitureInfo();
     }
 
-
     @Override
     public void onFailure(int code, String msg) {
-
+        ErrorCodeUtils.showErrorMsgByCode(getContext(), code, msg);
     }
 
     @Override
@@ -135,6 +135,9 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
 
     @Override
     public void onDestroy() {
+        if (mPresenter != null) {
+            mPresenter.release();
+        }
         super.onDestroy();
     }
 

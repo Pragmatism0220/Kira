@@ -21,11 +21,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
 import com.moemoe.lalala.R;
@@ -35,6 +37,7 @@ import com.moemoe.lalala.di.modules.NetModule;
 import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
 import com.moemoe.lalala.greendao.gen.MySQLiteOpenHelper;
 import com.moemoe.lalala.model.entity.DeskmateEntils;
+import com.moemoe.lalala.model.entity.StageLineEntity;
 import com.moemoe.lalala.netamusic.player.MusicPreferences;
 import com.moemoe.lalala.utils.DialogUtils;
 import com.moemoe.lalala.utils.FileUtil;
@@ -99,6 +102,10 @@ public class MoeMoeApplication extends Application {
     private RelativeLayout mLlFrist;
     private ImageView mPersonal, mBag, mShopping, mSignRoot, mPhoneMenu, mIvMsg;
     private boolean isMove;
+    private WindowManager.LayoutParams wmParamsThree;
+    private View dialog;
+    private TextView mTvContent;
+    private StageLineEntity stageLineEntity;
 
     @Override
     public void onCreate() {
@@ -151,6 +158,7 @@ public class MoeMoeApplication extends Application {
         }
         return false;
     }
+
     public void VisibilityWindowMager(Context context) {
         if (windowManager != null && inflate != null && wmParams != null) {
 //            imageView.setVisibility(View.VISIBLE);
@@ -158,10 +166,27 @@ public class MoeMoeApplication extends Application {
         }
     }
 
+    public void VisibleDiaLog(Context context) {
+        if (windowManager != null && dialog != null && dialog.getVisibility() == View.GONE) {
+            String stageLine = PreferenceUtils.getStageLine(context);
+            Gson gson = new Gson();
+            stageLineEntity = gson.fromJson(stageLine, StageLineEntity.class);
+            mTvContent.setText(stageLineEntity.getContent());
+            dialog.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void GoneDiaLog() {
+        if (windowManager != null && dialog != null && dialog.getVisibility() == View.VISIBLE) {
+            dialog.setVisibility(View.GONE);
+        }
+    }
+
     public void removeWindowMager() {
-        if (windowManager != null && inflate != null && inflateTwo != null) {
+        if (windowManager != null && inflate != null && inflateTwo != null && dialog != null) {
             windowManager.removeViewImmediate(inflate);
             windowManager.removeViewImmediate(inflateTwo);
+            windowManager.removeViewImmediate(dialog);
         }
     }
 
@@ -258,6 +283,36 @@ public class MoeMoeApplication extends Application {
         if (getActivity(MapActivity.class.getName()) instanceof MapActivity) {
             windowManager.addView(inflateTwo, wmParamsTwo);
         }
+
+
+        wmParamsThree = new WindowManager.LayoutParams();
+        //重点，类型设置为dialog类型,可无视权限!
+        if (Build.VERSION.SDK_INT >= 26) {//8.0新特性
+            wmParamsThree.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            wmParamsThree.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        }
+        wmParamsThree.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        wmParamsThree.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        wmParamsThree.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        //设置图片格式，效果为背景透明  
+        wmParamsThree.format = PixelFormat.RGBA_8888;
+        wmParamsThree.gravity = Gravity.LEFT | Gravity.TOP;
+        wmParamsThree.x = 0;
+        wmParamsThree.y = 0;
+        dialog = LayoutInflater.from(context).inflate(R.layout.float_dialog_layout, null);
+        dialog.setVisibility(View.GONE);
+        mTvContent = dialog.findViewById(R.id.tv_content);
+        ImageButton mIvLeft = dialog.findViewById(R.id.iv_left);
+        ImageButton mIvCansl = dialog.findViewById(R.id.iv_right);
+        String stageLine = PreferenceUtils.getStageLine(context);
+        Gson gson = new Gson();
+        stageLineEntity = gson.fromJson(stageLine, StageLineEntity.class);
+        if (getActivity(MapActivity.class.getName()) instanceof MapActivity) {
+            windowManager.addView(dialog, wmParamsThree);
+        }
+
         imageView.setOnTouchListener(new View.OnTouchListener() {
             int lastx = 0;
             int lasty = 0;
@@ -710,6 +765,7 @@ public class MoeMoeApplication extends Application {
                         layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
                         mLlFrist.setLayoutParams(layoutParams);
                         wmParamsTwo.x = (int) (x - (int) getResources().getDimension(R.dimen.x24));
+
                         wmParamsTwo.y = (int) (y + height - getResources().getDimension(R.dimen.status_bar_height));
                         windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
                     }
