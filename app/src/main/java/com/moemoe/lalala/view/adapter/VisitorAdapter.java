@@ -70,8 +70,6 @@ public class VisitorAdapter extends RecyclerView.Adapter<VisitorAdapter.VisitorV
             holder.mInfo.setText("收拾了你房间的垃圾");
         }
         holder.mTime.setText(StringUtils.timeFormat(list.get(position).getCreateTime()));
-        Log.i("asd", "时间: " + StringUtils.timeFormat(list.get(position).getCreateTime()));
-        Log.i("asd", "时间戳: " + list.get(position).getCreateTime());
 
         LevelSpan levelSpan = new LevelSpan(ContextCompat.getColor(mContext, R.color.white), mContext.getResources().getDimension(R.dimen.x12));
         final String content = "LV" + list.get(position).getVisitorLevel();

@@ -5,11 +5,33 @@ package com.moemoe.lalala.model.entity;
  */
 
 public class PropInfoEntity {
+
     private String id;//道具id
     private String image;//道具图片
     private boolean isUserHadTool;//是否拥有道具  true 拥有道具
     private String name;//名称
     private int toolCount;//拥有道具个数
+    private String describe;//道具信息描述
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    private boolean isSelected = false; //item选中 自加入
+
+
+
+    public String getDescribe() {
+        return describe;
+    }
+
+    public void setDescribe(String describe) {
+        this.describe = describe;
+    }
 
     public String getId() {
         return id;
@@ -59,6 +81,7 @@ public class PropInfoEntity {
                 ", isUserHadTool=" + isUserHadTool +
                 ", name='" + name + '\'' +
                 ", toolCount=" + toolCount +
+                ", describe='" + describe + '\'' +
                 '}';
     }
 }

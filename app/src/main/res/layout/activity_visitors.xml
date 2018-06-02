@@ -21,9 +21,13 @@
             android:id="@+id/include_toolbar"
             layout="@layout/neta_bar" />
 
-        <android.support.v7.widget.RecyclerView
+        <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
             android:id="@+id/root_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+        </com.moemoe.lalala.view.widget.recycler.PullAndLoadView>
+
+
     </LinearLayout>
 </layout>

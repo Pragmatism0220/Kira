@@ -4,8 +4,7 @@
     <RelativeLayout
         android:id="@+id/item_main"
         android:layout_width="@dimen/x200"
-        android:layout_height="@dimen/y250"
-        android:background="@drawable/role_official_btn">
+        android:layout_height="@dimen/y250">
 
 
         <ImageView

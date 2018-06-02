@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,8 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
     private Context mContext;
     private List<PropInfoEntity> infos;
 
+    private RoleItemClickListener listener;
+
     private int mSelectedPos = -1;//保存当前选中的position 重点！
 
 
@@ -50,11 +53,12 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
     @Override
     public void onBindViewHolder(final PropViewHolder holder, final int position) {
         final PropInfoEntity data = infos.get(position);
-        Log.i("PropFragment", "onBindViewHolder: " + data);
+
         if (data.isUserHadTool()) {
             Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).into(holder.mView);
             holder.mName.setText(data.getName());
             holder.mNum.setText("数量" + data.getToolCount());
+            holder.mView.setAlpha(1.0f);
         } else {
             holder.mName.setText(data.getName());
             holder.mNum.setText("数量" + data.getToolCount());
@@ -62,37 +66,20 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
             holder.mView.setAlpha(0.5f);
         }
 
+        holder.mBg.setSelected(data.isSelected());
 
-        holder.mBg.setChecked(mSelectedPos == position);
-        if (mOnItemListener != null) {
-            holder.mView.setOnClickListener(new View.OnClickListener() {
+        if (listener != null) {
+            holder.mBg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnItemListener.onItemClick(holder.mView, position);
-                    if (mSelectedPos != position) {
-                        holder.mBg.setChecked(true);
-                        if (mSelectedPos != -1) {
-                            notifyItemChanged(mSelectedPos, 0);
-                        }
-                        mSelectedPos = position;
-                    }
+                    listener.onClick(holder.mBg, position, holder.getAdapterPosition());
                 }
             });
         }
-//        holder.mBg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked){
-//                    String info = holder.mBg.getText().toString();
-//                    Log.i("asd", "onCheckedChanged: "+info);
-//                }
-//            }
-//        });
 
     }
 
     public void setData(List<PropInfoEntity> data) {
-
         this.infos = data;
         notifyDataSetChanged();
     }
@@ -111,19 +98,23 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
         return infos != null ? infos.size() : 0;
     }
 
-    private OnItemListener mOnItemListener;
+    /**
+     * 是声明点击事件接口
+     */
+    public interface RoleItemClickListener {
+        void onClick(View v, int position, int which);
+    }
 
-    public void setOnItemClickListener(OnItemListener onItemClickListener) {
-        mOnItemListener = onItemClickListener;
+    public void setOnItemClickListener(RoleItemClickListener listener) {
+        this.listener = listener;
     }
 
     class PropViewHolder extends RecyclerView.ViewHolder {
-        private CheckBox mBg;
+        private RelativeLayout mBg;
         private ImageView mView;//道具图片
         private TextView mName;//道具名称
         private TextView mNum;//道具数量
-        private FrameLayout mTop;
-        private LinearLayout mL;
+        private LinearLayout mTop;
 
         public PropViewHolder(View itemView) {
             super(itemView);
@@ -132,7 +123,6 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
             mName = itemView.findViewById(R.id.item_commodity_name);
             mNum = itemView.findViewById(R.id.item_commodity_num);
             mTop = itemView.findViewById(R.id.top);
-            mL = itemView.findViewById(R.id.ll);
         }
     }
 }

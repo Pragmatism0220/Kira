@@ -389,14 +389,14 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         pauseTime();
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (MoeMoeApplication.getInstance().isMenu()) {
-            MoeMoeApplication.getInstance().GoneMenu();
-            return true;
-        }
-        return super.dispatchTouchEvent(ev);
-    }
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        if (MoeMoeApplication.getInstance().isMenu()) {
+//            MoeMoeApplication.getInstance().GoneMenu();
+//            return true;
+//        }
+//        return super.dispatchTouchEvent(ev);
+//    }
 
     @Override
     protected void onResume() {

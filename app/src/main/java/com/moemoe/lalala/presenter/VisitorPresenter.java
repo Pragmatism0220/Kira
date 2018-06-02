@@ -4,6 +4,8 @@ import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetResultSubscriber;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 
+import org.greenrobot.greendao.annotation.Index;
+
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -28,14 +30,14 @@ public class VisitorPresenter implements VisitorsContract.Presenter {
 
 
     @Override
-    public void getVisitorsInfo(int size, int start) {
+    public void getVisitorsInfo(int size, final int start) {
         apiService.loadVisitor(size, start)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetResultSubscriber<ArrayList<VisitorsEntity>>() {
                     @Override
                     public void onSuccess(ArrayList<VisitorsEntity> entities) {
-                        if (view != null) view.getVisitorsInfoSuccess(entities);
+                        if (view != null) view.getVisitorsInfoSuccess(entities, start == 0);
                     }
 
                     @Override

@@ -1135,10 +1135,16 @@ public interface ApiService {
 
     @GET("v2/kira/house/inHouseObjects")
     Observable<ApiResult<ArrayList<MapEntity>>> loadHouseObjects();
-    
+
     @GET("v2/kira/house/user/clothes/all/{roleId}")
-    Observable<ApiResult<ArrayList<ClothingEntity>>> loadHouseClothesAll(@Path("roleId")String roleId);
-    
+    Observable<ApiResult<ArrayList<ClothingEntity>>> loadHouseClothesAll(@Path("roleId") String roleId);
+
     @POST("v2/kira/house/user/role/colthes/select/{roleId}/{clothesId}")
-    Observable<ApiResult> loadRoleColthesSelect(@Path("roleId")String roleId,@Path("clothesId") String  clothesId);
+    Observable<ApiResult> loadRoleColthesSelect(@Path("roleId") String roleId, @Path("clothesId") String clothesId);
+
+    @POST("/v2/kira/house/user/furniture/single/select/{furnitureId}")
+    Observable<ApiResult> furnitureUse(@Path("furnitureId") String furnitureId);
+
+    @POST("/v2/kira/house/user/furniture/suit/select/{suitTypeId}")
+    Observable<ApiResult> suitUse(@Path("suitTypeId") String suitTypeId);
 }

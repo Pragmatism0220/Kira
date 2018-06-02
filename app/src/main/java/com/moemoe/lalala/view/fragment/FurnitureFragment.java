@@ -75,8 +75,6 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
                 .inject(this);
 
         mPresenter.getFurnitureInfo();
-
-
     }
 
 
@@ -133,6 +131,7 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
             mTab.setViewPager(mFurnitureViewPager);
         }
     }
+
 
     @Override
     public void onDestroy() {

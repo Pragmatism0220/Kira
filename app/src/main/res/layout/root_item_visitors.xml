@@ -6,7 +6,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y80">
+        android:layout_height="@dimen/y80"
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/root_time"
@@ -25,14 +26,11 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black" />
+        android:background="@color/gray_e8e8e8" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/branch_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/y5"></android.support.v7.widget.RecyclerView>
-
-
-
 </LinearLayout>

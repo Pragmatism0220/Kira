@@ -1,33 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/top"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/ll"
-    >
+    android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
-
-        <CheckBox
-            android:id="@+id/item_commodity_check_btn"
-            android:layout_width="@dimen/x156"
-            android:layout_height="@dimen/x156"
-            android:background="@drawable/storage_commodity_selector_bg"
-            android:button="@null"
-            />
+    <RelativeLayout
+        android:id="@+id/item_commodity_check_btn"
+        android:layout_width="@dimen/x156"
+        android:layout_height="@dimen/y156"
+        android:background="@drawable/storage_commodity_selector_bg">
 
         <ImageView
             android:id="@+id/item_commodity_image"
             android:layout_width="@dimen/x130"
             android:layout_height="@dimen/y130"
-            android:layout_gravity="center"
+            android:layout_centerInParent="true"
             android:src="@drawable/test_image" />
-    </FrameLayout>
-
+    </RelativeLayout>
     <TextView
         android:id="@+id/item_commodity_name"
         android:layout_width="wrap_content"
@@ -49,5 +39,6 @@
         android:text="24"
         android:textColor="@color/black"
         android:textSize="10dp" />
+
 
 </LinearLayout>

@@ -40,13 +40,20 @@ public class FurnitureInfoFragment extends BaseFragment {
     @BindView(R.id.furniture_recycle_view)
     RecyclerView mRecycleView;
 
+    private String furnId;
+
     private FurnitureInfoAdapter mAdapter;
 
-    private List<FurnitureInfoEntity> lists;
     private List<AllFurnitureInfo> info = new ArrayList<>();
+
+
+    public FurnitureInfoFragment() {
+
+    }
 
     public FurnitureInfoFragment(ArrayList<AllFurnitureInfo> allFurnitureInfos) {
         this.info = allFurnitureInfos;
+
     }
 
     public static FurnitureInfoFragment newInstance(ArrayList<AllFurnitureInfo> allFurnitureInfos) {
@@ -67,6 +74,9 @@ public class FurnitureInfoFragment extends BaseFragment {
         mAdapter.setOnItemClickListener(new OnItemListener() {
             @Override
             public void onItemClick(View view, int position) {
+                Toast.makeText(getContext(), info.get(position).getName(), Toast.LENGTH_SHORT).show();
+                String furnitureId = info.get(position).getId();
+                EventBus.getDefault().post(furnitureId);
 
             }
         });

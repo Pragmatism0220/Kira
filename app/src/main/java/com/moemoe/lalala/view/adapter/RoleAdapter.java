@@ -37,6 +37,7 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder
         this.mContext = mContext;
     }
 
+
     @Override
     public RoleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RoleViewHolder holder = new RoleViewHolder(View.inflate(mContext, R.layout.item_choose_role, null));
@@ -48,54 +49,68 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder
         final RoleInfoEntity data = entities.get(position);
         Log.i("roleActivity", "onBindViewHolder: " + data);
         if (data != null) {
+
+            if (data.getIsPutInHouse()) {
+                holder.mZhai.setVisibility(View.VISIBLE);
+            } else {
+                holder.mZhai.setVisibility(View.GONE);
+            }
+
             if ("official".equals(data.getRoleType())) {
-                holder.mItem.setBackgroundResource(R.drawable.role_official_btn);
-                holder.mTitle.setImageResource(R.drawable.ic_home_roleschoice_from_official);
-                holder.mName.setText(data.getName());
-                Glide.with(mContext).load(ApiService.URL_QINIU + data.getHeadIcon()).into(holder.mImage);
                 if (!data.getIsUserHadRole()) {
-                    //false未拥有
+                    holder.mItem.setBackgroundResource(R.drawable.role_official_btn);
+                    holder.mTitle.setImageResource(R.drawable.ic_home_roleschoice_from_official);
+                    holder.mName.setText(data.getName());
+                    Glide.with(mContext).load(ApiService.URL_QINIU + data.getHeadIcon()).into(holder.mImage);
                     holder.mItem.setAlpha(0.5f);
                     holder.mImage.setAlpha(0.5f);
-                }
-                if (data.getIsPutInHouse()) {
-                    holder.mZhai.setVisibility(View.VISIBLE);
-                } else {
-                    holder.mZhai.setVisibility(View.GONE);
+                } else if (data.getIsUserHadRole()) {
+                    holder.mItem.setBackgroundResource(R.drawable.role_official_btn);
+                    holder.mTitle.setImageResource(R.drawable.ic_home_roleschoice_from_official);
+                    holder.mName.setText(data.getName());
+                    Glide.with(mContext).load(ApiService.URL_QINIU + data.getHeadIcon()).into(holder.mImage);
+                    holder.mItem.setAlpha(1.0f);
+                    holder.mImage.setAlpha(1.0f);
                 }
             } else if ("linkage".equals(data.getRoleType())) {
-                holder.mImage.setBackgroundResource(R.drawable.role_linkge_btn);
-                holder.mTitle.setImageResource(R.drawable.ic_home_roleschoice_from_linkage);
-                holder.mName.setText(data.getName());
-                Glide.with(mContext).load(ApiService.URL_QINIU + data.getHeadIcon()).into(holder.mImage);
                 if (!data.getIsUserHadRole()) {
-                    //false未拥有
+                    holder.mItem.setBackgroundResource(R.drawable.role_linkge_btn);
+                    holder.mTitle.setImageResource(R.drawable.ic_home_roleschoice_from_linkage);
+                    holder.mName.setText(data.getName());
+                    Glide.with(mContext).load(ApiService.URL_QINIU + data.getHeadIcon()).into(holder.mImage);
                     holder.mItem.setAlpha(0.5f);
                     holder.mImage.setAlpha(0.5f);
-                }
-                if (data.getIsPutInHouse()) {
-                    holder.mZhai.setVisibility(View.VISIBLE);
-                } else {
-                    holder.mZhai.setVisibility(View.GONE);
+                } else if (data.getIsUserHadRole()) {
+                    holder.mItem.setBackgroundResource(R.drawable.role_linkge_btn);
+                    holder.mTitle.setImageResource(R.drawable.ic_home_roleschoice_from_linkage);
+                    holder.mName.setText(data.getName());
+                    Glide.with(mContext).load(ApiService.URL_QINIU + data.getHeadIcon()).into(holder.mImage);
+                    holder.mItem.setAlpha(1.0f);
+                    holder.mImage.setAlpha(1.0f);
                 }
             } else if ("cameo".equals(data.getRoleType())) {
-                holder.mImage.setBackgroundResource(R.drawable.role_guest_btn);
-                holder.mTitle.setImageResource(R.drawable.ic_home_roleschoice_from_guest);
-                holder.mName.setText(data.getName());
-                Glide.with(mContext).load(ApiService.URL_QINIU + data.getHeadIcon()).into(holder.mImage);
                 if (!data.getIsUserHadRole()) {
-                    //false未拥有
+                    holder.mItem.setBackgroundResource(R.drawable.role_guest_btn);
+                    holder.mTitle.setImageResource(R.drawable.ic_home_roleschoice_from_guest);
+                    holder.mName.setText(data.getName());
+                    Glide.with(mContext).load(ApiService.URL_QINIU + data.getHeadIcon()).into(holder.mImage);
                     holder.mItem.setAlpha(0.5f);
                     holder.mImage.setAlpha(0.5f);
-                }
-                if (data.getIsPutInHouse()) {
-                    holder.mZhai.setVisibility(View.VISIBLE);
-                } else {
-                    holder.mZhai.setVisibility(View.GONE);
+                } else if (data.getIsUserHadRole()) {
+                    holder.mItem.setBackgroundResource(R.drawable.role_guest_btn);
+                    holder.mTitle.setImageResource(R.drawable.ic_home_roleschoice_from_guest);
+                    holder.mName.setText(data.getName());
+                    Glide.with(mContext).load(ApiService.URL_QINIU + data.getHeadIcon()).into(holder.mImage);
+                    holder.mItem.setAlpha(1.0f);
+                    holder.mImage.setAlpha(1.0f);
                 }
             }
+
         }
+
+
         holder.mItem.setSelected(data.isSelected());
+
         if (listener != null) {
             holder.mItem.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -105,6 +120,7 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder
             });
         }
     }
+
 
     @Override
     public int getItemCount() {

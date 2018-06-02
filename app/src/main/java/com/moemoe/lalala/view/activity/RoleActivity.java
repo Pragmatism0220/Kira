@@ -1,23 +1,31 @@
 package com.moemoe.lalala.view.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityRoleBinding;
 import com.moemoe.lalala.di.components.DaggerRoleComponent;
 import com.moemoe.lalala.di.modules.RoleModule;
+import com.moemoe.lalala.event.OnItemListener;
+import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.RoleInfoEntity;
 import com.moemoe.lalala.presenter.RoleContract;
 import com.moemoe.lalala.presenter.RolePresenter;
+import com.moemoe.lalala.utils.PreferenceUtils;
+import com.moemoe.lalala.utils.ToastUtils;
 import com.moemoe.lalala.view.adapter.RoleAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -47,6 +55,11 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                 .inject(this);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_role);
         binding.setPresenter(new Presenter());
+        initView();
+    }
+
+    private void initView() {
+
     }
 
     @Override
@@ -54,14 +67,28 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
         this.entities = entities;
         mAdapter = new RoleAdapter(entities, this);
         binding.roleListRv.setLayoutManager(new GridLayoutManager(this, 3));
-        binding.roleListRv.addItemDecoration(new SpacesItemDecoration(0, 16, 0));
+        binding.roleListRv.addItemDecoration(new SpacesItemDecoration(20, 16, 0));
         binding.roleListRv.setAdapter(mAdapter);
+
+        Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(0).getHeadIcon()).into(binding.roleImage);
+        binding.roleNameText.setText(entities.get(0).getName());
+        entities.get(0).setSelected(true);
+
         mAdapter.setOnItemClickListener(new RoleAdapter.RoleItemClickListener() {
             @Override
             public void onClick(View v, int position, int which) {
+                Toast.makeText(getApplicationContext(), entities.get(position).getName(), Toast.LENGTH_SHORT).show();
+
+                if (!entities.get(position).getIsUserHadRole()) {
+                    binding.putHouseBtn.setClickable(false);
+                }
+
                 binding.roleNameText.setText(entities.get(position).getName());
+                Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(position).getShowHeadIcon()).into(binding.roleImage);
+
                 roleId = entities.get(position).getId();
                 isPut = entities.get(position).getIsPutInHouse();
+
                 if (entities.get(position).getIsPutInHouse()) {
                     binding.putHouseBtn.setBackgroundResource(R.drawable.ic_role_move_house_bg);
                 } else {
@@ -69,6 +96,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                 }
                 for (int i = 0; i < entities.size(); i++) {
                     entities.get(i).setSelected(i == which);
+
                 }
                 mAdapter.notifyDataSetChanged();
             }
@@ -98,6 +126,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+
 
     }
 
@@ -133,20 +162,27 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     if (roleId != null) {
                         if (!isPut) {
                             mPresenter.putInHouse(roleId);
+                            Toast.makeText(getApplicationContext(), "放入宅屋", Toast.LENGTH_SHORT).show();
                         } else {
                             mPresenter.removeOutHouse(roleId);
+                            Toast.makeText(getApplicationContext(), "移除宅屋", Toast.LENGTH_SHORT).show();
                         }
                     }
                     break;
                 case R.id.set_deskmake_btn:
                     if (roleId != null) {
                         mPresenter.setDeskMate(roleId);
+                        Toast.makeText(getApplicationContext(), "设为同桌", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.check_cloth_btn:
-                    ClothingActivity.startActivity(RoleActivity.this, roleId);
+                    Intent intent = new Intent();
+                    intent.setClass(getApplicationContext(), ClothingActivity.class);
+                    startActivity(intent);
+                    Toast.makeText(getApplicationContext(), "服装", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.role_diary_btn:
+                    Toast.makeText(getApplicationContext(), "羁绊日记", Toast.LENGTH_SHORT).show();
                 default:
                     break;
             }

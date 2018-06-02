@@ -15,6 +15,6 @@ public interface VisitorsContract {
     }
 
     interface View extends BaseView {
-        void getVisitorsInfoSuccess(ArrayList<VisitorsEntity> entities);
+        void getVisitorsInfoSuccess(ArrayList<VisitorsEntity> entities, boolean isPull);
     }
 }

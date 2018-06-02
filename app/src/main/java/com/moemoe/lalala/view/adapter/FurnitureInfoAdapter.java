@@ -65,7 +65,7 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
             holder.mFName.setText(data.getSuitTypeName());
             holder.mFCheck.setChecked(mSelectedPos == position);
             Glide.with(mContext).load(ApiService.URL_QINIU + data.getSuitTypeImage()).into(holder.mFphoto);
-            holder.mFStyle.setText(data.getSuitTypeDescribe());
+//            holder.mFStyle.setText(data.getSuitTypeDescribe());
         }else {
             holder.mFName.setText(data.getName());
             holder.mFCheck.setChecked(mSelectedPos == position);

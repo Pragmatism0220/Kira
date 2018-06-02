@@ -12,6 +12,7 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.di.components.DaggerPropComponent;
 import com.moemoe.lalala.di.modules.PropModule;
 import com.moemoe.lalala.event.OnItemListener;
+import com.moemoe.lalala.model.entity.Image;
 import com.moemoe.lalala.model.entity.PropInfoEntity;
 import com.moemoe.lalala.presenter.PropContract;
 import com.moemoe.lalala.presenter.PropPresenter;
@@ -37,25 +38,19 @@ public class PropFragment extends BaseFragment implements PropContract.View {
     RecyclerView mRecycleView;
 
     private PropAdapter mAdapter;
-
-
     private List<PropInfoEntity> lists;
 
     //筛选为false的数据
     private List<PropInfoEntity> newLists;
 
-
     @Inject
     PropPresenter mPresenter;
 
     private CallBack callBack;
-
-
-    public static PropFragment newInstance() {
-        return new PropFragment();
-    }
+    private firstCallBack firstCallBack;
 
     @Override
+
     protected int getLayoutId() {
         return R.layout.prop_fragment;
     }
@@ -76,34 +71,56 @@ public class PropFragment extends BaseFragment implements PropContract.View {
 
     }
 
+
     @Override
-    public void getPropInfoSuccess(ArrayList<PropInfoEntity> propInfoEntities) {
+    public void getPropInfoSuccess(final ArrayList<PropInfoEntity> propInfoEntities) {
+        Log.i("PropFragment", "getPropInfoSuccess: " + propInfoEntities);
         lists = new ArrayList<>();
         this.lists = propInfoEntities;
+        Log.i("PropFragment", "getPropInfoSuccess:newLists " + lists);
 
+        String firstImage = propInfoEntities.get(0).getImage();
+        String name = propInfoEntities.get(0).getName();
+        String describe = propInfoEntities.get(0).getDescribe();
+        int toolCount = propInfoEntities.get(0).getToolCount();
+        String id = propInfoEntities.get(0).getId();
+        firstCallBack.firstResult(id, name, firstImage, toolCount, describe);
 
+        propInfoEntities.get(0).setSelected(true);
         mAdapter = new PropAdapter(getContext(), lists);
         mRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         mRecycleView.addItemDecoration(new SpacesItemDecoration(10, 9, 0));
         mRecycleView.setAdapter(mAdapter);
 
-        mAdapter.setOnItemClickListener(new OnItemListener() {
+        mAdapter.setOnItemClickListener(new PropAdapter.RoleItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onClick(View v, int position, int which) {
+                Toast.makeText(getContext(), lists.get(position).getName() + "", Toast.LENGTH_SHORT).show();
                 String id = lists.get(position).getId();
                 String name = lists.get(position).getName();
                 String image = lists.get(position).getImage();
                 int toolCount = lists.get(position).getToolCount();
-                callBack.getResult(id, name, image, toolCount);
+                String describe = lists.get(position).getDescribe();
+                boolean isUserHadTool = lists.get(position).isUserHadTool();
+                Log.i("PropFragment", "onItemClick: " + id + name + image);
+                callBack.getResult(id, name, image, toolCount, describe, isUserHadTool);
+                Log.i("PropFragment", "getResult: " + id + "/" + name + "/" + image + "/" + describe);
+
+                for (int i = 0; i < propInfoEntities.size(); i++) {
+                    propInfoEntities.get(i).setSelected(i == which);
+                }
+
+                mAdapter.notifyDataSetChanged();
             }
         });
-        mAdapter.notifyDataSetChanged();
+
     }
 
     /**
      * 显示未拥有
      */
     public void showNotHave() {
+        Log.i("asd", "showNotHave: " + lists);
         newLists = new ArrayList<>();
         if (lists != null && lists.size() > 0) {
             for (int i = 0; i < lists.size(); i++) {
@@ -119,15 +136,24 @@ public class PropFragment extends BaseFragment implements PropContract.View {
      * 显示拥有
      */
     public void showHave() {
+        Log.i("asd", "showHave: " + lists);
         mAdapter.setRestore(lists);
     }
 
 
     public interface CallBack {
-        void getResult(String id, String name, String image, int toolCount);
+        void getResult(String id, String name, String image, int toolCount, String describe, boolean isUserHadTool);
+    }
+
+    public interface firstCallBack {
+        void firstResult(String id, String name, String image, int toolCount, String describe);
     }
 
     public void setCallBack(CallBack callBack) {
         this.callBack = callBack;
+    }
+
+    public void setFirstCallBack(firstCallBack callBack) {
+        this.firstCallBack = callBack;
     }
 }
