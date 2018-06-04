@@ -12,16 +12,18 @@ public class RoleInfoEntity {
     private String id;// 角色ID
     private boolean isUserDeskmate;//同桌，true：是同桌（用户只有一个同桌
     private boolean isUserHadRole;//改角色头像用户是否拥有，true：拥有 ,
-    private int maxPutInHouseNum;//用户最多可以放入宅屋里面的角色个数
+    private int maxPutInHouseNum;//用户最多可以放入宅屋里面的角色个数   4
     private String name;//角色名称
     private String roleType;// 角色类型
     private int userLikeRoleDefine; //用户将角色房屋宅屋里收集的好感度累计值 ,
     private String userLikeRoleDefineTxt;//用户将角色房屋宅屋里收集的好感度累计值对应的好感评价
     private String showHeadIcon;//大图
     private boolean isPutInHouse;// 是否放入宅屋，true：已经放入宅屋
-
-
     private boolean isSelected = false; //item选中 自加入
+
+    public boolean isPutInHouse() {
+        return isPutInHouse;
+    }
 
 
     public boolean isSelected() {

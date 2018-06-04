@@ -37,6 +37,9 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder
         this.mContext = mContext;
     }
 
+    public List<RoleInfoEntity> getList() {
+        return entities;
+    }
 
     @Override
     public RoleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -47,7 +50,6 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder
     @Override
     public void onBindViewHolder(final RoleViewHolder holder, final int position) {
         final RoleInfoEntity data = entities.get(position);
-        Log.i("roleActivity", "onBindViewHolder: " + data);
         if (data != null) {
 
             if (data.getIsPutInHouse()) {

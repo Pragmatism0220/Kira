@@ -41,10 +41,13 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
     private RoleAdapter mAdapter;
     private ActivityRoleBinding binding;
     private ArrayList<RoleInfoEntity> entities = new ArrayList<>();
+    private ArrayList<RoleInfoEntity> putInHouseNum = new ArrayList<>();
     private String roleId;
     private boolean isPut;
     @Inject
     RolePresenter mPresenter;
+
+    int mPosition;
 
     @Override
     protected void initComponent() {
@@ -70,24 +73,41 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
         binding.roleListRv.addItemDecoration(new SpacesItemDecoration(20, 16, 0));
         binding.roleListRv.setAdapter(mAdapter);
 
-        Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(0).getHeadIcon()).into(binding.roleImage);
+        //数组为0的位置默认初始化
+        if (!entities.get(0).getIsPutInHouse()) {
+            binding.putHouseBtn.setBackgroundResource(R.drawable.ic_role_put_house_bg);
+        } else if (entities.get(0).getIsPutInHouse()) {
+            binding.putHouseBtn.setBackgroundResource(R.drawable.ic_role_move_house_bg);
+        }
+        Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(0).getShowHeadIcon()).into(binding.roleImage);
         binding.roleNameText.setText(entities.get(0).getName());
         entities.get(0).setSelected(true);
-
+        //点击事件
         mAdapter.setOnItemClickListener(new RoleAdapter.RoleItemClickListener() {
             @Override
             public void onClick(View v, int position, int which) {
-                Toast.makeText(getApplicationContext(), entities.get(position).getName(), Toast.LENGTH_SHORT).show();
-
+                mPosition = position;
+                //未拥有角色取消放入宅屋点击事件
                 if (!entities.get(position).getIsUserHadRole()) {
                     binding.putHouseBtn.setClickable(false);
+                    binding.setDeskmakeBtn.setClickable(false);
+                } else if (entities.get(position).getIsUserHadRole()) {
+                    binding.putHouseBtn.setClickable(true);
+                    binding.putHouseBtn.setClickable(true);
                 }
-
                 binding.roleNameText.setText(entities.get(position).getName());
                 Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(position).getShowHeadIcon()).into(binding.roleImage);
 
                 roleId = entities.get(position).getId();
                 isPut = entities.get(position).getIsPutInHouse();
+
+//                //拿到集合中放入宅屋的个数
+//                for (int i = 0; i < entities.size(); i++) {
+//                    if (entities.get(i).isPutInHouse()) {
+//                        putInHouseNum.add(entities.get(i));
+//                    }
+//                }
+                Log.i("asd", "putInHouseNum: " + putInHouseNum.size());
 
                 if (entities.get(position).getIsPutInHouse()) {
                     binding.putHouseBtn.setBackgroundResource(R.drawable.ic_role_move_house_bg);
@@ -96,11 +116,11 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                 }
                 for (int i = 0; i < entities.size(); i++) {
                     entities.get(i).setSelected(i == which);
-
                 }
                 mAdapter.notifyDataSetChanged();
             }
         });
+
     }
 
     @Override
@@ -110,16 +130,15 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
     @Override
     public void putInHouseSuccess() {
-
-        isPut = true;
+        mAdapter.getList().get(mPosition).setPutInHouse(true);
+        mAdapter.notifyDataSetChanged();
         binding.putHouseBtn.setBackgroundResource(R.drawable.ic_role_move_house_bg);
-
     }
 
     @Override
     public void removeOutHouseSuccess() {
-
-        isPut = false;
+        mAdapter.getList().get(mPosition).setPutInHouse(false);
+        mAdapter.notifyDataSetChanged();
         binding.putHouseBtn.setBackgroundResource(R.drawable.ic_role_put_house_bg);
 
     }
@@ -161,34 +180,33 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                 case R.id.put_house_btn:
                     if (roleId != null) {
                         if (!isPut) {
+//                            if (putInHouseNum.size() > mAdapter.getList().get(mPosition).getMaxPutInHouseNum()) {
+//                                ToastUtils.showShortToast(getApplicationContext(), "最多放入4个到宅屋");
+//                            } else {
+//                                mPresenter.putInHouse(roleId);
+//                            }
                             mPresenter.putInHouse(roleId);
-                            Toast.makeText(getApplicationContext(), "放入宅屋", Toast.LENGTH_SHORT).show();
                         } else {
                             mPresenter.removeOutHouse(roleId);
-                            Toast.makeText(getApplicationContext(), "移除宅屋", Toast.LENGTH_SHORT).show();
                         }
                     }
                     break;
                 case R.id.set_deskmake_btn:
                     if (roleId != null) {
                         mPresenter.setDeskMate(roleId);
-                        Toast.makeText(getApplicationContext(), "设为同桌", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.check_cloth_btn:
                     Intent intent = new Intent();
                     intent.setClass(getApplicationContext(), ClothingActivity.class);
                     startActivity(intent);
-                    Toast.makeText(getApplicationContext(), "服装", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.role_diary_btn:
                     Toast.makeText(getApplicationContext(), "羁绊日记", Toast.LENGTH_SHORT).show();
                 default:
                     break;
             }
-
         }
-
     }
 
 }
