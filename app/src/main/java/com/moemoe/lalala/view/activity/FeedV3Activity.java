@@ -207,10 +207,10 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         mRlClubInform.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                NoticeActivity.startActivity(FeedV3Activity.this, 0);
+                NoticeActivity.startActivity(FeedV3Activity.this, 0);
 //                Intent intent = new Intent(FeedV3Activity.this, ShoppingActivity.class);
-                Intent intent = new Intent(FeedV3Activity.this, DormitoryActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(FeedV3Activity.this, DormitoryActivity.class);
+//                startActivity(intent);
             }
         });
 

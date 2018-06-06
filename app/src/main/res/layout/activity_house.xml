@@ -40,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/y26"
                 android:background="@color/transparent"
+                android:onClick="@{presenter.onClick}"
                 android:src="@drawable/btn_association" />
 
             <LinearLayout
@@ -54,6 +55,7 @@
                 <ImageView
                     android:id="@+id/iv_personal"
                     android:layout_width="@dimen/x64"
+                    android:onClick="@{presenter.onClick}"
                     android:layout_height="@dimen/y64"
                     android:src="@drawable/bg_default_circle" />
 
@@ -66,6 +68,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="搜索你感兴趣的"
+                    android:onClick="@{presenter.onClick}"
                     android:textColor="@color/white"
                     android:textSize="@dimen/x30" />
 
@@ -74,6 +77,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="@dimen/y24"
+                    android:onClick="@{presenter.onClick}"
                     android:src="@drawable/btn_trends_search_white" />
             </LinearLayout>
 
@@ -83,6 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/y26"
                 android:layout_marginStart="@dimen/y26"
+                android:onClick="@{presenter.onClick}"
                 android:background="@color/transparent"
                 android:src="@drawable/btn_map" />
         </LinearLayout>
@@ -93,6 +98,7 @@
             android:layout_width="@dimen/x350"
             android:layout_height="@dimen/y60"
             android:layout_alignParentBottom="true"
+            android:onClick="@{presenter.onClick}"
             android:layout_marginBottom="@dimen/y20"
             android:background="@drawable/black_round_bg">
 
@@ -129,6 +135,7 @@
 
 
         <RelativeLayout
+            android:id="@+id/rl_select_root"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -139,26 +146,28 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Button
+                <ImageView
                     android:id="@+id/dormitory_storage"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="@dimen/x120"
+                    android:layout_height="@dimen/y120"
+                    android:onClick="@{presenter.onClick}"
                     android:background="@drawable/bg_storage_box_selector" />
 
-                <Button
+                <ImageView
                     android:id="@+id/dormitory_role"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="@dimen/x120"
+                    android:layout_height="@dimen/y120"
+                    android:onClick="@{presenter.onClick}"
                     android:background="@drawable/bg_role_selector" />
 
-                <Button
+                <ImageView
                     android:id="@+id/dormitory_drama"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="@dimen/x120"
+                    android:layout_height="@dimen/y120"
+                    android:onClick="@{presenter.onClick}"
                     android:background="@drawable/bg_drama_selector" />
             </LinearLayout>
         </RelativeLayout>
-
     </RelativeLayout>
 
 </layout>

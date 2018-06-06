@@ -1147,4 +1147,11 @@ public interface ApiService {
 
     @POST("/v2/kira/house/user/furniture/suit/select/{suitTypeId}")
     Observable<ApiResult> suitUse(@Path("suitTypeId") String suitTypeId);
+
+    @POST("v2/kira/house/user/role/timer/all")
+    Observable<ApiResult<ArrayList<HouseLikeEntity>>> loadRoleLikeGet();
+
+    @POST("v2/kira/house/user/role/timer/collect/{roleId}")
+    Observable<ApiResult<HouseLikeEntity>> loadRoleLikeCollect(@Path("roleId") String roleId);
+
 }

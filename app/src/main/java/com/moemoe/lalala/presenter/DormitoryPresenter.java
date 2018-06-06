@@ -7,12 +7,16 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.moemoe.lalala.R;
+import com.moemoe.lalala.di.components.DaggerFeedShowAllComponent;
 import com.moemoe.lalala.greendao.gen.MapDbEntityDao;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetResultSubscriber;
+import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
+import com.moemoe.lalala.model.entity.HouseLikeEntity;
 import com.moemoe.lalala.model.entity.HouseMarkContainer;
 import com.moemoe.lalala.model.entity.MapDbEntity;
 import com.moemoe.lalala.model.entity.MapEntity;
@@ -28,18 +32,21 @@ import com.moemoe.lalala.view.widget.map.MapLayout;
 import com.moemoe.lalala.view.widget.map.MapWidget;
 import com.moemoe.lalala.view.widget.map.interfaces.Layer;
 import com.moemoe.lalala.view.widget.map.model.MapObject;
+import com.moemoe.lalala.view.widget.view.HouseView;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
  * Created by Hygge on 2018/5/24.
@@ -79,11 +86,47 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                 });
     }
 
-//    @Override
-//    public void addMapMark(Context context, MapMarkContainer container, MapLayout map, String type) {
-//        addMapMark(context, map, container, type);
-//        // view.onMapMarkLoaded(container);
-//    }
+    @Override
+    public void loadRoleLikeGet() {
+        apiService.loadRoleLikeGet()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<ArrayList<HouseLikeEntity>>() {
+                    @Override
+                    public void onSuccess(ArrayList<HouseLikeEntity> entity) {
+                        if (view != null) view.onLoadRoleLikeGet(entity);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+    @Override
+    public void loadRoleLikeCollect(String roleId) {
+        apiService.loadRoleLikeCollect(roleId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<HouseLikeEntity>() {
+                    @Override
+                    public void onSuccess(HouseLikeEntity entity) {
+                        if (view != null) view.onLoadRoleLikeCollect(entity);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+    @Override
+    public void addMapMark(Context context, MapMarkContainer container, MapLayout map, String type) {
+        addMapMark(context, map, container, type);
+    }
+
     @Override
     public void addMapMark(Context context, MapMarkContainer container, MapWidget map, String type) {
         addMapMark(context, map, container, type);
@@ -325,12 +368,6 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
             });
             for (int i = 0; i < mapPics.size(); i++) {
                 MapDbEntity entity = mapPics.get(i);
-//                Layer tmp = map.getLayerById(entity.getLayer());
-//                if (tmp != null) map.removeLayer(entity.getLayer());
-//                layer = map.createLayer(entity.getLayer());
-//                Layer tmp = map.getLayerById(entity.getLayer());
-//                if (tmp != null) map.removeLayer(entity.getLayer());
-//                layer = map.createLayer(entity.getLayer());
                 String time = "-1";
                 if (StringUtils.isasa()) {
                     time = "1";
@@ -365,15 +402,24 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                                 }
                                 if (drawable != null) {
                                     map.setImageDrawable(drawable);
-                                    map.setTouchImageViewWidthOrHeight(entity.getImage_w(),entity.getImage_h());
                                 } else {
                                     FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity1.getPath());
                                 }
 //                                map.setMapResource(R.drawable.big_house);
                                 return;
                             }
-                            addMarkToMap(context, entity1, map, i, mapPics.size());
+                            addMarkToMap(context, entity1, map, entity);
                         }
+                    } else if (entity.getType().equals("3")) {
+                        int heightPixels = context.getResources().getDisplayMetrics().heightPixels;
+                        int widthPixels = context.getResources().getDisplayMetrics().widthPixels;
+                        double v = 3598.0 * heightPixels / 1920.0;
+                        double x = entity.getPointX() * v / 3598.0;
+                        double y = entity.getPointY() * heightPixels / 1920.0;
+                        double wight = entity.getImage_w() * v / 3598.0;
+                        double height = entity.getImage_h() * heightPixels / 1920.0;
+                        double v1 = x - ((v - widthPixels) / 2);
+                        map.addMapMarkView(R.drawable.bg_cardbg_myrole_like, (float) v1, (float) y, wight, height, entity.getSchema(), entity.getText(), entity.getType(), null,entity.getId());
                     }
                 }
                 // MapToolTipUtils.getInstance().updateList(container.getContainer());
@@ -381,7 +427,7 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
         }
     }
 
-    private void addMarkToMap(Context context, MapMarkEntity entity, MapLayout layer, int i, int size) {
+    private void addMarkToMap(Context context, MapMarkEntity entity, MapLayout layer, MapDbEntity dbEntity) {
         Drawable drawable;
         if (!TextUtils.isEmpty(entity.getPath())) {
             drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getPath());
@@ -390,11 +436,15 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
             drawable = ContextCompat.getDrawable(context, entity.getBg());
         }
         if (drawable != null) {
-            if (i == size - 1) {
-//                layer.setImageDrawable(drawable);
-            } else {
-                layer.addMapMarkView(drawable, (float) (entity.getX()/3600.0), (float) (entity.getY()/1920.0), entity.getW(), entity.getH(), entity.getSchema(), entity.getContent(), entity.getType(), null);
-            }
+            int heightPixels = context.getResources().getDisplayMetrics().heightPixels;
+            int widthPixels = context.getResources().getDisplayMetrics().widthPixels;
+            double v = 3598.0 * heightPixels / 1920.0;
+            double x = entity.getX() * v / 3598.0;
+            double y = entity.getY() * heightPixels / 1920.0;
+            double wight = entity.getW() * v / 3598.0;
+            double height = entity.getH() * heightPixels / 1920.0;
+            double v1 = x - ((v - widthPixels) / 2);
+            layer.addMapMarkView(drawable, (float) v1, (float) y, wight, height, entity.getSchema(), entity.getContent(), entity.getType(), null,dbEntity);
         } else {
             FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getPath());
         }

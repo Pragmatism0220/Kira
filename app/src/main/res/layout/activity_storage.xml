@@ -79,9 +79,8 @@
                 android:layout_toEndOf="@+id/storage_commodity_name"
                 android:background="@drawable/ic_white_bg"
                 android:gravity="center"
-                android:text="X13"
                 android:textColor="@color/white"
-                android:textSize="12dp"
+                android:textSize="@dimen/x24"
                 android:textStyle="bold" />
 
             <TextView

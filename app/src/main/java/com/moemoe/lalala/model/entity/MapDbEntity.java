@@ -57,8 +57,8 @@ public class MapDbEntity {
 
     @Generated(hash = 1615130461)
     public MapDbEntity(String id, String name, String image_path, int image_w, int image_h, String schema,
-            int pointX, int pointY, String text, String shows, String fileName, int downloadState, String md5,
-            String type, int layer, String house) {
+                       int pointX, int pointY, String text, String shows, String fileName, int downloadState, String md5,
+                       String type, int layer, String house) {
         this.id = id;
         this.name = name;
         this.image_path = image_path;
@@ -85,6 +85,9 @@ public class MapDbEntity {
         ArrayList<MapDbEntity> res = new ArrayList<>();
         for (MapEntity entity : entities) {
             MapDbEntity entity1 = new MapDbEntity(entity, type);
+            if (entity.getType() == 3) {
+                entity1.setDownloadState(2);
+            }
             res.add(entity1);
         }
         return res;

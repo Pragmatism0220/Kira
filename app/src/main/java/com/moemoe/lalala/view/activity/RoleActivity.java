@@ -197,12 +197,11 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     }
                     break;
                 case R.id.check_cloth_btn:
-                    Intent intent = new Intent();
-                    intent.setClass(getApplicationContext(), ClothingActivity.class);
+                    Intent intent = new Intent(RoleActivity.this, ClothingActivity.class);
+                    intent.putExtra("roleId", roleId);
                     startActivity(intent);
                     break;
                 case R.id.role_diary_btn:
-                    Toast.makeText(getApplicationContext(), "羁绊日记", Toast.LENGTH_SHORT).show();
                 default:
                     break;
             }

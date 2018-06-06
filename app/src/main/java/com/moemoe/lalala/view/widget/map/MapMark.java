@@ -244,13 +244,13 @@ public class MapMark extends ImageView {
     private void setMapMarkViewAtPosition(float x, float y) {
 
         // BUG : HTC SDK 2.3.3 界面会被不停的重绘,这个重绘请求是View.onDraw()方法发起的。
-        if (position.equals(x, y)) return;
+//        if (position.equals(x, y)) return;
         position.set(position.x + x, position.y + y);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
         int left = (int) position.x;
         int top = (int) position.y;
         // HTC SDK 2.3.3 Required
-        params.gravity = Gravity.CENTER_VERTICAL | Gravity.TOP;
+        params.gravity = Gravity.LEFT | Gravity.TOP;
         params.leftMargin = left;
         params.topMargin = top;
         setLayoutParams(params);
@@ -263,7 +263,7 @@ public class MapMark extends ImageView {
         int left = (int) position.x;
         int top = (int) position.y;
         // HTC SDK 2.3.3 Required
-        params.gravity = Gravity.CENTER_VERTICAL | Gravity.TOP;
+        params.gravity = Gravity.LEFT | Gravity.TOP;
         params.leftMargin = left;
         params.topMargin = top;
         setLayoutParams(params);

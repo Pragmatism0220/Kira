@@ -139,7 +139,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
      */
     @Override
     public void suitUseSuccess(int position) {
-        EventBus.getDefault().post(new FurnitureEvent(position,furnitureInfo.getType()));
+        EventBus.getDefault().post(new FurnitureEvent(position, furnitureInfo.getType()));
     }
 
     @Override

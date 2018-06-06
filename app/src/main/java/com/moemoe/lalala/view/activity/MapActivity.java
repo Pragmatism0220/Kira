@@ -637,6 +637,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             @Override
             public void onTouch(MapWidget v, MapTouchedEvent event) {
                 List<ObjectTouchEvent> objectTouchEvents = event.getTouchedObjectEvents();
+                MoeMoeApplication.getInstance().GoneDiaLog();
                 if (objectTouchEvents.size() == 0) {
                     if (!MoeMoeApplication.getInstance().isMenu()) {
                         if (mIsOut) {
@@ -818,7 +819,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             public void onClick(View v) {
                 clickSelect();
                 //埋点统计：home
-                startActivity(new Intent(MapActivity.this, DormitoryActivity.class));
+                startActivity(new Intent(MapActivity.this, HouseActivity.class));
             }
         });
         mIvRight.setOnClickListener(new View.OnClickListener() {
@@ -1487,7 +1488,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         ErrorCodeUtils.showErrorMsgByCode(MapActivity.this, code, msg);
     }
 
-    @OnClick({R.id.rl_main_list_root, R.id.tv_search, R.id.iv_create_dynamic, R.id.iv_create_wenzhang, R.id.iv_role, R.id.iv_live2d, R.id.rl_luntan_root, R.id.rl_map_search, R.id.rl_map_refresh, R.id.tv_show_live2d})
+    @OnClick({R.id.rl_main_list_root, R.id.tv_search, R.id.iv_create_dynamic, R.id.iv_create_wenzhang, R.id.iv_role, R.id.iv_live2d, R.id.rl_luntan_root, R.id.rl_map_search, R.id.rl_map_refresh, R.id.tv_show_live2d, R.id.iv_personal})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_main_list_root:
@@ -1616,15 +1617,15 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 //                Intent i7 = new Intent(MapActivity.this, CoinShopActivity.class);
 //                startActivity(i7);
 //                break;
-//            case R.id.iv_personal:
-//                if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
-//                    //埋点统计：手机个人中心
-//                    clickEvent("个人中心");
-//                    Intent i1 = new Intent(MapActivity.this, PersonalV2Activity.class);
-//                    i1.putExtra(UUID, PreferenceUtils.getUUid());
-//                    startActivity(i1);
-//                }
-//                break;
+            case R.id.iv_personal:
+                if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+                    //埋点统计：手机个人中心
+                    clickEvent("个人中心");
+                    Intent i1 = new Intent(MapActivity.this, PersonalV2Activity.class);
+                    i1.putExtra(UUID, PreferenceUtils.getUUid());
+                    startActivity(i1);
+                }
+                break;
             case R.id.tv_search:
                 if (DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
                     clickEvent("地图-搜索");
@@ -1979,44 +1980,41 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         }
     }
 
-    private final MyHandler mHandler = new MyHandler(this);
+    private final MyHandler mHandler = new MyHandler();
 
     /**
-     * 静态的匿名内部类不会持有外部类的引用 
+     * 静态的匿名内部类不会持有外部类的引用
      */
     private final Runnable sRunnable = new Runnable() {
         @Override
         public void run() {
-            MoeMoeApplication.getInstance().VisibleDiaLog(MapActivity.this);
-            Message message = new Message();
-            mHandler.handleMessage(message);
+            if (!MoeMoeApplication.getInstance().isMenu()) {
+                MoeMoeApplication.getInstance().goDialog(MapActivity.this);
+            }
+//            MoeMoeApplication.getInstance().goDialog(MapActivity.this);
+//            MoeMoeApplication.getInstance().VisibleDiaLog(MapActivity.this);
             try {
-                Thread.sleep(10000);
+                Thread.sleep(20000);
+//                MoeMoeApplication.getInstance().GoneDiaLog();
+//                mHandler.handleMessage(message);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     };
+
     /**
-     * 声明一个静态的Handler内部类，并持有外部类的弱引用 
+     * 声明一个静态的Handler内部类，并持有外部类的弱引用
      */
     private static class MyHandler extends Handler {
-
-        private final WeakReference<MapActivity> mActivty;
-
-        private MyHandler(MapActivity mActivty) {
-            this.mActivty = new WeakReference<MapActivity>(mActivty);
-        }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            MapActivity activity = mActivty.get();
-            if (activity != null){
-                MoeMoeApplication.getInstance().GoneDiaLog();
-            }
+            MoeMoeApplication.getInstance().GoneDiaLog();
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void mapEevent(MapEevent event) {
         if (PreferenceUtils.isLogin()) {

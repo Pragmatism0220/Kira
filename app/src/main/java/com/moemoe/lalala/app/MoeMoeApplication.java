@@ -36,8 +36,11 @@ import com.moemoe.lalala.di.components.NetComponent;
 import com.moemoe.lalala.di.modules.NetModule;
 import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
 import com.moemoe.lalala.greendao.gen.MySQLiteOpenHelper;
+import com.moemoe.lalala.model.entity.BagFolderInfo;
 import com.moemoe.lalala.model.entity.DeskmateEntils;
+import com.moemoe.lalala.model.entity.MapDbEntity;
 import com.moemoe.lalala.model.entity.StageLineEntity;
+import com.moemoe.lalala.model.entity.StageLineOptionsEntity;
 import com.moemoe.lalala.netamusic.player.MusicPreferences;
 import com.moemoe.lalala.utils.DialogUtils;
 import com.moemoe.lalala.utils.FileUtil;
@@ -64,6 +67,7 @@ import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.net.Proxy;
 import java.util.ArrayList;
+import java.util.List;
 
 import io.rong.imkit.RongIM;
 
@@ -106,6 +110,10 @@ public class MoeMoeApplication extends Application {
     private View dialog;
     private TextView mTvContent;
     private StageLineEntity stageLineEntity;
+    private TextView mIvLeft;
+    private TextView mIvCansl;
+    private LinearLayout mRlSelect;
+    private RelativeLayout mRlDialog;
 
     @Override
     public void onCreate() {
@@ -168,11 +176,14 @@ public class MoeMoeApplication extends Application {
 
     public void VisibleDiaLog(Context context) {
         if (windowManager != null && dialog != null && dialog.getVisibility() == View.GONE) {
-            String stageLine = PreferenceUtils.getStageLine(context);
-            Gson gson = new Gson();
-            stageLineEntity = gson.fromJson(stageLine, StageLineEntity.class);
+
             mTvContent.setText(stageLineEntity.getContent());
             dialog.setVisibility(View.VISIBLE);
+            if (stageLineEntity.equals("dialog_option")) {
+                mRlSelect.setVisibility(View.VISIBLE);
+            } else {
+                mRlSelect.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -230,13 +241,13 @@ public class MoeMoeApplication extends Application {
         wmParams.gravity = Gravity.LEFT | Gravity.TOP;
 //        wmParams.x = 0;
 //        wmParams.y = 0;
-        DeskmateEntils entity = entilsRight;
+        final DeskmateEntils entity = entilsRight;
         wmParams.x = width - (int) getResources().getDimension(R.dimen.x225);
         wmParams.y = height / 2 - (int) getResources().getDimension(R.dimen.x110);
 
         inflate = LayoutInflater.from(context).inflate(R.layout.ac_window, null);
         imageView = inflate.findViewById(R.id.imageView);
-        Drawable drawable;
+        final Drawable drawable;
         if (!TextUtils.isEmpty(entity.getPath())) {
             drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
         } else {
@@ -304,9 +315,11 @@ public class MoeMoeApplication extends Application {
         dialog = LayoutInflater.from(context).inflate(R.layout.float_dialog_layout, null);
         dialog.setVisibility(View.GONE);
         mTvContent = dialog.findViewById(R.id.tv_content);
-        ImageButton mIvLeft = dialog.findViewById(R.id.iv_left);
-        ImageButton mIvCansl = dialog.findViewById(R.id.iv_right);
-        String stageLine = PreferenceUtils.getStageLine(context);
+        mRlDialog = dialog.findViewById(R.id.rl_dialog);
+        mIvLeft = dialog.findViewById(R.id.iv_left);
+        mIvCansl = dialog.findViewById(R.id.iv_right);
+        mRlSelect = dialog.findViewById(R.id.rl_select);
+        final String stageLine = PreferenceUtils.getStageLine(context);
         Gson gson = new Gson();
         stageLineEntity = gson.fromJson(stageLine, StageLineEntity.class);
         if (getActivity(MapActivity.class.getName()) instanceof MapActivity) {
@@ -343,6 +356,7 @@ public class MoeMoeApplication extends Application {
                                 ((MapActivity) getActivity(MapActivity.class.getName())).clickSelect();
                             }
                             inflateTwo.setVisibility(View.GONE);
+                            dialog.setVisibility(View.GONE);
                             DeskmateEntils entity = entilsDrag;
                             Drawable drawable;
                             if (!TextUtils.isEmpty(entity.getPath())) {
@@ -609,6 +623,9 @@ public class MoeMoeApplication extends Application {
 //                    if (getActivity(MapActivity.class.getName()) instanceof MapActivity && isActivityTop(MapActivity.class, context)) {
 //                        ((MapActivity) getActivity(MapActivity.class.getName())).windowManagerOnclick(functionalX, functionalY, inflate.getMeasuredWidth(), inflate.getMeasuredHeight());
 //                    }
+                    if (dialog != null && dialog.getVisibility() == View.VISIBLE) {
+                        dialog.setVisibility(View.GONE);
+                    }
                     if (!isMove) {
                         windowManagerOnclick(functionalX, functionalY, inflate.getMeasuredWidth(), inflate.getMeasuredHeight());
                     }
@@ -680,8 +697,85 @@ public class MoeMoeApplication extends Application {
                 inflateTwo.setVisibility(View.GONE);
             }
         });
+
+        mIvLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dialog != null && stageLineEntity != null) {
+                    stageLineEntity = getStageLineEntity(stageLineEntity, "是");
+                    if (stageLineEntity == null) {
+                        dialog.setVisibility(View.GONE);
+                    } else {
+                        setDialogView(stageLineEntity);
+                    }
+                }
+            }
+        });
+        mIvCansl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dialog != null && stageLineEntity != null) {
+                    stageLineEntity = getStageLineEntity(stageLineEntity, "是");
+                    if (stageLineEntity == null) {
+                        dialog.setVisibility(View.GONE);
+                    } else {
+                        setDialogView(stageLineEntity);
+                    }
+                }
+            }
+        });
+
     }
 
+    public void setDialogView(StageLineEntity entity) {
+        if (dialog != null) {
+            mTvContent.setText(entity.getContent());
+            if (entity.getDialogType().equals("dialog_option")) {
+                mIvLeft.setVisibility(View.VISIBLE);
+                mIvCansl.setVisibility(View.VISIBLE);
+            } else {
+                mIvLeft.setVisibility(View.GONE);
+                mIvCansl.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    /**
+     * 解析台词层级
+     *
+     * @param mData
+     * @return
+     */
+    private StageLineEntity getStageLineEntity(StageLineEntity mData, String isSelect) {
+        List<StageLineOptionsEntity> options = mData.getOptions();
+        String LeftId = null;
+        for (int i = 0; i < options.size(); i++) {
+            if (options.get(i).equals(isSelect)) {
+                LeftId = options.get(i).getId();
+            }
+        }
+        List<StageLineEntity> children = mData.getChildren();
+        if (children == null) {
+            return null;
+        } else {
+            StageLineEntity stageLineEntity = new StageLineEntity();
+            for (int i = 0; i < children.size(); i++) {
+                if (children.get(i).getParentOptionId().equals(LeftId)) {
+                    stageLineEntity = children.get(i);
+                }
+            }
+            return stageLineEntity;
+        }
+    }
+
+    /**
+     * 菜单栏的定位
+     *
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
     public void windowManagerOnclick(int x, int y, int width, int height) {
         if (mRlRenWu != null && inflateTwo.getVisibility() == View.GONE) {
             inflateTwo.setVisibility(View.VISIBLE);
@@ -722,7 +816,7 @@ public class MoeMoeApplication extends Application {
                         windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
                     }
                 }
-            } else if (x == 504) {
+            } else if (x >= mapX - width) {
                 if (y > (mapY - getResources().getDimension(R.dimen.status_bar_height)) / 2) {
 //                    mRlRenWu.setX(x - getResources().getDimension(R.dimen.x428) + width - getResources().getDimension(R.dimen.x24));
 //                    mRlRenWu.setY(y - height / 2 - getResources().getDimension(R.dimen.y24));
@@ -769,7 +863,7 @@ public class MoeMoeApplication extends Application {
                         wmParamsTwo.y = (int) (y + height - getResources().getDimension(R.dimen.status_bar_height));
                         windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
                     }
-                } else if (y == 1016) {
+                } else if (y >= mapY - height) {
                     if (x > (mapX - width) / 2) {
                         mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
 //                        mRlRenWu.setX(x - width);
@@ -795,6 +889,87 @@ public class MoeMoeApplication extends Application {
             }
         } else {
             inflateTwo.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 对话框的定位
+     */
+    public void goDialog(Context context) {
+        int x = functionalX;
+        int y = functionalY;
+        int width = inflate.getMeasuredWidth();
+        int height = inflate.getMeasuredHeight();
+        if (dialog != null && dialog.getVisibility() == View.GONE) {
+            dialog.setVisibility(View.VISIBLE);
+            int mapX = this.width;
+            int mapY = this.height;
+            int marginHeight = height + (int) getResources().getDimension(R.dimen.status_bar_height);
+            if (x <= 0) {
+                if (y == 0) {
+                    mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_left);
+                    wmParamsThree.x = (int) (x + getResources().getDimension(R.dimen.x24));
+                    wmParamsThree.y = y + height - (int) getResources().getDimension(R.dimen.status_bar_height);
+                    windowManager.updateViewLayout(dialog, wmParamsThree);
+                } else {
+                    if (y > mapY / 2) {
+                        mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_left);
+                        wmParamsThree.x = (int) (x + getResources().getDimension(R.dimen.x24));
+                        wmParamsThree.y = (int) (y - marginHeight / 2 - getResources().getDimension(R.dimen.y24));
+                        windowManager.updateViewLayout(dialog, wmParamsThree);
+                    } else {
+                        mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_left);
+                        wmParamsThree.x = (int) (x + getResources().getDimension(R.dimen.x24));
+                        wmParamsThree.y = (int) (y + marginHeight / 2 - getResources().getDimension(R.dimen.y24));
+                        windowManager.updateViewLayout(dialog, wmParamsThree);
+                    }
+                }
+            } else if (x >= mapX - width) {
+                if (y > (mapY - getResources().getDimension(R.dimen.status_bar_height)) / 2) {
+                    mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_right);
+                    wmParamsThree.x = (int) (x - getResources().getDimension(R.dimen.x428) + width - getResources().getDimension(R.dimen.x24));
+                    wmParamsThree.y = (int) (y - height / 2 - getResources().getDimension(R.dimen.y24));
+                    windowManager.updateViewLayout(dialog, wmParamsThree);
+                } else {
+                    mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_right);
+                    wmParamsThree.x = (int) (x - (int) getResources().getDimension(R.dimen.x428) + width - getResources().getDimension(R.dimen.x24));
+                    wmParamsThree.y = (int) (y + height / 2 - getResources().getDimension(R.dimen.y24));
+                    windowManager.updateViewLayout(dialog, wmParamsThree);
+                }
+            } else {
+                if (y == 0) {
+                    if (x > (mapX - width) / 2) {
+                        mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_right);
+                        wmParamsThree.x = (int) (x - width);
+                        wmParamsThree.y = (int) (y + height - getResources().getDimension(R.dimen.status_bar_height));
+                        windowManager.updateViewLayout(dialog, wmParamsThree);
+                    } else {
+                        mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_left);
+                        wmParamsThree.x = (int) (x - (int) getResources().getDimension(R.dimen.x24));
+                        wmParamsThree.y = (int) (y + height - getResources().getDimension(R.dimen.status_bar_height));
+                        windowManager.updateViewLayout(dialog, wmParamsThree);
+                    }
+                } else if (y >= mapY - height) {
+                    if (x > (mapX - width) / 2) {
+                        mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_right);
+                        wmParamsThree.x = x - width;
+                        wmParamsThree.y = (int) (y - height);
+                        windowManager.updateViewLayout(dialog, wmParamsThree);
+                    } else {
+                        mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_left);
+                        wmParamsThree.x = x;
+                        wmParamsThree.y = (int) (y - height);
+                        windowManager.updateViewLayout(dialog, wmParamsThree);
+                    }
+                }
+            }
+
+            String stageLine = PreferenceUtils.getStageLine(context);
+            Gson gson = new Gson();
+            stageLineEntity = gson.fromJson(stageLine, StageLineEntity.class);
+            setDialogView(stageLineEntity);
+        } else {
+            dialog.setVisibility(View.GONE);
         }
     }
 
