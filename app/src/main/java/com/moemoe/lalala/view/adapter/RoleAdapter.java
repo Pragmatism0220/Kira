@@ -25,7 +25,7 @@ import java.util.List;
  * Created by zhangyan on 2018/5/8.
  */
 
-public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder> {
+public class    RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder> {
 
 
     private List<RoleInfoEntity> entities;
@@ -57,7 +57,6 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder
             } else {
                 holder.mZhai.setVisibility(View.GONE);
             }
-
             if ("official".equals(data.getRoleType())) {
                 if (!data.getIsUserHadRole()) {
                     holder.mItem.setBackgroundResource(R.drawable.role_official_btn);

@@ -42,19 +42,6 @@
                 android:onClick="@{presenter.onClick}" />
         </RelativeLayout>
 
-        <!--<android.support.design.widget.TabLayout-->
-        <!--android:id="@+id/branch_tab_layout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/tool_bar"-->
-        <!--android:layout_marginTop="@dimen/y20"-->
-        <!--app:tabIndicatorHeight="0dp">-->
-
-        <!--<android.support.design.widget.TabItem-->
-        <!--android:id="@+id/branch_tab_item"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content" />-->
-        <!--</android.support.design.widget.TabLayout>-->
 
         <com.moemoe.lalala.view.widget.view.KiraTabLayout
             android:id="@+id/branch_tab_layout"

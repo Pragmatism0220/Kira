@@ -20,6 +20,29 @@ public class RoleInfoEntity {
     private String showHeadIcon;//大图
     private boolean isPutInHouse;// 是否放入宅屋，true：已经放入宅屋
     private boolean isSelected = false; //item选中 自加入
+    private int count;
+    private String roleNumber;
+
+    public String getRoleNumber() {
+        return roleNumber;
+    }
+
+    public void setRoleNumber(String roleNumber) {
+        this.roleNumber = roleNumber;
+    }
+
+
+
+
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
 
     public boolean isPutInHouse() {
         return isPutInHouse;

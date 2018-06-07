@@ -43,6 +43,10 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
         this.infos = infos;
     }
 
+    public List<PropInfoEntity> getList() {
+        return infos;
+    }
+
     @Override
     public PropViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         PropViewHolder holder = new PropViewHolder(View.inflate(mContext, R.layout.item_storage_info, null));

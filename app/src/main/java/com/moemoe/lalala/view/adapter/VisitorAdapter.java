@@ -53,11 +53,12 @@ public class VisitorAdapter extends RecyclerView.Adapter<VisitorAdapter.VisitorV
                 .placeholder(R.drawable.bg_default_circle)
                 .bitmapTransform(new CropCircleTransformation(mContext))
                 .into(holder.mImage);
+
         holder.mName.setText(list.get(position).getRoleName());
         if ("F".equals(list.get(position).getVisitorSex())) {
             //女性
             holder.mSex.setImageResource(R.drawable.ic_user_girl);
-        } else if ("".equals(list.get(position).getVisitorSex())) {
+        } else if ("M".equals(list.get(position).getVisitorSex())) {
             //男性
             holder.mSex.setImageResource(R.drawable.ic_user_boy);
         }
@@ -69,7 +70,7 @@ public class VisitorAdapter extends RecyclerView.Adapter<VisitorAdapter.VisitorV
         } else if (list.get(position).getVisitorType() == 3) {
             holder.mInfo.setText("收拾了你房间的垃圾");
         }
-        holder.mTime.setText(StringUtils.timeFormat(list.get(position).getCreateTime()));
+        holder.mTime.setText(StringUtils.timeFormat(Long.valueOf(list.get(position).getCreateTime())));
 
         LevelSpan levelSpan = new LevelSpan(ContextCompat.getColor(mContext, R.color.white), mContext.getResources().getDimension(R.dimen.x12));
         final String content = "LV" + list.get(position).getVisitorLevel();

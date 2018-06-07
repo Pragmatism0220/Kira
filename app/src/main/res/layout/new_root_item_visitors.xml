@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y80"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/new_title_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="@dimen/x24"
+            android:text="2018-5-30"
+            android:textColor="@color/gray_595e64"
+            android:textSize="@dimen/x30"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_e8e8e8" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -9,7 +35,7 @@
         android:paddingStart="@dimen/x24">
 
         <TextView
-            android:id="@+id/visitor_time"
+            android:id="@+id/new_visitor_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -21,24 +47,24 @@
             android:textSize="@dimen/x30" />
 
         <ImageView
-            android:id="@+id/visitor_image"
+            android:id="@+id/new_visitor_image"
             android:layout_width="@dimen/x80"
             android:layout_height="@dimen/x80"
             android:layout_centerVertical="true"
             android:src="@drawable/test_image" />
 
         <LinearLayout
-            android:id="@+id/top"
+            android:id="@+id/new_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/x16"
             android:layout_marginTop="@dimen/y30"
-            android:layout_toEndOf="@+id/visitor_image"
+            android:layout_toEndOf="@+id/new_visitor_image"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/visitor_name"
+                android:id="@+id/new_visitor_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -49,14 +75,14 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/visitor_sex"
+                android:id="@+id/new_visitor_sex"
                 android:layout_width="@dimen/x30"
                 android:layout_height="@dimen/x30"
                 android:layout_marginStart="@dimen/x12"
                 android:src="@drawable/ic_user_girl" />
 
             <TextView
-                android:id="@+id/visitor_level"
+                android:id="@+id/new_visitor_level"
                 android:layout_width="@dimen/x52"
                 android:layout_height="@dimen/y26"
                 android:layout_marginStart="@dimen/x12"
@@ -70,14 +96,14 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/visitor_info"
+            android:id="@+id/new_visitor_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/top"
+            android:layout_below="@+id/new_top"
             android:layout_marginStart="@dimen/x16"
-            android:layout_toEndOf="@+id/visitor_image"
+            android:layout_toEndOf="@+id/new_visitor_image"
             android:text="拜访了宅屋"
             android:textColor="@color/green_6fc93a"
             android:textSize="@dimen/x24" />
     </RelativeLayout>
-</layout>
+</LinearLayout>

@@ -45,9 +45,9 @@ public class RootRecycleViewAdapter extends RecyclerView.Adapter<RootRecycleView
         if (itemBeen.get(position).getItems().isEmpty())
             return;
 
-        holder.mRv.setLayoutManager(new LinearLayoutManager(holder.mRv.getContext()));
-        VisitorAdapter adapter = new VisitorAdapter(itemBeen.get(position).getItems(), mContext);
-        holder.mRv.setAdapter(adapter);
+//        holder.mRv.setLayoutManager(new LinearLayoutManager(holder.mRv.getContext()));
+//        VisitorAdapter adapter = new VisitorAdapter(itemBeen.get(position).getItems(), mContext);
+//        holder.mRv.setAdapter(adapter);
 
     }
 
@@ -64,7 +64,7 @@ public class RootRecycleViewAdapter extends RecyclerView.Adapter<RootRecycleView
         RootViewHolder(View itemView) {
             super(itemView);
             mYearTime = itemView.findViewById(R.id.root_time);
-            mRv = itemView.findViewById(R.id.branch_rv);
+//            mRv = itemView.findViewById(R.id.branch_rv);
         }
     }
 }

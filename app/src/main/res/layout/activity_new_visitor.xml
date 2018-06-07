@@ -7,30 +7,26 @@
 
         <variable
             name="presenter"
-            type="com.moemoe.lalala.view.activity.VisitorsActivity.Presenter" />
+            type="com.moemoe.lalala.view.activity.NewVisitorActivity.Presenter" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/status_bar_height"
-        android:orientation="vertical"
-        tools:context="com.moemoe.lalala.view.activity.VisitorsActivity">
+        tools:context="com.moemoe.lalala.view.activity.NewVisitorActivity">
 
         <include
             android:id="@+id/include_toolbar"
             layout="@layout/neta_bar" />
 
         <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
-            android:id="@+id/root_rv"
+            android:layout_below="@+id/include_toolbar"
+            android:id="@+id/new_root_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
         </com.moemoe.lalala.view.widget.recycler.PullAndLoadView>
 
-
-
-
-
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

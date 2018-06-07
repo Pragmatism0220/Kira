@@ -248,19 +248,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
     }
 
 
-    /**
-     * 显示标题栏
-     */
-    private void showToolbar() {
 
-    }
-
-    /**
-     * 隐藏标题栏
-     */
-    private void hideToolbar() {
-
-    }
 
     @Override
     protected void initToolbar(Bundle savedInstanceState) {

@@ -62,10 +62,10 @@ public class DormitoryDramaActivity extends BaseActivity {
                     Intent i = new Intent(DormitoryDramaActivity.this, BranchActivity.class);
                     startActivity(i);
                     break;
-                case R.id.every_day_btn:
-                    Intent intent1 = new Intent(DormitoryDramaActivity.this, EveryDayActivity.class);
-                    startActivity(intent1);
-                    break;
+//                case R.id.every_day_btn:
+//                    Intent intent1 = new Intent(DormitoryDramaActivity.this, EveryDayActivity.class);
+//                    startActivity(intent1);
+//                    break;
                 default:
                     break;
             }

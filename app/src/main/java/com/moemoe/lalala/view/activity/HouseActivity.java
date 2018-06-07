@@ -304,7 +304,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                     startActivity(intent);
                     break;
                 case R.id.visitor_info:
-                    Intent i7 = new Intent(HouseActivity.this, VisitorsActivity.class);
+                    Intent i7 = new Intent(HouseActivity.this, NewVisitorActivity.class);
+//                    Intent i7 = new Intent(HouseActivity.this, VisitorsActivity.class);
                     startActivity(i7);
                     break;
                 case R.id.dormitory_storage:

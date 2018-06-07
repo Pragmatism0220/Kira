@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,7 +18,9 @@ import com.moemoe.lalala.di.modules.VisitorsModule;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.presenter.VisitorPresenter;
 import com.moemoe.lalala.presenter.VisitorsContract;
+import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.FolderDecoration;
+import com.moemoe.lalala.utils.MenuHItemDecoration;
 import com.moemoe.lalala.view.adapter.RootRecycleViewAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.widget.recycler.PullAndLoadView;
@@ -61,6 +64,7 @@ public class VisitorsActivity extends BaseActivity implements VisitorsContract.V
         mTvTitle = findViewById(R.id.tv_toolbar_title);
         mIvBack = findViewById(R.id.iv_back);
         mRv = findViewById(R.id.root_rv);
+
     }
 
     @Override
@@ -83,17 +87,19 @@ public class VisitorsActivity extends BaseActivity implements VisitorsContract.V
 
     @Override
     protected void initListeners() {
+
+        mRv.setLoadMoreEnabled(true);
         mRv.setPullCallback(new PullCallback() {
             @Override
             public void onLoadMore() {
                 isLoading = true;
-                mPresenter.getVisitorsInfo(10, 0);
+                mPresenter.getVisitorsInfo(10, mAdapter.getItemCount());
             }
 
             @Override
             public void onRefresh() {
                 isLoading = true;
-                mPresenter.getVisitorsInfo(10, 0);
+                mPresenter.getVisitorsInfo(10, mAdapter.getItemCount());
             }
 
             @Override
@@ -106,37 +112,30 @@ public class VisitorsActivity extends BaseActivity implements VisitorsContract.V
                 return false;
             }
         });
+
+
     }
 
     @Override
     protected void initData() {
-        mPresenter.getVisitorsInfo(10, 0);
+        mPresenter.getVisitorsInfo(10, mAdapter.getItemCount());
     }
 
     @Override
     public void onFailure(int code, String msg) {
-
+        isLoading = false;
+        mRv.setComplete();
+        ErrorCodeUtils.showErrorMsgByCode(getApplicationContext(), code, msg);
     }
 
     @Override
     public void getVisitorsInfoSuccess(ArrayList<VisitorsEntity> entities, boolean isPull) {
         isLoading = false;
         mRv.setComplete();
-        mRv.setLoadMoreEnabled(true);
-        if (entities.size() > 0) {
-            this.entityList = entities;
-            initAdapter(entities);
-        }
-        Log.i(TAG, "getVisitorsInfoSuccess: " + entities);
-
-    }
-
-    private void initAdapter(List<VisitorsEntity> itemBeanList) {
-        Log.i(TAG, "initAdapter: " + entityList);
         mRv.getSwipeRefreshLayout().setColorSchemeResources(R.color.main_light_cyan, R.color.main_cyan);
         mRv.setLoadMoreEnabled(false);
-        mRv.getRecyclerView().setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new RootRecycleViewAdapter(divideList(itemBeanList), this);
+        mRv.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new RootRecycleViewAdapter(divideList(entities), this);
         mRv.getRecyclerView().setAdapter(mAdapter);
     }
 
@@ -181,7 +180,6 @@ public class VisitorsActivity extends BaseActivity implements VisitorsContract.V
             switch (v.getId()) {
 
             }
-
         }
     }
 
