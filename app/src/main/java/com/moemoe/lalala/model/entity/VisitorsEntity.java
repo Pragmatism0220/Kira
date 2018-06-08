@@ -17,6 +17,15 @@ public class VisitorsEntity {
     private int visitorType;//访客操作类型
     private String titleTime;
     private String rightTime;
+    private int  count;//访客总数
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 
     public String getCreateTime() {
         return createTime;

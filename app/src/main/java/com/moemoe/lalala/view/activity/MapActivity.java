@@ -189,7 +189,8 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     ImageView mIvRight;
     @BindView(R.id.ll_tool_bar)
     LinearLayout mLlToolBar;
-
+    @BindView(R.id.iv_personal)
+    ImageView mIvPersonal;
     @BindView(R.id.tv_search)
     TextView mTvSearch;
 
@@ -428,6 +429,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     @Override
     protected void onResume() {
         super.onResume();
+        refreshMap();
         MoeMoeApplication.getInstance().VisibilityWindowMager(this);
         showBtn();
         MapToolTipUtils.getInstance().start();
@@ -525,6 +527,19 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 //                    .bitmapTransform(new CropCircleTransformation(this))
 //                    .into(mIvPresonal);
 //        }
+
+        if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
+            mIvPersonal.setImageResource(R.drawable.bg_default_circle);
+        } else {
+            int size = (int) getResources().getDimension(R.dimen.x64);
+            Glide.with(this)
+                    .load(StringUtils.getUrl(this, PreferenceUtils.getAuthorInfo().getHeadPath(), size, size, false, true))
+                    .error(R.drawable.bg_default_circle)
+                    .placeholder(R.drawable.bg_default_circle)
+                    .bitmapTransform(new CropCircleTransformation(this))
+                    .into(mIvPersonal);
+        }
+
         mPresenter.loadHousUserDeskmate();
     }
 
@@ -754,6 +769,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 //                                AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
 //                                temp += "?user_id=" + authorInfo.getUserId() + "&full_screen";
 //                            }
+
                             if (temp.contains("http://kiratetris.leanapp.cn/tab001/index.html")) {
                                 AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
                                 temp += "?id=" + authorInfo.getUserId() + "&name=" + authorInfo.getUserName();
@@ -819,7 +835,9 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             public void onClick(View v) {
                 clickSelect();
                 //埋点统计：home
-                startActivity(new Intent(MapActivity.this, HouseActivity.class));
+                if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+                    startActivity(new Intent(MapActivity.this, HouseActivity.class));
+                }
             }
         });
         mIvRight.setOnClickListener(new View.OnClickListener() {

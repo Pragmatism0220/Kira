@@ -3,12 +3,17 @@ package com.moemoe.lalala.view.widget.map;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.CountDownTimer;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -19,12 +24,21 @@ import android.widget.MediaController;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.AppSetting;
+import com.moemoe.lalala.databinding.AcClothingBinding;
+import com.moemoe.lalala.event.HouseLikeEvent;
+import com.moemoe.lalala.model.entity.HouseDbEntity;
+import com.moemoe.lalala.model.entity.HouseLikeEntity;
 import com.moemoe.lalala.model.entity.MapDbEntity;
+import com.moemoe.lalala.presenter.ClothingContrarct;
+import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.view.widget.view.HouseView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.DatagramSocketImplFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +51,7 @@ public class MapLayout extends FrameLayout {
     private List<MapMark> marks = new ArrayList<>();
     private List<HouseView> wuViews = new ArrayList<>();
     private ArrayList<String> mChildView = new ArrayList<>();
+    private boolean isJump;
 
     public MapLayout(Context context) {
         this(context, null);
@@ -52,6 +67,14 @@ public class MapLayout extends FrameLayout {
         initialImageView(context);
     }
 
+    public void clearAllView() {
+        marks.clear();
+        wuViews.clear();
+        mChildView.clear();
+        touchImageView.removeAllMark(true);
+        removeAllViews();
+    }
+
     private void initialImageView(Context context) {
         touchImageView = new TouchImageView(context);
         touchImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -63,21 +86,13 @@ public class MapLayout extends FrameLayout {
         touchImageView.setOnClickListener(lietener);
     }
 
-    public void addMapMarkView(Drawable markView, float x, float y, double wdp, double hdp, final String schame, String content, final String type, MapMark.RenderDelegate renderDelegate, final MapDbEntity entity) {
+    public void addMapMarkView(Drawable markView, float x, float y, double wdp, double hdp, final String schame, String content, final String type, MapMark.RenderDelegate renderDelegate, final HouseDbEntity entity) {
         if (markView == null) {
             throw new IllegalArgumentException("View for bubble cannot be null !");
         }
-        MapMark mark = new MapMark(getContext());
-        mark.setRenderDelegate(renderDelegate);
-        mark.setMapX(x);
-        mark.setMapY(y);
-        mark.setImageDrawable(markView);
-        mark.setSchame(schame);
-        mark.setContent(content);
         HouseView wuView = new HouseView(getContext());
         wuView.setMapX(x);
         wuView.setMapY(y);
-//        wuView.setImageDrawable(markView);
         wuView.setBackground(markView);
         addView(wuView);
         wuViews.add(wuView);
@@ -86,34 +101,93 @@ public class MapLayout extends FrameLayout {
         params.height = (int) hdp;
         wuView.setLayoutParams(params);
         touchImageView.addRenWuMark(wuView);
-
-        wuView.setOnClickListener(new OnClickListener() {
+        isJump = true;
+        wuView.setOnClickListener(new NoDoubleClickListener(700) {
             @Override
-            public void onClick(View view) {
-                onHouseClick(view, schame, type, entity.getId());
+            public void onNoDoubleClick(View view) {
+                onHouseClick(view, schame, type, entity.getId(), isJump);
+                isJump = !isJump;
             }
         });
         mChildView.add(entity.getId());
 
         if (entity.getType().equals("2") && entity.getImage_w() > 0 && entity.getImage_h() > 0) {
+            if (entity.getTimerRoleId() != null && entity.getTimerRoleId().equals(entity.getId())) {
+                final HouseView houseView = new HouseView(getContext());
+                houseView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                houseView.setBackgroundResource(R.drawable.bg_ic_home_heart_selector);
+                float likeX = (float) (((wdp - getContext().getResources().getDimension(R.dimen.x120)) / 2) + x);
+                float likeY = (float) (y - getContext().getResources().getDimension(R.dimen.y80));
+                houseView.setMapX(likeX);
+                houseView.setMapY(likeY);
+                addView(houseView);
+                wuViews.add(houseView);
+                touchImageView.addRenWuMark(houseView);
+                houseView.setGravity(Gravity.CENTER);
+                LayoutParams layoutParams = (LayoutParams) houseView.getLayoutParams();
+                layoutParams.width = (int) getContext().getResources().getDimension(R.dimen.x120);
+                layoutParams.height = (int) getContext().getResources().getDimension(R.dimen.y120);
+                houseView.setLayoutParams(layoutParams);
+                houseView.setTextSize(getContext().getResources().getDimension(R.dimen.x12));
+                mChildView.add("like" + entity.getId());
+                CountDownTimer countDownTimer = new CountDownTimer(entity.getTimerRemainTime(), 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        String value = StringUtils.getTimeFromMillisecond(millisUntilFinished);
+                        houseView.setText(value);
+                    }
 
-            HouseView houseView = new HouseView(getContext());
-            houseView.setBackgroundResource(R.drawable.bg_ic_home_heart_selector);
-//            houseView.setImageResource(R.drawable.bg_ic_home_heart_selector);
-            float likeX = (float) (((wdp - getContext().getResources().getDimension(R.dimen.x150)) / 2) + x);
-            float likeY = (float) (y - getContext().getResources().getDimension(R.dimen.x150) - getContext().getResources().getDimension(R.dimen.y24));
-            houseView.setMapX(likeX);
-            houseView.setMapY(likeY);
-            addView(houseView);
-            wuViews.add(houseView);
-            touchImageView.addRenWuMark(houseView);
-            LayoutParams layoutParams = (LayoutParams) houseView.getLayoutParams();
-            layoutParams.width = (int) getContext().getResources().getDimension(R.dimen.x150);
-            layoutParams.height = (int) getContext().getResources().getDimension(R.dimen.x150);
-            houseView.setLayoutParams(layoutParams);
-            mChildView.add("like" + entity.getId());
+                    @Override
+                    public void onFinish() {
+                        entity.setTimerIsCollectable(true);
+                        houseView.setText("");
+                    }
+                }.start();
+                houseView.setOnClickListener(new NoDoubleClickListener(700) {
+                    @Override
+                    public void onNoDoubleClick(View view) {
+                        if (entity.getTimerIsCollectable()) {
+                            entity.setTimerIsCollectable(false);
+                            EventBus.getDefault().post(new HouseLikeEvent(entity.getTimerRoleId()));
+                            setLikeAnimtion(view);
+                        }
+                    }
+                });
+            }
         }
+    }
 
+    public void setTimerLikeView(HouseLikeEntity entity) {
+        if (entity != null) {
+            int child = 0;
+            for (int i = 0; i < mChildView.size(); i++) {
+                if (entity.getRoleId().equals(mChildView.get(i))) {
+                    child = i + 2;
+                }
+            }
+            final HouseView childAt = (HouseView) getChildAt(child);
+            new CountDownTimer(entity.getRemainTime(), 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    String value = StringUtils.getTimeFromMillisecond(millisUntilFinished);
+                    childAt.setText(value);
+                }
+
+                @Override
+                public void onFinish() {
+                    childAt.setText("");
+                }
+            }.start();
+        }
+    }
+
+    public void setLikeAnimtion(View view) {
+        ObjectAnimator animatorX = ObjectAnimator.ofFloat(view, "scaleX", 1.0f, 1.8f, 1.0f, 1.5f, 1.0f);
+        ObjectAnimator animatorY = ObjectAnimator.ofFloat(view, "scaleY", 1.0f, 1.8f, 1.0f, 1.5f, 1.0f);
+        AnimatorSet set = new AnimatorSet();
+        set.setDuration(700);
+        set.playTogether(animatorX, animatorY);
+        set.start();
     }
 
     /**
@@ -123,21 +197,14 @@ public class MapLayout extends FrameLayout {
      * @param schame
      * @param type
      */
-    public void onHouseClick(View view, String schame, String type, String id) {
+    public void onHouseClick(View view, String schame, String type, String id, boolean isJump) {
         if (StringUtils.isKillEvent() && !AppSetting.isEnterEventToday) {
             return;
         }
         if (type.equals("2")) {//角色
             float x = view.getX();
             float y = view.getY();
-            int widthPixels = getContext().getResources().getDisplayMetrics().widthPixels;
-            int measuredWidth = view.getMeasuredWidth();
-            int measuredHeight = view.getMeasuredHeight();
-            if (widthPixels - x < getContext().getResources().getDimension(R.dimen.x24)) {
-                startRightAnimatorPath(view, x, y);
-            } else {
-                startLeftAnimatorPath(view, x, y, id);
-            }
+            startAnimatorPath(view, x, y, id, isJump);
         } else if (type.equals("3")) {//垃圾
             removeView(view);
             wuViews.remove(view);
@@ -153,41 +220,23 @@ public class MapLayout extends FrameLayout {
      * @param x
      * @param y
      */
-    public void startLeftAnimatorPath(final View view, float x, float y, String id) {
+    public void startAnimatorPath(final View view, float x, float y, String id, boolean isJump) {
         int widthPixels = getContext().getResources().getDisplayMetrics().widthPixels;
         int measuredWidth = view.getMeasuredWidth();
         int measuredHeight = view.getMeasuredHeight();
-        boolean isJump = true;
         float rightX = 0;
         float leftX = 0;
-        if ((widthPixels - (x + measuredWidth)) <= getContext().getResources().getDimension(R.dimen.x24)) {
-            isJump = false;
-            rightX = x - 200;
-        } else if (x < getContext().getResources().getDimension(R.dimen.x24)) {
-            isJump = true;
-            leftX = x + 200;
-        } else {
-            if (!isJump) {
-                if (x < 200) {
-                    if (x < 24) {
-                        isJump = true;
-                        leftX = x + 200;
-                    } else {
-                        isJump = false;
-
-                    }
-                } else {
-                    isJump = false;
-                    rightX = x - 200;
-                }
+        if (x > (widthPixels - measuredWidth) / 2) {
+            if (isJump) {
+                leftX = x + 200;
             } else {
-                if (widthPixels - (x + measuredWidth) < 24) {
-                    isJump = false;
-                    rightX = x - 200;
-                } else {
-                    isJump = true;
-                    leftX = x + 200;
-                }
+                rightX = x - 200;
+            }
+        } else {
+            if (isJump) {
+                leftX = x + 200;
+            } else {
+                rightX = x - 200;
             }
         }
         int child = 0;
@@ -371,95 +420,6 @@ public class MapLayout extends FrameLayout {
         animation.start();
     }
 
-    public void startRightAnimatorPath(final View view, float x, float y) {
-
-        ObjectAnimator translateAnimation = ObjectAnimator.ofFloat(view, "X", x, x - 200);
-        translateAnimation.setInterpolator(new LinearInterpolator());
-        translateAnimation.setDuration(710);
-        translateAnimation.start();
-        ObjectAnimator anim1 = ObjectAnimator.ofFloat(view,
-                "Y", y, y - 150)
-                .setDuration(300);
-        anim1.setInterpolator(new DecelerateInterpolator());
-        anim1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                view.postInvalidate();
-                view.invalidate();
-            }
-        });
-
-        ObjectAnimator anim2 = ObjectAnimator.ofFloat(view,
-                "Y", y - 150, y)
-                .setDuration(200);
-        anim2.setInterpolator(new AccelerateInterpolator());
-        anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                view.postInvalidate();
-                view.invalidate();
-            }
-        });
-
-        ObjectAnimator anim3 = ObjectAnimator.ofFloat(view,
-                "Y", y, y - 50)
-
-                .setDuration(100);
-        anim3.setInterpolator(new DecelerateInterpolator());
-        anim3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                view.postInvalidate();
-                view.invalidate();
-            }
-        });
-
-        ObjectAnimator anim4 = ObjectAnimator.ofFloat(view,
-                "Y", y - 50, y)
-                .setDuration(50);
-        anim4.setInterpolator(new AccelerateInterpolator());
-        anim4.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                view.postInvalidate();
-                view.invalidate();
-            }
-        });
-
-        ObjectAnimator anim5 = ObjectAnimator.ofFloat(view,
-                "Y", y, y - 20)
-                .setDuration(40);
-        anim5.setInterpolator(new DecelerateInterpolator());
-        anim5.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                view.postInvalidate();
-                view.invalidate();
-            }
-        });
-
-
-        ObjectAnimator anim6 = ObjectAnimator.ofFloat(view,
-                "Y", y - 20, y)
-                .setDuration(20);
-        anim6.setInterpolator(new AccelerateInterpolator());
-        anim6.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                view.postInvalidate();
-                view.invalidate();
-            }
-        });
-
-        AnimatorSet s1 = new AnimatorSet();
-        s1.playSequentially(anim1, anim2, anim3, anim4, anim5, anim6);// 顺序播放效果，参数个数可变  
-
-
-        AnimatorSet animation = new AnimatorSet();
-        animation.playTogether(translateAnimation, s1);// 并行  
-        animation.start();
-    }
-
     public void addMapMarkView(int markView, float x, float y, double wdp, double hdp, String schame, String content, String type, MapMark.RenderDelegate renderDelegate, String id) {
         if (markView >= 0) {
             throw new IllegalArgumentException("View for bubble cannot be null !");
@@ -492,9 +452,10 @@ public class MapLayout extends FrameLayout {
     }
 
     public void removeAllMarkView(boolean isChange) {
-        removeViews(1, marks.size());
         if (isChange) {
             marks.clear();
+            wuViews.clear();
+            mChildView.clear();
         }
         touchImageView.removeAllMark(isChange);
     }

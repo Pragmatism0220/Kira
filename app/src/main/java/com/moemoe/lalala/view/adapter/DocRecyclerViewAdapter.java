@@ -1711,6 +1711,9 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 holder.mRlPinLun.setVisibility(View.VISIBLE);
                 holder.mViewSep.setVisibility(View.VISIBLE);
             }
+        }else {
+            holder.mRlPinLun.setVisibility(View.VISIBLE);
+            holder.mViewSep.setVisibility(View.VISIBLE);
         }
         holder.pageIndicator.setTabData(mTabEntities);
         holder.pageIndicator.setOnTabSelectListener(new OnTabSelectListener() {

@@ -395,12 +395,18 @@ public void EventError();
 
 
 -keepattributes Signature
--keepattributes *Annotation*
+-keepattributes *Annotation* 
 
 
 -keep class com.hubcloud.adhubsdk.** {*; }
 -keep class android.support.** { *; }
 -keep class android.app.**{*;}
 -keep class **.R$* {*;}
+#talking data
+ 
+
+#databinding
+-dontwarn android.databinding.**
+-keep class android.databinding.** { *; }
 
 

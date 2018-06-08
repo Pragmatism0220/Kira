@@ -4,7 +4,7 @@
     android:id="@+id/rl_dialog"
     android:layout_width="@dimen/x428"
     android:layout_height="@dimen/y320"
-    android:background="@drawable/bg_classmate_talkbg_top_left"
+    android:background="@drawable/bg_classmate_talkbg_bottom_left"
     android:orientation="vertical">
 
     <TextView
@@ -24,11 +24,10 @@
         android:id="@+id/rl_select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/y26"
-        android:layout_marginEnd="@dimen/x40"
-        android:layout_marginStart="@dimen/x40"
+        android:layout_marginTop="@dimen/y200"
+        android:layout_marginEnd="@dimen/x56"
+        android:layout_marginStart="@dimen/y56"
         android:orientation="horizontal"
         android:visibility="gone">
 
@@ -38,9 +37,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/x20"
             android:layout_weight="1"
-            android:background="@color/main_cyan"
-            android:padding="@dimen/x20"
-            android:text="是"
+            android:background="@drawable/btn_talkbg_classmate"
+            android:gravity="center"
+            android:paddingBottom="@dimen/y2"
+            android:paddingTop="@dimen/y2"
             android:textColor="@color/white" />
 
         <TextView
@@ -49,9 +49,10 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/iv_left"
             android:layout_weight="1"
-            android:background="@color/main_cyan"
-            android:padding="@dimen/x20"
-            android:text="否"
+            android:background="@drawable/btn_talkbg_classmate"
+            android:gravity="center"
+            android:paddingBottom="@dimen/y2"
+            android:paddingTop="@dimen/y2"
             android:textColor="@color/white" />
     </LinearLayout>
 </RelativeLayout>

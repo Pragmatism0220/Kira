@@ -109,6 +109,7 @@ public class TouchImageView extends ImageView {
     public void removeAllMark(boolean isChange) {
         if (isChange) {
             marks.clear();
+            wuViews.clear();
         }
         onDrawReady = false;
     }

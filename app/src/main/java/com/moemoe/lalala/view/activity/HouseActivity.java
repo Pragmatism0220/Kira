@@ -7,21 +7,29 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.AppSetting;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityHouseBinding;
 import com.moemoe.lalala.di.components.DaggerHouseComponent;
 import com.moemoe.lalala.di.modules.HouseModule;
+import com.moemoe.lalala.event.HouseLikeEvent;
 import com.moemoe.lalala.galgame.FileManager;
 import com.moemoe.lalala.galgame.SoundManager;
+import com.moemoe.lalala.model.entity.HouseDbEntity;
 import com.moemoe.lalala.model.entity.HouseLikeEntity;
-import com.moemoe.lalala.model.entity.MapDbEntity;
 import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
+import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.presenter.DormitoryContract;
 import com.moemoe.lalala.presenter.DormitoryPresenter;
 import com.moemoe.lalala.utils.DialogUtils;
@@ -30,10 +38,17 @@ import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.GreenDaoManager;
 import com.moemoe.lalala.utils.MapUtil;
 import com.moemoe.lalala.utils.NetworkUtils;
+import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.StringUtils;
+import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.base.BaseActivity;
+import com.moemoe.lalala.view.widget.map.MapLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,6 +58,7 @@ import javax.inject.Inject;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class HouseActivity extends BaseActivity implements DormitoryContract.View {
 
@@ -57,11 +73,14 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     private MapMarkContainer mContainer;
     private Disposable initDisposable;
     private Disposable resolvDisposable;
+    private FrameLayout mHouse;
+    private MapLayout mHouselayout;
 
     @Override
     protected void initComponent() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_house);
         binding.setPresenter(new Presenter());
+        mHouselayout = findViewById(R.id.map);
     }
 
     @Override
@@ -78,14 +97,58 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                 .inject(this);
 
         mContainer = new MapMarkContainer();
+        mPresenter.getVisitorsInfo();
+        mPresenter.loadHouseObjects();
         initMap();
         SoundManager.init(this);
         FileManager.init(this);
+        EventBus.getDefault().register(this);
     }
 
     public void initMap() {
-        mPresenter.loadHouseObjects();
-        binding.map.setOnImageClickLietener(new View.OnClickListener() {
+//        mHouselayout = new MapLayout(this);
+//        mHouse.removeAllViews();
+//        mHouselayout.removeAllViews();
+//        mHouse.addView(mHouselayout);
+//        mPresenter.addMapMark(HouseActivity.this, mContainer, mHouselayout, "house");
+    }
+
+
+    private void clearMap() {
+        if (mHouselayout != null) {
+            mContainer = new MapMarkContainer();
+            mHouselayout.removeAllMarkView(true);
+            mHouselayout = null;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        clearMap();
+//        mPresenter.getVisitorsInfo();
+//        mPresenter.loadHouseObjects();
+//        initMap();
+        if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
+            binding.ivPersonal.setImageResource(R.drawable.bg_default_circle);
+        } else {
+            int size = (int) getResources().getDimension(R.dimen.x64);
+            Glide.with(this)
+                    .load(StringUtils.getUrl(this, PreferenceUtils.getAuthorInfo().getHeadPath(), size, size, false, true))
+                    .error(R.drawable.bg_default_circle)
+                    .placeholder(R.drawable.bg_default_circle)
+                    .bitmapTransform(new CropCircleTransformation(this))
+                    .into(binding.ivPersonal);
+        }
+    }
+
+    @Override
+    protected void initToolbar(Bundle savedInstanceState) {
+    }
+
+    @Override
+    protected void initListeners() {
+        mHouselayout.setOnImageClickLietener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mIsOut) {
@@ -100,16 +163,6 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     }
 
     @Override
-    protected void initToolbar(Bundle savedInstanceState) {
-
-    }
-
-    @Override
-    protected void initListeners() {
-
-    }
-
-    @Override
     protected void initData() {
 
     }
@@ -117,6 +170,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     @Override
     public void onFailure(int code, String msg) {
         ErrorCodeUtils.showErrorMsgByCode(HouseActivity.this, code, msg);
+        finish();
     }
 
     @Override
@@ -128,16 +182,16 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                 entity.setShows("1,2,3,4,5");
             }
         }
-        final ArrayList<MapDbEntity> res = new ArrayList<>();
-        final ArrayList<MapDbEntity> errorList = new ArrayList<>();
-        MapUtil.checkAndDownloadHouse(this, true, MapDbEntity.toDb(entities, "house"), "house", new Observer<MapDbEntity>() {
+        final ArrayList<HouseDbEntity> res = new ArrayList<>();
+        final ArrayList<HouseDbEntity> errorList = new ArrayList<>();
+        MapUtil.checkAndDownloadHouse(this, true, HouseDbEntity.toDb(entities, "house"), "house", new Observer<HouseDbEntity>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
                 initDisposable = d;
             }
 
             @Override
-            public void onNext(@NonNull MapDbEntity mapDbEntity) {
+            public void onNext(@NonNull HouseDbEntity mapDbEntity) {
                 if (!mapDbEntity.getType().equals("3")) {
                     File file = new File(StorageUtils.getHouseRootPath() + mapDbEntity.getFileName());
                     String md5 = mapDbEntity.getMd5();
@@ -163,8 +217,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
 
             @Override
             public void onComplete() {
-                GreenDaoManager.getInstance().getSession().getMapDbEntityDao().insertOrReplaceInTx(res);
-                mPresenter.addMapMark(HouseActivity.this, mContainer, binding.map, "house");
+                GreenDaoManager.getInstance().getSession().getHouseDbEntityDao().insertOrReplaceInTx(res);
+                mPresenter.addMapMark(HouseActivity.this, mContainer, mHouselayout, "house");
                 if (errorList.size() > 0) {
                     resolvErrorList(errorList, "house");
                 }
@@ -173,25 +227,73 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     }
 
     /**
-     * 读取好感度值
-     */
-    @Override
-    public void onLoadRoleLikeGet(ArrayList<HouseLikeEntity> entity) {
-
-    }
-
-    /**
      * 采集好感度值
      */
     @Override
     public void onLoadRoleLikeCollect(HouseLikeEntity entity) {
-
+        showToast("采集成功~~~~");
+        mHouselayout.setTimerLikeView(entity);
     }
 
-    private void resolvErrorList(ArrayList<MapDbEntity> errorList, final String type) {
-        final ArrayList<MapDbEntity> errorListTmp = new ArrayList<>();
-        final ArrayList<MapDbEntity> res = new ArrayList<>();
-        MapUtil.checkAndDownloadHouse(this, false, errorList, type, new Observer<MapDbEntity>() {
+    /**
+     * 访客总数
+     *
+     * @param entities
+     */
+    @Override
+    public void getVisitorsInfoSuccess(ArrayList<VisitorsEntity> entities) {
+        binding.llLikeUserRoot.removeAllViews();
+        if (entities != null && entities.size() > 0) {
+            binding.visitorInfo.setVisibility(View.VISIBLE);
+            int trueSize = (int) getResources().getDimension(R.dimen.y48);
+            int imgSize = (int) getResources().getDimension(R.dimen.y44);
+            int startMargin = (int) -getResources().getDimension(R.dimen.y10);
+            int showSize = 4;
+            if (entities.size() < showSize) {
+                showSize = entities.size();
+            }
+            if (showSize == 4) {
+                ImageView iv = new ImageView(this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(trueSize, trueSize);
+                lp.leftMargin = startMargin;
+                iv.setLayoutParams(lp);
+                iv.setImageResource(R.drawable.btn_feed_like_more);
+                binding.llLikeUserRoot.addView(iv);
+            }
+//            binding.visitorCount.setText(entities.get(0).getCount());
+            for (int i = showSize - 1; i >= 0; i--) {
+                final VisitorsEntity userEntity = entities.get(i);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(trueSize, trueSize);
+                if (i != 0) {
+                    lp.leftMargin = startMargin;
+                }
+                View likeUser = LayoutInflater.from(this).inflate(R.layout.item_white_border_img, null);
+                likeUser.setLayoutParams(lp);
+                ImageView img = likeUser.findViewById(R.id.iv_img);
+                Glide.with(this)
+                        .load(StringUtils.getUrl(this, userEntity.getVisitorImage(), imgSize, imgSize, false, true))
+                        .error(R.drawable.bg_default_circle)
+                        .placeholder(R.drawable.bg_default_circle)
+                        .bitmapTransform(new CropCircleTransformation(this))
+                        .into(img);
+                img.setOnClickListener(new NoDoubleClickListener() {
+                    @Override
+                    public void onNoDoubleClick(View v) {
+                        ViewUtils.toPersonal(HouseActivity.this, userEntity.getVisitorId());
+                    }
+                });
+                binding.llLikeUserRoot.addView(likeUser);
+            }
+            binding.visitorCount.setText(entities.get(0).getCount() + "");
+        } else {
+            binding.visitorInfo.setVisibility(View.GONE);
+        }
+    }
+
+    private void resolvErrorList(ArrayList<HouseDbEntity> errorList, final String type) {
+        final ArrayList<HouseDbEntity> errorListTmp = new ArrayList<>();
+        final ArrayList<HouseDbEntity> res = new ArrayList<>();
+        MapUtil.checkAndDownloadHouse(this, false, errorList, type, new Observer<HouseDbEntity>() {
 
             @Override
             public void onSubscribe(@NonNull Disposable d) {
@@ -199,7 +301,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
             }
 
             @Override
-            public void onNext(@NonNull MapDbEntity mapDbEntity) {
+            public void onNext(@NonNull HouseDbEntity mapDbEntity) {
                 File file = new File(StorageUtils.getHouseRootPath() + mapDbEntity.getFileName());
                 String md5 = mapDbEntity.getMd5();
                 if (md5.length() < 32) {
@@ -223,12 +325,12 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
 
             @Override
             public void onComplete() {
-                GreenDaoManager.getInstance().getSession().getMapDbEntityDao().insertOrReplaceInTx(res);
+                GreenDaoManager.getInstance().getSession().getHouseDbEntityDao().insertOrReplaceInTx(res);
                 if (errorListTmp.size() > 0) {
                     resolvErrorList(errorListTmp, type);
                 } else {
                     if ("house".equals(type)) {
-                        mPresenter.addMapMark(HouseActivity.this, mContainer, binding.map, "house");
+                        mPresenter.addMapMark(HouseActivity.this, mContainer, mHouselayout, "house");
                     }
                 }
             }
@@ -240,6 +342,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         super.onDestroy();
         if (initDisposable != null && !initDisposable.isDisposed()) initDisposable.dispose();
         if (resolvDisposable != null && !resolvDisposable.isDisposed()) resolvDisposable.dispose();
+        EventBus.getDefault().unregister(this);
     }
 
     private void imgIn() {
@@ -251,12 +354,14 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mStorageAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mDramaAnimator = ObjectAnimator.ofFloat(binding.dormitoryDrama, "translationY", binding.dormitoryDrama.getHeight() - getResources().getDimension(R.dimen.y60), 0).setDuration(300);
         mDramaAnimator.setInterpolator(new OvershootInterpolator());
-        ObjectAnimator mVisitorInfoAnimator = ObjectAnimator.ofFloat(binding.visitorInfo, "translationY", binding.visitorInfo.getHeight() - getResources().getDimension(R.dimen.y60), 0).setDuration(300);
+        ObjectAnimator mVisitorInfoAnimator = ObjectAnimator.ofFloat(binding.visitorInfo, "translationX", -binding.visitorInfo.getWidth(), 0).setDuration(300);
         mVisitorInfoAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvSleepAnimator = ObjectAnimator.ofFloat(binding.ivSleep, "translationX", getResources().getDisplayMetrics().widthPixels, 0).setDuration(300);
+        mIvSleepAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(mRoleAnimator);
         set.play(mStorageAnimator).with(mDramaAnimator);
-        set.play(mVisitorInfoAnimator);
+        set.play(mVisitorInfoAnimator).with(mIvSleepAnimator);
         set.start();
     }
 
@@ -269,12 +374,14 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mRoleAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mDramaAnimator = ObjectAnimator.ofFloat(binding.dormitoryDrama, "translationY", 0, -getResources().getDimension(R.dimen.y60) - -binding.dormitoryDrama.getHeight() * 2).setDuration(300);
         mDramaAnimator.setInterpolator(new OvershootInterpolator());
-        ObjectAnimator mVisitorInfoAnimator = ObjectAnimator.ofFloat(binding.visitorInfo, "translationY", 0, -getResources().getDimension(R.dimen.y10) - -binding.visitorInfo.getHeight() * 2).setDuration(300);
+        ObjectAnimator mVisitorInfoAnimator = ObjectAnimator.ofFloat(binding.visitorInfo, "translationX", 0, -binding.visitorInfo.getWidth()).setDuration(300);
         mVisitorInfoAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvSleepAnimator = ObjectAnimator.ofFloat(binding.ivSleep, "translationX", 0, getResources().getDisplayMetrics().widthPixels).setDuration(300);
+        mIvSleepAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(mRoleAnimator);
         set.play(mStorageAnimator).with(mDramaAnimator);
-        set.play(mVisitorInfoAnimator);
+        set.play(mVisitorInfoAnimator).with(mIvSleepAnimator);
         set.start();
     }
 
@@ -320,7 +427,19 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                     Intent i8 = new Intent(HouseActivity.this, DormitoryDramaActivity.class);
                     startActivity(i8);
                     break;
+                case R.id.iv_sleep:
+                    Intent i9 = new Intent(HouseActivity.this, Live2dActivity.class);
+                    startActivity(i9);
+                    break;
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void houseLikeEvent(HouseLikeEvent event) {
+        if (event != null) {
+            String roleId = event.getRoleId();
+            mPresenter.loadRoleLikeCollect(roleId);
         }
     }
 }

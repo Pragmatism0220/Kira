@@ -21,6 +21,15 @@ public class MapEntity {
     private String md5;
     private int layer;//图片图层
     private int type;//类型：1，家具 2.角色 3，垃圾
+    private HouseLikeEntity roleTimer;//角色好感度计时器 
+
+    public HouseLikeEntity getRoleTimer() {
+        return roleTimer;
+    }
+
+    public void setRoleTimer(HouseLikeEntity roleTimer) {
+        this.roleTimer = roleTimer;
+    }
 
     public int getType() {
         return type;

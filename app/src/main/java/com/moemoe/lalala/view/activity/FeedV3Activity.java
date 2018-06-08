@@ -29,6 +29,7 @@ import com.moemoe.lalala.utils.DialogUtils;
 import com.moemoe.lalala.utils.DocEvent;
 import com.moemoe.lalala.utils.MapEevent;
 import com.moemoe.lalala.utils.NetworkUtils;
+import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
@@ -247,9 +248,6 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
 //        }
     }
 
-
-
-
     @Override
     protected void initToolbar(Bundle savedInstanceState) {
         mIncludeToolbar.setEnabled(false);
@@ -278,11 +276,13 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
                 finish();
             }
         });
-        mIvRight.setOnClickListener(new View.OnClickListener() {
+        mIvRight.setOnClickListener(new NoDoubleClickListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FeedV3Activity.this, HouseActivity.class));
-                finish();
+            public void onNoDoubleClick(View v) {
+                if (NetworkUtils.checkNetworkAndShowError(FeedV3Activity.this) && DialogUtils.checkLoginAndShowDlg(FeedV3Activity.this)) {
+                    startActivity(new Intent(FeedV3Activity.this, HouseActivity.class));
+                    finish();
+                }
             }
         });
         mIvClubPost.setOnClickListener(new View.OnClickListener() {
@@ -297,11 +297,6 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
                 startActivityForResult(intent, REQUEST_CODE_CREATE_DOC);
             }
         });
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
     }
 
     public void likeTag(boolean isLike, int position, TagLikeEntity entity, int parentPosition) {
@@ -360,34 +355,18 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
 
     @Override
     protected void initData() {
-        if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
-            mIvPresonal.setImageResource(R.drawable.bg_default_circle);
-        } else {
-            int size = (int) getResources().getDimension(R.dimen.x64);
-            Glide.with(this)
-                    .load(StringUtils.getUrl(this, PreferenceUtils.getAuthorInfo().getHeadPath(), size, size, false, true))
-                    .error(R.drawable.bg_default_circle)
-                    .placeholder(R.drawable.bg_default_circle)
-                    .bitmapTransform(new CropCircleTransformation(this))
-                    .into(mIvPresonal);
-        }
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         MoeMoeApplication.getInstance().GoneWindowMager(this);
+        MoeMoeApplication.getInstance().GoneDiaLog();
+        MoeMoeApplication.getInstance().GoneMenu();
         pauseTime();
     }
 
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        if (MoeMoeApplication.getInstance().isMenu()) {
-//            MoeMoeApplication.getInstance().GoneMenu();
-//            return true;
-//        }
-//        return super.dispatchTouchEvent(ev);
-//    }
 
     @Override
     protected void onResume() {
@@ -413,6 +392,18 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
                     }
                 });
             }
+        }
+
+        if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
+            mIvPresonal.setImageResource(R.drawable.bg_default_circle);
+        } else {
+            int size = (int) getResources().getDimension(R.dimen.x64);
+            Glide.with(this)
+                    .load(StringUtils.getUrl(this, PreferenceUtils.getAuthorInfo().getHeadPath(), size, size, false, true))
+                    .error(R.drawable.bg_default_circle)
+                    .placeholder(R.drawable.bg_default_circle)
+                    .bitmapTransform(new CropCircleTransformation(this))
+                    .into(mIvPresonal);
         }
     }
 

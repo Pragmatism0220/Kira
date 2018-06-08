@@ -187,10 +187,12 @@ public class MoeMoeApplication extends Application {
         }
     }
 
-    public void GoneDiaLog() {
+    public boolean GoneDiaLog() {
         if (windowManager != null && dialog != null && dialog.getVisibility() == View.VISIBLE) {
             dialog.setVisibility(View.GONE);
+            return true;
         }
+        return false;
     }
 
     public void removeWindowMager() {
@@ -273,8 +275,8 @@ public class MoeMoeApplication extends Application {
             wmParamsTwo.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         }
         wmParamsTwo.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        wmParamsTwo.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        wmParamsTwo.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        wmParamsTwo.width = (int) context.getResources().getDimension(R.dimen.x428);
+        wmParamsTwo.height = (int) context.getResources().getDimension(R.dimen.y320);
 
         //设置图片格式，效果为背景透明  
         wmParamsTwo.format = PixelFormat.RGBA_8888;
@@ -304,8 +306,8 @@ public class MoeMoeApplication extends Application {
             wmParamsThree.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         }
         wmParamsThree.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        wmParamsThree.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        wmParamsThree.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        wmParamsThree.width = (int) context.getResources().getDimension(R.dimen.x428);
+        wmParamsThree.height = (int) context.getResources().getDimension(R.dimen.y320);
 
         //设置图片格式，效果为背景透明  
         wmParamsThree.format = PixelFormat.RGBA_8888;
@@ -702,7 +704,7 @@ public class MoeMoeApplication extends Application {
             @Override
             public void onClick(View view) {
                 if (dialog != null && stageLineEntity != null) {
-                    stageLineEntity = getStageLineEntity(stageLineEntity, "是");
+                    stageLineEntity = getStageLineEntity(stageLineEntity, mIvLeft.getText().toString());
                     if (stageLineEntity == null) {
                         dialog.setVisibility(View.GONE);
                     } else {
@@ -715,7 +717,7 @@ public class MoeMoeApplication extends Application {
             @Override
             public void onClick(View view) {
                 if (dialog != null && stageLineEntity != null) {
-                    stageLineEntity = getStageLineEntity(stageLineEntity, "是");
+                    stageLineEntity = getStageLineEntity(stageLineEntity, mIvCansl.getText().toString());
                     if (stageLineEntity == null) {
                         dialog.setVisibility(View.GONE);
                     } else {
@@ -729,13 +731,26 @@ public class MoeMoeApplication extends Application {
 
     public void setDialogView(StageLineEntity entity) {
         if (dialog != null) {
-            mTvContent.setText(entity.getContent());
-            if (entity.getDialogType().equals("dialog_option")) {
-                mIvLeft.setVisibility(View.VISIBLE);
-                mIvCansl.setVisibility(View.VISIBLE);
+            if (entity.getId() != null) {
+                mTvContent.setText(entity.getContent());
+                if (entity.getDialogType() != null && entity.getDialogType().equals("dialog_option")) {
+                    mRlSelect.setVisibility(View.VISIBLE);
+                    for (int i = 0; i < entity.getOptions().size(); i++) {
+                        if (i == 0) {
+                            mIvLeft.setText(entity.getOptions().get(i).getOption());
+                        } else {
+                            if (entity.getOptions().get(i) == null) {
+                                mIvCansl.setVisibility(View.GONE);
+                            } else {
+                                mIvCansl.setText(entity.getOptions().get(i).getOption());
+                            }
+                        }
+                    }
+                } else {
+                    mRlSelect.setVisibility(View.GONE);
+                }
             } else {
-                mIvLeft.setVisibility(View.GONE);
-                mIvCansl.setVisibility(View.GONE);
+                dialog.setVisibility(View.GONE);
             }
         }
     }
@@ -750,7 +765,7 @@ public class MoeMoeApplication extends Application {
         List<StageLineOptionsEntity> options = mData.getOptions();
         String LeftId = null;
         for (int i = 0; i < options.size(); i++) {
-            if (options.get(i).equals(isSelect)) {
+            if (options.get(i).getOption().equals(isSelect)) {
                 LeftId = options.get(i).getId();
             }
         }
@@ -896,6 +911,9 @@ public class MoeMoeApplication extends Application {
      * 对话框的定位
      */
     public void goDialog(Context context) {
+        if (inflate != null && inflate.getVisibility() == View.GONE) {
+            return;
+        }
         int x = functionalX;
         int y = functionalY;
         int width = inflate.getMeasuredWidth();

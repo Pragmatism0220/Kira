@@ -10,7 +10,7 @@ public class HouseLikeEntity {
     private boolean isCollectable;
     private boolean isSleep;
     private String lastCollectTime;
-    private String remainTime;
+    private long remainTime;
     private String roleId;
     private int roleLike;
 
@@ -34,7 +34,7 @@ public class HouseLikeEntity {
         return lastCollectTime;
     }
 
-    public String getRemainTime() {
+    public long getRemainTime() {
         return remainTime;
     }
 
@@ -66,7 +66,7 @@ public class HouseLikeEntity {
         this.lastCollectTime = lastCollectTime;
     }
 
-    public void setRemainTime(String remainTime) {
+    public void setRemainTime(long remainTime) {
         this.remainTime = remainTime;
     }
 

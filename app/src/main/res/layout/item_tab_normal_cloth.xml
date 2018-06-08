@@ -4,11 +4,20 @@
     android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/iv_root"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
+        android:src="@drawable/ic_home_roleschoice_current" />
+
+    <ImageView
         android:id="@+id/iv_cover"
+        android:layout_below="@+id/iv_root"
         android:layout_width="@dimen/x174"
         android:layout_height="@dimen/y232"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/y44" />
+        android:layout_marginTop="@dimen/y10" />
 
     <TextView
         android:id="@+id/tv_tab_title"

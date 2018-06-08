@@ -1109,28 +1109,28 @@ public interface ApiService {
     @GET("v2/kira/house/userDeskmate")
     Observable<ApiResult<UserDeskmateEntity>> loadHousUserDeskmate();
 
-    @GET("/v2/kira/house/allRolesForUserSelect")
+    @GET("v2/kira/house/allRolesForUserSelect")
     Observable<ApiResult<ArrayList<RoleInfoEntity>>> loadRoleInfo();
 
-    @POST("/v2/kira/house/user/role/deskmate/{roleId}")
+    @POST("v2/kira/house/user/role/deskmate/{roleId}")
     Observable<ApiResult> setDeskMate(@Path("roleId") String roleId);
 
-    @POST("/v2/kira/house/user/role/putInHouse/{roleId}")
+    @POST("v2/kira/house/user/role/putInHouse/{roleId}")
     Observable<ApiResult> putInHouse(@Path("roleId") String roleId);
 
-    @POST("/v2/kira/house/user/role/removeOutHouse/{roleId}")
+    @POST("v2/kira/house/user/role/removeOutHouse/{roleId}")
     Observable<ApiResult> removeInHouse(@Path("roleId") String roleId);
 
-    @GET("/v2/kira/house/user/tool/all")
+    @GET("v2/kira/house/user/tool/all")
     Observable<ApiResult<ArrayList<PropInfoEntity>>> loadPropInfo();
 
-    @GET("/v2/kira/house/user/furniture/all")
+    @GET("v2/kira/house/user/furniture/all")
     Observable<ApiResult<FurnitureInfoEntity>> loadFurnitureInfo();
 
-    @POST("/v2/kira/house/visitor/save")
+    @POST("v2/kira/house/visitor/save")
     Observable<ApiResult> saveVisitor(@Body SaveVisitorEntity entity);
 
-    @GET("/v2/kira/house/visitor/page/{size}/{start}")
+    @GET("v2/kira/house/visitor/page/{size}/{start}")
     Observable<ApiResult<ArrayList<VisitorsEntity>>> loadVisitor(@Path("size") int size, @Path("start") int start);
 
     @GET("v2/kira/house/inHouseObjects")
@@ -1147,9 +1147,6 @@ public interface ApiService {
 
     @POST("/v2/kira/house/user/furniture/suit/select/{suitTypeId}")
     Observable<ApiResult> suitUse(@Path("suitTypeId") String suitTypeId);
-
-    @POST("v2/kira/house/user/role/timer/all")
-    Observable<ApiResult<ArrayList<HouseLikeEntity>>> loadRoleLikeGet();
 
     @POST("v2/kira/house/user/role/timer/collect/{roleId}")
     Observable<ApiResult<HouseLikeEntity>> loadRoleLikeCollect(@Path("roleId") String roleId);

@@ -247,7 +247,6 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     if (!isUserHadTool) {
                         return;
                     }
-
                     break;
                 case R.id.storage_commodity_use_btn:
                     if (furnitureInfo != null) {

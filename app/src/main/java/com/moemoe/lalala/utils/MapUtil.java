@@ -6,9 +6,11 @@ import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
+import com.moemoe.lalala.greendao.gen.HouseDbEntityDao;
 import com.moemoe.lalala.greendao.gen.MapDbEntityDao;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.DeskmateEntils;
+import com.moemoe.lalala.model.entity.HouseDbEntity;
 import com.moemoe.lalala.model.entity.MapDbEntity;
 
 import java.io.File;
@@ -137,8 +139,8 @@ public class MapUtil {
     }
 
 
-    public static void checkAndDownloadHouse(Context context, boolean del, ArrayList<MapDbEntity> entities, String type, Observer<MapDbEntity> callback) {//1.未下载 2.下载完成 3.下载失败
-        for (MapDbEntity entity : entities) {
+    public static void checkAndDownloadHouse(Context context, boolean del, ArrayList<HouseDbEntity> entities, String type, Observer<HouseDbEntity> callback) {//1.未下载 2.下载完成 3.下载失败
+        for (HouseDbEntity entity : entities) {
             //文件是否存在
             if (FileUtil.isExists(StorageUtils.getHouseRootPath() + entity.getFileName())) {
                 File file = new File(StorageUtils.getHouseRootPath() + entity.getFileName());
@@ -156,19 +158,19 @@ public class MapUtil {
                     entity.setDownloadState(2);
                 }
             } else {
-                if (entity.getType().equals("3")){
+                if (entity.getType().equals("3")) {
                     entity.setDownloadState(2);
-                }else {
+                } else {
                     entity.setDownloadState(1);
                 }
             }
         }
         //检查文件是否更改
-        final MapDbEntityDao dao = GreenDaoManager.getInstance().getSession().getMapDbEntityDao();
+        final HouseDbEntityDao dao = GreenDaoManager.getInstance().getSession().getHouseDbEntityDao();
         if (del) {
-            ArrayList<MapDbEntity> mapList = (ArrayList<MapDbEntity>) dao.queryBuilder()
-                    .where(MapDbEntityDao.Properties.House.eq(type))
-                    .list(); 
+            ArrayList<HouseDbEntity> mapList = (ArrayList<HouseDbEntity>) dao.queryBuilder()
+                    .where(HouseDbEntityDao.Properties.House.eq(type))
+                    .list();
             if (mapList != null) {
                 dao.deleteInTx(mapList);
             }
@@ -179,12 +181,12 @@ public class MapUtil {
         downLoadFilesHouse(context, entities, callback);
     }
 
-    public static void downLoadFilesHouse(Context context, ArrayList<MapDbEntity> tasks, Observer<MapDbEntity> callback) {//1.未下载 2.下载完成 3.下载失败
+    public static void downLoadFilesHouse(Context context, ArrayList<HouseDbEntity> tasks, Observer<HouseDbEntity> callback) {//1.未下载 2.下载完成 3.下载失败
 
         Observable.fromIterable(tasks)
-                .filter(new Predicate<MapDbEntity>() {
+                .filter(new Predicate<HouseDbEntity>() {
                     @Override
-                    public boolean test(@NonNull MapDbEntity mapDbEntity) throws Exception {
+                    public boolean test(@NonNull HouseDbEntity mapDbEntity) throws Exception {
                         if (mapDbEntity.getDownloadState() != 2) {
                             return true;
                         } else {
@@ -193,12 +195,12 @@ public class MapUtil {
                     }
                 })
                 .subscribeOn(Schedulers.io())
-                .flatMap(new Function<MapDbEntity, ObservableSource<MapDbEntity>>() {
+                .flatMap(new Function<HouseDbEntity, ObservableSource<HouseDbEntity>>() {
                     @Override
-                    public ObservableSource<MapDbEntity> apply(@NonNull final MapDbEntity mapDbEntity) throws Exception {
-                        return Observable.create(new ObservableOnSubscribe<MapDbEntity>() {
+                    public ObservableSource<HouseDbEntity> apply(@NonNull final HouseDbEntity mapDbEntity) throws Exception {
+                        return Observable.create(new ObservableOnSubscribe<HouseDbEntity>() {
                             @Override
-                            public void subscribe(@NonNull final ObservableEmitter<MapDbEntity> res) throws Exception {
+                            public void subscribe(@NonNull final ObservableEmitter<HouseDbEntity> res) throws Exception {
                                 FileDownloader.getImpl().create(ApiService.URL_QINIU + mapDbEntity.getImage_path())
                                         .setPath(StorageUtils.getHouseRootPath() + mapDbEntity.getFileName())
                                         .setCallbackProgressTimes(1)
@@ -245,7 +247,7 @@ public class MapUtil {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback);
     }
-   
+
     public static void checkAndDownloadDeskmate(Context context, boolean del, ArrayList<DeskmateEntils> entities, String type, Observer<DeskmateEntils> callback) {//1.未下载 2.下载完成 3.下载失败
         for (DeskmateEntils entity : entities) {
             //文件是否存在
@@ -350,5 +352,5 @@ public class MapUtil {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback);
     }
-    
+
 }

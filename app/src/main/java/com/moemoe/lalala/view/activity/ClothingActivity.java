@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.moemoe.lalala.R;
@@ -68,6 +69,9 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
     @Override
     protected void initViews(Bundle savedInstanceState) {
         roleId = getIntent().getStringExtra("roleId");
+        if (TextUtils.isEmpty(roleId)) {
+            finish();
+        }
         mPresenter.loadHouseClothesAll(roleId);
 
     }

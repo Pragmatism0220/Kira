@@ -18,7 +18,6 @@ public abstract class NoDoubleClickListener implements View.OnClickListener{
 
     public NoDoubleClickListener() {
     }
-
     @Override
     public void onClick(View v) {
         long currentTime = System.currentTimeMillis();

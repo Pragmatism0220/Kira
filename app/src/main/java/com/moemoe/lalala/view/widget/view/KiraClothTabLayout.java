@@ -308,7 +308,7 @@ public class KiraClothTabLayout extends HorizontalScrollView implements ViewPage
                 setOnTabClick(v, position);
             }
         });
-        
+
         LinearLayout.LayoutParams lp = mTabSpaceEqual ?
                 new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f) :
                 new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -318,7 +318,7 @@ public class KiraClothTabLayout extends HorizontalScrollView implements ViewPage
         tabView.setPadding((int) mTabPadding, 0, (int) mTabPadding, 0);
         mTabsContainer.addView(tabView, position, lp);
     }
-   
+
     public void setOnTabClick(View v, int position) {
         if (position != -1) {
             if (mViewPager.getCurrentItem() != position) {
@@ -347,6 +347,7 @@ public class KiraClothTabLayout extends HorizontalScrollView implements ViewPage
             TextView tv_title = v.findViewById(R.id.tv_tab_title);
             ImageView mIvCover = v.findViewById(R.id.iv_cover);
             ImageView mIvSelect = v.findViewById(R.id.iv_select);
+            ImageView mIvRoot = v.findViewById(R.id.iv_root);
             if (tv_title == null) {
                 throw new IllegalStateException("title textView id must be tv_tab_title");
             }
@@ -356,10 +357,14 @@ public class KiraClothTabLayout extends HorizontalScrollView implements ViewPage
             if (mIvSelect == null) {
                 throw new IllegalStateException("title imageView id must be iv_select");
             }
+            if (mIvRoot == null) {
+                throw new IllegalStateException("title imageView id must be iv_root");
+            }
             tv_title.setTextColor(i == mCurrentTab ? mTextSelectColor : mTextUnSelectColor);
             tv_title.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
 //            tv_title.setPadding(0, (int) (i == mCurrentTab ? mTextSelectPaddingTop : mTextUnSelectPaddingTop), 0, 0);
             tv_title.setBackground(i == mCurrentTab ? mTextSelectBackground : mTextUnSelectBackground);
+            mIvRoot.setVisibility(i == mCurrentTab ? VISIBLE : INVISIBLE);
             // tv_title.setPadding((int) mTabPadding,0, (int) mTabPadding,0);
             if (mTextAllCaps) {
                 tv_title.setText(tv_title.getText().toString().toUpperCase());
@@ -425,6 +430,7 @@ public class KiraClothTabLayout extends HorizontalScrollView implements ViewPage
             TextView tv_title = tabView.findViewById(R.id.tv_tab_title);
             ImageView mIvCover = tabView.findViewById(R.id.iv_cover);
             ImageView mIvSelect = tabView.findViewById(R.id.iv_select);
+            ImageView mIvRoot = tabView.findViewById(R.id.iv_root);
             if (tv_title == null) {
                 throw new IllegalStateException("title textView id must be tv_tab_title");
             }
@@ -434,9 +440,13 @@ public class KiraClothTabLayout extends HorizontalScrollView implements ViewPage
             if (mIvSelect == null) {
                 throw new IllegalStateException("title imageView id must be iv_select");
             }
+            if (mIvRoot == null) {
+                throw new IllegalStateException("title imageView id must be iv_root");
+            }
             tv_title.setTextColor(isSelect ? mTextSelectColor : mTextUnSelectColor);
 //            tv_title.setPadding(0, (int) (isSelect ? mTextSelectPaddingTop : mTextUnSelectPaddingTop), 0, 0);
             tv_title.setBackground(isSelect ? mTextSelectBackground : mTextUnSelectBackground);
+            mIvRoot.setVisibility(isSelect ? VISIBLE : INVISIBLE);
             if (mTextBold == TEXT_BOLD_WHEN_SELECT) {
                 tv_title.getPaint().setFakeBoldText(isSelect);
             }

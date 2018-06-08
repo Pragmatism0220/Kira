@@ -216,7 +216,7 @@ public class NewFolderWenZhangActivity extends BaseAppCompatActivity implements 
             } else {
                 initPopupMenus();
                 if (mIsSelect) {
-                    mIvBack.setVisibility(View.GONE);
+                    mIvBack.setVisibility(View.VISIBLE);
                     mIvMenu.setVisibility(View.GONE);
                     mTvMenuLeft.setVisibility(View.VISIBLE);
                     ViewUtils.setLeftMargins(mTvMenuLeft, getResources().getDimensionPixelSize(R.dimen.x36));

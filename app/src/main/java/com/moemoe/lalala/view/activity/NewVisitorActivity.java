@@ -17,6 +17,7 @@ import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.presenter.NewVisitorPresenter;
 import com.moemoe.lalala.presenter.NewVisitorsContract;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
+import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.adapter.NewVisitorAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.widget.recycler.PullAndLoadView;
@@ -42,6 +43,7 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
 
     @Override
     protected void initComponent() {
+        ViewUtils.setStatusBarLight(getWindow(), $(R.id.top_view));
         DaggerNewVisitorsComponent.builder()
                 .newVisitorModule(new NewVisitorModule(this))
                 .netComponent(MoeMoeApplication.getInstance().getNetComponent())
