@@ -241,8 +241,9 @@ public class NewDocDetailActivity extends BaseAppCompatActivity implements DocDe
 
         Intent intent = getIntent();
         String userId = intent.getStringExtra("uuid");
-
     }
+    
+    
 
     @Override
     protected void initToolbar(Bundle savedInstanceState) {
