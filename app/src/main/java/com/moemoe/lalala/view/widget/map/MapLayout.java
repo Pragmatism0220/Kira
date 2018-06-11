@@ -55,6 +55,7 @@ public class MapLayout extends FrameLayout {
 
     public MapLayout(Context context) {
         this(context, null);
+        initialImageView(context);
     }
 
     public MapLayout(Context context, AttributeSet attrs) {
@@ -188,6 +189,15 @@ public class MapLayout extends FrameLayout {
         set.setDuration(700);
         set.playTogether(animatorX, animatorY);
         set.start();
+    }
+
+    public void addTouchView(Context context) {
+        if (touchImageView != null) {
+            touchImageView = new TouchImageView(context);
+            touchImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            addView(touchImageView, params);
+        }
     }
 
     /**

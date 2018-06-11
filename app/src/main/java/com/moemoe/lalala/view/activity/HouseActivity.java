@@ -97,8 +97,6 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                 .inject(this);
 
         mContainer = new MapMarkContainer();
-        mPresenter.getVisitorsInfo();
-        mPresenter.loadHouseObjects();
         initMap();
         SoundManager.init(this);
         FileManager.init(this);
@@ -106,29 +104,16 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     }
 
     public void initMap() {
-//        mHouselayout = new MapLayout(this);
-//        mHouse.removeAllViews();
-//        mHouselayout.removeAllViews();
-//        mHouse.addView(mHouselayout);
-//        mPresenter.addMapMark(HouseActivity.this, mContainer, mHouselayout, "house");
-    }
-
-
-    private void clearMap() {
-        if (mHouselayout != null) {
-            mContainer = new MapMarkContainer();
-            mHouselayout.removeAllMarkView(true);
-            mHouselayout = null;
-        }
+        mPresenter.addMapMark(HouseActivity.this, mContainer, mHouselayout, "house");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        clearMap();
-//        mPresenter.getVisitorsInfo();
-//        mPresenter.loadHouseObjects();
-//        initMap();
+        binding.map.clearAllView();
+        binding.map.addTouchView(HouseActivity.this);
+        mPresenter.getVisitorsInfo();
+        mPresenter.loadHouseObjects();
         if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
             binding.ivPersonal.setImageResource(R.drawable.bg_default_circle);
         } else {
