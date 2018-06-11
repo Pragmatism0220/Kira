@@ -2,6 +2,7 @@ package com.moemoe.lalala.model.api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.moemoe.lalala.event.NewStoryInfoEvent;
 import com.moemoe.lalala.model.entity.*;
 
 import java.util.ArrayList;
@@ -1151,4 +1152,6 @@ public interface ApiService {
     @POST("v2/kira/house/user/role/timer/collect/{roleId}")
     Observable<ApiResult<HouseLikeEntity>> loadRoleLikeCollect(@Path("roleId") String roleId);
 
+    @GET("v2/kira/story/v2/main/progress")
+    Observable<ApiResult<NewStoryInfoEvent>> GetNewStoryInfo();
 }

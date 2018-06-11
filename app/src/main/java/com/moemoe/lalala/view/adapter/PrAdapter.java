@@ -171,7 +171,6 @@ public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mNoPhoto = itemView.findViewById(R.id.no_photo);
             mNoBottomIamge = itemView.findViewById(R.id.no_bottom_image);
             noBottomTitle = itemView.findViewById(R.id.no_bottom_title);
-
             noBottomName = itemView.findViewById(R.id.no_bottom_name);
             noBottomNum = itemView.findViewById(R.id.no_bottom_num);
         }

@@ -31,7 +31,7 @@ import java.util.Locale;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
- * Created by Administrator on 2018/6/4.
+ * Created by zhangyan on 2018/6/4.
  */
 
 public class NewVisitorAdapter extends BaseRecyclerViewAdapter<VisitorsEntity, NewVisitorHolder> {
@@ -49,14 +49,17 @@ public class NewVisitorAdapter extends BaseRecyclerViewAdapter<VisitorsEntity, N
     public NewVisitorHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
         this.mContext = parent.getContext();
-        VisitorsItemBinding visitorsItemBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.visitors_item, parent, false);
+        VisitorsItemBinding visitorsItemBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
+                R.layout.visitors_item, parent, false);
         if (viewType == TYPE_TITLE) {
             LinearLayout linearLayout = new LinearLayout(parent.getContext());
             linearLayout.setOrientation(LinearLayout.VERTICAL);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
             linearLayout.setLayoutParams(params);
 
-            RootItemVisitorsBinding rootItemVisitorsBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.root_item_visitors, parent, false);
+            RootItemVisitorsBinding rootItemVisitorsBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
+                    R.layout.root_item_visitors, parent, false);
             linearLayout.addView(rootItemVisitorsBinding.getRoot());
             linearLayout.addView(visitorsItemBinding.getRoot());
             view = linearLayout;

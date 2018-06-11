@@ -132,7 +132,6 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
         }
     }
 
-
     @Override
     public void onDestroy() {
         if (mPresenter != null) {

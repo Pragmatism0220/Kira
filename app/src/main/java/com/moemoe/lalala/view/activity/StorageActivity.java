@@ -20,6 +20,7 @@ import com.moemoe.lalala.di.modules.StorageModule;
 import com.moemoe.lalala.event.FurnitureEvent;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
+import com.moemoe.lalala.model.entity.PropInfoEntity;
 import com.moemoe.lalala.presenter.StorageContract;
 import com.moemoe.lalala.presenter.StoragePresenter;
 import com.moemoe.lalala.view.adapter.TabPageAdapter;
@@ -64,6 +65,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     @Inject
     StoragePresenter mPresenter;
     private AllFurnitureInfo furnitureInfo;
+    private PropInfoEntity mPropInfoEntity;
 
 
     @Override
@@ -244,8 +246,11 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     finish();
                     break;
                 case R.id.storage_commodity_buy_btn:
-                    if (!isUserHadTool) {
-                        return;
+                    Log.i("propInfo", "propInfo: " + mPropInfoEntity);
+                    if (!mPropInfoEntity.isUserHadTool()) {
+                        showToast("未拥有");
+                    } else {
+                        showToast("购买");
                     }
                     break;
                 case R.id.storage_commodity_use_btn:
@@ -288,6 +293,14 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                 Glide.with(this).load(ApiService.URL_QINIU + event.getImage()).into(binding.storageImage);
                 binding.storageCommodityInfo.setText(event.getDescribe());
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void propInfo(PropInfoEntity propEvent) {
+        if (propEvent != null) {
+            mPropInfoEntity = propEvent;
+            Log.i("propInfo", "propInfo: " + mPropInfoEntity);
         }
     }
 

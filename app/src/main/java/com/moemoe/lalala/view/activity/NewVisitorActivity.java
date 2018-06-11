@@ -88,13 +88,13 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
             @Override
             public void onLoadMore() {
                 isLoading = true;
-                mPresenter.getNewVisitorsInfo(2, mAdapter.getItemCount());
+                mPresenter.getNewVisitorsInfo(10, mAdapter.getItemCount());
             }
 
             @Override
             public void onRefresh() {
                 isLoading = true;
-                mPresenter.getNewVisitorsInfo(2, mAdapter.getItemCount());
+                mPresenter.getNewVisitorsInfo(10, mAdapter.getItemCount());
             }
 
             @Override

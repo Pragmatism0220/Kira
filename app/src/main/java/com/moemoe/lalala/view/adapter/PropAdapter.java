@@ -93,6 +93,10 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
         notifyDataSetChanged();
     }
 
+    public List<PropInfoEntity> getData() {
+        return infos;
+    }
+
     public int getSelectedPos() {
         return mSelectedPos;
     }

@@ -3,32 +3,55 @@ package com.moemoe.lalala.view.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
+import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityDormitoryDramaBinding;
+import com.moemoe.lalala.di.components.DaggerNewDormitoryComponent;
+import com.moemoe.lalala.di.modules.NewDormitorModule;
+import com.moemoe.lalala.event.NewStoryInfoEvent;
+import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.entity.HouseLikeEntity;
+import com.moemoe.lalala.model.entity.MapEntity;
+import com.moemoe.lalala.presenter.DormitoryContract;
+import com.moemoe.lalala.presenter.NewDormitioryContract;
+import com.moemoe.lalala.presenter.NewDormitoryPresenter;
 import com.moemoe.lalala.view.base.BaseActivity;
+
+import java.util.ArrayList;
+
+import javax.inject.Inject;
+
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
  * do(zhangyan)
  * 剧情主界面
  */
 
-public class DormitoryDramaActivity extends BaseActivity {
+public class DormitoryDramaActivity extends BaseActivity implements NewDormitioryContract.View {
 
     private ActivityDormitoryDramaBinding binding;
 
-    private int schedule = 74;
+    @Inject
+    NewDormitoryPresenter mPresenter;
 
     @Override
     protected void initComponent() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dormitory_drama);
         binding.setPresenter(new Presenter());
+        DaggerNewDormitoryComponent.builder()
+                .newDormitorModule(new NewDormitorModule(this))
+                .netComponent(MoeMoeApplication.getInstance().getNetComponent())
+                .build()
+                .inject(this);
     }
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-        binding.principalLineSchedule.setText("收集度:" + schedule + "%");
 
     }
 
@@ -44,8 +67,29 @@ public class DormitoryDramaActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        mPresenter.getStoryInfo();
+    }
+
+    @Override
+    public void onFailure(int code, String msg) {
 
     }
+
+    @Override
+    public void getStoryInfoSuccess(NewStoryInfoEvent event) {
+        Log.i("StoryInfo", "getStoryInfoSuccess: " + event);
+        binding.principalLineSchedule.setText("收集度:" + event.getMasterCollectPercent() + "%");
+        binding.branchSchedule.setText("N(" + event.getBranchN() + ")" +
+                "R(" + event.getBranchR() + ")" +
+                "+SR(" + event.getBranchSR() + ")");
+//        Glide.with(this).load(ApiService.URL_QINIU + event.getBgImage())
+//                .error(R.drawable.bg_default_circle)
+//                .placeholder(R.drawable.bg_default_circle)
+//                .bitmapTransform(new CropCircleTransformation(this))
+//                .into(binding.dramaImage);
+
+    }
+
 
     public class Presenter {
         public void onClick(View v) {

@@ -44,14 +44,14 @@
                 android:layout_marginTop="@dimen/y24"
                 android:background="@drawable/ic_home_roles_choice_title" />
 
-            <ImageButton
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/role_dialog_btn"
                 android:layout_alignParentEnd="true"
-                android:layout_below="@+id/role_name_bg"
-                android:layout_marginTop="@dimen/y18"
                 android:layout_marginEnd="@dimen/x24"
+                android:layout_marginBottom="@dimen/y42"
+                android:background="@drawable/role_dialog_btn"
+                android:layout_alignParentBottom="true"
                 />
 
             <ImageView
@@ -62,15 +62,6 @@
                 android:layout_below="@+id/role_name_bg"
                 android:src="@drawable/btn_classmate_mei_uniform_1" />
 
-            <ImageButton
-                android:id="@+id/check_cloth_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/role_clothing_bg"
-                android:onClick="@{presenter.onClick}"
-                />
 
             <TextView
                 android:id="@+id/role_guanfang"
@@ -89,10 +80,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/role_back_btn"
+                android:layout_marginStart="@dimen/x20"
                 android:layout_marginTop="@dimen/y70"
                 android:layout_toEndOf="@+id/role_guanfang"
                 android:text="编号:3513"
-                android:layout_marginStart="@dimen/x20"
                 android:textColor="@color/white"
                 android:textSize="@dimen/x24"
 
@@ -145,7 +136,7 @@
 
             </FrameLayout>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/role_diary_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -155,7 +146,7 @@
                 android:background="@drawable/role_diary_selector"
                 android:onClick="@{presenter.onClick}" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/put_house_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -165,13 +156,25 @@
                 android:background="@drawable/ic_role_put_house_bg"
                 android:onClick="@{presenter.onClick}" />
 
-            <ImageButton
+            <ImageView
+                android:id="@+id/check_cloth_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/role_diary_btn"
+                android:layout_marginStart="@dimen/x20"
+                android:layout_marginTop="@dimen/y16"
+                android:layout_toEndOf="@+id/put_house_btn"
+                android:background="@drawable/role_clothing_bg"
+                android:onClick="@{presenter.onClick}" />
+
+            <ImageView
                 android:id="@+id/set_deskmake_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/role_diary_btn"
+                android:layout_marginStart="@dimen/x20"
                 android:layout_marginTop="@dimen/y16"
-                android:layout_toEndOf="@+id/put_house_btn"
+                android:layout_toEndOf="@+id/check_cloth_btn"
                 android:background="@drawable/ic_role_deskmake_bg"
                 android:onClick="@{presenter.onClick}" />
 

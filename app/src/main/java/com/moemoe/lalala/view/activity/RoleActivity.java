@@ -259,7 +259,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     if (roleId != null) {
                         if (!isPut) {
                             if (mAdapter.getList().get(mPosition).getCount() > mAdapter.getList().get(mPosition).getMaxPutInHouseNum()) {
-                                ToastUtils.showShortToast(getApplicationContext(), "最多可以设置4个角色为同桌");
+                                showToast("最多可以设置4个角色为同桌");
                             }
                             mPresenter.putInHouse(roleId);
                         } else {

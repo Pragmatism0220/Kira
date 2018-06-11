@@ -19,6 +19,8 @@ import com.moemoe.lalala.presenter.PropPresenter;
 import com.moemoe.lalala.view.adapter.PropAdapter;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,8 +85,9 @@ public class PropFragment extends BaseFragment implements PropContract.View {
         int toolCount = propInfoEntities.get(0).getToolCount();
         String id = propInfoEntities.get(0).getId();
         firstCallBack.firstResult(id, name, firstImage, toolCount, describe);
-
         propInfoEntities.get(0).setSelected(true);
+
+
         mAdapter = new PropAdapter(getContext(), lists);
         mRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         mRecycleView.addItemDecoration(new SpacesItemDecoration(10, 9, 0));
@@ -93,12 +96,25 @@ public class PropFragment extends BaseFragment implements PropContract.View {
         mAdapter.setOnItemClickListener(new PropAdapter.RoleItemClickListener() {
             @Override
             public void onClick(View v, int position, int which) {
-                String id = lists.get(position).getId();
-                String name = lists.get(position).getName();
-                String image = lists.get(position).getImage();
-                int toolCount = lists.get(position).getToolCount();
-                String describe = lists.get(position).getDescribe();
-                boolean isUserHadTool = lists.get(position).isUserHadTool();
+//                PropInfoEntity propInfoEntity = propInfoEntities.get(position);
+//                EventBus.getDefault().post(propInfoEntity);
+//
+//                String id = lists.get(position).getId();
+//                String name = lists.get(position).getName();
+//                String image = lists.get(position).getImage();
+//                int toolCount = lists.get(position).getToolCount();
+//                String describe = lists.get(position).getDescribe();
+//                boolean isUserHadTool = lists.get(position).isUserHadTool();
+                PropInfoEntity propInfoEntity = mAdapter.getData().get(position);
+                EventBus.getDefault().post(propInfoEntity);
+                String id = mAdapter.getData().get(position).getId();
+                String name = mAdapter.getData().get(position).getName();
+                String image = mAdapter.getData().get(position).getImage();
+                int toolCount = mAdapter.getData().get(position).getToolCount();
+                String describe = mAdapter.getData().get(position).getDescribe();
+                boolean isUserHadTool = mAdapter.getData().get(position).isUserHadTool();
+
+
                 callBack.getResult(id, name, image, toolCount, describe, isUserHadTool);
                 for (int i = 0; i < propInfoEntities.size(); i++) {
                     propInfoEntities.get(i).setSelected(i == which);
@@ -123,6 +139,11 @@ public class PropFragment extends BaseFragment implements PropContract.View {
             }
         }
         mAdapter.setData(newLists);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     /**
