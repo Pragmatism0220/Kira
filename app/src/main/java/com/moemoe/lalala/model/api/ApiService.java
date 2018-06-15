@@ -1172,7 +1172,7 @@ public interface ApiService {
     Observable<ApiResult<ArrayList<NewJuQingTriggerEntity>>> searchAllTrigger();
 
     @POST("v2/kira/story/v2/user/record/save")
-    Observable<ApiResult> saveRecord(@Body saveRecordEntity entity);
+    Observable<ApiResult<Long>> saveRecord(@Body saveRecordEntity entity);
 
     @GET("v2/kira/story/v2/branch/story/all")
     Observable<ApiResult<ArrayList<BranchStoryAllEntity>>> loadBranchStoryAll();

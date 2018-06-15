@@ -15,6 +15,7 @@ import com.moemoe.lalala.di.components.DaggerJuQIngChatComponent;
 import com.moemoe.lalala.di.modules.JuQingChatModule;
 import com.moemoe.lalala.event.EventDoneEvent;
 import com.moemoe.lalala.model.entity.JuQingShowEntity;
+import com.moemoe.lalala.model.entity.saveRecordEntity;
 import com.moemoe.lalala.presenter.JuQIngChatContract;
 import com.moemoe.lalala.presenter.JuQingChatPresenter;
 import com.moemoe.lalala.utils.JuQingUtil;
@@ -40,11 +41,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 /**
- *
  * Created by yi on 2017/9/28.
  */
 
-public class JuQingChatV2Fragment extends BaseFragment implements IPhoneFragment,JuQIngChatContract.View{
+public class JuQingChatV2Fragment extends BaseFragment implements IPhoneFragment, JuQIngChatContract.View {
 
     @BindView(R.id.list)
     RecyclerView mListDocs;
@@ -58,15 +58,18 @@ public class JuQingChatV2Fragment extends BaseFragment implements IPhoneFragment
     private String id;
     private String role;
 
+    private String groupId;
+
     @Override
     protected int getLayoutId() {
         return R.layout.frag_chat_phone;
     }
 
-    public static JuQingChatV2Fragment newInstance(String role, String id){
+    public static JuQingChatV2Fragment newInstance(String role, String id) {
         JuQingChatV2Fragment fragment = new JuQingChatV2Fragment();
         Bundle b = new Bundle();
-        b.putString("id",id);
+        b.putString("id", id);
+        b.putString("groupId", id);
         fragment.setRole(role);
         fragment.setArguments(b);
         return fragment;
@@ -85,33 +88,34 @@ public class JuQingChatV2Fragment extends BaseFragment implements IPhoneFragment
                 .build()
                 .inject(this);
         id = getArguments().getString("id");
+        groupId = getArguments().getString("groupId");
         mAdapter = new ChatAdapter(getContext());
         LinearLayoutManager m = new LinearLayoutManager(getContext());
         mListDocs.setLayoutManager(m);
         mListDocs.setAdapter(mAdapter);
         ArrayList<JuQingShowEntity> list = JuQingUtil.getJuQingShow(id);
         mList = new ArrayList<>();
-        for(JuQingShowEntity entity : list){
-            if(entity.getName().equals("me")){
+        for (JuQingShowEntity entity : list) {
+            if (entity.getName().equals("me")) {
                 entity.setPath(PreferenceUtils.getAuthorInfo().getHeadPath());
-            }else {
-                if(role.equals("len")){
+            } else {
+                if (role.equals("len")) {
                     entity.setOtherPath(R.drawable.ic_phone_message_len);
                 }
-                if(role.equals("mei")){
+                if (role.equals("mei")) {
                     entity.setOtherPath(R.drawable.ic_phone_message_mei);
                 }
-                if(role.equals("sari")){
+                if (role.equals("sari")) {
                     entity.setOtherPath(R.drawable.ic_phone_message_sari);
                 }
             }
             mList.add(entity);
         }
-        if(mList.size() > 0){
+        if (mList.size() > 0) {
             JuQingShowEntity entity = mList.get(0);
             mCurIndex = 0;
             mAdapter.addItem(entity);
-            mListDocs.scrollToPosition(mAdapter.getItemCount()-1);
+            mListDocs.scrollToPosition(mAdapter.getItemCount() - 1);
             mListDocs.setOnTouchListener(new View.OnTouchListener() {
                 private int MIN_CLICK_DELAY_TIME = 500;
                 private long lastClickTime = 0;
@@ -121,34 +125,38 @@ public class JuQingChatV2Fragment extends BaseFragment implements IPhoneFragment
 
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
                         x = event.getX();
                         y = event.getY();
                     }
 
-                    if(event.getAction() == MotionEvent.ACTION_UP){
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
                         float tempX = event.getX();
                         float tempY = event.getY();
 
-                        if(Math.abs(tempX - x) < 20 && Math.abs(tempY - y) < 20){
+                        if (Math.abs(tempX - x) < 20 && Math.abs(tempY - y) < 20) {
                             long currentTime = System.currentTimeMillis();
                             long timeD = currentTime - lastClickTime;
                             lastClickTime = currentTime;
-                            if(timeD >= MIN_CLICK_DELAY_TIME){
-                                if(mCurIndex != -1){
+                            if (timeD >= MIN_CLICK_DELAY_TIME) {
+                                if (mCurIndex != -1) {
                                     JuQingShowEntity entity = mList.get(mCurIndex);
-                                    if(entity.getChoice().size() > 0){
-                                        if(entity.getChoice().size() == 1){
-                                            for(int index : entity.getChoice().values()){
+                                    if (entity.getChoice().size() > 0) {
+                                        if (entity.getChoice().size() == 1) {
+                                            for (int index : entity.getChoice().values()) {
                                                 mCurIndex = index;
                                                 toNext();
                                             }
-                                        }else {
+                                        } else {
                                             showMenu(entity.getChoice());
                                         }
-                                    }else {
+                                    } else {
                                         mCurIndex = -1;
                                         mPresenter.doneJuQing(id);
+                                        //TODO 剧情结束
+//                                        saveRecordEntity saveRecordEntity = new saveRecordEntity(groupId, id, 1);
+//                                        mPresenter.newDownJuQing(saveRecordEntity);
+
                                     }
                                 }
                             }
@@ -159,20 +167,20 @@ public class JuQingChatV2Fragment extends BaseFragment implements IPhoneFragment
                     return false;
                 }
             });
-        }else {
-            ((PhoneMainV2Activity)getContext()).onBackPressed();
+        } else {
+            ((PhoneMainV2Activity) getContext()).onBackPressed();
         }
     }
 
     @Override
     public void release() {
-        if(mPresenter != null) mPresenter.release();
+        if (mPresenter != null) mPresenter.release();
         super.release();
     }
 
-    public void showMenu(LinkedHashMap<String,Integer> map){
+    public void showMenu(LinkedHashMap<String, Integer> map) {
         final ArrayList<MenuItem> items = new ArrayList<>();
-        for(String name : map.keySet()){
+        for (String name : map.keySet()) {
             MenuItem item = new MenuItem(map.get(name), name);
             items.add(item);
         }
@@ -186,7 +194,7 @@ public class JuQingChatV2Fragment extends BaseFragment implements IPhoneFragment
             @Override
             public void OnMenuItemClick(int itemId) {
                 mCurIndex = itemId;
-                if(mCurIndex != -1){
+                if (mCurIndex != -1) {
                     toNext();
                 }
             }
@@ -194,8 +202,8 @@ public class JuQingChatV2Fragment extends BaseFragment implements IPhoneFragment
         menuFragment.show(getChildFragmentManager(), "MsgMenu");
     }
 
-    private void toNext(){
-        if(mList.size() > 0){
+    private void toNext() {
+        if (mList.size() > 0) {
             Observable.timer(200, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
                     .subscribe(new Observer<Long>() {
                         @Override
@@ -217,7 +225,7 @@ public class JuQingChatV2Fragment extends BaseFragment implements IPhoneFragment
                         public void onComplete() {
                             JuQingShowEntity entity = mList.get(mCurIndex);
                             mAdapter.addItem(entity);
-                            mListDocs.scrollToPosition(mAdapter.getItemCount()-1);
+                            mListDocs.scrollToPosition(mAdapter.getItemCount() - 1);
                         }
                     });
         }
@@ -231,31 +239,37 @@ public class JuQingChatV2Fragment extends BaseFragment implements IPhoneFragment
     @Override
     public void onDoneSuccess(long time) {
         JuQingShowEntity entity = mList.get(mList.size() - 1);
-        if("len".equals(role)){
-            PreferenceUtils.setLenLastContent(getContext(),entity.getText());
-        }else if("mei".equals(role)){
-            PreferenceUtils.setMeiLastContent(getContext(),entity.getText());
-        }else if("sari".equals(role)){
-            PreferenceUtils.setSariLastContent(getContext(),entity.getText());
+        if ("len".equals(role)) {
+            PreferenceUtils.setLenLastContent(getContext(), entity.getText());
+        } else if ("mei".equals(role)) {
+            PreferenceUtils.setMeiLastContent(getContext(), entity.getText());
+        } else if ("sari".equals(role)) {
+            PreferenceUtils.setSariLastContent(getContext(), entity.getText());
         }
-        if(3 != JuQingUtil.getLevel(id)){
-            JuQingUtil.saveJuQingDone(id,time);
+        if (3 != JuQingUtil.getLevel(id)) {
+            JuQingUtil.saveJuQingDone(id, time);
         }
         int dotNum = PreferenceUtils.getJuQIngDotNum(getContext());
-        if(dotNum > 0){
+        if (dotNum > 0) {
             dotNum -= 1;
         }
-        PreferenceUtils.setJuQingDotNum(getContext(),dotNum);
-        EventBus.getDefault().post(new EventDoneEvent("mobile",role));
+        PreferenceUtils.setJuQingDotNum(getContext(), dotNum);
+        EventBus.getDefault().post(new EventDoneEvent("mobile", role));
     }
 
     @Override
+    public void newDownSuccess() {
+
+    }
+
+
+    @Override
     public String getTitle() {
-        if("len".equals(role)){
+        if ("len".equals(role)) {
             return "小莲";
-        }else if("mei".equals(role)){
+        } else if ("mei".equals(role)) {
             return "美藤双树";
-        }else if("sari".equals(role)){
+        } else if ("sari".equals(role)) {
             return "沙利尔";
         }
         return "";

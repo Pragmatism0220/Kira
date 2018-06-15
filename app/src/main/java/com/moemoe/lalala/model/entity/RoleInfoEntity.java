@@ -18,12 +18,22 @@ public class RoleInfoEntity {
     private int userLikeRoleDefine; //用户将角色房屋宅屋里收集的好感度累计值 ,
     private String userLikeRoleDefineTxt;//用户将角色房屋宅屋里收集的好感度累计值对应的好感评价
     private String showHeadIcon;//大图
+    private int  userLikeRoleDefineFull;//好感度满值
     private boolean isPutInHouse;// 是否放入宅屋，true：已经放入宅屋
     private boolean isSelected = false; //item选中 自加入
     private int count;
     private String roleNumber;
 
+    public int getUserLikeRoleDefineFull() {
+        return userLikeRoleDefineFull;
+    }
+
+    public void setUserLikeRoleDefineFull(int userLikeRoleDefineFull) {
+        this.userLikeRoleDefineFull = userLikeRoleDefineFull;
+    }
+
     public String getRoleNumber() {
+
         return roleNumber;
     }
 

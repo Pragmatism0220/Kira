@@ -32,7 +32,7 @@ public class JuQingTriggerEntity {
     private String type;//map:地图剧情,mobile:手机剧情
     private String conditionStr;
     private String groupId;//主线剧情分组ID
-
+    private String scriptId;//主线剧情ID
     private String fileName;
     private int downloadState;//1.未下载 2.下载完成 3.下载失败
 
@@ -53,7 +53,7 @@ public class JuQingTriggerEntity {
 
         condition = entity.getCondition();
         conditionStr = entity.getCondition().toString();
-
+        scriptId = entity.getScriptId();
         force = entity.isForce();
         level = entity.getLevel();
         roleOf = entity.getRoleOf();
@@ -86,10 +86,12 @@ public class JuQingTriggerEntity {
     }
 
 
-    @Generated(hash = 1885469217)
-    public JuQingTriggerEntity(String id, String extra, boolean force, int level, String roleOf, String storyId, String type,
-            String conditionStr, String groupId, String fileName, int downloadState, String iconId, String iconPath, int w, int h,
-            int x, int y, String md5) {
+
+
+    @Generated(hash = 1163253950)
+    public JuQingTriggerEntity(String id, String extra, boolean force, int level, String roleOf, String storyId,
+            String type, String conditionStr, String groupId, String scriptId, String fileName, int downloadState,
+            String iconId, String iconPath, int w, int h, int x, int y, String md5) {
         this.id = id;
         this.extra = extra;
         this.force = force;
@@ -99,6 +101,7 @@ public class JuQingTriggerEntity {
         this.type = type;
         this.conditionStr = conditionStr;
         this.groupId = groupId;
+        this.scriptId = scriptId;
         this.fileName = fileName;
         this.downloadState = downloadState;
         this.iconId = iconId;
@@ -111,9 +114,14 @@ public class JuQingTriggerEntity {
     }
 
 
+
+
     @Generated(hash = 901926953)
     public JuQingTriggerEntity() {
     }
+
+
+
 
     public static ArrayList<JuQingTriggerEntity> toDb(ArrayList<NewJuQingTriggerEntity> entities, String type) {
         ArrayList<JuQingTriggerEntity> res = new ArrayList<>();
@@ -277,11 +285,18 @@ public class JuQingTriggerEntity {
         this.groupId = groupId;
     }
 
+    public String getScriptId() {
+        return scriptId;
+    }
+
+    public void setScriptId(String scriptId) {
+        this.scriptId = scriptId;
+    }
+
     @Override
     public String toString() {
         return "JuQingTriggerEntity{" +
                 "id='" + id + '\'' +
-                ", condition=" + condition +
                 ", extra='" + extra + '\'' +
                 ", force=" + force +
                 ", level=" + level +
@@ -290,6 +305,17 @@ public class JuQingTriggerEntity {
                 ", type='" + type + '\'' +
                 ", conditionStr='" + conditionStr + '\'' +
                 ", groupId='" + groupId + '\'' +
+                ", scriptId='" + scriptId + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", downloadState=" + downloadState +
+                ", iconId='" + iconId + '\'' +
+                ", iconPath='" + iconPath + '\'' +
+                ", w=" + w +
+                ", h=" + h +
+                ", x=" + x +
+                ", y=" + y +
+                ", md5='" + md5 + '\'' +
+                ", condition=" + condition +
                 '}';
     }
 

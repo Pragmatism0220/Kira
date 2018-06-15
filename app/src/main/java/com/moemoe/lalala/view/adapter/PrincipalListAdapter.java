@@ -69,7 +69,7 @@ public class PrincipalListAdapter extends RecyclerView.Adapter<PrincipalListAdap
 
         if (data.getImages() != null && data.getImages().size() > 0) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.mBackImage.getLayoutParams();
-            params.height = formatDipToPx(mContext, 95);
+            params.height = formatDipToPx(mContext, 105);
             holder.mBackImage.setLayoutParams(params);
             for (int i = 0; i < data.getImages().size(); i++) {
                 ImageViewWithNeedle image = new ImageViewWithNeedle(mContext);

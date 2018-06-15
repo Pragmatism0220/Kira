@@ -24,6 +24,7 @@ import com.moemoe.lalala.di.modules.JuQingChatModule;
 import com.moemoe.lalala.event.EventDoneEvent;
 import com.moemoe.lalala.model.entity.JuQingMapShowEntity;
 import com.moemoe.lalala.model.entity.JuQingNormalEvent;
+import com.moemoe.lalala.model.entity.saveRecordEntity;
 import com.moemoe.lalala.presenter.JuQIngChatContract;
 import com.moemoe.lalala.presenter.JuQingChatPresenter;
 import com.moemoe.lalala.utils.AlertDialogUtil;
@@ -104,7 +105,9 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
     private MediaPlayer mBgmPlayer;
     private MediaPlayer mVolPlayer;
     private ArrayList<JuQingMapShowEntity> eventList;
+    private String mGroupId;
     private String mId;
+    private int mStoryType;
     private int mCurIndex;
     private boolean mIsOut;
     private String mCurCg = "";
@@ -140,12 +143,13 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
                 .build()
                 .inject(this);
         mId = getIntent().getStringExtra("id");
+        mGroupId = getIntent().getStringExtra("groupId");
         type = getIntent().getBooleanExtra("type", false);
         if (TextUtils.isEmpty(mId)) {
             finish();
             return;
         }
-        eventList = JuQingUtil.getMapEventShow(mId); 
+        eventList = JuQingUtil.getMapEventShow(mId);
 
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         lp.leftMargin = (int) -getResources().getDimension(R.dimen.x10);
@@ -258,6 +262,7 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
                     @Override
                     public void CancelOnClick() {
                         alertDialogUtil.dismissDialog();
+
                     }
 
                     @Override
@@ -265,6 +270,8 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
                         mCurIndex = -1;
                         if (!type) {
                             mPresenter.doneJuQing(mId);
+                            saveRecordEntity entity = new saveRecordEntity(mGroupId, mId, 1);
+                            mPresenter.newDownJuQing(entity);
                         } else {
                             finish();
                         }
@@ -388,7 +395,10 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
                     } else {
                         mCurIndex = -1;
                         if (!type) {
-                            mPresenter.doneJuQing(mId);
+//                            mPresenter.doneJuQing(mId);
+                            saveRecordEntity entity1 = new saveRecordEntity(mGroupId, mId, 1);
+                            mPresenter.newDownJuQing(entity1);
+
                         } else {
                             finish();
                         }
@@ -1053,4 +1063,17 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
 //        setResult(RESULT_OK,intent);
         finish();
     }
+
+    @Override
+    public void newDownSuccess(long time) {
+        if (3 != JuQingUtil.getLevel(mId)) {
+            JuQingUtil.saveJuQingDone(mId, time);
+        } else {
+            JuQingUtil.saveJuQingNormal(new JuQingNormalEvent(mId));
+        }
+        EventBus.getDefault().post(new EventDoneEvent("map", ""));
+        finish();
+    }
+
+
 }

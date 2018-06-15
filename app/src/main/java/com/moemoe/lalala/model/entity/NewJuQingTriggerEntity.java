@@ -23,6 +23,15 @@ public class NewJuQingTriggerEntity {
     private String type;//map:地图剧情,mobile:手机剧情
     private String conditionStr;
     private String groupId;//主线剧情分组ID
+    private String scriptId;//剧情脚本ID
+
+    public String getScriptId() {
+        return scriptId;
+    }
+
+    public void setScriptId(String scriptId) {
+        this.scriptId = scriptId;
+    }
 
     public String getId() {
         return id;
@@ -117,6 +126,7 @@ public class NewJuQingTriggerEntity {
                 ", type='" + type + '\'' +
                 ", conditionStr='" + conditionStr + '\'' +
                 ", groupId='" + groupId + '\'' +
+                ", scriptId='" + scriptId + '\'' +
                 '}';
     }
 }

@@ -8,7 +8,13 @@ public class saveRecordEntity {
 
     private String groupId;//主线剧情组ID，storyType=1时必填项 ,
     private String storyId;//主线或支线的剧情ID ,
-    private String storyType;//剧情类型，1：主线剧情，2：支线剧情
+    private int storyType;//剧情类型，1：主线剧情，2：支线剧情
+
+    public saveRecordEntity(String groupId, String storyId, int storyType) {
+        this.groupId = groupId;
+        this.storyId = storyId;
+        this.storyType = storyType;
+    }
 
     public String getGroupId() {
         return groupId;
@@ -26,11 +32,11 @@ public class saveRecordEntity {
         this.storyId = storyId;
     }
 
-    public String getStoryType() {
+    public int getStoryType() {
         return storyType;
     }
 
-    public void setStoryType(String storyType) {
+    public void setStoryType(int storyType) {
         this.storyType = storyType;
     }
 

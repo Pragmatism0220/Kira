@@ -123,7 +123,7 @@ android {
         }
     }
     greendao {
-        schemaVersion 73
+        schemaVersion 74
         daoPackage 'com.moemoe.lalala.greendao.gen'
         targetGenDir 'src/main/java'
     }

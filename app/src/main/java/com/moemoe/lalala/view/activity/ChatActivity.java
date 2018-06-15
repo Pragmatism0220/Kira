@@ -90,6 +90,7 @@ public class ChatActivity extends BaseAppCompatActivity {
         if (type != null) {
             if (type.equals("JuQing")) {
                 BaseFragment juQingChatFragment = JuQingChatV2Fragment.newInstance(role, id);
+
                 toFragment(juQingChatFragment);
             } else if (type.equals("MsgV2")) {
                 toFragment(PhoneMsgListV2Fragment.newInstance());

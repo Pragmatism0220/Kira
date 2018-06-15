@@ -521,6 +521,18 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 mPresenter.loadRcToken();
             }
         }
+//        if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
+//            mIvPresonal.setImageResource(R.drawable.bg_default_circle);
+//        } else {
+//            int size = (int) getResources().getDimension(R.dimen.x64);
+//            Glide.with(this)
+//                    .load(StringUtils.getUrl(this, PreferenceUtils.getAuthorInfo().getHeadPath(), size, size, false, true))
+//                    .error(R.drawable.bg_default_circle)
+//                    .placeholder(R.drawable.bg_default_circle)
+//                    .bitmapTransform(new CropCircleTransformation(this))
+//                    .into(mIvPresonal);
+//        }
+
         if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
             mIvPersonal.setImageResource(R.drawable.bg_default_circle);
         } else {
@@ -584,12 +596,21 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                                     String extra = entity.getExtra();
                                     boolean isForce = entity.isForce();
                                     JsonObject jsonObject = new Gson().fromJson(extra, JsonObject.class);
+                                    //TODO 触摸器图片处理
                                     String icon = jsonObject.get("icon").getAsString();
                                     String eventId = jsonObject.get("map").getAsString();
-                                    mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getStoryId());
-//                                    mPresenter.addNewEventMark(eventId, icon, w, h, x, y, md5, mContainer, MapActivity.this, mapWidget, entity.getStoryId());
+                                    int w = jsonObject.get("w").getAsInt();
+                                    int h = jsonObject.get("h").getAsInt();
+                                    int x = jsonObject.get("x").getAsInt();
+                                    int y = jsonObject.get("y").getAsInt();
+                                    String md5 = jsonObject.get("md5").getAsString();
+//                                    mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getStoryId());
+                                    mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getScriptId());
+
+                                    //                                    mPresenter.addNewEventMark(eventId, icon, w, h, x, y, md5, mContainer, MapActivity.this, mapWidget, entity.getStoryId());
                                     if (isForce) {
                                         Intent i = new Intent(MapActivity.this, MapEventNewActivity.class);
+
                                         i.putExtra("id", entity.getStoryId());
                                         startActivity(i);
                                     }
@@ -599,13 +620,24 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                                     String extra = entity.getExtra();
                                     boolean isForce = entity.isForce();
                                     JsonObject jsonObject = new Gson().fromJson(extra, JsonObject.class);
+                                    //TODO 触摸器图片处理
                                     String icon = jsonObject.get("icon").getAsString();
                                     String eventId = jsonObject.get("iconId").getAsString();
+
+                                    int w = jsonObject.get("w").getAsInt();
+                                    int h = jsonObject.get("h").getAsInt();
+                                    int x = jsonObject.get("x").getAsInt();
+                                    int y = jsonObject.get("y").getAsInt();
+                                    String md5 = jsonObject.get("md5").getAsString();
+//                                    mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getStoryId());
                                     mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getType());
+
+//                                    mPresenter.addNewEventMark(eventId, icon, w, h, x, y, md5, mContainer, MapActivity.this, mapWidget, entity.getStoryId());
                                     if (isForce) {
-//                                        Intent i = new Intent(MapActivity.this, MapEventNewActivity.class);
-//                                        i.putExtra("id", entity.getStoryId());
-//                                        startActivity(i);
+                                        Intent i = new Intent(MapActivity.this, MapEventNewActivity.class);
+                                        i.putExtra("groupId", entity.getGroupId());
+                                        i.putExtra("id", entity.getScriptId());
+                                        startActivity(i);
                                     }
 
                                 }
@@ -619,7 +651,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
     @Override
     public void onGetTriggerSuccess(ArrayList<JuQingTriggerEntity> entities) {
-//        JuQingUtil.saveJuQingTriggerList(entities);
+        JuQingUtil.saveJuQingTriggerList(entities);
     }
 
     @Override
@@ -660,13 +692,12 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             @Override
             public void onComplete() {
                 GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao().insertOrReplaceInTx(res);
-
             }
         });
-        ArrayList<JuQingTriggerEntity> mapPics = (ArrayList<JuQingTriggerEntity>) GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao()
-                .queryBuilder()
-                .where(JuQingTriggerEntityDao.Properties.Type.eq("story"))
-                .list();
+//        ArrayList<JuQingTriggerEntity> mapPics = (ArrayList<JuQingTriggerEntity>) GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao()
+//                .queryBuilder()
+//                .where(JuQingTriggerEntityDao.Properties.Type.eq("story"))
+//                .list();
     }
 
 
@@ -678,6 +709,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     @Override
     public void onCheckStoryVersionSuccess(int version) {
         int version1 = PreferenceUtils.getJuQingVersion(this);
+
         if (version1 < version) {
             mPresenter.getAllStory();
 //            mPresenter.getTrigger();
@@ -1722,6 +1754,28 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         if (MoeMoeApplication.getInstance().isMenu()) {
             MoeMoeApplication.getInstance().GoneMenu();
         }
+//        if (mIvSelect.isSelected()) {
+//            ViewGroup.LayoutParams layoutParams = mLlComprehensive.getLayoutParams();
+//            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//            mLlComprehensive.setLayoutParams(layoutParams);
+//            mLlComprehensive.setBackgroundColor(getResources().getColor(R.color.white_e5));
+//            ViewGroup.LayoutParams params = mLlComprehensiveChild.getLayoutParams();
+//            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//            mLlComprehensiveChild.setLayoutParams(params);
+//            mLlComprehensiveChild.setVisibility(View.VISIBLE);
+//            mLlFrist.setVisibility(View.VISIBLE);
+//            mLlSecond.setVisibility(View.VISIBLE);
+//        } else {
+//            ViewGroup.LayoutParams layoutParams = mLlComprehensive.getLayoutParams();
+//            layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+//            mLlComprehensive.setLayoutParams(layoutParams);
+//            mLlComprehensive.setBackgroundColor(getResources().getColor(R.color.transparent));
+//            ViewGroup.LayoutParams params = mLlComprehensiveChild.getLayoutParams();
+//            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+//            mLlComprehensiveChild.setLayoutParams(params);
+//            mLlFrist.setVisibility(View.GONE);
+//            mLlSecond.setVisibility(View.GONE);
+//        }
     }
 
     private void clickRole() {
@@ -1780,7 +1834,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         refreshAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator userImageAnimator = ObjectAnimator.ofFloat(mUserImageRoot, "translationY", -mUserImageRoot.getHeight() - getResources().getDimension(R.dimen.y60), 0).setDuration(300);
         userImageAnimator.setInterpolator(new OvershootInterpolator());
-        ObjectAnimator mMapNewAnimator = ObjectAnimator.ofFloat(mMapNew, "translationX", getResources().getDisplayMetrics().widthPixels, 0).setDuration(300);
+        ObjectAnimator mMapNewAnimator = ObjectAnimator.ofFloat(mMapNew, "translationY", -mMapNew.getHeight() - getResources().getDimension(R.dimen.y60), 0).setDuration(300);
         mMapNewAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mToolBarAnimator = ObjectAnimator.ofFloat(mLlToolBar, "translationY", -mLlToolBar.getHeight() - getResources().getDimension(R.dimen.y60), 0).setDuration(300);
         mToolBarAnimator.setInterpolator(new OvershootInterpolator());
@@ -1808,7 +1862,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         refreshAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator userImageAnimator = ObjectAnimator.ofFloat(mUserImageRoot, "translationY", 0, -getResources().getDimension(R.dimen.y60) - mUserImageRoot.getHeight()).setDuration(300);
         userImageAnimator.setInterpolator(new OvershootInterpolator());
-        ObjectAnimator mMapNewAnimator = ObjectAnimator.ofFloat(mMapNew, "translationX", 0, getResources().getDisplayMetrics().widthPixels).setDuration(300);
+        ObjectAnimator mMapNewAnimator = ObjectAnimator.ofFloat(mMapNew, "translationY", 0, -getResources().getDimension(R.dimen.y60) - mMapNew.getHeight()).setDuration(300);
         mMapNewAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mToolBarAnimator = ObjectAnimator.ofFloat(mLlToolBar, "translationY", 0, -getResources().getDimension(R.dimen.y60) - mLlToolBar.getHeight()).setDuration(300);
         mToolBarAnimator.setInterpolator(new OvershootInterpolator());
@@ -2004,6 +2058,15 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         }
     }
 
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        if (MoeMoeApplication.getInstance().isMenu()) {
+//            MoeMoeApplication.getInstance().GoneMenu();
+//            return true;
+//        }
+//        return super.dispatchTouchEvent(ev);
+//    }
+
     @Override
     public void onLocationChanged(TencentLocation tencentLocation, int error, String s) {
         if (TencentLocation.ERROR_OK == error) {
@@ -2043,8 +2106,12 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             if (!MoeMoeApplication.getInstance().isMenu()) {
                 MoeMoeApplication.getInstance().goDialog(MapActivity.this);
             }
+//            MoeMoeApplication.getInstance().goDialog(MapActivity.this);
+//            MoeMoeApplication.getInstance().VisibleDiaLog(MapActivity.this);
             try {
-                Thread.sleep(10000);
+                Thread.sleep(20000);
+//                MoeMoeApplication.getInstance().GoneDiaLog();
+//                mHandler.handleMessage(message);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -2068,5 +2135,16 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         if (PreferenceUtils.isLogin()) {
             AlertDialogUtil.getInstance().dismissDialog();
         }
+//        if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
+//            mIvPresonal.setImageResource(R.drawable.bg_default_circle);
+//        } else {
+//            int size = (int) getResources().getDimension(R.dimen.x64);
+//            Glide.with(this)
+//                    .load(StringUtils.getUrl(this, PreferenceUtils.getAuthorInfo().getHeadPath(), size, size, false, true))
+//                    .error(R.drawable.bg_default_circle)
+//                    .placeholder(R.drawable.bg_default_circle)
+//                    .bitmapTransform(new CropCircleTransformation(this))
+//                    .into(mIvPresonal);
+//        }
     }
 }

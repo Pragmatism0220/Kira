@@ -62,8 +62,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/image_plot_item_bg"
-        android:layout_marginLeft="7dp"
+        android:layout_marginStart="@dimen/x14"
         android:layout_marginTop="-35dp"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal"/>
 
 </RelativeLayout>

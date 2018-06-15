@@ -111,6 +111,7 @@
                 android:background="@drawable/ic_home_roles_emotion_2" />
 
             <FrameLayout
+                android:id="@+id/fl"
                 android:layout_width="@dimen/x220"
                 android:layout_height="@dimen/y52"
                 android:layout_below="@+id/role_name_text"
