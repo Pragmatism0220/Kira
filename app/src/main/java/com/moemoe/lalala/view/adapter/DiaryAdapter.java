@@ -1,33 +1,28 @@
 package com.moemoe.lalala.view.adapter;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.view.ViewGroup;
+
+
+import com.moemoe.lalala.model.entity.DiaryEntity;
+import com.moemoe.lalala.view.widget.adapter.BaseRecyclerViewAdapter;
 
 /**
  * Created by Administrator on 2018/6/5.
  */
 
-public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.DiaryViewHolder> {
+public class DiaryAdapter extends BaseRecyclerViewAdapter<DiaryEntity,DiaryViewHolder> {
 
-    @Override
-    public DiaryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+
+    public DiaryAdapter(int layoutResId) {
+        super(layoutResId);
     }
 
     @Override
-    public void onBindViewHolder(DiaryViewHolder holder, int position) {
+    protected void convert(DiaryViewHolder helper, DiaryEntity item, int position) {
 
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemType(int position) {
         return 0;
-    }
-
-    class DiaryViewHolder extends RecyclerView.ViewHolder {
-        public DiaryViewHolder(View itemView) {
-            super(itemView);
-        }
     }
 }

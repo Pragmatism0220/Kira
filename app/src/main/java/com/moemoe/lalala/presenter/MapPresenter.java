@@ -1,6 +1,7 @@
 package com.moemoe.lalala.presenter;
 
 import android.content.Context;
+import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -9,6 +10,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.AppSetting;
+import com.moemoe.lalala.event.SearchAllTriggerEntity;
+import com.moemoe.lalala.greendao.gen.JuQingTriggerEntityDao;
 import com.moemoe.lalala.greendao.gen.MapDbEntityDao;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetResultSubscriber;
@@ -25,6 +28,7 @@ import com.moemoe.lalala.model.entity.MapMarkContainer;
 import com.moemoe.lalala.model.entity.MapMarkEntity;
 import com.moemoe.lalala.model.entity.NearUserEntity;
 import com.moemoe.lalala.model.entity.NetaEvent;
+import com.moemoe.lalala.model.entity.NewJuQingTriggerEntity;
 import com.moemoe.lalala.model.entity.SplashEntity;
 import com.moemoe.lalala.model.entity.UserDeskmateEntity;
 import com.moemoe.lalala.model.entity.UserLocationEntity;
@@ -38,6 +42,10 @@ import com.moemoe.lalala.view.widget.map.MapWidget;
 import com.moemoe.lalala.view.widget.map.interfaces.Layer;
 import com.moemoe.lalala.view.widget.map.model.MapObject;
 
+import org.greenrobot.greendao.annotation.Id;
+
+import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -281,6 +289,24 @@ public class MapPresenter implements MapContract.Presenter {
     }
 
     @Override
+    public void getNewTrigger() {
+        apiService.searchAllTrigger()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<ArrayList<NewJuQingTriggerEntity>>() {
+                    @Override
+                    public void onSuccess(ArrayList<NewJuQingTriggerEntity> newJuQingTriggerEntities) {
+                        if (view != null) view.onGetNewTriggerSuccess(newJuQingTriggerEntities);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+    @Override
     public void getAllStory() {
         apiService.getAllStory()
                 .subscribeOn(Schedulers.io())
@@ -335,93 +361,167 @@ public class MapPresenter implements MapContract.Presenter {
     }
 
     @Override
-    public void addEventMark(String id, String icon, MapMarkContainer container, Context context, MapWidget map, String storyId) {
-        int iconId = 0;
-        int x = 0;
-        int y = 0;
-        if ("daily_len".equals(icon)) {
-            iconId = R.drawable.btn_event_daily_len;
-        } else if ("daily_mei".equals(icon)) {
-            iconId = R.drawable.btn_event_daily_mei;
-        } else if ("daily_sari".equals(icon)) {
-            iconId = R.drawable.btn_event_daily_sari;
-        } else if ("branch_len".equals(icon)) {
-            iconId = R.drawable.btn_event_branch_len;
-        } else if ("branch_mei".equals(icon)) {
-            iconId = R.drawable.btn_event_branch_mei;
-        } else if ("branch_sari".equals(icon)) {
-            iconId = R.drawable.btn_event_branch_sari;
-        } else if ("main_len".equals(icon)) {
-            iconId = R.drawable.btn_event_main_len;
-        } else if ("main_mei".equals(icon)) {
-            iconId = R.drawable.btn_event_main_mei;
-        } else if ("main_sari".equals(icon)) {
-            iconId = R.drawable.btn_event_main_sari;
-        } else if ("summerfestival".equals(icon)) {
-            iconId = R.drawable.btn_map_event_summerfestival;
-        } else if ("daily_current".equals(icon)) {
-            iconId = R.drawable.btn_event_daily_current;
-        } else if ("branch_current".equals(icon)) {
-            iconId = R.drawable.btn_event_branch_current;
-        } else if ("main_current".equals(icon)) {
-            iconId = R.drawable.btn_event_main_current;
+    public void addEventMark(String id, String icon, MapMarkContainer container, Context context, MapWidget map, String type) {
+        Layer layer;
+//        if ("story".equals(type)) {
+////            layer = map.createLayer(1);
+//            Layer tmp = map.getLayerById(1);
+//            if (tmp != null) map.removeLayer(1);
+//            layer = map.createLayer(1);
+//        } else {
+//            Layer tmp = map.getLayerById(100);
+//            if (tmp != null) map.removeLayer(100);
+//            layer = map.createLayer(100);
+//        }
+        ArrayList<JuQingTriggerEntity> mapPics = (ArrayList<JuQingTriggerEntity>) GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao()
+                .queryBuilder()
+                .where(JuQingTriggerEntityDao.Properties.Type.eq(type))
+                .list();
+        if (mapPics != null && mapPics.size() > 0) {
+            for (JuQingTriggerEntity entity : mapPics) {
+                if ("story".equals(type)) {
+//            layer = map.createLayer(1);
+                    Layer tmp = map.getLayerById(1);
+                    if (tmp != null) map.removeLayer(1);
+                    layer = map.createLayer(1);
+                } else {
+                    Layer tmp = map.getLayerById(100);
+                    if (tmp != null) map.removeLayer(100);
+                    layer = map.createLayer(100);
+                }
+                if (entity.getDownloadState() == 2) {
+                    if (FileUtil.isExists(StorageUtils.getMapRootPath() + entity.getFileName())) {
+                        //TODO 加入剧情脚本ID
+                        MapMarkEntity entity1 = new MapMarkEntity
+                                ("地图剧情" + id, entity.getX(), entity.getY(), "neta://com.moemoe.lalala/map_event_1.0?id=" + entity.getId(), entity.getFileName(),
+                                        entity.getW(), entity.getH(), entity.getGroupId());
+                        container.addMark(entity1);
+                        addMarkToMap(context, entity1, layer);
+                    }
+                }
+
+            }
         }
 
-        if ("activityroom".equals(id)) {
-            x = 1295;
-            y = 866;
-        } else if ("classroom".equals(id)) {
-            x = 1696;
-            y = 412;
-        } else if ("rooftop".equals(id)) {
-            x = 1493;
-            y = 272;
-        } else if ("mainroad".equals(id)) {
-            x = 2988;
-            y = 1311;
-        } else if ("corridor".equals(id)) {
-            x = 1861;
-            y = 715;
-        } else if ("tree".equals(id)) {
-            x = 441;
-            y = 1736;
-        } else if ("canteen".equals(id)) {
-            x = 1108;
-            y = 1455;
-        } else if ("principal".equals(id)) {
-            x = 1877;
-            y = 342;
-        } else if ("coffee".equals(id)) {
-            x = 873;
-            y = 1147;
-        } else if ("playground".equals(id)) {
-            x = 1166;
-            y = 188;
-        } else if ("warehouse".equals(id)) {
-            x = 2321;
-            y = 342;
-        } else if ("summerfestival".equals(id)) {
-            x = 3405;
-            y = 1992;
-        } else if ("library".equals(id)) {
-            x = 3288;
-            y = 1024;
+
+//            MapMarkEntity entity1 = new MapMarkEntity("地图剧情" + id, x, y, "neta://com.moemoe.lalala/map_event_1.0?id=" + storyId, iconId, 140, 140);
+//            container.removeMarkById("地图剧情" + id);
+//            container.addMark(entity1);
+//            addMarkToMap(context, entity1, layer);
+
+
+//        int iconId = 0;
+//        int x = 0;
+//        int y = 0;
+//        if ("daily_len".equals(icon)) {
+//            iconId = R.drawable.btn_event_daily_len;
+//        } else if ("daily_mei".equals(icon)) {
+//            iconId = R.drawable.btn_event_daily_mei;
+//        } else if ("daily_sari".equals(icon)) {
+//            iconId = R.drawable.btn_event_daily_sari;
+//        } else if ("branch_len".equals(icon)) {
+//            iconId = R.drawable.btn_event_branch_len;
+//        } else if ("branch_mei".equals(icon)) {
+//            iconId = R.drawable.btn_event_branch_mei;
+//        } else if ("branch_sari".equals(icon)) {
+//            iconId = R.drawable.btn_event_branch_sari;
+//        } else if ("main_len".equals(icon)) {
+//            iconId = R.drawable.btn_event_main_len;
+//        } else if ("main_mei".equals(icon)) {
+//            iconId = R.drawable.btn_event_main_mei;
+//        } else if ("main_sari".equals(icon)) {
+//            iconId = R.drawable.btn_event_main_sari;
+//        } else if ("summerfestival".equals(icon)) {
+//            iconId = R.drawable.btn_map_event_summerfestival;
+//        } else if ("daily_current".equals(icon)) {
+//            iconId = R.drawable.btn_event_daily_current;
+//        } else if ("branch_current".equals(icon)) {
+//            iconId = R.drawable.btn_event_branch_current;
+//        } else if ("main_current".equals(icon)) {
+//            iconId = R.drawable.btn_event_main_current;
+//        }
+//
+//        if ("activityroom".equals(id)) {
+//            x = 1295;
+//            y = 866;
+//        } else if ("classroom".equals(id)) {
+//            x = 1696;
+//            y = 412;
+//        } else if ("rooftop".equals(id)) {
+//            x = 1493;
+//            y = 272;
+//        } else if ("mainroad".equals(id)) {
+//            x = 2988;
+//            y = 1311;
+//        } else if ("corridor".equals(id)) {
+//            x = 1861;
+//            y = 715;
+//        } else if ("tree".equals(id)) {
+//            x = 441;
+//            y = 1736;
+//        } else if ("canteen".equals(id)) {
+//            x = 1108;
+//            y = 1455;
+//        } else if ("principal".equals(id)) {
+//            x = 1877;
+//            y = 342;
+//        } else if ("coffee".equals(id)) {
+//            x = 873;
+//            y = 1147;
+//        } else if ("playground".equals(id)) {
+//            x = 1166;
+//            y = 188;
+//        } else if ("warehouse".equals(id)) {
+//            x = 2321;
+//            y = 342;
+//        } else if ("summerfestival".equals(id)) {
+//            x = 3405;
+//            y = 1992;
+//        } else if ("library".equals(id)) {
+//            x = 3288;
+//            y = 1024;
+//        }
+//        Layer layer = map.getLayerById(1);
+//
+//        // if(layer == null){
+//        // Layer layer = map.createLayer(1);//1 地图剧情
+//        //  }
+//        MapObject object = layer.getMapObject("地图剧情" + id);
+//        if (object == null) {
+//
+//
+//            MapMarkEntity entity1 = new MapMarkEntity("地图剧情" + id, x, y, "neta://com.moemoe.lalala/map_event_1.0?id=" + storyId, iconId, 140, 140);
+//            container.removeMarkById("地图剧情" + id);
+//            container.addMark(entity1);
+//            addMarkToMap(context, entity1, layer);
+        // view.onMapEventLoaded(container);
+    }
+    // MapToolTipUtils.getInstance().updateList(container.getContainer());
+
+    @Override
+    public void addNewEventMark(String id, String icon, int w, int h, int x, int y, String md5, MapMarkContainer container, Context context, MapWidget map, String storyId) {
+
+        if (md5.length() < 32) {
+            int n = 32 - md5.length();
+            for (int i = 0; i < n; i++) {
+                md5 = "0" + md5;
+            }
         }
         Layer layer = map.getLayerById(1);
-
-        // if(layer == null){
-        // Layer layer = map.createLayer(1);//1 地图剧情
-        //  }
         MapObject object = layer.getMapObject("地图剧情" + id);
-        if (object == null) {
-            MapMarkEntity entity1 = new MapMarkEntity("地图剧情" + id, x, y, "neta://com.moemoe.lalala/map_event_1.0?id=" + storyId, iconId, 140, 140);
-            container.removeMarkById("地图剧情" + id);
-            container.addMark(entity1);
-            addMarkToMap(context, entity1, layer);
-            // view.onMapEventLoaded(container);
+        if (object != null) {
+
         }
-        // MapToolTipUtils.getInstance().updateList(container.getContainer());
     }
+
+//    @Override
+//    public void addNewEventMark(String id, String icon, int w, int h, int x, int y, MapMarkContainer container, Context context, MapWidget map, String storyId) {
+//        Layer layer = map.getLayerById(1);
+//        MapObject object = layer.getMapObject("地图剧情" + id);
+//        if (object != null) {
+//            MapMarkEntity entity = new MapMarkEntity();
+//        }
+//    }
 
     @Override
     public void addMapMark(Context context, MapMarkContainer container, MapWidget map, String type) {

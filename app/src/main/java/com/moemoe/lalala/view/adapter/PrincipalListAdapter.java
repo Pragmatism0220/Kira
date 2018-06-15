@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -14,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.moemoe.lalala.R;
+import com.moemoe.lalala.event.NewStoryInfo;
 import com.moemoe.lalala.event.OnItemListener;
 import com.moemoe.lalala.view.base.PrincipalListBean;
 import com.moemoe.lalala.view.widget.view.ImageViewWithNeedle;
@@ -28,9 +30,9 @@ import java.util.List;
 public class PrincipalListAdapter extends RecyclerView.Adapter<PrincipalListAdapter.PrincipalListViewHolder> {
 
     private Context mContext;
-    private List<PrincipalListBean> mData;
+    private List<NewStoryInfo> mData;
 
-    public PrincipalListAdapter(Context mContext, List<PrincipalListBean> lists) {
+    public PrincipalListAdapter(Context mContext, List<NewStoryInfo> lists) {
         this.mContext = mContext;
         this.mData = lists;
     }
@@ -57,31 +59,33 @@ public class PrincipalListAdapter extends RecyclerView.Adapter<PrincipalListAdap
 
     @Override
     public void onBindViewHolder(final PrincipalListViewHolder holder, final int position) {
-        PrincipalListBean data = mData.get(position);
+        NewStoryInfo data = mData.get(position);
+        Log.i("asd", "onBindViewHolder: " + mData);
+
         holder.mNumberImage.setEnabled(!data.isLock());
         holder.mPlayImage.setEnabled(!data.isLock());
-        holder.mTitleText.setText(data.getTitle());
-        holder.mNumberText.setText(data.getNumber());
+        holder.mTitleText.setText(data.getName());
+        holder.mNumberText.setText(data.getSortId());
 
-        if (data.getExtraImages() != null && data.getExtraImages().size() > 0) {
+        if (data.getImages() != null && data.getImages().size() > 0) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.mBackImage.getLayoutParams();
             params.height = formatDipToPx(mContext, 95);
             holder.mBackImage.setLayoutParams(params);
-            for (Bitmap bitmap : data.getExtraImages()) {
+            for (int i = 0; i < data.getImages().size(); i++) {
                 ImageViewWithNeedle image = new ImageViewWithNeedle(mContext);
-                image.setExtraImage(bitmap);
+                image.setExtraImage(data.getImages().get(i));
                 holder.mExtraLayout.addView(image);
             }
         }
 
-//        if (mOnItemListener != null) {
-//            holder.mTitle.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    mOnItemListener.onItemClick(holder.mTitle, position);
-//                }
-//            });
-//        }
+        if (mOnItemListener != null) {
+            holder.mBackImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemListener.onItemClick(holder.mBackImage, position);
+                }
+            });
+        }
     }
 
     @Override

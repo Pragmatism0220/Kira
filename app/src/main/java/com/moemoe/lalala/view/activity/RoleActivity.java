@@ -32,6 +32,7 @@ import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -45,13 +46,14 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
     private RoleAdapter mAdapter;
     private ActivityRoleBinding binding;
-    private ArrayList<RoleInfoEntity> entities = new ArrayList<>();
+    List<RoleInfoEntity> info = new ArrayList<>();
     private String roleId;
     private boolean isPut;
     @Inject
     RolePresenter mPresenter;
 
     int mPosition;
+    private boolean isPause;
 
     @Override
     protected void initComponent() {
@@ -62,6 +64,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                 .inject(this);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_role);
         binding.setPresenter(new Presenter());
+        mPresenter.getRoleInfo();
         initView();
     }
 
@@ -71,11 +74,12 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
     @Override
     public void getRoleInfo(final ArrayList<RoleInfoEntity> entities) {
-        this.entities = entities;
+        info = entities;
         mAdapter = new RoleAdapter(entities, this);
         binding.roleListRv.setLayoutManager(new GridLayoutManager(this, 3));
         binding.roleListRv.addItemDecoration(new SpacesItemDecoration(20, 16, 0));
         binding.roleListRv.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
 
         //数组为0的位置默认初始化
         if (!entities.get(0).getIsPutInHouse()) {
@@ -96,7 +100,9 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
         } else if ("真爱".equals(entities.get(0).getUserLikeRoleDefineTxt())) {
             binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_6);
         }
-
+        /**
+         * 好感度计时器
+         */
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
         if (entities.get(0).getUserLikeRoleDefine() <= 20) {
             params.width = 60;
@@ -112,14 +118,13 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
             binding.roleHeartNumSmall.setVisibility(View.GONE);
         }
         binding.roleHeartNumSmall.setLayoutParams(params);
-        binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine() + "/120");
+        binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine() + "/");
         binding.roleNum.setText("编号" + entities.get(0).getRoleNumber());
         Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(0).getShowHeadIcon()).into(binding.roleImage);
         binding.roleNameText.setText(entities.get(0).getName());
 
         entities.get(0).setSelected(true);
         //点击事件
-
 
         mAdapter.setOnItemClickListener(new RoleAdapter.RoleItemClickListener() {
             @Override
@@ -129,9 +134,11 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                 if (!entities.get(position).getIsUserHadRole()) {
                     binding.putHouseBtn.setClickable(false);
                     binding.setDeskmakeBtn.setClickable(false);
+                    binding.checkClothBtn.setClickable(false);
                 } else if (entities.get(position).getIsUserHadRole()) {
                     binding.putHouseBtn.setClickable(true);
                     binding.putHouseBtn.setClickable(true);
+                    binding.checkClothBtn.setClickable(true);
                 }
                 if ("厌烦".equals(entities.get(position).getUserLikeRoleDefineTxt())) {
                     binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_1);
@@ -148,6 +155,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                 }
                 binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefine() + "/120");
                 FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
+
                 if (entities.get(position).getUserLikeRoleDefine() <= 20) {
                     params.width = 60;
                 } else if (entities.get(position).getUserLikeRoleDefine() <= 40) {
@@ -200,6 +208,25 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isPause = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isPause){
+            isPause = false;
+            info = mAdapter.getList();
+            Log.i("role", "onResume: "+info);
+            mAdapter.setList(info);
+        }
+
+    }
+
     private int dip2px(Context context, float dipValue) {
         Resources r = context.getResources();
         return (int) TypedValue.applyDimension(
@@ -239,7 +266,6 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
     @Override
     protected void initData() {
-        mPresenter.getRoleInfo();
     }
 
 
@@ -273,9 +299,14 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     }
                     break;
                 case R.id.check_cloth_btn:
-                    Intent intent = new Intent(RoleActivity.this, ClothingActivity.class);
-                    intent.putExtra("roleId", roleId);
-                    startActivity(intent);
+                    if (roleId != null) {
+                        Intent intent = new Intent(RoleActivity.this, ClothingActivity.class);
+                        intent.putExtra("roleId", roleId);
+                        startActivity(intent);
+                    } else {
+                        showToast("请选择相对应角色");
+                    }
+
                     break;
                 case R.id.role_diary_btn:
                     Intent diary = new Intent(RoleActivity.this, DiaryActivity.class);

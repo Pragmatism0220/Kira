@@ -836,6 +836,7 @@ public class FeedHolder extends ClickableViewHolder {
                     ((PersonalFavoriteDynamicActivity) context).likeDynamic(entity.getId(), entity.isThumb(), position);
                 } else if (context instanceof PersonalV2Activity) {
                     ((PersonalV2Activity) context).likeDynamic(entity.getId(), entity.isThumb(), position);
+
                 } else if (context instanceof FeedV3Activity) {
                     ((FeedV3Activity) context).likeDoc(entity.getId(), entity.isThumb(), position);
                 } else if (context instanceof NewDynamicActivity) {

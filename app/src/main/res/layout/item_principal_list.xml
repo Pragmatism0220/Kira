@@ -2,22 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="22dp"
-    android:paddingRight="22dp">
+
+    >
 
     <ImageView
         android:id="@+id/image_plot_item_bg"
-        android:layout_width="332dp"
-        android:layout_height="75dp"
-        android:layout_marginTop="9dp"
-        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y150"
+        android:layout_marginTop="@dimen/y18"
         android:background="@drawable/bg_home_plot_detail_paper"
-        />
+        android:scaleType="fitXY" />
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/x14">
+        android:layout_marginStart="@dimen/x20">
 
         <ImageView
             android:id="@+id/image_plot_detail_num"
@@ -40,19 +39,21 @@
         android:id="@+id/text_plot_detail_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="56dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="@dimen/x112"
         android:text="[意外的惊喜]"
-        android:textSize="15sp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/x30"
         android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/image_plot_detail_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="@dimen/x48"
         android:src="@drawable/selector_plot_play" />
 
 

@@ -48,15 +48,16 @@ public class ActivityEveryDayInfoAdapter extends RecyclerView.Adapter<ActivityEv
         holder.mPlayImage.setEnabled(!data.isLock());
         holder.mTitleText.setText(data.getTitle());
         holder.mNumberText.setText(data.getNumber());
+
         if (data.getExtraImages() != null && data.getExtraImages().size() > 0) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.mBackImage.getLayoutParams();
             params.height = formatDipToPx(mContext, 95);
             holder.mBackImage.setLayoutParams(params);
-            for (Bitmap bitmap : data.getExtraImages()) {
-                ImageViewWithNeedle image = new ImageViewWithNeedle(mContext);
-                image.setExtraImage(bitmap);
-                holder.mExtraLayout.addView(image);
-            }
+//            for (Bitmap bitmap : data.getExtraImages()) {
+//                ImageViewWithNeedle image = new ImageViewWithNeedle(mContext);
+//                image.setExtraImage(bitmap);
+//                holder.mExtraLayout.addView(image);
+//            }
 
         }
 

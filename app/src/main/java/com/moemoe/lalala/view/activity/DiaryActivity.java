@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.databinding.ActivityDiaryBinding;
 import com.moemoe.lalala.event.ScrollMessage;
+import com.moemoe.lalala.view.adapter.DiaryAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -26,6 +27,7 @@ import java.util.TimerTask;
 public class DiaryActivity extends BaseActivity {
 
     private ActivityDiaryBinding binding;
+    private DiaryAdapter mAdapter;
     private int topHeight;
     private final float maxScroll = 500f;
     private float oldAlpha;
@@ -93,26 +95,4 @@ public class DiaryActivity extends BaseActivity {
             }
         }
     }
-//
-//    private void initDialog() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(2000);
-//                    Handler handler = new Handler();
-//                    Runnable runnable = new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            binding.diaryDialog.setVisibility(View.GONE);
-//                        }
-//                    };
-//                    handler.postDelayed(runnable, 3000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//    }
 }

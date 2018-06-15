@@ -76,6 +76,7 @@ public class StorageUtils {
 
     private static String sDirSplash;
     private static String sDirHouse;
+    private static String sTrigger;
 
     /**
      * @param context
@@ -105,7 +106,7 @@ public class StorageUtils {
         sDirDownload = sDirRoot + "download/";
 
         sDirVideo = sDirRoot + "video/";
-
+        sTrigger = sDirRoot + ".trigger/";
         sDirLive2d = sDirRoot + ".live2d/";
         sDirSplash = sDirRoot + ".splash/";
         sDirHouse = sDirRoot + ".house/";
@@ -123,6 +124,7 @@ public class StorageUtils {
         check &= checkDir(sDirLive2d);
         check &= checkDir(sDirVideo);
         check &= checkDir(sDirHouse);
+        check &= checkDir(sTrigger);
         //check &= checkDir(sDirLog);
 
         Logger.d("initialStorageDir = " + check + ", paths = " + sDirRoot + "; " + sDirTemp);
@@ -239,9 +241,15 @@ public class StorageUtils {
     public static String getMapRootPath() {
         return sDirMap;
     }
-    public static String getHouseRootPath(){
+
+    public static String getHouseRootPath() {
         return sDirHouse;
     }
+
+    public static String getTrigger() {
+        return sTrigger;
+    }
+
     public static String getEventRootPath() {
         return sDirEvent;
     }

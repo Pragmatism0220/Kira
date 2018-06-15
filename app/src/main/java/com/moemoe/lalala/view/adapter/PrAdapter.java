@@ -10,10 +10,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
+import com.moemoe.lalala.event.NewStoryGroupInfo;
 import com.moemoe.lalala.event.OnItemListener;
+import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.view.base.MainStoryBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,10 +31,10 @@ public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int NO_VIEW = -1;//未解锁
 
     private Context mContext;
-    private List<MainStoryBean> infos;
+    private List<NewStoryGroupInfo> infos;
     private OnItemListener clickListener;
 
-    public PrAdapter(Context mContext, List<MainStoryBean> infos) {
+    public PrAdapter(Context mContext, List<NewStoryGroupInfo> infos) {
         this.mContext = mContext;
         this.infos = infos;
     }
@@ -41,15 +45,14 @@ public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-//        infos = new ArrayList<>();
         Log.i("asd", "getItemViewType: " + infos);
-        if (infos.get(position).getPercent() > 0) {
-            //未收集完
+        if (infos.get(position).isFullCollect()) {
+            //未收集
             return HALF_VIEW;
-        } else if (infos.get(position).getPercent() == -1) {
+        } else if (!infos.get(position).isFullCollect()) {
             //全收集
             return ALL_VIEW;
-        } else if (infos.get(position).getPercent() == -2) {
+        } else if (infos.get(position).isLock()) {
             //未解锁
             return NO_VIEW;
         }
@@ -74,26 +77,38 @@ public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        MainStoryBean data = infos.get(position);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        if (clickListener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickListener.onItemClick(v, position);
+                }
+            });
+        }
+        NewStoryGroupInfo data = infos.get(position);
         if (holder instanceof ALLViewHolder) {
             ALLViewHolder allHolder = (ALLViewHolder) holder;
-            allHolder.mBottomTitle.setText(data.getCoverDescribe());
-            allHolder.mNum.setText("参与人数：" + data.getCount());
-            allHolder.mName.setText(data.getName());
-
+            allHolder.mBottomTitle.setText(data.getContent());
+            allHolder.mNum.setText("参与人数：" + data.getJoinNum());
+            allHolder.mName.setText(data.getGroupName());
+            Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).into(allHolder.mPhoto);
+            allHolder.mPhoto.setAlpha(1.0f);
         } else if (holder instanceof HalfViewHolder) {
             HalfViewHolder halfHolder = (HalfViewHolder) holder;
-            halfHolder.mHalfBottomTitle.setText(data.getCoverDescribe());
-            halfHolder.mHalfBottomText.setText("36%" + "");
-            halfHolder.mHalfBottomNum.setText("参与人数：" + data.getCount());
-            halfHolder.mHalfBottonName.setText(data.getName());
-
+            halfHolder.mHalfBottomTitle.setText(data.getContent());
+            halfHolder.mHalfBottomText.setText(data.getProgress() + "%");
+            halfHolder.mHalfBottomNum.setText("参与人数：" + data.getJoinNum());
+            halfHolder.mHalfBottonName.setText(data.getGroupName());
+            Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).into(halfHolder.mHalfItemPhoto);
+            halfHolder.mHalfItemPhoto.setAlpha(1.0f);
         } else if (holder instanceof NoViewHolder) {
             NoViewHolder noHolder = (NoViewHolder) holder;
-            noHolder.noBottomTitle.setText(data.getCoverDescribe());
-            noHolder.noBottomNum.setText("参与人数：" + data.getCount());
-            noHolder.noBottomName.setText(data.getName());
+            noHolder.noBottomTitle.setText(data.getContent());
+            noHolder.noBottomNum.setText("参与人数：" + data.getJoinNum());
+            noHolder.noBottomName.setText(data.getGroupName());
+            Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).into(noHolder.mNoPhoto);
+            noHolder.mNoPhoto.setAlpha(0.5f);
         }
     }
 
@@ -107,7 +122,7 @@ public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public class ALLViewHolder extends RecyclerView.ViewHolder {
 
-        private RelativeLayout mPhoto;//封面素材
+        private ImageView mPhoto;//封面素材
         private ImageView mBottomImage;//封面底部角标
         private TextView mBottomTitle;//封面底部标题
 
@@ -130,7 +145,7 @@ public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class HalfViewHolder extends RecyclerView.ViewHolder {
 
         private LinearLayout mHalfItemView;//最外部布局
-        private RelativeLayout mHalfItemPhoto;//图片素材  git
+        private ImageView mHalfItemPhoto;//图片素材  git
         private ImageView mHalfItemBottomImage;//绿色角标
         private TextView mHalfBottomTitle;//绿色角标上标题
         private TextView mHalfBottomText;//绿色角标上进度
@@ -158,7 +173,7 @@ public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class NoViewHolder extends RecyclerView.ViewHolder {
 
         private LinearLayout mNoView; //最外部布局
-        private RelativeLayout mNoPhoto;//背景素材
+        private ImageView mNoPhoto;//背景素材
         private ImageView mNoBottomIamge;//灰色角标
         private TextView noBottomTitle;//灰色角标标题
 

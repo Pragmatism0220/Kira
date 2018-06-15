@@ -3,6 +3,7 @@ package com.moemoe.lalala.presenter;
 import android.content.Context;
 
 import com.moemoe.lalala.dialog.SignDialog;
+import com.moemoe.lalala.event.SearchAllTriggerEntity;
 import com.moemoe.lalala.model.entity.AppUpdateEntity;
 import com.moemoe.lalala.model.entity.BuildEntity;
 import com.moemoe.lalala.model.entity.DailyTaskEntity;
@@ -12,6 +13,7 @@ import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
 import com.moemoe.lalala.model.entity.NearUserEntity;
 import com.moemoe.lalala.model.entity.NetaEvent;
+import com.moemoe.lalala.model.entity.NewJuQingTriggerEntity;
 import com.moemoe.lalala.model.entity.PersonalMainEntity;
 import com.moemoe.lalala.model.entity.SignEntity;
 import com.moemoe.lalala.model.entity.JuQingDoneEntity;
@@ -35,12 +37,14 @@ public interface MapContract {
         void saveEvent(NetaEvent event);
         void getServerTime();
         void getTrigger();
+        void getNewTrigger();
         void getAllStory();
         void checkStoryVersion();
         void findMyDoneJuQing();
         void loadMapPics();
         void addMapMark(Context context,MapMarkContainer container, MapWidget map,String type);
         void addEventMark(String id,String icon,MapMarkContainer container,Context context, MapWidget map,String storyId);
+        void addNewEventMark(String id,String icon,int w,int h,int x,int y,String md5,MapMarkContainer container,Context context,MapWidget map,String storyId);
         void loadRcToken();
         void saveUserLocation(UserLocationEntity entity);
         void loadMapAllUser();
@@ -59,6 +63,7 @@ public interface MapContract {
         void saveEventSuccess();
         void onGetTimeSuccess(Date time);
         void onGetTriggerSuccess(ArrayList<JuQingTriggerEntity> entities);
+        void onGetNewTriggerSuccess(ArrayList<NewJuQingTriggerEntity> newJuQingTriggerEntities);
         void onGetAllStorySuccess(ArrayList<JuQIngStoryEntity> entities);
         void onCheckStoryVersionSuccess(int version);
         void onFindMyDoneJuQingSuccess(ArrayList<JuQingDoneEntity> entities);

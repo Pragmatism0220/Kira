@@ -22,15 +22,16 @@
             android:layout_width="@dimen/x130"
             android:layout_height="@dimen/y130"
             android:layout_gravity="center"
-            android:background="@drawable/test_image" />
+            />
 
         <ImageView
             android:id="@+id/item_furniture_using"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="center|bottom"
             android:background="@drawable/btn_home_items_furniture_using"
-            android:visibility="gone" />
+            android:visibility="gone"
+            />
 
     </FrameLayout>
 

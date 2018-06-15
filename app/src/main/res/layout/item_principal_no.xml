@@ -11,14 +11,18 @@
         android:background="@drawable/ic_home_plot_paper">
 
         <RelativeLayout
-            android:id="@+id/no_photo"
             android:layout_width="150dp"
             android:layout_height="200dp"
             android:layout_marginBottom="@dimen/y28"
             android:layout_marginEnd="@dimen/x16"
             android:layout_marginStart="@dimen/x16"
-            android:layout_marginTop="@dimen/y10"
-            android:background="@drawable/test_image">
+            android:layout_marginTop="@dimen/y10">
+
+            <ImageView
+                android:id="@+id/no_photo"
+                android:layout_width="@dimen/x300"
+                android:layout_height="@dimen/y400"
+                android:background="@drawable/test_image" />
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -36,9 +40,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_marginBottom="@dimen/y20"
-                    android:layout_marginStart="@dimen/x4"
-                    android:paddingStart="@dimen/x30"
+                    android:layout_marginBottom="@dimen/y10"
+                    android:layout_marginStart="@dimen/x10"
+                    android:paddingStart="@dimen/x40"
                     android:rotation="-15"
                     android:text="万圣节"
                     android:textColor="@color/black"

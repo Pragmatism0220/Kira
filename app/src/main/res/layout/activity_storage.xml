@@ -132,6 +132,7 @@
                 android:background="@drawable/checkbox_selector"
                 android:button="@null"
                 android:checked="false"
+                android:layout_marginTop="@dimen/y15"
                 android:onClick="@{presenter.onClick}" />
 
 
@@ -140,6 +141,7 @@
                 android:layout_height="@dimen/y46"
                 android:layout_below="@+id/storage_commodity_use_btn"
                 android:layout_marginEnd="@dimen/x10"
+                android:layout_marginTop="@dimen/y15"
                 android:layout_toStartOf="@+id/storage_check_box_btn"
                 android:background="@drawable/ic_show_unowned" />
 

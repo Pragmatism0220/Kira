@@ -23,8 +23,6 @@ public class PropInfoEntity {
 
     private boolean isSelected = false; //item选中 自加入
 
-
-
     public String getDescribe() {
         return describe;
     }

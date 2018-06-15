@@ -31,6 +31,7 @@ public class MapDbEntity {
     private int downloadState;//1.未下载 2.下载完成 3.下载失败
     private String md5;
     private String type;//map allUser birthdayUser followUser nearUser
+
 //    private int layer;//图片图层
 //    private String house;
 //    private String timerId;//计时器ID

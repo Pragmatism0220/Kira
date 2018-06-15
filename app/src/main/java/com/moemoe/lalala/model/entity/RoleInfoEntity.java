@@ -31,10 +31,6 @@ public class RoleInfoEntity {
         this.roleNumber = roleNumber;
     }
 
-
-
-
-
     public int getCount() {
         return count;
     }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.moemoe.lalala.R;
@@ -76,6 +77,8 @@ public class FurnitureInfoFragment extends BaseFragment {
         mAdapter.setList(info);
         EventBus.getDefault().register(this);
     }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void furnitureEvent(FurnitureEvent event) {

@@ -77,17 +77,16 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
 
     @Override
     public void getStoryInfoSuccess(NewStoryInfoEvent event) {
-        Log.i("StoryInfo", "getStoryInfoSuccess: " + event);
+        Log.i("NewStoryInfo", "getStoryInfoSuccess: " + event);
         binding.principalLineSchedule.setText("收集度:" + event.getMasterCollectPercent() + "%");
         binding.branchSchedule.setText("N(" + event.getBranchN() + ")" +
                 "R(" + event.getBranchR() + ")" +
-                "+SR(" + event.getBranchSR() + ")");
-//        Glide.with(this).load(ApiService.URL_QINIU + event.getBgImage())
-//                .error(R.drawable.bg_default_circle)
-//                .placeholder(R.drawable.bg_default_circle)
-//                .bitmapTransform(new CropCircleTransformation(this))
-//                .into(binding.dramaImage);
-
+                "SR(" + event.getBranchSR() + ")");
+        Glide.with(this).load(ApiService.URL_QINIU + event.getBgImage())
+                .error(R.drawable.bg_default_circle)
+                .placeholder(R.drawable.bg_default_circle)
+                .bitmapTransform(new CropCircleTransformation(this))
+                .into(binding.dramaImage);
     }
 
 

@@ -64,7 +64,9 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
 
     @Inject
     StoragePresenter mPresenter;
+    //家具套装
     private AllFurnitureInfo furnitureInfo;
+    //道具
     private PropInfoEntity mPropInfoEntity;
 
 
@@ -220,6 +222,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     mPropFragment.showNotHave();
+                    mFurnitureFragment.FurnShowNotHave();
                 } else {
                     mPropFragment.showHave();
                 }
@@ -246,33 +249,62 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     finish();
                     break;
                 case R.id.storage_commodity_buy_btn:
-                    Log.i("propInfo", "propInfo: " + mPropInfoEntity);
-                    if (!mPropInfoEntity.isUserHadTool()) {
-                        showToast("未拥有");
-                    } else {
-                        showToast("购买");
-                    }
-                    break;
-                case R.id.storage_commodity_use_btn:
+                    Log.i("propInfo", "propInfo: " + furnitureInfo);
+                    //家具套装的购买
                     if (furnitureInfo != null) {
-                        if (furnitureInfo.equals("套装")) {
-                            if (furnitureInfo.isUserSuitFurnitureHad()) {
-                                if (!furnitureInfo.isSuitPutInHouse()) {
-                                    mPresenter.suitUse(furnitureInfo.getSuitTypeId(), furnitureInfo.getPosition());
-                                }
+                        if (furnitureInfo.equals("套装")) {//套装
+                            if (!furnitureInfo.isUserSuitFurnitureHad() && !furnitureInfo.isSuitPutInHouse()) {
+                                showToast("购买");
+                                //TODO 套装购买
                             } else {
-                                showToast("还未拥有该套装家具哦~~~~~");
+                                showToast("已经拥有");
                             }
-                        } else {
-                            if (furnitureInfo.isUserFurnitureHad()) {
-                                if (!furnitureInfo.isPutInHouse()) {
-                                    mPresenter.furnitureUse(furnitureInfo.getId(), furnitureInfo.getPosition());
-                                }
+                        } else {//单件
+                            if (!furnitureInfo.isUserFurnitureHad() && !furnitureInfo.isPutInHouse()) {
+                                showToast("购买");
+                                //TODO 家具单件购买
                             } else {
-                                showToast("还未拥有该家具哦~~~~~");
+                                showToast("已经拥有");
                             }
                         }
                     }
+                    //TODO 道具购买
+
+                    break;
+                case R.id.storage_commodity_use_btn:
+                    //家具套装的使用
+                    Log.i("propInfo", "propInfo: " + furnitureInfo);
+                    if (furnitureInfo != null) {
+                        if (furnitureInfo.equals("套装")) {
+                            if (furnitureInfo.isUserSuitFurnitureHad()) {//套装是否拥有
+                                if (!furnitureInfo.isSuitPutInHouse()) {
+                                    mPresenter.suitUse(furnitureInfo.getSuitTypeId(), furnitureInfo.getPosition());
+                                } else {
+                                    showToast("使用中");
+                                }
+                            } else {
+                                showToast("未拥有该套装");
+                            }
+                        } else {
+                            //家具是否拥有
+                            if (furnitureInfo.isUserFurnitureHad()) {
+                                if (!furnitureInfo.isPutInHouse()) {
+                                    mPresenter.furnitureUse(furnitureInfo.getId(), furnitureInfo.getPosition());
+                                } else {
+                                    showToast("使用中");
+                                }
+                            } else {
+                                showToast("未拥有该套装");
+                            }
+                        }
+                    }
+//                    //道具的使用
+//                    if (!isUserHadTool) {
+//                        showToast("未拥有");
+//                    } else {
+//                        showToast("使用");
+//                        //TODO 道具使用
+//                    }
                     break;
                 default:
                     break;
@@ -286,11 +318,11 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
             furnitureInfo = event;
             if (event.getType().equals("套装")) {
                 binding.storageCommodityName.setText(event.getSuitTypeName());
-                Glide.with(this).load(ApiService.URL_QINIU + event.getSuitTypeImage()).into(binding.storageImage);
+                Glide.with(this).load(ApiService.URL_QINIU + event.getSuitTypeDetailIcon()).into(binding.storageImage);
                 binding.storageCommodityInfo.setText(event.getSuitTypeDescribe());
             } else {
                 binding.storageCommodityName.setText(event.getName());
-                Glide.with(this).load(ApiService.URL_QINIU + event.getImage()).into(binding.storageImage);
+                Glide.with(this).load(ApiService.URL_QINIU + event.getDetailIcon()).into(binding.storageImage);
                 binding.storageCommodityInfo.setText(event.getDescribe());
             }
         }

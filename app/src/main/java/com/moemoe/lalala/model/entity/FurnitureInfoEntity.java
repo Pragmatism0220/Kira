@@ -35,4 +35,12 @@ public class FurnitureInfoEntity implements Serializable {
     public void setSuitFurnitures(ArrayList<AllFurnitureInfo> suitFurnitures) {
         this.suitFurnitures = suitFurnitures;
     }
+
+    @Override
+    public String toString() {
+        return "FurnitureInfoEntity{" +
+                "allFurnitures=" + allFurnitures +
+                ", suitFurnitures=" + suitFurnitures +
+                '}';
+    }
 }

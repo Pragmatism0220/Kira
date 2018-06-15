@@ -69,15 +69,28 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
         } else {
             holder.mFusing.setVisibility(View.GONE);
         }
+        //套装是否拥有
+        if (!data.isUserSuitFurnitureHad()) {
+            holder.mFphoto.setAlpha(0.5f);
+        } else {
+            holder.mFphoto.setAlpha(1.0f);
+        }
+        //判断家具是否拥有
+        if (!data.isUserFurnitureHad()) {
+            holder.mFphoto.setAlpha(0.5f);
+        } else {
+            holder.mFphoto.setAlpha(1.0f);
+        }
+
 
         if (data.getType().equals("套装")) {
             holder.mFName.setText(data.getSuitTypeName());
             holder.mFCheck.setChecked(mSelectedPos == position);
-            Glide.with(mContext).load(ApiService.URL_QINIU + data.getSuitTypeImage()).into(holder.mFphoto);
+            Glide.with(mContext).load(ApiService.URL_QINIU + data.getSuitTypeDetailIcon()).into(holder.mFphoto);
         } else {
             holder.mFName.setText(data.getName());
             holder.mFCheck.setChecked(mSelectedPos == position);
-            Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).into(holder.mFphoto);
+            Glide.with(mContext).load(ApiService.URL_QINIU + data.getDetailIcon()).into(holder.mFphoto);
             holder.mFStyle.setText(data.getSuitTypeName());
         }
 

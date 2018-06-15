@@ -30,6 +30,22 @@ public class MapMarkEntity {
         this.bg = bg;
     }
 
+
+
+    public MapMarkEntity(String id, int x, int y, int w, int h, String schema, String content, int bg, String path, int layer, String type) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.schema = schema;
+        this.content = content;
+        this.bg = bg;
+        this.path = path;
+        this.layer = layer;
+        this.type = type;
+    }
+
     public MapMarkEntity(String id, int x, int y, String schema, String content, int bg) {
         this.id = id;
         this.x = x;
@@ -77,6 +93,16 @@ public class MapMarkEntity {
         this.bg = bg;
         this.w = w;
         this.h = h;
+    }
+    public MapMarkEntity(String id, int x, int y, String schema, int bg, int w, int h,String path) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.schema = schema;
+        this.bg = bg;
+        this.w = w;
+        this.h = h;
+        this.path = path;
     }
 
     public String getType() {

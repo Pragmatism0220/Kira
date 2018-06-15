@@ -16,6 +16,7 @@ import com.moemoe.lalala.R;
 
 import com.moemoe.lalala.event.*;
 import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.entity.AllFurnitureInfo;
 import com.moemoe.lalala.model.entity.RoleInfoEntity;
 
 import java.nio.file.Path;
@@ -25,7 +26,7 @@ import java.util.List;
  * Created by zhangyan on 2018/5/8.
  */
 
-public class    RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder> {
+public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder> {
 
 
     private List<RoleInfoEntity> entities;
@@ -40,6 +41,12 @@ public class    RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHol
     public List<RoleInfoEntity> getList() {
         return entities;
     }
+
+    public void setList(List<RoleInfoEntity> mData) {
+        this.entities = mData;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public RoleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

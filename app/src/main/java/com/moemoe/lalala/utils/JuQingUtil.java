@@ -10,9 +10,11 @@ import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.moemoe.lalala.app.MoeMoeApplication;
+import com.moemoe.lalala.event.SearchAllTriggerEntity;
 import com.moemoe.lalala.greendao.gen.JuQIngStoryEntityDao;
 import com.moemoe.lalala.greendao.gen.JuQingDoneEntityDao;
 import com.moemoe.lalala.greendao.gen.JuQingTriggerEntityDao;
+import com.moemoe.lalala.greendao.gen.SearchAllTriggerEntityDao;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetTResultSubscriber;
 import com.moemoe.lalala.model.entity.CircleTimeTrigger;
@@ -58,43 +60,53 @@ public class JuQingUtil {
 
     /**
      * 剧情触发器
+     *
      * @param entity
      */
-    public static void saveJuQingTrigger(JuQingTriggerEntity entity){
+    public static void saveJuQingTrigger(JuQingTriggerEntity entity) {
         JuQingTriggerEntityDao dao = GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao();
         dao.insertOrReplace(entity);
     }
 
-    public static void saveJuQingNormal(JuQingNormalEvent event){
+//    public static void saveJuQingTrigger(SearchAllTriggerEntity entity) {
+//        SearchAllTriggerEntityDao dao = GreenDaoManager.getInstance().getSession().getSearchAllTriggerEntityDao();
+//        dao.insertOrReplace(entity);
+//    }
+
+    public static void saveJuQingNormal(JuQingNormalEvent event) {
         GreenDaoManager.getInstance().getSession().insertOrReplace(event);
     }
 
     /**
      * 剧情触发器list
+     *
      * @param list
      */
-    public static void saveJuQingTriggerList(ArrayList<JuQingTriggerEntity> list){
+    public static void saveJuQingTriggerList(ArrayList<JuQingTriggerEntity> list) {
         GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao().deleteAll();
-        for (JuQingTriggerEntity entity : list){
+        for (JuQingTriggerEntity entity : list) {
             entity.setConditionStr(entity.getCondition().toString());
+//            entity.setConditionStr(entity.getConditionStr().toString());
             saveJuQingTrigger(entity);
         }
     }
 
     /**
      * 剧情
+     *
      * @param entity
      */
-    public static void saveJuQingStory(JuQIngStoryEntity entity){
+    public static void saveJuQingStory(JuQIngStoryEntity entity) {
         JuQIngStoryEntityDao dao = GreenDaoManager.getInstance().getSession().getJuQIngStoryEntityDao();
         dao.insertOrReplace(entity);
     }
 
     /**
      * 剧情list
+     *
      * @param list
      */
-    public static void saveJuQingStoryList(ArrayList<JuQIngStoryEntity> list){
+    public static void saveJuQingStoryList(ArrayList<JuQIngStoryEntity> list) {
         JuQIngStoryEntityDao dao = GreenDaoManager.getInstance().getSession().getJuQIngStoryEntityDao();
         dao.deleteAll();
         dao.insertOrReplaceInTx(list);
@@ -103,52 +115,53 @@ public class JuQingUtil {
     /**
      * 已完成的剧情
      */
-    public static void saveJuQingDone(ArrayList<JuQingDoneEntity> entities){
-        if(entities.size() > 0){
+    public static void saveJuQingDone(ArrayList<JuQingDoneEntity> entities) {
+        if (entities.size() > 0) {
             JuQingDoneEntityDao dao = GreenDaoManager.getInstance().getSession().getJuQingDoneEntityDao();
             dao.deleteAll();
             dao.insertOrReplaceInTx(entities);
         }
     }
 
-    public static void clearJuQingDone(){
+    public static void clearJuQingDone() {
         GreenDaoManager.getInstance().getSession().getJuQingDoneEntityDao().deleteAll();
     }
 
     /**
      * 已完成的剧情
      */
-    public static void saveJuQingDone(String id,long time){
+    public static void saveJuQingDone(String id, long time) {
         JuQingDoneEntityDao dao = GreenDaoManager.getInstance().getSession().getJuQingDoneEntityDao();
-        JuQingDoneEntity entity = new JuQingDoneEntity(id,time,"");
+        JuQingDoneEntity entity = new JuQingDoneEntity(id, time, "");
         dao.insertOrReplace(entity);
     }
 
     /**
-     *     String res = "";
-     String name = "";
-     String type = "";
-     String extra = "";
+     * String res = "";
+     * String name = "";
+     * String type = "";
+     * String extra = "";
      * 检查是否有满足的剧情
+     *
      * @return
      */
-    public static  ArrayList<JuQingTriggerEntity> checkJuQingAll(Calendar calendar){
+    public static ArrayList<JuQingTriggerEntity> checkJuQingAll(Calendar calendar) {
         ArrayList<JuQingTriggerEntity> res = new ArrayList<>();
         List<JuQingTriggerEntity> list = GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao().loadAll();
-        for(JuQingTriggerEntity entity : list){
+        for (JuQingTriggerEntity entity : list) {
             JuQingDoneEntity tmp = GreenDaoManager.getInstance().getSession().getJuQingDoneEntityDao().load(entity.getStoryId());
-            if(tmp != null) continue;
-            if(entity.getLevel() == 3){
+            if (tmp != null) continue;
+            if (entity.getLevel() == 3) {
                 JuQingNormalEvent event = GreenDaoManager.getInstance().getSession().getJuQingNormalEventDao().load(entity.getStoryId());
-                if(event != null) continue;
+                if (event != null) continue;
             }
-            JsonArray condition = new Gson().fromJson(entity.getConditionStr(),JsonArray.class);
-            if(condition.size() > 0){
+            JsonArray condition = new Gson().fromJson(entity.getConditionStr(), JsonArray.class);
+            if (condition.size() > 0) {
                 try {
-                    if(checkCondition(condition,entity.getStoryId(),calendar)){
+                    if (checkCondition(condition, entity.getStoryId(), calendar)) {
                         res.add(entity);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -156,17 +169,17 @@ public class JuQingUtil {
         return res;
     }
 
-    public static String[] checkJuQingMobile(Calendar calendar,String role){//{"map": "111"}
+    public static String[] checkJuQingMobile(Calendar calendar, String role) {//{"map": "111"}
         String res = "";
         String name = "";
         List<JuQingTriggerEntity> list = GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao().loadAll();
-        for(JuQingTriggerEntity entity : list){
-            if("mobile".equals(entity.getType())){//只关注手机剧情
+        for (JuQingTriggerEntity entity : list) {
+            if ("mobile".equals(entity.getType())) {//只关注手机剧情
                 JuQingDoneEntity tmp = GreenDaoManager.getInstance().getSession().getJuQingDoneEntityDao().load(entity.getStoryId());
-                if(tmp != null) continue;
-                JsonArray condition = new Gson().fromJson(entity.getConditionStr(),JsonArray.class);
-                if(condition.size() > 0){
-                    if(checkCondition(condition,entity.getStoryId(),calendar) && entity.getRoleOf().equals(role)){
+                if (tmp != null) continue;
+                JsonArray condition = new Gson().fromJson(entity.getConditionStr(), JsonArray.class);
+                if (condition.size() > 0) {
+                    if (checkCondition(condition, entity.getStoryId(), calendar) && entity.getRoleOf().equals(role)) {
                         res = entity.getStoryId();
                         name = entity.getRoleOf();
                         break;
@@ -174,20 +187,20 @@ public class JuQingUtil {
                 }
             }
         }
-        return new String[]{res,name};
+        return new String[]{res, name};
     }
 
-    public static String[] checkJuQingMobile(Calendar calendar){//{"map": "111"}
+    public static String[] checkJuQingMobile(Calendar calendar) {//{"map": "111"}
         String res = "";
         String name = "";
         List<JuQingTriggerEntity> list = GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao().loadAll();
-        for(JuQingTriggerEntity entity : list){
-            if("mobile".equals(entity.getType())){//只关注手机剧情
+        for (JuQingTriggerEntity entity : list) {
+            if ("mobile".equals(entity.getType())) {//只关注手机剧情
                 JuQingDoneEntity tmp = GreenDaoManager.getInstance().getSession().getJuQingDoneEntityDao().load(entity.getStoryId());
-                if(tmp != null) continue;
-                JsonArray condition = new Gson().fromJson(entity.getConditionStr(),JsonArray.class);
-                if(condition.size() > 0){
-                    if(checkCondition(condition,entity.getStoryId(),calendar)){
+                if (tmp != null) continue;
+                JsonArray condition = new Gson().fromJson(entity.getConditionStr(), JsonArray.class);
+                if (condition.size() > 0) {
+                    if (checkCondition(condition, entity.getStoryId(), calendar)) {
                         res = entity.getStoryId();
                         name = entity.getRoleOf();
                         break;
@@ -195,22 +208,23 @@ public class JuQingUtil {
                 }
             }
         }
-        return new String[]{res,name};
+        return new String[]{res, name};
     }
 
     /**
      * 检查是否有满足的剧情
+     *
      * @return
      */
-    public static String[] checkJuQingAll(Calendar calendar, String role){
+    public static String[] checkJuQingAll(Calendar calendar, String role) {
         String res = "";
         String name = "";
         List<JuQingTriggerEntity> list = GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao().loadAll();
-        for(JuQingTriggerEntity entity : list){
-            if("mobile".equals(entity.getType()) && entity.getRoleOf().equals(role)){//只关注手机剧情,角色名
-                JsonArray condition = new Gson().fromJson(entity.getConditionStr(),JsonArray.class);
-                if(condition.size() > 0){
-                    if(checkCondition(condition,entity.getStoryId(),calendar)){
+        for (JuQingTriggerEntity entity : list) {
+            if ("mobile".equals(entity.getType()) && entity.getRoleOf().equals(role)) {//只关注手机剧情,角色名
+                JsonArray condition = new Gson().fromJson(entity.getConditionStr(), JsonArray.class);
+                if (condition.size() > 0) {
+                    if (checkCondition(condition, entity.getStoryId(), calendar)) {
                         res = entity.getStoryId();
                         name = entity.getRoleOf();
                         break;
@@ -218,66 +232,66 @@ public class JuQingUtil {
                 }
             }
         }
-        return new String[]{res,name};
+        return new String[]{res, name};
     }
 
-    public static boolean checkCondition(JsonArray condition,String storyId,Calendar calendar){
+    public static boolean checkCondition(JsonArray condition, String storyId, Calendar calendar) {
         boolean res = true;
-        for(int i = 0;i < condition.size();i++){
+        for (int i = 0; i < condition.size(); i++) {
             JsonObject item = condition.get(i).getAsJsonObject();
             String type = item.get("type").getAsString();
-            if("circleTime".equals(type)){//循环时间
-                res = res && checkCircleTime(item,calendar);
-            }else if("specificTime".equals(type)){//具体时间
-                res = res && checkSpecificTime(item,calendar);
-            }else if("progress".equals(type)){//剧情进度
-                res = res && checkProgressTime(item,storyId,calendar);
-            }else if("prepose".equals(type)){//前置剧情
-                res = res && checkPreposeTime(item,calendar);
-            }else if("impression".equals(type)){//好感度
+            if ("circleTime".equals(type)) {//循环时间
+                res = res && checkCircleTime(item, calendar);
+            } else if ("specificTime".equals(type)) {//具体时间
+                res = res && checkSpecificTime(item, calendar);
+            } else if ("progress".equals(type)) {//剧情进度
+                res = res && checkProgressTime(item, storyId, calendar);
+            } else if ("prepose".equals(type)) {//前置剧情
+                res = res && checkPreposeTime(item, calendar);
+            } else if ("impression".equals(type)) {//好感度
                 res = res && checkImpressionTime(item);
-            }else if("level".equals(type)){//等级
+            } else if ("level".equals(type)) {//等级
                 res = res && checkLevelTime(item);
-            }else if("weather".equals(type)){//天气
+            } else if ("weather".equals(type)) {//天气
                 //TODO 目前没有天气
                 res = false;
-            }else if("vip".equals(type)){
-                res = res && checkVip(item,calendar);
-            }else if("invite".equals(type)){
+            } else if ("vip".equals(type)) {
+                res = res && checkVip(item, calendar);
+            } else if ("invite".equals(type)) {
                 res = res && checkInvite(item);
-            }else {
+            } else {
                 res = false;
             }
         }
         return res;
     }
 
-    public static boolean checkInvite(JsonObject item){
+    public static boolean checkInvite(JsonObject item) {
         int num = item.get("num").getAsInt();
-        if(!PreferenceUtils.isLogin()){
+        if (!PreferenceUtils.isLogin()) {
             return false;
         }
-        if(PreferenceUtils.getAuthorInfo().getInviteNum() >= num){
+        if (PreferenceUtils.getAuthorInfo().getInviteNum() >= num) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
-    public static boolean checkVip(JsonObject item,Calendar calendar){
-        if(!PreferenceUtils.isLogin()){
+    public static boolean checkVip(JsonObject item, Calendar calendar) {
+        if (!PreferenceUtils.isLogin()) {
             return false;
         }
-        if(TextUtils.isEmpty(PreferenceUtils.getAuthorInfo().getVipTime())){
-           return false;
+        if (TextUtils.isEmpty(PreferenceUtils.getAuthorInfo().getVipTime())) {
+            return false;
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Calendar calendar1 = Calendar.getInstance();
         try {
             calendar1.setTime(sdf.parse(PreferenceUtils.getAuthorInfo().getVipTime()));
-            if(StringUtils.matchCurrentTime(calendar,calendar1)){
+            if (StringUtils.matchCurrentTime(calendar, calendar1)) {
                 return true;
-            }else {
+            } else {
                 return false;
             }
         } catch (ParseException e) {
@@ -286,19 +300,19 @@ public class JuQingUtil {
         }
     }
 
-    public static boolean checkCircleTime(JsonObject item,Calendar calendar){
+    public static boolean checkCircleTime(JsonObject item, Calendar calendar) {
         boolean res = false;
-        CircleTimeTrigger entity = new Gson().fromJson(item,CircleTimeTrigger.class);
+        CircleTimeTrigger entity = new Gson().fromJson(item, CircleTimeTrigger.class);
         String start = StringUtils.addZero(entity.getStartHour()) + ":" + StringUtils.addZero(entity.getStartMinute()) + ":" + StringUtils.addZero(entity.getStartSecond());
         String end = StringUtils.addZero(entity.getEndHour()) + ":" + StringUtils.addZero(entity.getEndMinute()) + ":" + StringUtils.addZero(entity.getEndSecond());
-        if(StringUtils.matchCurrentTime(calendar,start,end)){
-            if(entity.getWeek() == 0){
+        if (StringUtils.matchCurrentTime(calendar, start, end)) {
+            if (entity.getWeek() == 0) {
                 res = true;
-            }else {
+            } else {
                 Calendar time = Calendar.getInstance();
                 int week = time.get(Calendar.DAY_OF_WEEK) - 1;
-                if(week == 0) week = 7;
-                if(week == entity.getWeek()){
+                if (week == 0) week = 7;
+                if (week == entity.getWeek()) {
                     res = true;
                 }
             }
@@ -306,20 +320,20 @@ public class JuQingUtil {
         return res;
     }
 
-    public static boolean checkSpecificTime(JsonObject item,Calendar calendar){
+    public static boolean checkSpecificTime(JsonObject item, Calendar calendar) {
         boolean res = false;
-        SpecificTimeTrigger entity = new Gson().fromJson(item,SpecificTimeTrigger.class);
+        SpecificTimeTrigger entity = new Gson().fromJson(item, SpecificTimeTrigger.class);
         String start = StringUtils.addZero(entity.getStartHour()) + ":" + StringUtils.addZero(entity.getStartMinute()) + ":" + StringUtils.addZero(entity.getStartSecond());
         String end = StringUtils.addZero(entity.getEndHour()) + ":" + StringUtils.addZero(entity.getEndMinute()) + ":" + StringUtils.addZero(entity.getEndSecond());
-        if(StringUtils.matchCurrentTime(calendar,start,end) && StringUtils.matchDate(calendar,entity.getStartYear(),entity.getEndYear())){
+        if (StringUtils.matchCurrentTime(calendar, start, end) && StringUtils.matchDate(calendar, entity.getStartYear(), entity.getEndYear())) {
             res = true;
         }
         return res;
     }
 
-    public static boolean checkProgressTime(JsonObject item,String storyId,Calendar calendar){
+    public static boolean checkProgressTime(JsonObject item, String storyId, Calendar calendar) {
         boolean res = false;
-        ProgressTrigger entity = new Gson().fromJson(item,ProgressTrigger.class);
+        ProgressTrigger entity = new Gson().fromJson(item, ProgressTrigger.class);
         JuQingDoneEntityDao dao = GreenDaoManager.getInstance().getSession().getJuQingDoneEntityDao();
         JuQingDoneEntity entity1 = dao.queryBuilder()
                 .where(JuQingDoneEntityDao.Properties.StoryId.eq(entity.getStory()))
@@ -327,83 +341,83 @@ public class JuQingUtil {
         JuQingDoneEntity entity2 = dao.queryBuilder()
                 .where(JuQingDoneEntityDao.Properties.StoryId.eq(storyId))
                 .unique();
-        if(entity1 != null && entity2 == null){
+        if (entity1 != null && entity2 == null) {
             long cur = calendar.getTimeInMillis();
             long between = entity.getDay() * 24 * 60 * 60 * 1000 + entity.getHour() * 60 * 60 * 1000 + entity.getMinute() * 60 * 1000 + entity.getSecond() * 1000;
-            if(cur - entity1.getTimestamp() >= between){
+            if (cur - entity1.getTimestamp() >= between) {
                 res = true;
             }
         }
         return res;
     }
 
-    public static boolean checkPreposeTime(JsonObject item,Calendar calendar){
+    public static boolean checkPreposeTime(JsonObject item, Calendar calendar) {
         boolean res = false;
-        PreposeTrigger entity = new Gson().fromJson(item,PreposeTrigger.class);
+        PreposeTrigger entity = new Gson().fromJson(item, PreposeTrigger.class);
         JuQingDoneEntityDao dao = GreenDaoManager.getInstance().getSession().getJuQingDoneEntityDao();
         JuQingDoneEntity entity1 = dao.queryBuilder()
                 .where(JuQingDoneEntityDao.Properties.StoryId.eq(entity.getStory()))
                 .unique();
-        if(entity1 != null){
+        if (entity1 != null) {
             long cur = calendar.getTimeInMillis();
             long between = entity.getDay() * 24 * 60 * 60 * 1000 + entity.getHour() * 60 * 60 * 1000 + entity.getMinute() * 60 * 1000 + entity.getSecond() * 1000;
-            if(cur - entity1.getTimestamp() >= between){
+            if (cur - entity1.getTimestamp() >= between) {
                 res = true;
             }
         }
         return res;
     }
 
-    public static boolean checkImpressionTime(JsonObject item){
+    public static boolean checkImpressionTime(JsonObject item) {
         boolean res = false;
-        ImpressionTrigger entity = new Gson().fromJson(item,ImpressionTrigger.class);
+        ImpressionTrigger entity = new Gson().fromJson(item, ImpressionTrigger.class);
         ArrayList<DeskMateEntity> list = PreferenceUtils.getAuthorInfo().getDeskMateEntities();
-        for(DeskMateEntity tmp : list){
-            if(tmp.getRoleOf().equals(entity.getRoleOf()) && tmp.getLikes() >= entity.getLikes()){
+        for (DeskMateEntity tmp : list) {
+            if (tmp.getRoleOf().equals(entity.getRoleOf()) && tmp.getLikes() >= entity.getLikes()) {
                 res = true;
             }
         }
         return res;
     }
 
-    public static boolean checkLevelTime(JsonObject item){
+    public static boolean checkLevelTime(JsonObject item) {
         boolean res = false;
-        LevelTrigger entity = new Gson().fromJson(item,LevelTrigger.class);
+        LevelTrigger entity = new Gson().fromJson(item, LevelTrigger.class);
         int level = PreferenceUtils.getAuthorInfo().getLevel();
-        if(level >= entity.getLevel()){
+        if (level >= entity.getLevel()) {
             res = true;
         }
         return res;
     }
 
-    public static boolean isForce(String id){
+    public static boolean isForce(String id) {
         boolean res = false;
         try {
             JuQingTriggerEntity entity = GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao().queryBuilder()
                     .where(JuQingTriggerEntityDao.Properties.StoryId.eq(id))
                     .unique();
-            if(entity != null){
+            if (entity != null) {
                 res = entity.isForce();
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return res;
     }
 
-    public static int getLevel(String id){
+    public static int getLevel(String id) {
         JuQIngStoryEntity entity = GreenDaoManager.getInstance().getSession().getJuQIngStoryEntityDao().load(id);
-        if(entity != null) return entity.getLevel();
+        if (entity != null) return entity.getLevel();
         return -1;
     }
 
-    public static ArrayList<JuQingMapShowEntity> getMapEventShow(String id){
+    public static ArrayList<JuQingMapShowEntity> getMapEventShow(String id) {
         ArrayList<JuQingMapShowEntity> res = new ArrayList<>();
         JuQIngStoryEntity entity = GreenDaoManager.getInstance().getSession().getJuQIngStoryEntityDao().load(id);
-        if(entity != null) {
+        if (entity != null) {
             JsonArray array = new Gson().fromJson(entity.getJson(), JsonArray.class);
-            for (int i = 0;i < array.size();i++){
+            for (int i = 0; i < array.size(); i++) {
                 JsonObject json = array.get(i).getAsJsonObject();
                 JuQingMapShowEntity entity1 = new JuQingMapShowEntity();
                 entity1.setIndex(json.get("index").getAsInt());
@@ -411,22 +425,22 @@ public class JuQingUtil {
 
                 JsonObject vol = json.get("vol").getAsJsonObject();
                 entity1.getVol().setFile(vol.get("file").getAsString());
-                if(vol.has("md5")) entity1.getVol().setMd5(vol.get("md5").getAsString());
-                if(!"无".equals(entity1.getVol().getFile())){
+                if (vol.has("md5")) entity1.getVol().setMd5(vol.get("md5").getAsString());
+                if (!"无".equals(entity1.getVol().getFile())) {
                     String name = entity1.getVol().getFile().substring(entity1.getVol().getFile().lastIndexOf("/") + 1);
-                    if(!name.endsWith(".temp.kira")){
-                        name = name.substring(0,name.indexOf(".")) + ".temp.kira";   //png.kira
+                    if (!name.endsWith(".temp.kira")) {
+                        name = name.substring(0, name.indexOf(".")) + ".temp.kira";   //png.kira
                     }
                     entity1.getVol().setLocalPath(StorageUtils.getEventRootPath() + name);
                 }
 
                 JsonObject bgm = json.get("bgm").getAsJsonObject();
                 entity1.getBgm().setFile(bgm.get("file").getAsString());
-                if(bgm.has("md5")) entity1.getBgm().setMd5(bgm.get("md5").getAsString());
-                if(!"无".equals(entity1.getBgm().getFile())){
+                if (bgm.has("md5")) entity1.getBgm().setMd5(bgm.get("md5").getAsString());
+                if (!"无".equals(entity1.getBgm().getFile())) {
                     String name = entity1.getBgm().getFile().substring(entity1.getBgm().getFile().lastIndexOf("/") + 1);
-                    if(!name.endsWith(".temp.kira")){
-                        name = name.substring(0,name.indexOf(".")) + ".temp.kira";   //png.kira
+                    if (!name.endsWith(".temp.kira")) {
+                        name = name.substring(0, name.indexOf(".")) + ".temp.kira";   //png.kira
                     }
                     entity1.getBgm().setLocalPath(StorageUtils.getEventRootPath() + name);
                 }
@@ -437,85 +451,85 @@ public class JuQingUtil {
 
                 JsonObject pose = json.get("character_pose").getAsJsonObject();
                 entity1.getPose().setFile(pose.get("file").getAsString());
-                if(pose.has("md5")) entity1.getPose().setMd5(pose.get("md5").getAsString());
+                if (pose.has("md5")) entity1.getPose().setMd5(pose.get("md5").getAsString());
                 entity1.getPose().setEffect(pose.get("effect").getAsString());
-                if(!"无".equals(entity1.getPose().getFile())){
+                if (!"无".equals(entity1.getPose().getFile())) {
                     String name = entity1.getPose().getFile().substring(entity1.getPose().getFile().lastIndexOf("/") + 1);
-                    if(!name.endsWith(".temp.kira")){
-                        name = name.substring(0,name.indexOf(".")) + ".temp.kira";   //png.kira
+                    if (!name.endsWith(".temp.kira")) {
+                        name = name.substring(0, name.indexOf(".")) + ".temp.kira";   //png.kira
                     }
                     entity1.getPose().setLocalPath(StorageUtils.getEventRootPath() + name);
                 }
 
                 JsonObject face = json.get("character_face").getAsJsonObject();
                 entity1.getFace().setFile(face.get("file").getAsString());
-                if(face.has("md5")) entity1.getFace().setMd5(face.get("md5").getAsString());
+                if (face.has("md5")) entity1.getFace().setMd5(face.get("md5").getAsString());
                 entity1.getFace().setEffect(face.get("effect").getAsString());
-                if(!"无".equals(entity1.getFace().getFile())){
+                if (!"无".equals(entity1.getFace().getFile())) {
                     String name = entity1.getFace().getFile().substring(entity1.getFace().getFile().lastIndexOf("/") + 1);
-                    if(!name.endsWith(".temp.kira")){
-                        name = name.substring(0,name.indexOf(".")) + ".temp.kira";   //png.kira
+                    if (!name.endsWith(".temp.kira")) {
+                        name = name.substring(0, name.indexOf(".")) + ".temp.kira";   //png.kira
                     }
                     entity1.getFace().setLocalPath(StorageUtils.getEventRootPath() + name);
                 }
 
                 JsonObject extra = json.get("character_extra").getAsJsonObject();
                 entity1.getExtra().setFile(extra.get("file").getAsString());
-                if(extra.has("md5")) entity1.getExtra().setMd5(extra.get("md5").getAsString());
+                if (extra.has("md5")) entity1.getExtra().setMd5(extra.get("md5").getAsString());
                 entity1.getExtra().setEffect(extra.get("effect").getAsString());
-                if(!"无".equals(entity1.getExtra().getFile())){
+                if (!"无".equals(entity1.getExtra().getFile())) {
                     String name = entity1.getExtra().getFile().substring(entity1.getExtra().getFile().lastIndexOf("/") + 1);
-                    if(!name.endsWith(".temp.kira")){
-                        name = name.substring(0,name.indexOf(".")) + ".temp.kira";   //png.kira
+                    if (!name.endsWith(".temp.kira")) {
+                        name = name.substring(0, name.indexOf(".")) + ".temp.kira";   //png.kira
                     }
                     entity1.getExtra().setLocalPath(StorageUtils.getEventRootPath() + name);
                 }
 
                 JsonObject cg = json.get("CG").getAsJsonObject();
                 entity1.getCg().setFile(cg.get("file").getAsString());
-                if(cg.has("md5")) entity1.getCg().setMd5(cg.get("md5").getAsString());
+                if (cg.has("md5")) entity1.getCg().setMd5(cg.get("md5").getAsString());
                 entity1.getCg().setEffect(cg.get("effect").getAsString());
-                if(!"无".equals(entity1.getCg().getFile())){
+                if (!"无".equals(entity1.getCg().getFile())) {
                     String name = entity1.getCg().getFile().substring(entity1.getCg().getFile().lastIndexOf("/") + 1);
-                    if(!name.endsWith(".temp.kira")){
-                        name = name.substring(0,name.indexOf(".")) + ".temp.kira";   //png.kira
+                    if (!name.endsWith(".temp.kira")) {
+                        name = name.substring(0, name.indexOf(".")) + ".temp.kira";   //png.kira
                     }
                     entity1.getCg().setLocalPath(StorageUtils.getEventRootPath() + name);
                 }
 
                 JsonObject bg = json.get("background").getAsJsonObject();
                 entity1.getBg().setFile(bg.get("file").getAsString());
-                if(bg.has("md5")) entity1.getBg().setMd5(bg.get("md5").getAsString());
+                if (bg.has("md5")) entity1.getBg().setMd5(bg.get("md5").getAsString());
                 entity1.getBg().setEffect(bg.get("effect").getAsString());
-                if(!"无".equals(entity1.getBg().getFile())){
+                if (!"无".equals(entity1.getBg().getFile())) {
                     String name = entity1.getBg().getFile().substring(entity1.getBg().getFile().lastIndexOf("/") + 1);
-                    if(!name.endsWith(".temp.kira")){
-                        name = name.substring(0,name.indexOf(".")) + ".temp.kira";   //png.kira
+                    if (!name.endsWith(".temp.kira")) {
+                        name = name.substring(0, name.indexOf(".")) + ".temp.kira";   //png.kira
                     }
                     entity1.getBg().setLocalPath(StorageUtils.getEventRootPath() + name);
                 }
 
                 JsonObject item = json.get("item").getAsJsonObject();
                 entity1.getItem().setFile(item.get("file").getAsString());
-                if(item.has("md5")) entity1.getItem().setMd5(item.get("md5").getAsString());
+                if (item.has("md5")) entity1.getItem().setMd5(item.get("md5").getAsString());
                 entity1.getItem().setEffect(item.get("effect").getAsString());
-                if(!"无".equals(entity1.getItem().getFile())){
+                if (!"无".equals(entity1.getItem().getFile())) {
                     String name = entity1.getItem().getFile().substring(entity1.getItem().getFile().lastIndexOf("/") + 1);
-                    if(!name.endsWith(".temp.kira")){
-                        name = name.substring(0,name.indexOf(".")) + ".temp.kira";   //png.kira
+                    if (!name.endsWith(".temp.kira")) {
+                        name = name.substring(0, name.indexOf(".")) + ".temp.kira";   //png.kira
                     }
                     entity1.getItem().setLocalPath(StorageUtils.getEventRootPath() + name);
                 }
 
-                if(json.has("option")){
-                    LinkedHashMap<String,Integer> map = new LinkedHashMap<>();
+                if (json.has("option")) {
+                    LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
                     JsonArray option = json.get("option").getAsJsonArray();
                     JsonArray nextnode = json.get("nextnode").getAsJsonArray();
-                    for(int n = 0;n< option.size();n++){
-                        map.put(option.get(n).getAsString(),nextnode.get(n).getAsInt());
+                    for (int n = 0; n < option.size(); n++) {
+                        map.put(option.get(n).getAsString(), nextnode.get(n).getAsInt());
                     }
                     entity1.setChoice(map);
-                }else {
+                } else {
                     entity1.setChoice(new LinkedHashMap<String, Integer>());
                 }
 
@@ -525,27 +539,27 @@ public class JuQingUtil {
         return res;
     }
 
-    public static ArrayList<JuQingShowEntity> getJuQingShow(String id){
+    public static ArrayList<JuQingShowEntity> getJuQingShow(String id) {
         ArrayList<JuQingShowEntity> resList = new ArrayList<>();
         JuQIngStoryEntity entity = GreenDaoManager.getInstance().getSession().getJuQIngStoryEntityDao().load(id);
-        if(entity != null){
-            JsonArray array = new Gson().fromJson(entity.getJson(),JsonArray.class);
-            for (int i = 0;i < array.size();i++){
+        if (entity != null) {
+            JsonArray array = new Gson().fromJson(entity.getJson(), JsonArray.class);
+            for (int i = 0; i < array.size(); i++) {
                 JsonObject json = array.get(i).getAsJsonObject();
                 JuQingShowEntity entity1 = new JuQingShowEntity();
                 entity1.setIndex(json.get("index").getAsInt());
                 entity1.setName(json.get("name").getAsString());
                 entity1.setText(json.get("talk").getAsJsonObject().get("text").getAsString());
                 entity1.setExtra(entity.getExtra());
-                if(json.has("option")){
-                    LinkedHashMap<String,Integer> map = new LinkedHashMap<>();
+                if (json.has("option")) {
+                    LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
                     JsonArray option = json.get("option").getAsJsonArray();
                     JsonArray nextnode = json.get("nextnode").getAsJsonArray();
-                    for(int n = 0;n< option.size();n++){
-                        map.put(option.get(n).getAsString(),nextnode.get(n).getAsInt());
+                    for (int n = 0; n < option.size(); n++) {
+                        map.put(option.get(n).getAsString(), nextnode.get(n).getAsInt());
                     }
                     entity1.setChoice(map);
-                }else {
+                } else {
                     entity1.setChoice(new LinkedHashMap<String, Integer>());
                 }
                 resList.add(entity1);
@@ -560,12 +574,12 @@ public class JuQingUtil {
                 .flatMap(new Function<String, ObservableSource<String>>() {
                     @Override
                     public ObservableSource<String> apply(@NonNull final String str) throws Exception {
-                        return  Observable.create(new ObservableOnSubscribe<String>() {
+                        return Observable.create(new ObservableOnSubscribe<String>() {
                             @Override
                             public void subscribe(@NonNull final ObservableEmitter<String> res) throws Exception {
                                 String name = str.substring(str.lastIndexOf("/") + 1);
-                                if(!name.endsWith(".temp.kira")){
-                                    name = name.substring(0,name.indexOf(".")) + ".temp.kira";   //png.kira
+                                if (!name.endsWith(".temp.kira")) {
+                                    name = name.substring(0, name.indexOf(".")) + ".temp.kira";   //png.kira
                                 }
                                 final String finalName = name;
                                 FileDownloader.getImpl().create(ApiService.URL_QINIU + str)

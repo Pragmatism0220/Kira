@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
@@ -20,8 +21,10 @@ import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.adapter.NewVisitorAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
+import com.moemoe.lalala.view.widget.adapter.BaseRecyclerViewAdapter;
 import com.moemoe.lalala.view.widget.recycler.PullAndLoadView;
 import com.moemoe.lalala.view.widget.recycler.PullCallback;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -105,6 +108,17 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
             @Override
             public boolean hasLoadedAllItems() {
                 return false;
+            }
+        });
+
+        mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
             }
         });
 

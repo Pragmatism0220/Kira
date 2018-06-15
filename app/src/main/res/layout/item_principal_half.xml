@@ -11,14 +11,18 @@
         android:background="@drawable/ic_home_plot_paper">
 
         <RelativeLayout
-            android:id="@+id/half_item_photo"
             android:layout_width="150dp"
             android:layout_height="200dp"
             android:layout_marginBottom="@dimen/y28"
             android:layout_marginEnd="@dimen/x16"
             android:layout_marginStart="@dimen/x16"
-            android:layout_marginTop="@dimen/y10"
-            android:background="@drawable/test_image">
+            android:layout_marginTop="@dimen/y10">
+
+            <ImageView
+                android:id="@+id/half_item_photo"
+                android:layout_width="@dimen/x300"
+                android:layout_height="@dimen/y400"
+                android:src="@drawable/test_image" />
 
             <FrameLayout
                 android:layout_width="wrap_content"

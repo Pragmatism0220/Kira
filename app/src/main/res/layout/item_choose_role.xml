@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data></data>
+
     <RelativeLayout
         android:id="@+id/item_main"
         android:layout_width="@dimen/x200"
@@ -35,10 +37,11 @@
             android:id="@+id/item_choose_role_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:text="莲莲莲"
-            android:textColor="@color/white"
+            android:layout_below="@+id/item_choose_role_image"
+            android:layout_marginTop="@dimen/y20"
+            android:textColor="@drawable/item_choose_role_name_color"
             android:textStyle="bold" />
     </RelativeLayout>
 </layout>

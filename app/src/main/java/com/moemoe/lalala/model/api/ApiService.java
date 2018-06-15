@@ -2,7 +2,11 @@ package com.moemoe.lalala.model.api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.moemoe.lalala.event.NewStoryGroupInfo;
+import com.moemoe.lalala.event.NewStoryInfo;
 import com.moemoe.lalala.event.NewStoryInfoEvent;
+import com.moemoe.lalala.event.NewStoryJsonInfo;
+import com.moemoe.lalala.event.SearchAllTriggerEntity;
 import com.moemoe.lalala.model.entity.*;
 
 import java.util.ArrayList;
@@ -1143,10 +1147,10 @@ public interface ApiService {
     @POST("v2/kira/house/user/role/colthes/select/{roleId}/{clothesId}")
     Observable<ApiResult> loadRoleColthesSelect(@Path("roleId") String roleId, @Path("clothesId") String clothesId);
 
-    @POST("/v2/kira/house/user/furniture/single/select/{furnitureId}")
+    @POST("v2/kira/house/user/furniture/single/select/{furnitureId}")
     Observable<ApiResult> furnitureUse(@Path("furnitureId") String furnitureId);
 
-    @POST("/v2/kira/house/user/furniture/suit/select/{suitTypeId}")
+    @POST("v2/kira/house/user/furniture/suit/select/{suitTypeId}")
     Observable<ApiResult> suitUse(@Path("suitTypeId") String suitTypeId);
 
     @POST("v2/kira/house/user/role/timer/collect/{roleId}")
@@ -1154,4 +1158,19 @@ public interface ApiService {
 
     @GET("v2/kira/story/v2/main/progress")
     Observable<ApiResult<NewStoryInfoEvent>> GetNewStoryInfo();
+
+    @GET("v2/kira/story/v2/master/group/all")
+    Observable<ApiResult<ArrayList<NewStoryGroupInfo>>> getNewStoryGroupInfo();
+
+    @GET("v2/kira/story/v2/master/story/all/{groupId}")
+    Observable<ApiResult<ArrayList<NewStoryInfo>>> getNewStoryListInfo(@Path("groupId") String groupId);
+
+    @GET("v2/kira/story/v2/remember/{scriptId}")
+    Observable<ApiResult<NewStoryJsonInfo>> playStory(@Path("scriptId") String scriptId);
+
+    @GET("v2/kira/story/v2/trigger/all")
+    Observable<ApiResult<ArrayList<NewJuQingTriggerEntity>>> searchAllTrigger();
+
+    @POST("v2/kira/story/v2/user/record/save")
+    Observable<ApiResult> saveRecord(@Body saveRecordEntity entity);
 }

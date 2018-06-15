@@ -21,10 +21,15 @@
         tools:context="com.moemoe.lalala.view.activity.DormitoryDramaActivity">
 
         <FrameLayout
-            android:id="@+id/drama_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/drama_dormitory_bg">
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/drama_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY" />
+
 
             <ImageView
                 android:layout_width="match_parent"

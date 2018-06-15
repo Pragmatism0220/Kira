@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import java.util.List;
 
 /**
- * Created by Administrator on 2018/5/16.
+ * Created by zhangyan on 2018/5/16.
  */
 
 public class PrincipalListBean {

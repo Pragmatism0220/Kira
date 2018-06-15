@@ -8,6 +8,7 @@ import android.graphics.drawable.shapes.RoundRectShape;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,9 @@ import com.moemoe.lalala.databinding.RootItemVisitorsBinding;
 import com.moemoe.lalala.databinding.VisitorsItemBinding;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.utils.LevelSpan;
+import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.StringUtils;
+import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.widget.adapter.BaseRecyclerViewAdapter;
 
 import java.text.SimpleDateFormat;
@@ -71,7 +74,7 @@ public class NewVisitorAdapter extends BaseRecyclerViewAdapter<VisitorsEntity, N
 
 
     @Override
-    protected void convert(NewVisitorHolder helper, VisitorsEntity item, int position) {
+    protected void convert(NewVisitorHolder helper, final VisitorsEntity item, int position) {
         Log.i("asd", "item: " + item);
         if (helper == null)
             return;
@@ -120,6 +123,16 @@ public class NewVisitorAdapter extends BaseRecyclerViewAdapter<VisitorsEntity, N
         shapeDrawable2.getPaint().setStyle(Paint.Style.FILL);
         shapeDrawable2.getPaint().setColor(StringUtils.readColorStr(item.getVisitorLevelColor(), ContextCompat.getColor(mContext, R.color.main_cyan)));
         helper.mLevel.setBackground(shapeDrawable2);
+
+        helper.mImage.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (TextUtils.isEmpty(item.getVisitorId())) {
+                    ViewUtils.toPersonal(mContext, item.getVisitorId());
+                }
+
+            }
+        });
     }
 
     @Override

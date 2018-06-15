@@ -16,21 +16,69 @@ import butterknife.BindView;
 public class AllFurnitureInfo implements Serializable {
 
     private String describe;//家具描述
+    private String detailIcon;//图标
     private String furnitureType;//家具类型
     private String id;
     private String image;//家具图片
     private boolean isPutInHouse;// 家具是否（使用）放入宅屋，true：已经放入宅屋 ,
     private boolean isUserFurnitureHad;//家具是否拥有，true：拥有当前家具
     private String name;//名称
+    private String schema;//跳转地址
+    private String schemaShop;//家具跳转商店
+
+    private String suitTypeDetailIcon;//套装图标
+
+    public String getSuitTypeDetailIcon() {
+        return suitTypeDetailIcon;
+    }
+
+    public void setSuitTypeDetailIcon(String suitTypeDetailIcon) {
+        this.suitTypeDetailIcon = suitTypeDetailIcon;
+    }
+
     private boolean isSuitPutInHouse;//套装是否（使用）放入宅屋，true：已经放入宅屋 ,
     private boolean isUserSuitFurnitureHad;// 套装是否拥有，true：拥有当前家具 ,
     private String suitTypeDescribe;//套装风格描述
     private String suitTypeImage;//套装风格封面图片
     private String suitTypeName;//套装风格名称
+    private String suitTypeSchemaShop;//套装家具跳转
     private String type;//区分套装
+
+    public String getSuitTypeSchemaShop() {
+        return suitTypeSchemaShop;
+    }
+
+    public void setSuitTypeSchemaShop(String suitTypeSchemaShop) {
+        this.suitTypeSchemaShop = suitTypeSchemaShop;
+    }
+
     private int sortId;//排序值
     private String suitTypeId;// 套装风格ID ,
     private int position;
+
+    public String getDetailIcon() {
+        return detailIcon;
+    }
+
+    public void setDetailIcon(String detailIcon) {
+        this.detailIcon = detailIcon;
+    }
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
+
+    public String getSchemaShop() {
+        return schemaShop;
+    }
+
+    public void setSchemaShop(String schemaShop) {
+        this.schemaShop = schemaShop;
+    }
 
     public int getPosition() {
         return position;
@@ -158,5 +206,32 @@ public class AllFurnitureInfo implements Serializable {
 
     public void setSuitTypeName(String suitTypeName) {
         this.suitTypeName = suitTypeName;
+    }
+
+    @Override
+    public String toString() {
+        return "AllFurnitureInfo{" +
+                "describe='" + describe + '\'' +
+                ", detailIcon='" + detailIcon + '\'' +
+                ", furnitureType='" + furnitureType + '\'' +
+                ", id='" + id + '\'' +
+                ", image='" + image + '\'' +
+                ", isPutInHouse=" + isPutInHouse +
+                ", isUserFurnitureHad=" + isUserFurnitureHad +
+                ", name='" + name + '\'' +
+                ", schema='" + schema + '\'' +
+                ", schemaShop='" + schemaShop + '\'' +
+                ", suitTypeDetailIcon='" + suitTypeDetailIcon + '\'' +
+                ", isSuitPutInHouse=" + isSuitPutInHouse +
+                ", isUserSuitFurnitureHad=" + isUserSuitFurnitureHad +
+                ", suitTypeDescribe='" + suitTypeDescribe + '\'' +
+                ", suitTypeImage='" + suitTypeImage + '\'' +
+                ", suitTypeName='" + suitTypeName + '\'' +
+                ", suitTypeSchemaShop='" + suitTypeSchemaShop + '\'' +
+                ", type='" + type + '\'' +
+                ", sortId=" + sortId +
+                ", suitTypeId='" + suitTypeId + '\'' +
+                ", position=" + position +
+                '}';
     }
 }
