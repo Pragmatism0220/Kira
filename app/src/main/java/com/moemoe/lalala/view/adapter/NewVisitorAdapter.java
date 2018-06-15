@@ -127,7 +127,7 @@ public class NewVisitorAdapter extends BaseRecyclerViewAdapter<VisitorsEntity, N
         helper.mImage.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if (TextUtils.isEmpty(item.getVisitorId())) {
+                if (!TextUtils.isEmpty(item.getVisitorId())) {
                     ViewUtils.toPersonal(mContext, item.getVisitorId());
                 }
 

@@ -3,7 +3,9 @@ package com.moemoe.lalala.model.entity;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonObject;
 
 import org.greenrobot.greendao.annotation.Entity;

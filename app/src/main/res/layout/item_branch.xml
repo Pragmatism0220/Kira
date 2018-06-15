@@ -7,25 +7,35 @@
     <RelativeLayout
         android:id="@+id/item_branch_photo"
         android:layout_width="@dimen/x210"
-        android:layout_height="@dimen/y280"
-        android:background="@drawable/ic_demo_example">
+        android:layout_height="@dimen/y280">
 
         <ImageView
             android:id="@+id/item_branch_bg"
             android:layout_width="@dimen/x210"
-            android:layout_height="@dimen/y280"
-            android:background="@drawable/ic_home_plot_branch_cover_n_mini" />
+            android:layout_height="@dimen/y280" />
 
         <TextView
-            android:id="@+id/item_branch_name"
+            android:id="@+id/tv_branch_num_new"
+            android:layout_width="@dimen/y44"
+            android:layout_height="@dimen/y44"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/x8"
+            android:layout_marginTop="@dimen/y8"
+            android:background="@drawable/shape_whitr_background_main_you"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x20"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_plot_memory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="@dimen/y5"
-            android:layout_marginEnd="@dimen/x10"
-            android:text="双树"
-            android:textColor="@color/white" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/y10"
+            android:src="@drawable/bg_ic_home_compse" />
     </RelativeLayout>
 
     <TextView
@@ -34,7 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/y16"
-        android:text="吃蛋糕的莲"
         android:textColor="@color/black"
         android:textSize="@dimen/x24"
         android:textStyle="bold" />
@@ -44,7 +53,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="已拥有:1"
         android:textColor="@color/black"
         android:textSize="@dimen/x20" />
 

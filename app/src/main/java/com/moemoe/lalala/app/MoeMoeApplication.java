@@ -241,8 +241,6 @@ public class MoeMoeApplication extends Application {
         //设置图片格式，效果为背景透明  
         wmParams.format = PixelFormat.RGBA_8888;
         wmParams.gravity = Gravity.LEFT | Gravity.TOP;
-//        wmParams.x = 0;
-//        wmParams.y = 0;
         final DeskmateEntils entity = entilsRight;
         wmParams.x = width - (int) getResources().getDimension(R.dimen.x225);
         wmParams.y = height / 2 - (int) getResources().getDimension(R.dimen.x110);
@@ -383,86 +381,7 @@ public class MoeMoeApplication extends Application {
                     case MotionEvent.ACTION_UP:
                         int finalX = (int) event.getRawX();
                         int finalY = (int) event.getRawY();
-                        boolean isok = false;
 
-//                        if (finalY < inflate.getMeasuredHeight()) {
-//                            DeskmateEntils entity = entilsTop;
-//                            Drawable drawable;
-//                            if (!TextUtils.isEmpty(entity.getPath())) {
-//                                drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
-//                            } else {
-//                                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_top);
-//                            }
-//                            if (drawable != null) {
-//                                imageView.setImageDrawable(drawable);
-//                            } else {
-//                                FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
-//                            }
-//                            movey = 0;
-//                            if (finalX > width - inflate.getMeasuredWidth()) {
-//                                movex = width - inflate.getMeasuredWidth();
-//                            } else {
-//                                movex = finalX;
-//                            }
-//                        }
-//
-//
-//                        if (finalY > height - inflate.getMeasuredHeight()) {
-//                            DeskmateEntils entity = entilsBottom;
-//                            Drawable drawable;
-//                            if (!TextUtils.isEmpty(entity.getPath())) {
-//                                drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
-//                            } else {
-//                                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_down);
-//                            }
-//                            if (drawable != null) {
-//                                imageView.setImageDrawable(drawable);
-//                            } else {
-//                                FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
-//                            }
-//                            movey = height - inflate.getMeasuredHeight();
-//                            if (finalX > width - imageView.getMeasuredWidth()) {
-//                                movex = width - imageView.getMeasuredWidth();
-//                            } else {
-//                                movex = finalX;
-//                            }
-//                        }
-//
-//                        if (finalY > inflate.getMeasuredHeight() && finalY < height - inflate.getMeasuredHeight()) {
-//                            isok = true;
-//                        }
-//                        if (isok && finalX - inflate.getMeasuredWidth() / 2 < width / 2) {
-//                            movex = 0;
-//                            movey = finalY - inflate.getMeasuredHeight() / 2;
-//                            DeskmateEntils entity = entilsLeft;
-//                            Drawable drawable;
-//                            if (!TextUtils.isEmpty(entity.getPath())) {
-//                                drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
-//                            } else {
-//                                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_left);
-//                            }
-//                            if (drawable != null) {
-//                                imageView.setImageDrawable(drawable);
-//                            } else {
-//                                FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
-//                            }
-//                        } else if (isok && finalX - inflate.getMeasuredWidth() / 2 > width / 2) {
-//
-//                            DeskmateEntils entity = entilsRight;
-//                            Drawable drawable;
-//                            if (!TextUtils.isEmpty(entity.getPath())) {
-//                                drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getFileName());
-//                            } else {
-//                                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_right);
-//                            }
-//                            if (drawable != null) {
-//                                imageView.setImageDrawable(drawable);
-//                            } else {
-//                                FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
-//                            }
-//                            movex = width - inflate.getMeasuredWidth();
-//                            movey = finalY - inflate.getMeasuredHeight() / 2;
-//                        }
                         if (finalX > width / 2) {
                             if (finalY > height / 2) {
                                 if (width - finalX > height - finalY) {
@@ -622,11 +541,9 @@ public class MoeMoeApplication extends Application {
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    if (getActivity(MapActivity.class.getName()) instanceof MapActivity && isActivityTop(MapActivity.class, context)) {
-//                        ((MapActivity) getActivity(MapActivity.class.getName())).windowManagerOnclick(functionalX, functionalY, inflate.getMeasuredWidth(), inflate.getMeasuredHeight());
-//                    }
                     if (dialog != null && dialog.getVisibility() == View.VISIBLE) {
                         dialog.setVisibility(View.GONE);
+                        return;
                     }
                     if (!isMove) {
                         windowManagerOnclick(functionalX, functionalY, inflate.getMeasuredWidth(), inflate.getMeasuredHeight());
@@ -732,8 +649,12 @@ public class MoeMoeApplication extends Application {
     public void setDialogView(StageLineEntity entity) {
         if (dialog != null) {
             if (entity.getId() != null) {
-                mTvContent.setText(entity.getContent());
-                if (entity.getDialogType() != null && entity.getDialogType().equals("dialog_option")) {
+                if (TextUtils.isEmpty(entity.getSchema())){
+                                        
+                }else {
+                    mTvContent.setText(entity.getContent());
+                }
+                if (entity.getDialogType() != null && entity.getDialogType().equals("dialog_option")) { 
                     mRlSelect.setVisibility(View.VISIBLE);
                     for (int i = 0; i < entity.getOptions().size(); i++) {
                         if (i == 0) {
@@ -911,9 +832,10 @@ public class MoeMoeApplication extends Application {
      * 对话框的定位
      */
     public void goDialog(Context context) {
-        if (inflate != null && inflate.getVisibility() == View.GONE) {
+        if (imageView != null && imageView.getVisibility() == View.GONE) {
             return;
         }
+
         int x = functionalX;
         int y = functionalY;
         int width = inflate.getMeasuredWidth();

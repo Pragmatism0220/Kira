@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.util.Log;
 import android.view.View;
 
 import com.moemoe.lalala.R;
@@ -18,10 +17,7 @@ import com.moemoe.lalala.presenter.PrincipalContract;
 import com.moemoe.lalala.presenter.PrincipalPresenter;
 import com.moemoe.lalala.view.adapter.PrAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
-import com.moemoe.lalala.view.base.MainStoryBean;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
-
-import org.greenrobot.greendao.annotation.Id;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +31,6 @@ public class PrActivity extends BaseActivity implements PrincipalContract.View {
 
     @Inject
     PrincipalPresenter mPresenter;
-
 
     @Override
     protected void initComponent() {
@@ -60,12 +55,6 @@ public class PrActivity extends BaseActivity implements PrincipalContract.View {
 
     @Override
     protected void initListeners() {
-        binding.prLineBackBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     @Override
@@ -112,9 +101,7 @@ public class PrActivity extends BaseActivity implements PrincipalContract.View {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.pr_line_back_btn:
-//                  finish();
-                    break;
-                default:
+                    finish();
                     break;
             }
         }

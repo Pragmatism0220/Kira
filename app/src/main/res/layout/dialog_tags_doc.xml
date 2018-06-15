@@ -6,6 +6,13 @@
     android:background="@drawable/bg_rect_corner_white_5"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y24"
+        android:text="添加标签"
+        android:textColor="@color/main_cyan" />
 
     <EditText
         android:id="@+id/et_floor"
@@ -13,7 +20,7 @@
         android:layout_height="@dimen/y100"
         android:layout_marginEnd="@dimen/x16"
         android:layout_marginStart="@dimen/x16"
-        android:layout_marginTop="@dimen/y72"
+        android:layout_marginTop="@dimen/y24"
         android:background="@drawable/shape_rect_border_main_no_background"
         android:ellipsize="end"
         android:maxLength="15"
@@ -25,7 +32,7 @@
     <View
         android:layout_width="@dimen/x420"
         android:layout_height="1dp"
-        android:layout_marginTop="@dimen/y70"
+        android:layout_marginTop="@dimen/y25"
         android:background="@color/gray_d7d7d7" />
 
     <LinearLayout

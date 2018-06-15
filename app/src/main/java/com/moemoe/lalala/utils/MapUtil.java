@@ -164,11 +164,7 @@ public class MapUtil {
                     entity.setDownloadState(2);
                 }
             } else {
-                if (entity.getType().equals("3")) {
-                    entity.setDownloadState(2);
-                } else {
-                    entity.setDownloadState(1);
-                }
+                entity.setDownloadState(1);
             }
         }
         //检查文件是否更改

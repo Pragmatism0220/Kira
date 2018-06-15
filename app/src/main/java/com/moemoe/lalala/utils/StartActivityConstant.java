@@ -1,7 +1,6 @@
 package com.moemoe.lalala.utils;
 
 /**
- *
  * Created by yi on 2017/7/19.
  */
 
@@ -31,6 +30,7 @@ public interface StartActivityConstant {
     int REQ_LOGIN = 10022;//登陆界面
     int REQ_SELECT_TAG = 10023;//标签选择
     int REQ_GET_FROM_SELECT_MOVIE = 10024;//选择视频
-    int REQ_COMMUNITY_INTRODUTION= 10025;//保存社区简介
-    int REQ_GO_COMMUNITY=10026;//跳转社区详情
+    int REQ_COMMUNITY_INTRODUTION = 10025;//保存社区简介
+    int REQ_GO_COMMUNITY = 10026;//跳转社区详情
+    int REQ_GO_COMPOUND_SELECT = 10027;//合成剧情卡片
 }

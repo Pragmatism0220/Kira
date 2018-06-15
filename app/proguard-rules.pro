@@ -408,5 +408,7 @@ public void EventError();
 #databinding
 -dontwarn android.databinding.**
 -keep class android.databinding.** { *; }
-
+-keepclasseswithmembers class *$Presenter { 
+     <methods>; 
+}
 

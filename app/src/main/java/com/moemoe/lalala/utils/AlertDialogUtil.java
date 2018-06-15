@@ -442,7 +442,6 @@ public class AlertDialogUtil {
         cancel.setVisibility(View.GONE);
     }
 
-
     public void createSelectDialog(Context context) {
         this.context = context;
         if (this.dialog != null && this.dialog.isShowing()) {

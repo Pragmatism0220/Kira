@@ -71,7 +71,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- *
  * Created by zhangshaowen on 16/4/7.
  */
 public class Utils {
@@ -80,12 +79,12 @@ public class Utils {
      * the error code define by myself
      * should after {@code ShareConstants.ERROR_PATCH_INSERVICE
      */
-    public static final int ERROR_PATCH_GOOGLEPLAY_CHANNEL      = -5;
-    public static final int ERROR_PATCH_ROM_SPACE               = -6;
-    public static final int ERROR_PATCH_MEMORY_LIMIT            = -7;
-    public static final int ERROR_PATCH_ALREADY_APPLY           = -8;
-    public static final int ERROR_PATCH_CRASH_LIMIT             = -9;
-    public static final int ERROR_PATCH_RETRY_COUNT_LIMIT       = -10;
+    public static final int ERROR_PATCH_GOOGLEPLAY_CHANNEL = -5;
+    public static final int ERROR_PATCH_ROM_SPACE = -6;
+    public static final int ERROR_PATCH_MEMORY_LIMIT = -7;
+    public static final int ERROR_PATCH_ALREADY_APPLY = -8;
+    public static final int ERROR_PATCH_CRASH_LIMIT = -9;
+    public static final int ERROR_PATCH_RETRY_COUNT_LIMIT = -10;
     public static final int ERROR_PATCH_CONDITION_NOT_SATISFIED = -11;
 
     public static final String PLATFORM = "platform";
@@ -185,18 +184,18 @@ public class Utils {
         }
     }
 
-    public static int[] getDocIconSize(int width, int height, int widthLimit){
+    public static int[] getDocIconSize(int width, int height, int widthLimit) {
         int[] res = new int[2];
         res[0] = widthLimit;
         res[1] = height * widthLimit / width;
         return res;
     }
 
-    public static void startAlarmClock(Context context, AlarmClockEntity entity){
+    public static void startAlarmClock(Context context, AlarmClockEntity entity) {
         Intent intent = new Intent(context, AlarmClockBroadcast.class);
         Bundle bundle = new Bundle();
-        bundle.putParcelable("alarm",entity);
-        intent.putExtra("bundle",bundle);
+        bundle.putParcelable("alarm", entity);
+        intent.putExtra("bundle", bundle);
         PendingIntent pi = PendingIntent.getBroadcast(context,
                 (int) entity.getId(), intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -288,9 +287,9 @@ public class Utils {
         }
     }
 
-    public static void uploadFile(ApiService apiService, final String path, Observer<UploadResultEntity> callback){
+    public static void uploadFile(ApiService apiService, final String path, Observer<UploadResultEntity> callback) {
         final ArrayList<NewUploadEntity> entities = new ArrayList<>();
-        entities.add(new NewUploadEntity(StringUtils.getFileMD5(new File(path)),FileUtil.getExtensionName(path)));
+        entities.add(new NewUploadEntity(StringUtils.getFileMD5(new File(path)), FileUtil.getExtensionName(path)));
         apiService.checkMd5(entities)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
@@ -304,9 +303,9 @@ public class Utils {
                             @Override
                             public void subscribe(@NonNull final ObservableEmitter<UploadResultEntity> res) throws Exception {
                                 final UploadResultEntity entity = new UploadResultEntity();
-                                if(!uploadResultEntity.isSave()){
+                                if (!uploadResultEntity.isSave()) {
                                     try {
-                                        uploadManager.put(file,uploadResultEntity.getPath(), uploadResultEntity.getUploadToken(), new UpCompletionHandler() {
+                                        uploadManager.put(file, uploadResultEntity.getPath(), uploadResultEntity.getUploadToken(), new UpCompletionHandler() {
                                             @Override
                                             public void complete(String key, ResponseInfo info, JSONObject response) {
                                                 if (info.isOK()) {
@@ -316,7 +315,7 @@ public class Utils {
                                                     entity.setSave(uploadResultEntity.isSave());
                                                     entity.setSize(file.length());
                                                     entity.setType(uploadResultEntity.getType());
-                                                    if(FileUtil.isImageFileBySuffix(file.getName())){
+                                                    if (FileUtil.isImageFileBySuffix(file.getName())) {
                                                         try {
                                                             String attr = "{\"h\":" + response.getInt("h") + ",\"w\":" + response.getInt("w") + "}";
                                                             entity.setAttr(attr);
@@ -331,10 +330,10 @@ public class Utils {
                                                 }
                                             }
                                         }, null);
-                                    }catch (Exception e){
+                                    } catch (Exception e) {
                                         res.onError(e);
                                     }
-                                }else {
+                                } else {
                                     entity.setAttr(uploadResultEntity.getAttr());
                                     entity.setFileName(file.getName());
                                     entity.setMd5(uploadResultEntity.getMd5());
@@ -353,25 +352,25 @@ public class Utils {
                 .subscribe(callback);
     }
 
-    public static void uploadFiles(ApiService apiService, final ArrayList<Object> items, final String cover, final int coverSize, final String folderType, final String folderName,Observer<UploadResultEntity> callback){
+    public static void uploadFiles(ApiService apiService, final ArrayList<Object> items, final String cover, final int coverSize, final String folderType, final String folderName, Observer<UploadResultEntity> callback) {
         final ArrayList<NewUploadEntity> entities = new ArrayList<>();
         final ArrayList<Integer> range = new ArrayList<>();
-        if(!TextUtils.isEmpty(cover) && coverSize != -1){
+        if (!TextUtils.isEmpty(cover) && coverSize != -1) {
             entities.add(new NewUploadEntity(StringUtils.getFileMD5(new File(cover)), FileUtil.getExtensionName(cover)));
             range.add(0);
         }
-        for(Object o : items){
-            if (o instanceof String){
-                entities.add(new NewUploadEntity(StringUtils.getFileMD5(new File((String) o)),FileUtil.getExtensionName((String) o)));
-            }else if(o instanceof MusicLoader.MusicInfo){
+        for (Object o : items) {
+            if (o instanceof String) {
+                entities.add(new NewUploadEntity(StringUtils.getFileMD5(new File((String) o)), FileUtil.getExtensionName((String) o)));
+            } else if (o instanceof MusicLoader.MusicInfo) {
                 MusicLoader.MusicInfo info = (MusicLoader.MusicInfo) o;
-                entities.add(new NewUploadEntity(StringUtils.getFileMD5(new File(info.getUrl())),FileUtil.getExtensionName(info.getUrl())));
-            }else if(o instanceof BookInfo){
+                entities.add(new NewUploadEntity(StringUtils.getFileMD5(new File(info.getUrl())), FileUtil.getExtensionName(info.getUrl())));
+            } else if (o instanceof BookInfo) {
                 BookInfo entity = (BookInfo) o;
-                entities.add(new NewUploadEntity(StringUtils.getFileMD5(new File(entity.getPath())),FileUtil.getExtensionName(entity.getPath())));
-            }else if(o instanceof VideoInfo){
+                entities.add(new NewUploadEntity(StringUtils.getFileMD5(new File(entity.getPath())), FileUtil.getExtensionName(entity.getPath())));
+            } else if (o instanceof VideoInfo) {
                 VideoInfo entity = (VideoInfo) o;
-                entities.add(new NewUploadEntity(StringUtils.getFileMD5(new File(entity.getPath())),FileUtil.getExtensionName(entity.getPath())));
+                entities.add(new NewUploadEntity(StringUtils.getFileMD5(new File(entity.getPath())), FileUtil.getExtensionName(entity.getPath())));
             }
             range.add(range.size());
         }
@@ -387,27 +386,27 @@ public class Utils {
                                 new BiFunction<Integer, UploadResultEntity, UploadResultEntity>() {
                                     @Override
                                     public UploadResultEntity apply(@NonNull Integer integer, @NonNull UploadResultEntity uploadResultEntity) throws Exception {
-                                        if(integer == 0 && !TextUtils.isEmpty(cover) && coverSize != -1){
+                                        if (integer == 0 && !TextUtils.isEmpty(cover) && coverSize != -1) {
                                             uploadResultEntity.setType("cover");
                                             uploadResultEntity.setFilePath(cover);
-                                        }else {
-                                            Object o ;
-                                            if(!TextUtils.isEmpty(cover) && coverSize != -1){
+                                        } else {
+                                            Object o;
+                                            if (!TextUtils.isEmpty(cover) && coverSize != -1) {
                                                 o = items.get(integer - 1);
-                                            }else {
+                                            } else {
                                                 o = items.get(integer);
                                             }
-                                            if(o instanceof String){
+                                            if (o instanceof String) {
                                                 uploadResultEntity.setFilePath((String) o);
                                                 uploadResultEntity.setType("image");
-                                            }else if(o instanceof MusicLoader.MusicInfo){
+                                            } else if (o instanceof MusicLoader.MusicInfo) {
                                                 uploadResultEntity.setFilePath(((MusicLoader.MusicInfo) o).getUrl());
                                                 uploadResultEntity.setType("music");
                                                 uploadResultEntity.setMusicTime(((MusicLoader.MusicInfo) o).getDuration());
-                                            }else if(o instanceof BookInfo){
+                                            } else if (o instanceof BookInfo) {
                                                 uploadResultEntity.setFilePath(((BookInfo) o).getPath());
                                                 uploadResultEntity.setType("txt");
-                                            } else if(o instanceof VideoInfo){
+                                            } else if (o instanceof VideoInfo) {
                                                 uploadResultEntity.setFilePath(((VideoInfo) o).getPath());
                                                 uploadResultEntity.setMusicTime((int) ((VideoInfo) o).getDuration());
                                                 uploadResultEntity.setType("movie");
@@ -429,9 +428,9 @@ public class Utils {
                             @Override
                             public void subscribe(@NonNull final ObservableEmitter<UploadResultEntity> res) throws Exception {
                                 final UploadResultEntity entity = new UploadResultEntity();
-                                if(!uploadResultEntity.isSave()){
+                                if (!uploadResultEntity.isSave()) {
                                     try {
-                                        uploadManager.put(file,uploadResultEntity.getPath(), uploadResultEntity.getUploadToken(), new UpCompletionHandler() {
+                                        uploadManager.put(file, uploadResultEntity.getPath(), uploadResultEntity.getUploadToken(), new UpCompletionHandler() {
                                             @Override
                                             public void complete(String key, ResponseInfo info, JSONObject response) {
                                                 if (info.isOK()) {
@@ -441,30 +440,30 @@ public class Utils {
                                                     entity.setSave(uploadResultEntity.isSave());
                                                     entity.setSize(file.length());
                                                     entity.setType(uploadResultEntity.getType());
-                                                    if(uploadResultEntity.getType().equals("image")){
+                                                    if (uploadResultEntity.getType().equals("image")) {
                                                         try {
                                                             String attr = "{\"h\":" + response.getInt("h") + ",\"w\":" + response.getInt("w") + "}";
                                                             entity.setAttr(attr);
                                                         } catch (JSONException e) {
                                                             e.printStackTrace();
                                                         }
-                                                    }else if(uploadResultEntity.getType().equals("music")){
+                                                    } else if (uploadResultEntity.getType().equals("music")) {
                                                         String attr = "{\"timestamp\":" + uploadResultEntity.getMusicTime() + "}";
                                                         entity.setAttr(attr);
                                                         entity.setTimestamp(StringUtils.getMinute(uploadResultEntity.getMusicTime()));
-                                                    }else if(uploadResultEntity.getType().equals("txt")){
-                                                        String attr = "{\"size\":"+ file.length() +"}";
+                                                    } else if (uploadResultEntity.getType().equals("txt")) {
+                                                        String attr = "{\"size\":" + file.length() + "}";
                                                         entity.setAttr(attr);
-                                                        if(!TextUtils.isEmpty(folderType) && folderType.equals(FolderType.XS.toString())){
-                                                            entity.setNum((int)file.length());
+                                                        if (!TextUtils.isEmpty(folderType) && folderType.equals(FolderType.XS.toString())) {
+                                                            entity.setNum((int) file.length());
                                                             entity.setTitle(folderName);
                                                             String content = FileUtil.readFileToString(file);
-                                                            if(content.length() > 100){
-                                                                content = content.substring(0,100);
+                                                            if (content.length() > 100) {
+                                                                content = content.substring(0, 100);
                                                             }
                                                             entity.setContent(content);
                                                         }
-                                                    }else if("movie".equals(uploadResultEntity.getType())){
+                                                    } else if ("movie".equals(uploadResultEntity.getType())) {
                                                         String attr = "{\"timestamp\":" + uploadResultEntity.getMusicTime() + "}";
                                                         entity.setAttr(attr);
                                                         entity.setTimestamp(StringUtils.getMinute(uploadResultEntity.getMusicTime()));
@@ -476,10 +475,10 @@ public class Utils {
                                                 }
                                             }
                                         }, null);
-                                    }catch (Exception e){
+                                    } catch (Exception e) {
                                         res.onError(e);
                                     }
-                                }else {
+                                } else {
                                     entity.setAttr(uploadResultEntity.getAttr());
                                     entity.setFileName(file.getName());
                                     entity.setMd5(uploadResultEntity.getMd5());
@@ -487,12 +486,12 @@ public class Utils {
                                     entity.setSave(uploadResultEntity.isSave());
                                     entity.setSize(uploadResultEntity.getSize());
                                     entity.setType(uploadResultEntity.getType());
-                                    if(!TextUtils.isEmpty(folderType) && folderType.equals(FolderType.XS.toString())){
-                                        entity.setNum((int)file.length());
+                                    if (!TextUtils.isEmpty(folderType) && folderType.equals(FolderType.XS.toString())) {
+                                        entity.setNum((int) file.length());
                                         entity.setTitle(folderName);
                                         String content = FileUtil.readFileToString(file);
-                                        if(content.length() > 100){
-                                            content = content.substring(0,100);
+                                        if (content.length() > 100) {
+                                            content = content.substring(0, 100);
                                         }
                                         entity.setContent(content);
                                     }

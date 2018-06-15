@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -15,9 +14,7 @@ import com.moemoe.lalala.R;
 import com.moemoe.lalala.event.NewStoryGroupInfo;
 import com.moemoe.lalala.event.OnItemListener;
 import com.moemoe.lalala.model.api.ApiService;
-import com.moemoe.lalala.view.base.MainStoryBean;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +42,6 @@ public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        Log.i("asd", "getItemViewType: " + infos);
         if (infos.get(position).isFullCollect()) {
             //未收集
             return HALF_VIEW;
@@ -78,14 +74,16 @@ public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        if (clickListener != null) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
                     clickListener.onItemClick(v, position);
                 }
-            });
-        }
+            }
+        });
+
         NewStoryGroupInfo data = infos.get(position);
         if (holder instanceof ALLViewHolder) {
             ALLViewHolder allHolder = (ALLViewHolder) holder;

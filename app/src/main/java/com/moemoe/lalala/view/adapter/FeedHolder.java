@@ -902,7 +902,7 @@ public class FeedHolder extends ClickableViewHolder {
                 wh = BitmapUtils.getDocIconSizeFromWItem(image.getW(), image.getH(), (int) itemView.getResources().getDimension(R.dimen.x460));
             } else if (image.getW() == image.getH()) {
                 wh = BitmapUtils.getDocIconSizeFromW(image.getW(), image.getH(), (int) itemView.getResources().getDimension(R.dimen.x460));
-            }  else {
+            } else {
                 int[] res = new int[2];
                 res[1] = (int) itemView.getResources().getDimension(R.dimen.x460);
                 res[0] = image.getW() * (int) itemView.getResources().getDimension(R.dimen.x460) / image.getH();
@@ -999,6 +999,8 @@ public class FeedHolder extends ClickableViewHolder {
                 layout.addView(iv);
                 showImg(iv, images, i);
                 if (i % 3 == 2 || images.size() == i + 1) {
+                    // TODO: 2018/6/14 个人中心添加数据 
+//                    ((LinearLayout) $(R.id.ll_img_root)).removeAllViews();
                     ((LinearLayout) $(R.id.ll_img_root)).addView(layout);
                 }
             }

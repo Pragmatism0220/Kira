@@ -7,6 +7,7 @@ import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ public class HouseView extends TextView {
     public final PointF position = new PointF();
     private float mapX;
     private float mapY;
+    private boolean isTouch = true;
 
     public HouseView(Context context) {
         super(context);
@@ -60,6 +62,23 @@ public class HouseView extends TextView {
         float posX = center.x;
         float posY = center.y;
         setMapMarkViewAtPosition(posX, posY);
+    }
+
+    public void setTouch(boolean isTouch) {
+        this.isTouch = isTouch;
+    }
+
+    public boolean onTouchEvent() {
+        return isTouch;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (onTouchEvent()) {
+            return super.onTouchEvent(event);
+        } else {
+            return false;
+        }
     }
 
     private void setMapMarkViewAtPosition(float x, float y) {

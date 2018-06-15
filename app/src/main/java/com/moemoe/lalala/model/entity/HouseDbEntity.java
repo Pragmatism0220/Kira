@@ -41,21 +41,19 @@ public class HouseDbEntity {
 
     public HouseDbEntity(MapEntity entity, String type) {
         id = entity.getId();
-        if (!("" + entity.getType()).equals("3")) {
-            image_path = entity.getImage().getPath();
-            image_w = entity.getImage().getW();
-            image_h = entity.getImage().getH();
-            fileName = entity.getId() + image_path.substring(image_path.lastIndexOf("."));
-        }
-        if (entity.getRoleTimer()!=null){
-            this.timerId=entity.getRoleTimer().getId();
-            timerIsCollectFull=entity.getRoleTimer().isCollectFull();
-            timerIsCollectable=entity.getRoleTimer().isCollectable();
-            timerIsSleep=entity.getRoleTimer().isSleep();
-            timerLastCollectTime=entity.getRoleTimer().getLastCollectTime();
-            timerRemainTime=entity.getRoleTimer().getRemainTime();
-            timerRoleId=entity.getRoleTimer().getRoleId();
-            timerRoleLike=entity.getRoleTimer().getRoleLike();
+        image_path = entity.getImage().getPath();
+        image_w = entity.getImage().getW();
+        image_h = entity.getImage().getH();
+        fileName = entity.getId() + image_path.substring(image_path.lastIndexOf("."));
+        if (entity.getRoleTimer() != null) {
+            this.timerId = entity.getRoleTimer().getId();
+            timerIsCollectFull = entity.getRoleTimer().isCollectFull();
+            timerIsCollectable = entity.getRoleTimer().isCollectable();
+            timerIsSleep = entity.getRoleTimer().isSleep();
+            timerLastCollectTime = entity.getRoleTimer().getLastCollectTime();
+            timerRemainTime = entity.getRoleTimer().getRemainTime();
+            timerRoleId = entity.getRoleTimer().getRoleId();
+            timerRoleLike = entity.getRoleTimer().getRoleLike();
         }
         schema = entity.getSchema();
         pointX = entity.getPointX();
@@ -72,11 +70,11 @@ public class HouseDbEntity {
 
     @Generated(hash = 1831665315)
     public HouseDbEntity(String id, String name, String image_path, int image_w, int image_h,
-            String schema, int pointX, int pointY, String text, String shows, String fileName,
-            int downloadState, String md5, String type, int layer, String house,
-            String timerId, boolean timerIsCollectFull, boolean timerIsCollectable,
-            boolean timerIsSleep, String timerLastCollectTime, long timerRemainTime,
-            String timerRoleId, int timerRoleLike) {
+                         String schema, int pointX, int pointY, String text, String shows, String fileName,
+                         int downloadState, String md5, String type, int layer, String house,
+                         String timerId, boolean timerIsCollectFull, boolean timerIsCollectable,
+                         boolean timerIsSleep, String timerLastCollectTime, long timerRemainTime,
+                         String timerRoleId, int timerRoleLike) {
         this.id = id;
         this.name = name;
         this.image_path = image_path;
@@ -106,14 +104,11 @@ public class HouseDbEntity {
     @Generated(hash = 1369071674)
     public HouseDbEntity() {
     }
-    
+
     public static ArrayList<HouseDbEntity> toDb(ArrayList<MapEntity> entities, String type) {
         ArrayList<HouseDbEntity> res = new ArrayList<>();
         for (MapEntity entity : entities) {
             HouseDbEntity entity1 = new HouseDbEntity(entity, type);
-            if (entity.getType() == 3) {
-                entity1.setDownloadState(2);
-            }
             res.add(entity1);
         }
         return res;

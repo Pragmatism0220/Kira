@@ -324,6 +324,8 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     protected void onPause() {
         super.onPause();
         MoeMoeApplication.getInstance().GoneWindowMager(this);
+        MoeMoeApplication.getInstance().GoneMenu();
+        MoeMoeApplication.getInstance().GoneDiaLog();
         hideBtn();
         MapToolTipUtils.getInstance().stop();
     }
@@ -887,8 +889,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                             if (temp.contains("game_1.0")) {
                                 temp += "&token=" + PreferenceUtils.getToken() + "&version=" + AppSetting.VERSION_CODE + "&userId=" + PreferenceUtils.getUUid() + "&channel=" + AppSetting.CHANNEL;
                             }
-
-
                             Uri uri = Uri.parse(temp);
                             IntentUtils.toActivityFromUri(MapActivity.this, uri, v);
                         }
@@ -1934,6 +1934,9 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         RongIM.getInstance().disconnect();
         if (locationManager != null) locationManager.removeUpdates(this);
         //if(mOrientationListener != null) mOrientationListener.disable();
+        if (AlertDialogUtil.getInstance().isShow()){
+            AlertDialogUtil.getInstance().dismissDialog();
+        }
         super.onDestroy();
     }
 

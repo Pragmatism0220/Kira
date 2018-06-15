@@ -299,7 +299,7 @@
         app:child_view_height="22dp"
         app:child_view_width="wrap_content"
         app:label_spacing="7dp"
-        app:line_spacing="7dp"></com.moemoe.lalala.view.widget.view.DocLabelView>
+        app:line_spacing="7dp"/>
 
     <include layout="@layout/item_new_list_bottom" />
 

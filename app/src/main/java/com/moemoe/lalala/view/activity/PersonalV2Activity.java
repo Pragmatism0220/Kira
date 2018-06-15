@@ -396,7 +396,6 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
 
     @OnClick({R.id.tv_follow, R.id.iv_option, R.id.iv_edit, R.id.iv_menu_list, R.id.iv_avatar, R.id.tv_private_msg
             , R.id.house_btn, R.id.chat_btn, R.id.attention_btn})
-
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_follow:
@@ -466,11 +465,8 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
                 /**
                  * 她的宅屋
                  */
-                //TODO
                 SaveVisitorEntity entity = new SaveVisitorEntity(null, mInfo.getUserId(), 1);
-                Log.i("save", "onClick: " + mInfo.getUserId());
                 mPresenter.saveVisitor(entity);
-                Toast.makeText(getApplicationContext(), "她的宅屋", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -491,7 +487,9 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
 
     @Override
     public void saveVisitorSuccess() {
-
+        Intent intent = new Intent(this, HouseHisActivity.class);
+        intent.putExtra("id", mUserId);
+        startActivity(intent);
     }
 
     @Override
@@ -646,6 +644,13 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
         shapeDrawable2.getPaint().setStyle(Paint.Style.FILL);
         shapeDrawable2.getPaint().setColor(StringUtils.readColorStr(info.getLevelColor(), ContextCompat.getColor(this, R.color.main_cyan)));
         mTvLevel.setBackgroundDrawable(shapeDrawable2);
+        if ("F".equals(info.getSex())) {
+            mHouse.setText("他的宅屋");
+        } else if ("M".equals(info.getSex())) {
+            mHouse.setText("她的宅屋");
+        } else {
+            mHouse.setText("Ta的宅屋");
+        }
 
     }
 

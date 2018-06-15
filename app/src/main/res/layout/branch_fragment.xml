@@ -9,6 +9,44 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="@dimen/x36"
         android:layout_marginStart="@dimen/x36"
-        android:layout_marginTop="@dimen/y32"></android.support.v7.widget.RecyclerView>
+        android:layout_marginTop="@dimen/y32" />
 
+    <RelativeLayout
+        android:id="@+id/branch_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y100"
+        android:layout_alignParentBottom="true"
+        android:background="@color/alpha_60">
+
+        <TextView
+            android:id="@+id/tv_branch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="15dp"
+            android:text="N(12) R(23) SR(4)"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x30" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x10"
+            android:layout_toStartOf="@+id/check_box_btn"
+            android:src="@drawable/ic_show_unowned" />
+
+        <CheckBox
+            android:id="@+id/check_box_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x40"
+            android:background="@drawable/checkbox_selector"
+            android:button="@null"
+            android:checked="false" />
+
+    </RelativeLayout>
 </RelativeLayout>

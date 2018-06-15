@@ -49,7 +49,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/x32"
             android:layout_marginStart="@dimen/x32"
-            android:layout_marginTop="@dimen/y32"></android.support.v7.widget.RecyclerView>
+            android:layout_marginTop="@dimen/y32"/>
 
     </LinearLayout>
 </layout>

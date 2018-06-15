@@ -18,6 +18,5 @@
             app:child_view_width="wrap_content"
             app:child_view_min_width="@dimen/x20"
             app:line_spacing="@dimen/y14"
-            app:label_spacing="@dimen/x14">
-        </com.moemoe.lalala.view.widget.view.DocLabelView>
+            app:label_spacing="@dimen/x14"/>
 </LinearLayout>

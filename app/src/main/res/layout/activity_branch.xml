@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -10,104 +10,70 @@
             type="com.moemoe.lalala.view.activity.BranchActivity.Presenter" />
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/status_bar_height"
-        android:background="@drawable/bg_home_plot_branch_background_cover"
+        android:orientation="vertical"
         tools:context="com.moemoe.lalala.view.activity.BranchActivity">
 
-        <RelativeLayout
-            android:id="@+id/tool_bar"
+        <View
+            android:id="@+id/top_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/bg_home_plot_topbackground">
+            android:layout_height="@dimen/status_bar_height"
+            android:background="@color/alpha_20" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/x20"
-                android:src="@drawable/ic_home_title_mystory_branch" />
-
-            <ImageView
-                android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/role_back_btn"
-                android:onClick="@{presenter.onClick}" />
-        </RelativeLayout>
-
-
-        <com.moemoe.lalala.view.widget.view.KiraTabLayout
-            android:id="@+id/branch_tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/y104"
-            android:layout_below="@+id/tool_bar"
-            android:paddingLeft="@dimen/x36"
-            android:paddingRight="@dimen/x12"
-            app:kira_tl_indicator_color="@color/white"
-            app:kira_tl_indicator_margin_bottom="@dimen/x24"
-            app:kira_tl_indicator_margin_end="@dimen/x12"
-            app:kira_tl_indicator_margin_start="@dimen/x12"
-            app:kira_tl_indicator_margin_top="@dimen/x24"
-            app:kira_tl_indicator_style="NORMAL"
-            app:kira_tl_tab_layout="@layout/tag_branch"
-            app:kira_tl_tab_padding="@dimen/x12"
-            app:kira_tl_textSelectColor="@color/white"
-            app:kira_tl_textUnSelectColor="@color/pink_fb7ba2"
-            app:kira_tl_text_size="@dimen/x30"/>
-
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/branch_viewpager"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/branch_bottom"
-            android:layout_below="@+id/branch_tab_layout"/>
+            android:background="@drawable/bg_home_plot_branch_background_cover"
+            android:orientation="vertical">
 
-
-        <RelativeLayout
-            android:id="@+id/branch_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/alpha_60">
-
-            <TextView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/tool_bar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
-                android:text="N(12) R(23) SR(4)"
-                android:textColor="@color/white"
-                android:textSize="@dimen/x30" />
+                android:background="@drawable/bg_home_plot_topbackground">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/x10"
-                android:layout_toStartOf="@+id/check_box_btn"
-                android:background="@drawable/ic_show_unowned" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/x20"
+                    android:src="@drawable/ic_home_title_mystory_branch" />
 
-            <CheckBox
-                android:id="@+id/check_box_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/x40"
-                android:background="@drawable/checkbox_selector"
-                android:button="@null"
-                android:checked="false"
-                android:onClick="@{presenter.onClick}" />
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/btn_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:onClick="@{presenter.onClick}"
+                    android:src="@drawable/role_back_btn" />
 
-    </RelativeLayout>
+            </RelativeLayout>
+
+            <com.moemoe.lalala.view.widget.view.KiraTabLayout
+                android:id="@+id/branch_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y104"
+                android:paddingEnd="@dimen/x12"
+                android:paddingStart="@dimen/x12"
+                app:kira_tl_indicator_color="@color/transparent"
+                app:kira_tl_indicator_style="BLOCK"
+                app:kira_tl_tab_layout="@layout/tag_branch"
+                app:kira_tl_tab_padding="@dimen/x12"
+                app:kira_tl_textSelectBackground="@drawable/ic_home_plot_branch_tag_pink"
+                app:kira_tl_textSelectColor="@color/white"
+                app:kira_tl_textUnSelectBackground="@drawable/ic_home_plot_branch_tag_white"
+                app:kira_tl_textUnSelectColor="@color/pink_fb7ba2"
+                app:kira_tl_text_size="@dimen/x30" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/branch_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </LinearLayout>
+
 </layout>

@@ -10,93 +10,80 @@
             type="com.moemoe.lalala.view.activity.CompoundActivity.Presenter" />
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/status_bar_height"
-        android:background="@drawable/bg_home_plot_branch_background_cover"
+        android:orientation="vertical"
         tools:context="com.moemoe.lalala.view.activity.CompoundActivity">
-
-        <RelativeLayout
-            android:id="@+id/compound_tool_bar"
+        <View
+            android:id="@+id/top_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/bg_home_plot_topbackground">
+            android:layout_height="@dimen/status_bar_height"
+            android:background="@color/white_70" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_home_plot_branch_background_cover"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-            <ImageView
+            <RelativeLayout
+                android:id="@+id/compound_tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_home_plot_topbackground">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/x20"
+                    android:src="@drawable/ic_home_title_mystory_branch" />
+
+                <ImageView
+                    android:id="@+id/compound_btn_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/role_back_btn"
+                    android:onClick="@{presenter.onClick}" />
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/compound_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/x20"
-                android:src="@drawable/ic_home_title_mystory_branch" />
+                android:layout_marginTop="@dimen/y154"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x56" />
 
-            <ImageView
-                android:id="@+id/compound_btn_back"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/x60"
+                android:layout_marginStart="@dimen/x72"
+                android:layout_marginTop="@dimen/y80" />
+
+            <TextView
+                android:id="@+id/compound_explain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/role_back_btn"
+                android:layout_marginTop="@dimen/y76"
+                android:text="注:合成使用素材将会消失"
+                android:textColor="@color/black"
+                android:textSize="@dimen/x30" />
+
+            <ImageView
+                android:id="@+id/compound_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y16"
                 android:onClick="@{presenter.onClick}"
-                />
-        </RelativeLayout>
-
-
-        <TextView
-            android:id="@+id/compound_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/compound_tool_bar"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/y154"
-            android:text="选择5张N卡进行合成"
-            android:textColor="@color/white"
-            android:textSize="@dimen/x56" />
-
-        <LinearLayout
-            android:id="@+id/three_ll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/compound_title"
-            android:layout_marginEnd="@dimen/x72"
-            android:layout_marginStart="@dimen/x72"
-            android:layout_marginTop="@dimen/y80"
-            android:orientation="horizontal">
-
+                android:src="@drawable/branch_info_recall_selector" />
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/two_ll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/three_ll"
-            android:layout_marginEnd="@dimen/x180"
-            android:layout_marginStart="@dimen/x180"
-            android:layout_marginTop="@dimen/y32"
-            android:orientation="horizontal">
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/compound_explain"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/two_ll"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/y76"
-            android:text="注:合成使用素材将会消失"
-            android:textColor="@color/black"
-            android:textSize="@dimen/x30" />
-
-        <ImageView
-            android:id="@+id/compound_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/compound_explain"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/y16"
-            android:onClick="@{presenter.onClick}" />
-    </RelativeLayout>
+    </LinearLayout>
 </layout>

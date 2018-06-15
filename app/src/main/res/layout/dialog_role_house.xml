@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_role_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:background="@color/alpha_60"
+    android:visibility="gone">
+
+    <ImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/bg_home_roles_like_prompt" />
+
+    <TextView
+        android:id="@+id/tv_renyi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/iv_cover"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/y24"
+        android:text="(点击任意区域关闭)"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x30" />
+
+    <TextView
+        android:id="@+id/tv_role_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_renyi"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/y52"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x64"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_role_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_role_num"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x40" />
+</RelativeLayout>

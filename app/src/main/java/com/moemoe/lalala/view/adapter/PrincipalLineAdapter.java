@@ -64,7 +64,7 @@ public class PrincipalLineAdapter extends RecyclerView.Adapter<PrincipalLineAdap
 
     class PrincipalLineViewHolder extends RecyclerView.ViewHolder {
 
-        private RelativeLayout mPhoto;//封面素材
+        private ImageView mPhoto;//封面素材
         private ImageView mBottomImage;//封面底部角标
         private TextView mBottomTitle;//封面底部标题
 

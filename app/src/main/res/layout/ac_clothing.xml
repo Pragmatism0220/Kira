@@ -102,10 +102,12 @@
                         android:id="@+id/iv_cloth_name_select"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/tv_name"
+                        android:layout_marginBottom="@dimen/y10"
                         android:layout_marginStart="@dimen/x8"
                         android:layout_toEndOf="@+id/tv_name"
                         android:src="@drawable/ic_home_roleschoice_select"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -173,8 +175,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@drawable/bg_home_clothes_background_bottpom"
-            android:paddingEnd="@dimen/x20"
-            android:paddingStart="@dimen/x20"
             app:kira_tl_indicator_color="@color/transparent"
             app:kira_tl_indicator_width_equal_title="true"
             app:kira_tl_tab_padding="@dimen/x8"

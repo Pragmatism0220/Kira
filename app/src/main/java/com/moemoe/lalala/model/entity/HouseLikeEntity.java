@@ -13,6 +13,15 @@ public class HouseLikeEntity {
     private long remainTime;
     private String roleId;
     private int roleLike;
+    private String roleName;
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
 
     public String getId() {
         return id;

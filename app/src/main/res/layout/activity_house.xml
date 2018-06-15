@@ -14,10 +14,6 @@
         android:layout_height="match_parent"
         tools:context="com.moemoe.lalala.view.activity.HouseActivity">
 
-        <!--<FrameLayout-->
-        <!--android:id="@+id/map"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent" />-->
         <com.moemoe.lalala.view.widget.map.MapLayout
             android:id="@+id/map"
             android:layout_width="match_parent"
@@ -203,6 +199,8 @@
             android:layout_marginBottom="@dimen/y16"
             android:onClick="@{presenter.onClick}"
             android:src="@drawable/bg_role_selector" />
+
+        <include layout="@layout/dialog_role_house" />
     </RelativeLayout>
 
 </layout>

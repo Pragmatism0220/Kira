@@ -234,8 +234,9 @@
                         android:layout_marginBottom="-2dp"
                         android:layout_marginEnd="@dimen/x90"
                         android:layout_marginStart="@dimen/y24"
-                        android:layout_toRightOf="@+id/fl_cover"
-                        android:background="@drawable/shape_person">
+                        android:layout_toEndOf="@+id/fl_cover"
+                        android:background="@drawable/shape_person"
+                        android:visibility="invisible">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -266,14 +267,16 @@
                         android:layout_below="@+id/ll_tv_doc_num"
                         android:layout_marginStart="@dimen/y30"
                         android:layout_marginTop="@dimen/y10"
-                        android:layout_toRightOf="@+id/fl_cover"
-                        android:src="@drawable/ig_center_cardbg_prestige" />
+                        android:layout_toEndOf="@+id/fl_cover"
+                        android:src="@drawable/ig_center_cardbg_prestige"
+                        android:visibility="invisible" />
 
                     <TextView
                         android:id="@+id/tv_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/fl_cover"
+                        android:layout_marginEnd="@dimen/x90"
                         android:layout_marginStart="@dimen/x28"
                         android:layout_marginTop="@dimen/y20"
                         android:ellipsize="end"
@@ -537,9 +540,7 @@
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:gravity="center"
-                android:text="她的宅屋"
-                android:textColor="@color/main_selected_cyan"
-                android:visibility="visible" />
+                android:textColor="@color/main_selected_cyan" />
         </LinearLayout>
 
     </RelativeLayout>

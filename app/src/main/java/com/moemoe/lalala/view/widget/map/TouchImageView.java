@@ -44,6 +44,7 @@ public class TouchImageView extends ImageView {
     private float normalizedScale;
 
     private Matrix matrix, prevMatrix;
+    private boolean isTouch;
 
     private static enum State {NONE, DRAG, ZOOM, FLING, ANIMATE_ZOOM}
 
@@ -75,7 +76,6 @@ public class TouchImageView extends ImageView {
     private GestureDetector.OnDoubleTapListener doubleTapListener = null;
     private OnTouchListener userTouchListener = null;
     private OnTouchImageViewListener touchImageViewListener = null;
-
     private List<MapMark> marks = new ArrayList<>();
     private List<HouseView> wuViews = new ArrayList<>();
 
@@ -121,7 +121,7 @@ public class TouchImageView extends ImageView {
     private void sharedConstructing(Context context) {
         super.setClickable(true);
         this.context = context;
-        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
+//        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
         mGestureDetector = new GestureDetector(context, new GestureListener());
         matrix = new Matrix();
         prevMatrix = new Matrix();
@@ -139,6 +139,18 @@ public class TouchImageView extends ImageView {
         setState(State.NONE);
         onDrawReady = false;
         super.setOnTouchListener(new PrivateOnTouchListener());
+    }
+
+    public void setIsTouch(boolean isTouch) {
+        this.isTouch = isTouch;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (isTouch) {
+            return true;
+        }
+        return super.dispatchTouchEvent(event);
     }
 
     @Override
@@ -295,7 +307,7 @@ public class TouchImageView extends ImageView {
         }
         for (HouseView wuView : wuViews) {
             wuView.scaleMark(x - wuView.getMeasuredWidth() / 2, y - wuView.getMeasuredHeight() / 2, scale);
-            
+
             wuView.setScaleX(wuView.getScaleX() * scale);
             wuView.setScaleY(wuView.getScaleY() * scale);
         }
@@ -850,7 +862,7 @@ public class TouchImageView extends ImageView {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            mScaleDetector.onTouchEvent(event);
+//            mScaleDetector.onTouchEvent(event);
             mGestureDetector.onTouchEvent(event);
             PointF curr = new PointF(event.getX(), event.getY());
 
@@ -1021,10 +1033,10 @@ public class TouchImageView extends ImageView {
         public void run() {
             float t = interpolate();
             double deltaScale = calculateDeltaScale(t);
-            scaleImage(deltaScale, bitmapX, bitmapY, stretchImageToSuper);
-            translateImageToCenterTouchPosition(t);
-            fixScaleTrans();
-            setImageMatrix(matrix);
+//            scaleImage(deltaScale, bitmapX, bitmapY, stretchImageToSuper);
+//            translateImageToCenterTouchPosition(t);
+//            fixScaleTrans();
+//            setImageMatrix(matrix);
 
             //
             // OnTouchImageViewListener is set: double tap runnable updates listener

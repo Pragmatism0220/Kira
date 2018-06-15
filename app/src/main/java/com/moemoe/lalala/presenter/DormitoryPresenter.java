@@ -24,6 +24,7 @@ import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
 import com.moemoe.lalala.model.entity.MapMarkEntity;
 import com.moemoe.lalala.model.entity.NearUserEntity;
+import com.moemoe.lalala.model.entity.SaveVisitorEntity;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.GreenDaoManager;
@@ -71,21 +72,38 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
     }
 
     @Override
-    public void loadHouseObjects() {
-        apiService.loadHouseObjects()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new NetResultSubscriber<ArrayList<MapEntity>>() {
-                    @Override
-                    public void onSuccess(ArrayList<MapEntity> entities) {
-                        if (view != null) view.onLoadHouseObjects(entities);
-                    }
+    public void loadHouseObjects(boolean isHouse, String visitorId) {
+        if (isHouse) {
+            apiService.loadHouseObjects()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new NetResultSubscriber<ArrayList<MapEntity>>() {
+                        @Override
+                        public void onSuccess(ArrayList<MapEntity> entities) {
+                            if (view != null) view.onLoadHouseObjects(entities);
+                        }
 
-                    @Override
-                    public void onFail(int code, String msg) {
-                        if (view != null) view.onFailure(code, msg);
-                    }
-                });
+                        @Override
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onFailure(code, msg);
+                        }
+                    });
+        } else {
+            apiService.loadHouseObjects(visitorId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new NetResultSubscriber<ArrayList<MapEntity>>() {
+                        @Override
+                        public void onSuccess(ArrayList<MapEntity> entities) {
+                            if (view != null) view.onLoadHouseObjects(entities);
+                        }
+
+                        @Override
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onFailure(code, msg);
+                        }
+                    });
+        }
     }
 
 
@@ -126,175 +144,29 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
     }
 
     @Override
+    public void saveVisitor(SaveVisitorEntity request) {
+        apiService.saveVisitor(request)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetSimpleResultSubscriber() {
+                    @Override
+                    public void onSuccess() {
+                        if (view != null) view.saveVisitorSuccess();
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+
+    }
+
+    @Override
     public void addMapMark(Context context, MapMarkContainer container, MapLayout map, String type) {
         addMapMark(context, map, container, type);
     }
 
-//    @Override
-//    public void addMapMark(Context context, MapMarkContainer container, MapWidget map, String type) {
-//        addMapMark(context, map, container, type);
-//        // view.onMapMarkLoaded(container);
-//    }
-//
-//    @Override
-//    public void addEventMark(String id, String icon, MapMarkContainer container, Context context, MapWidget map, String storyId) {
-//        int iconId = 0;
-//        int x = 0;
-//        int y = 0;
-//        if ("daily_len".equals(icon)) {
-//            iconId = R.drawable.btn_event_daily_len;
-//        } else if ("daily_mei".equals(icon)) {
-//            iconId = R.drawable.btn_event_daily_mei;
-//        } else if ("daily_sari".equals(icon)) {
-//            iconId = R.drawable.btn_event_daily_sari;
-//        } else if ("branch_len".equals(icon)) {
-//            iconId = R.drawable.btn_event_branch_len;
-//        } else if ("branch_mei".equals(icon)) {
-//            iconId = R.drawable.btn_event_branch_mei;
-//        } else if ("branch_sari".equals(icon)) {
-//            iconId = R.drawable.btn_event_branch_sari;
-//        } else if ("main_len".equals(icon)) {
-//            iconId = R.drawable.btn_event_main_len;
-//        } else if ("main_mei".equals(icon)) {
-//            iconId = R.drawable.btn_event_main_mei;
-//        } else if ("main_sari".equals(icon)) {
-//            iconId = R.drawable.btn_event_main_sari;
-//        } else if ("summerfestival".equals(icon)) {
-//            iconId = R.drawable.btn_map_event_summerfestival;
-//        } else if ("daily_current".equals(icon)) {
-//            iconId = R.drawable.btn_event_daily_current;
-//        } else if ("branch_current".equals(icon)) {
-//            iconId = R.drawable.btn_event_branch_current;
-//        } else if ("main_current".equals(icon)) {
-//            iconId = R.drawable.btn_event_main_current;
-//        }
-//
-//        if ("activityroom".equals(id)) {
-//            x = 1295;
-//            y = 866;
-//        } else if ("classroom".equals(id)) {
-//            x = 1696;
-//            y = 412;
-//        } else if ("rooftop".equals(id)) {
-//            x = 1493;
-//            y = 272;
-//        } else if ("mainroad".equals(id)) {
-//            x = 2988;
-//            y = 1311;
-//        } else if ("corridor".equals(id)) {
-//            x = 1861;
-//            y = 715;
-//        } else if ("tree".equals(id)) {
-//            x = 441;
-//            y = 1736;
-//        } else if ("canteen".equals(id)) {
-//            x = 1108;
-//            y = 1455;
-//        } else if ("principal".equals(id)) {
-//            x = 1877;
-//            y = 342;
-//        } else if ("coffee".equals(id)) {
-//            x = 873;
-//            y = 1147;
-//        } else if ("playground".equals(id)) {
-//            x = 1166;
-//            y = 188;
-//        } else if ("warehouse".equals(id)) {
-//            x = 2321;
-//            y = 342;
-//        } else if ("summerfestival".equals(id)) {
-//            x = 3405;
-//            y = 1992;
-//        } else if ("library".equals(id)) {
-//            x = 3288;
-//            y = 1024;
-//        }
-//        Layer layer = map.getLayerById(1);
-//
-//        // if(layer == null){
-//        // Layer layer = map.createLayer(1);//1 地图剧情
-//        //  }
-////        MapObject object = layer.getMapObject("地图剧情" + id);
-////        if (object == null) {
-////            MapMarkEntity entity1 = new MapMarkEntity("地图剧情" + id, x, y, "neta://com.moemoe.lalala/map_event_1.0?id=" + storyId, iconId, 140, 140);
-////            container.removeMarkById("地图剧情" + id);
-////            container.addMark(entity1);
-////            addMarkToMap(context, entity1, layer);
-////            // view.onMapEventLoaded(container);
-////        }
-//        // MapToolTipUtils.getInstance().updateList(container.getContainer());
-//    }
-
-//    private void addMapMark(Context context, final MapWidget map, MapMarkContainer container, String type) {
-//        ArrayList<MapDbEntity> mapPics = (ArrayList<MapDbEntity>) GreenDaoManager.getInstance().getSession().getMapDbEntityDao()
-//                .queryBuilder()
-//                .where(MapDbEntityDao.Properties.House.eq(type))
-//                .list();
-//        Layer layer;//0 全天可点击事件
-//        if (mapPics != null && mapPics.size() > 0) {
-//            if ("nearUser".equals(type)) {
-//                String posStr = PreferenceUtils.getNearPosition(context);
-//                Gson gson = new Gson();
-//                ArrayList<NearUserEntity.Point> posList = gson.fromJson(posStr, new TypeToken<ArrayList<NearUserEntity.Point>>() {
-//                }.getType());
-//                if (posList != null) {
-//                    mapPics = getRandom(mapPics, posList);
-//                }
-//            } else if ("topUser".equals(type)) {
-//                String posStr = PreferenceUtils.getTopUserPosition(context);
-//                Gson gson = new Gson();
-//                ArrayList<NearUserEntity.Point> posList = gson.fromJson(posStr, new TypeToken<ArrayList<NearUserEntity.Point>>() {
-//                }.getType());
-//                if (posList != null) {
-//                    mapPics = getRandom(mapPics, posList);
-//                }
-//            }
-//            Collections.sort(mapPics, new Comparator<MapDbEntity>() {
-//                @Override
-//                public int compare(MapDbEntity mapDbEntity, MapDbEntity t1) {
-//                    int i = mapDbEntity.getLayer() - t1.getLayer();
-//                    return i;
-//                }
-//            });
-//            for (MapDbEntity entity : mapPics) {
-////                Layer tmp = map.getLayerById(entity.getLayer());
-////                if (tmp != null) map.removeLayer(entity.getLayer());
-////                layer = map.createLayer(entity.getLayer());
-//                Layer tmp = map.getLayerById(entity.getLayer());
-//                if (tmp != null) map.removeLayer(entity.getLayer());
-//                layer = map.createLayer(entity.getLayer());
-//                String time = "-1";
-//                if (StringUtils.isasa()) {
-//                    time = "1";
-//                }
-//                if (StringUtils.issyougo()) {
-//                    time = "2";
-//                }
-//                if (StringUtils.isgogo()) {
-//                    time = "3";
-//                }
-//                if (StringUtils.istasogare()) {
-//                    time = "4";
-//                }
-//                if (StringUtils.isyoru2()) {
-//                    time = "5";
-//                }
-//                if (StringUtils.ismayonaka()) {
-//                    time = "6";
-//                }
-//                if (entity.getShows() != null && entity.getShows().contains(time)) {
-//                    if (entity.getDownloadState() == 2) {
-//                        if (FileUtil.isExists(StorageUtils.getHouseRootPath() + entity.getFileName())) {
-//                            MapMarkEntity entity1 = new MapMarkEntity(entity.getName(), entity.getPointX(), entity.getPointY(), entity.getSchema(), entity.getFileName(), entity.getImage_w(), entity.getImage_h(), entity.getText(), entity.getLayer(), entity.getType());
-//                            container.addMark(entity1);
-//                            addMarkToMap(context, entity1, layer);
-//                        }
-//                    }
-//                }
-//                // MapToolTipUtils.getInstance().updateList(container.getContainer());
-//            }
-//        }
-//    }
 
     private ArrayList<HouseDbEntity> getRandom(ArrayList<HouseDbEntity> list, ArrayList<NearUserEntity.Point> posList) {
         ArrayList<HouseDbEntity> res = new ArrayList<>();
@@ -312,31 +184,6 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
         }
         return res;
     }
-
-//    private void addMarkToMap(Context context, MapMarkEntity entity, Layer layer) {
-//        Drawable drawable;
-//        if (!TextUtils.isEmpty(entity.getPath())) {
-//            drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getPath());
-//        } else {
-//            if (entity.getBg() == 0) return;
-//            drawable = ContextCompat.getDrawable(context, entity.getBg());
-//        }
-//        if (drawable != null) {
-//            MapObject object = new MapObject(entity.getId()
-//                    , drawable
-//                    , entity.getX()
-//                    , entity.getY()
-//                    , 0
-//                    , 0
-//                    , true
-//                    , true
-//                    , entity.getW()
-//                    , entity.getH());
-//            layer.addMapObject(object);
-//        } else {
-//            FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getPath());
-//        }
-//    }
 
     private void addMapMark(Context context, final MapLayout map, MapMarkContainer container, String type) {
         ArrayList<HouseDbEntity> mapPics = (ArrayList<HouseDbEntity>) GreenDaoManager.getInstance().getSession().getHouseDbEntityDao()
@@ -411,26 +258,28 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
 //                                map.setMapResource(R.drawable.big_house);
                                 return;
                             }
-                            addMarkToMap(context, entity1, map, entity);
+                            HouseDbEntity houseDbEntity = mapPics.get(mapPics.size() - 1);
+                            addMarkToMap(context, entity1, map, entity, houseDbEntity.getImage_w(), houseDbEntity.getImage_h());
                         }
-                    } else if (entity.getType().equals("3")) {
-                        int heightPixels = context.getResources().getDisplayMetrics().heightPixels;
-                        int widthPixels = context.getResources().getDisplayMetrics().widthPixels;
-                        double v = 3598.0 * heightPixels / 1920.0;
-                        double x = entity.getPointX() * v / 3598.0;
-                        double y = entity.getPointY() * heightPixels / 1920.0;
-                        double wight = entity.getImage_w() * v / 3598.0;
-                        double height = entity.getImage_h() * heightPixels / 1920.0;
-                        double v1 = x - ((v - widthPixels) / 2);
-                        map.addMapMarkView(R.drawable.bg_cardbg_myrole_like, (float) v1, (float) y, wight, height, entity.getSchema(), entity.getText(), entity.getType(), null, entity.getId());
                     }
+//                    } else if (entity.getType().equals("3")) {
+//                        int heightPixels = context.getResources().getDisplayMetrics().heightPixels;
+//                        int widthPixels = context.getResources().getDisplayMetrics().widthPixels;
+//                        double v = 3598.0 * heightPixels / 1920.0;
+//                        double x = entity.getPointX() * v / 3598.0;
+//                        double y = entity.getPointY() * heightPixels / 1920.0;
+//                        double wight = entity.getImage_w() * v / 3598.0;
+//                        double height = entity.getImage_h() * heightPixels / 1920.0;
+//                        double v1 = x - ((v - widthPixels) / 2);
+//                        map.addMapMarkView(R.drawable.bg_cardbg_myrole_like, (float) v1, (float) y, wight, height, entity.getSchema(), entity.getText(), entity.getType(), null, entity.getId());
+//                    }
                 }
                 // MapToolTipUtils.getInstance().updateList(container.getContainer());
             }
         }
     }
 
-    private void addMarkToMap(Context context, MapMarkEntity entity, MapLayout layer, HouseDbEntity dbEntity) {
+    private void addMarkToMap(Context context, MapMarkEntity entity, MapLayout layer, HouseDbEntity dbEntity, double oldW, double oldH) {
         Drawable drawable;
         if (!TextUtils.isEmpty(entity.getPath())) {
             drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entity.getPath());
@@ -441,10 +290,10 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
         if (drawable != null) {
             int heightPixels = context.getResources().getDisplayMetrics().heightPixels;
             int widthPixels = context.getResources().getDisplayMetrics().widthPixels;
-            double v = 3598.0 * heightPixels / 1920.0;
-            double x = entity.getX() * v / 3598.0;
+            double v = 3600.0 * heightPixels / 1920.0;
+            double x = entity.getX() * v / 3600.0;
             double y = entity.getY() * heightPixels / 1920.0;
-            double wight = entity.getW() * v / 3598.0;
+            double wight = entity.getW() * v / 3600.0;
             double height = entity.getH() * heightPixels / 1920.0;
             double v1 = x - ((v - widthPixels) / 2);
             layer.addMapMarkView(drawable, (float) v1, (float) y, wight, height, entity.getSchema(), entity.getContent(), entity.getType(), null, dbEntity);

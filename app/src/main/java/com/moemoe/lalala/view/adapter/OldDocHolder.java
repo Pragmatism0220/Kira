@@ -243,7 +243,7 @@ public class OldDocHolder extends ClickableViewHolder {
         //label
         if (docLabel != null && entity.getTags() != null) {
             docLabel.setDocLabelAdapter(docLabelAdapter);
-            docLabelAdapter.setData(entity.getTags(), false);
+            docLabelAdapter.setData(entity.getTags(), true);
             if (entity.getTags().size() > 0) {
                 docLabel.setVisibility(View.VISIBLE);
             } else {
@@ -257,17 +257,21 @@ public class OldDocHolder extends ClickableViewHolder {
                     }
                     if (entity != null) {
                         if (DialogUtils.checkLoginAndShowDlg(context)) {
-                            final DocTagEntity tagBean = entity.getTags().get(position);
-                            TagLikeEntity bean = new TagLikeEntity(entity.getId(), tagBean.getId());
-                            ((BaseAppCompatActivity) context).createDialog();
-                            if (context instanceof FeedV3Activity) {
-                                ((FeedV3Activity) context).likeTag(tagBean.isLiked(), position, bean, paposition);
-                            } else if (context instanceof WenQuanActivity) {
-                                ((WenQuanActivity) context).likeTag(tagBean.isLiked(), position, bean, paposition);
-                            } else if (context instanceof PersonalV2Activity) {
-                                ((PersonalV2Activity) context).likeTag(tagBean.isLiked(), position, bean, paposition);
-                            } else if (context instanceof CommunityV1Activity) {
-                                ((CommunityV1Activity) context).likeTag(tagBean.isLiked(), position, bean, paposition);
+                            if (position < entity.getTags().size()) {
+                                final DocTagEntity tagBean = entity.getTags().get(position);
+                                TagLikeEntity bean = new TagLikeEntity(entity.getId(), tagBean.getId());
+                                ((BaseAppCompatActivity) context).createDialog();
+                                if (context instanceof FeedV3Activity) {
+                                    ((FeedV3Activity) context).likeTag(tagBean.isLiked(), position, bean, paposition);
+                                } else if (context instanceof WenQuanActivity) {
+                                    ((WenQuanActivity) context).likeTag(tagBean.isLiked(), position, bean, paposition);
+                                } else if (context instanceof PersonalV2Activity) {
+                                    ((PersonalV2Activity) context).likeTag(tagBean.isLiked(), position, bean, paposition);
+                                } else if (context instanceof CommunityV1Activity) {
+                                    ((CommunityV1Activity) context).likeTag(tagBean.isLiked(), position, bean, paposition);
+                                }
+                            } else {
+                                addDocLabel(entity, paposition);
                             }
                         }
                     }
@@ -383,41 +387,7 @@ public class OldDocHolder extends ClickableViewHolder {
         $(R.id.fl_forward_root_2).setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-
-                final AlertDialogUtil alertDialogUtil = AlertDialogUtil.getInstance();
-                alertDialogUtil.createDocEditDialog(itemView.getContext());
-                alertDialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
-                    @Override
-                    public void CancelOnClick() {
-                        alertDialogUtil.dismissDialog();
-                    }
-
-                    @Override
-                    public void ConfirmOnClick() {
-                        if (DialogUtils.checkLoginAndShowDlg(itemView.getContext())) {
-                            String content = alertDialogUtil.getEditTextContent();
-                            if (!TextUtils.isEmpty(content)) {
-                                TagSendEntity bean = new TagSendEntity(entity.getId(), content);
-                                if (itemView.getContext() instanceof FeedV3Activity) {
-                                    ((FeedV3Activity) context).createLabel(bean, paposition);
-                                } else if (itemView.getContext() instanceof DepartmentV3Activity) {
-                                    ((DepartmentV3Activity) context).createLabel(bean, paposition);
-                                } else if (itemView.getContext() instanceof PersonalV2Activity) {
-                                    ((PersonalV2Activity) context).createLabel(bean, paposition);
-                                } else if (itemView.getContext() instanceof WenQuanActivity) {
-                                    ((WenQuanActivity) context).createLabel(bean, paposition);
-                                } else if (itemView.getContext() instanceof CommunityV1Activity) {
-                                    ((CommunityV1Activity) context).createLabel(bean, paposition);
-                                }
-                                alertDialogUtil.dismissDialog();
-                            } else {
-                                ToastUtils.showShortToast(itemView.getContext(), "标签名不能哟！");
-                            }
-                        }
-                    }
-                });
-                alertDialogUtil.showDialog();
-
+                addDocLabel(entity, paposition);
             }
         });
 
@@ -482,6 +452,42 @@ public class OldDocHolder extends ClickableViewHolder {
         });
 
 
+    }
+
+    private void addDocLabel(final DocResponse entity, final int paposition) {
+        final AlertDialogUtil alertDialogUtil = AlertDialogUtil.getInstance();
+        alertDialogUtil.createDocEditDialog(itemView.getContext());
+        alertDialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+            @Override
+            public void CancelOnClick() {
+                alertDialogUtil.dismissDialog();
+            }
+
+            @Override
+            public void ConfirmOnClick() {
+                if (DialogUtils.checkLoginAndShowDlg(itemView.getContext())) {
+                    String content = alertDialogUtil.getEditTextContent();
+                    if (!TextUtils.isEmpty(content)) {
+                        TagSendEntity bean = new TagSendEntity(entity.getId(), content);
+                        if (itemView.getContext() instanceof FeedV3Activity) {
+                            ((FeedV3Activity) context).createLabel(bean, paposition);
+                        } else if (itemView.getContext() instanceof DepartmentV3Activity) {
+                            ((DepartmentV3Activity) context).createLabel(bean, paposition);
+                        } else if (itemView.getContext() instanceof PersonalV2Activity) {
+                            ((PersonalV2Activity) context).createLabel(bean, paposition);
+                        } else if (itemView.getContext() instanceof WenQuanActivity) {
+                            ((WenQuanActivity) context).createLabel(bean, paposition);
+                        } else if (itemView.getContext() instanceof CommunityV1Activity) {
+                            ((CommunityV1Activity) context).createLabel(bean, paposition);
+                        }
+                        alertDialogUtil.dismissDialog();
+                    } else {
+                        ToastUtils.showShortToast(itemView.getContext(), "标签名不能哟！");
+                    }
+                }
+            }
+        });
+        alertDialogUtil.showDialog();
     }
 
     private void setImg(ArrayList<Image> images) {

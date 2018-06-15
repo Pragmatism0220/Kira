@@ -151,7 +151,7 @@ public class ClubListFragment extends BaseFragment implements SelectTagContract.
             List<BaseFragment> fragmentList = new ArrayList<>();
             ArrayList<String> titles = new ArrayList<>();
             titles.add("我的");
-            titles.add(getString(R.string.label_club));
+            titles.add("所有");
 
             fragmentList.add(ClubChildFragment.newInstance(tags, "我的"));
             fragmentList.add(ClubChildFragment.newInstance(tags, "社团"));

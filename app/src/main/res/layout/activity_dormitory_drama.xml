@@ -16,13 +16,20 @@
         android:id="@+id/dormitory_drama_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/status_bar_height"
+        android:background="@drawable/drama_dormitory_bg"
         android:orientation="vertical"
         tools:context="com.moemoe.lalala.view.activity.DormitoryDramaActivity">
+
+        <View
+            android:id="@+id/top_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/status_bar_height"
+            android:background="@color/white_70" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+    
 
             <ImageView
                 android:id="@+id/drama_image"
@@ -85,7 +92,6 @@
                                 android:layout_marginBottom="@dimen/y10"
                                 android:layout_marginEnd="@dimen/x80"
                                 android:gravity="center_vertical"
-                                android:text="收集度：000"
                                 android:textColor="@color/white"
                                 tools:ignore="RtlHardcoded" />
 
@@ -106,7 +112,6 @@
                                 android:layout_gravity="bottom|end"
                                 android:layout_marginBottom="@dimen/y10"
                                 android:layout_marginEnd="@dimen/y80"
-                                android:text="N(12) R(23) SR(4)"
                                 android:textColor="@color/white" />
                         </FrameLayout>
 
@@ -127,7 +132,6 @@
                                 android:layout_gravity="bottom|right"
                                 android:layout_marginBottom="@dimen/y10"
                                 android:layout_marginEnd="@dimen/x80"
-                                android:text="收集度：000"
                                 android:textColor="@color/white"
                                 tools:ignore="RtlHardcoded" />
                         </FrameLayout>

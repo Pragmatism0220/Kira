@@ -78,18 +78,5 @@ public class NewStoryGroupInfo {
     public void setProgress(int progress) {
         this.progress = progress;
     }
-
-    @Override
-    public String toString() {
-        return "NewStoryGroupInfo{" +
-                "content='" + content + '\'' +
-                ", groupName='" + groupName + '\'' +
-                ", id='" + id + '\'' +
-                ", image='" + image + '\'' +
-                ", isFullCollect=" + isFullCollect +
-                ", isLock=" + isLock +
-                ", joinNum=" + joinNum +
-                ", progress=" + progress +
-                '}';
-    }
+    
 }

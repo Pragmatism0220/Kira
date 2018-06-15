@@ -8,12 +8,16 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
@@ -29,9 +33,11 @@ import com.moemoe.lalala.model.entity.HouseDbEntity;
 import com.moemoe.lalala.model.entity.HouseLikeEntity;
 import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
+import com.moemoe.lalala.model.entity.SaveVisitorEntity;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.presenter.DormitoryContract;
 import com.moemoe.lalala.presenter.DormitoryPresenter;
+import com.moemoe.lalala.utils.AlertDialogUtil;
 import com.moemoe.lalala.utils.DialogUtils;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.FileUtil;
@@ -45,6 +51,7 @@ import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.widget.map.MapLayout;
+import com.moemoe.lalala.view.widget.map.TouchImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -73,14 +80,18 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     private MapMarkContainer mContainer;
     private Disposable initDisposable;
     private Disposable resolvDisposable;
-    private FrameLayout mHouse;
-    private MapLayout mHouselayout;
+    private int type;
+    private RelativeLayout mRlRoleRoot;
+    private TextView mTvRoleNum;
+    private TextView mTvRoleName;
 
     @Override
     protected void initComponent() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_house);
         binding.setPresenter(new Presenter());
-        mHouselayout = findViewById(R.id.map);
+        mRlRoleRoot = findViewById(R.id.rl_role_root);
+        mTvRoleNum = findViewById(R.id.tv_role_num);
+        mTvRoleName = findViewById(R.id.tv_role_name);
     }
 
     @Override
@@ -104,7 +115,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     }
 
     public void initMap() {
-        mPresenter.addMapMark(HouseActivity.this, mContainer, mHouselayout, "house");
+        mPresenter.addMapMark(HouseActivity.this, mContainer, binding.map, "house");
     }
 
     @Override
@@ -113,7 +124,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         binding.map.clearAllView();
         binding.map.addTouchView(HouseActivity.this);
         mPresenter.getVisitorsInfo();
-        mPresenter.loadHouseObjects();
+        mPresenter.loadHouseObjects(true, "");
         if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
             binding.ivPersonal.setImageResource(R.drawable.bg_default_circle);
         } else {
@@ -125,6 +136,18 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                     .bitmapTransform(new CropCircleTransformation(this))
                     .into(binding.ivPersonal);
         }
+        binding.map.setOnImageClickLietener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mIsOut) {
+                    imgIn();
+                    mIsOut = false;
+                } else {
+                    imgOut();
+                    mIsOut = true;
+                }
+            }
+        });
     }
 
     @Override
@@ -133,16 +156,10 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
 
     @Override
     protected void initListeners() {
-        mHouselayout.setOnImageClickLietener(new View.OnClickListener() {
+        mRlRoleRoot.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (mIsOut) {
-                    imgIn();
-                    mIsOut = false;
-                } else {
-                    imgOut();
-                    mIsOut = true;
-                }
+            public void onClick(View view) {
+                mRlRoleRoot.setVisibility(View.GONE);
             }
         });
     }
@@ -162,9 +179,9 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     public void onLoadHouseObjects(ArrayList<MapEntity> entities) {
         for (MapEntity entity : entities) {
             if (entity.getType() == 2) {
-                entity.setShows("1,2,3,4,5");
+                entity.setShows("1,2,3,4,5,6");
             } else if (entity.getType() == 3) {
-                entity.setShows("1,2,3,4,5");
+                entity.setShows("1,2,3,4,5,6");
             }
         }
         final ArrayList<HouseDbEntity> res = new ArrayList<>();
@@ -203,7 +220,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
             @Override
             public void onComplete() {
                 GreenDaoManager.getInstance().getSession().getHouseDbEntityDao().insertOrReplaceInTx(res);
-                mPresenter.addMapMark(HouseActivity.this, mContainer, mHouselayout, "house");
+                mPresenter.addMapMark(HouseActivity.this, mContainer, binding.map, "house");
                 if (errorList.size() > 0) {
                     resolvErrorList(errorList, "house");
                 }
@@ -216,8 +233,10 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
      */
     @Override
     public void onLoadRoleLikeCollect(HouseLikeEntity entity) {
-        showToast("采集成功~~~~");
-        mHouselayout.setTimerLikeView(entity);
+        binding.map.setTimerLikeView(entity);
+        mRlRoleRoot.setVisibility(View.VISIBLE);
+        mTvRoleNum.setText("好感度+" + entity.getRoleLike());
+        mTvRoleName.setText(entity.getRoleName());
     }
 
     /**
@@ -275,6 +294,15 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         }
     }
 
+    @Override
+    public void saveVisitorSuccess() {
+        if (type == 3) {
+            showToast("捡起了一个垃圾哟~~真勤快~~");
+        } else {
+            showToast("咻咻咻咻~~~");
+        }
+    }
+
     private void resolvErrorList(ArrayList<HouseDbEntity> errorList, final String type) {
         final ArrayList<HouseDbEntity> errorListTmp = new ArrayList<>();
         final ArrayList<HouseDbEntity> res = new ArrayList<>();
@@ -315,7 +343,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                     resolvErrorList(errorListTmp, type);
                 } else {
                     if ("house".equals(type)) {
-                        mPresenter.addMapMark(HouseActivity.this, mContainer, mHouselayout, "house");
+                        mPresenter.addMapMark(HouseActivity.this, mContainer, binding.map, "house");
                     }
                 }
             }
@@ -327,6 +355,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         super.onDestroy();
         if (initDisposable != null && !initDisposable.isDisposed()) initDisposable.dispose();
         if (resolvDisposable != null && !resolvDisposable.isDisposed()) resolvDisposable.dispose();
+        binding.map.clearAllView();
         EventBus.getDefault().unregister(this);
     }
 
@@ -391,6 +420,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                     }
                     break;
                 case R.id.tv_search:
+                    //埋点统计：手机个人中心
+                    clickEvent("宅屋-搜索");
                     Intent intent = new Intent(HouseActivity.this, AllSearchActivity.class);
                     intent.putExtra("type", "all");
                     startActivity(intent);
@@ -424,7 +455,13 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     public void houseLikeEvent(HouseLikeEvent event) {
         if (event != null) {
             String roleId = event.getRoleId();
-            mPresenter.loadRoleLikeCollect(roleId);
+            if (TextUtils.isEmpty(roleId)) {
+                type = 3;
+                mPresenter.saveVisitor(new SaveVisitorEntity("", PreferenceUtils.getUUid(), 3));
+            } else {
+                type = 2;
+                mPresenter.loadRoleLikeCollect(roleId);
+            }
         }
     }
 }

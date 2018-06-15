@@ -34,9 +34,9 @@ public class TrashPresenter implements TrashContract.Presenter {
     public TrashPresenter(TrashContract.View view, ApiService apiService) {
         this.view = view;
         this.apiService = apiService;
-        if(view instanceof TrashActivity){
+        if (view instanceof TrashActivity) {
             entity = new TrashOperationEntity("text");
-        }else if(view instanceof ImageTrashActivity){
+        } else if (view instanceof ImageTrashActivity) {
             entity = new TrashOperationEntity("image");
         }
     }
@@ -49,79 +49,79 @@ public class TrashPresenter implements TrashContract.Presenter {
     };
 
     @Override
-    public void getTrashList(int type,int time) {
-        if(type == 0){//text
-            apiService.getTextTrashList(ApiService.LENGHT,time)
+    public void getTrashList(int type, int time) {
+        if (type == 0) {//text
+            apiService.getTextTrashList(ApiService.LENGHT, time)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetResultSubscriber<ArrayList<TrashEntity>>() {
                         @Override
                         public void onSuccess(ArrayList<TrashEntity> entities) {
-                            Collections.sort(entities,timeComparator);
-                            if(view != null)  view.onLoadListSuccess(entities);
+                            Collections.sort(entities, timeComparator);
+                            if (view != null) view.onLoadListSuccess(entities);
                         }
 
                         @Override
-                        public void onFail(int code,String msg) {
-                            if(view != null) view.onFailure(code,msg);
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
-        }else if(type == 1){//img
-            apiService.getImgTrashList(ApiService.LENGHT,time)
+        } else if (type == 1) {//img
+            apiService.getImgTrashList(ApiService.LENGHT, time)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetResultSubscriber<ArrayList<TrashEntity>>() {
                         @Override
                         public void onSuccess(ArrayList<TrashEntity> entities) {
-                            Collections.sort(entities,timeComparator);
-                            if(view != null) view.onLoadListSuccess(entities);
+                            Collections.sort(entities, timeComparator);
+                            if (view != null) view.onLoadListSuccess(entities);
                         }
 
                         @Override
-                        public void onFail(int code,String msg) {
-                            if(view != null) view.onFailure(code,msg);
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
         }
     }
 
     @Override
-    public void operationTrash(String id,boolean fun) {
-        entity.ids.add(new TrashOperationEntity.Ids(id,fun));
+    public void operationTrash(String id, boolean fun) {
+        entity.ids.add(new TrashOperationEntity.Ids(id, fun));
     }
 
     @Override
     public void favoriteTrash(final TrashEntity entity, final String type) {
-        if(!entity.isMark()){
-            apiService.favoriteTrash(type,entity.getDustbinId())
+        if (!entity.isMark()) {
+            apiService.favoriteTrash(type, entity.getDustbinId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetSimpleResultSubscriber() {
                         @Override
                         public void onSuccess() {
                             entity.setMark(true);
-                            if(view != null)  view.onFavoriteTrashSuccess(entity);
+                            if (view != null) view.onFavoriteTrashSuccess(entity);
                         }
 
                         @Override
-                        public void onFail(int code,String msg) {
-                            if(view != null) view.onFailure(code,msg);
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
-        }else {
-            apiService.cancelFavoriteTrash(type,entity.getDustbinId())
+        } else {
+            apiService.cancelFavoriteTrash(type, entity.getDustbinId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetSimpleResultSubscriber() {
                         @Override
                         public void onSuccess() {
                             entity.setMark(false);
-                            if(view != null)  view.onFavoriteTrashSuccess(entity);
+                            if (view != null) view.onFavoriteTrashSuccess(entity);
                         }
 
                         @Override
-                        public void onFail(int code,String msg) {
-                            if(view != null) view.onFailure(code,msg);
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
         }
@@ -139,7 +139,7 @@ public class TrashPresenter implements TrashContract.Presenter {
                     }
 
                     @Override
-                    public void onFail(int code,String msg) {
+                    public void onFail(int code, String msg) {
 
                     }
                 });
@@ -147,34 +147,34 @@ public class TrashPresenter implements TrashContract.Presenter {
 
     @Override
     public void getTop3List(int type) {
-        if(type == 0){//text
+        if (type == 0) {//text
             apiService.getTextTop3()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetResultSubscriber<ArrayList<TrashEntity>>() {
                         @Override
                         public void onSuccess(ArrayList<TrashEntity> entities) {
-                            if(view != null)  view.onTop3LoadSuccess(entities);
+                            if (view != null) view.onTop3LoadSuccess(entities);
                         }
 
                         @Override
-                        public void onFail(int code,String msg) {
-                            if(view != null) view.onTop3LoadFail(code,msg);
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onTop3LoadFail(code, msg);
                         }
                     });
-        }else if(type == 1){//img
+        } else if (type == 1) {//img
             apiService.getImageTop3()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetResultSubscriber<ArrayList<TrashEntity>>() {
                         @Override
                         public void onSuccess(ArrayList<TrashEntity> entities) {
-                            if(view != null)  view.onTop3LoadSuccess(entities);
+                            if (view != null) view.onTop3LoadSuccess(entities);
                         }
 
                         @Override
-                        public void onFail(int code,String msg) {
-                            if(view != null) view.onTop3LoadFail(code,msg);
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onTop3LoadFail(code, msg);
                         }
                     });
         }
@@ -182,34 +182,34 @@ public class TrashPresenter implements TrashContract.Presenter {
 
     @Override
     public void getTrashDetail(String type, String id) {
-        if(type.equals("text")){//text
+        if (type.equals("text")) {//text
             apiService.getTextTrashTags(id)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetResultSubscriber<ArrayList<DocTagEntity>>() {
                         @Override
                         public void onSuccess(ArrayList<DocTagEntity> entities) {
-                            if(view != null)  view.onLoadDetailSuccess(entities);
+                            if (view != null) view.onLoadDetailSuccess(entities);
                         }
 
                         @Override
-                        public void onFail(int code,String msg) {
-                            if(view != null) view.onFailure(code,msg);
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
-        }else if(type.equals("image")){//img
+        } else if (type.equals("image")) {//img
             apiService.getImgTrashTags(id)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetResultSubscriber<ArrayList<DocTagEntity>>() {
                         @Override
                         public void onSuccess(ArrayList<DocTagEntity> entities) {
-                            if(view != null)  view.onLoadDetailSuccess(entities);
+                            if (view != null) view.onLoadDetailSuccess(entities);
                         }
 
                         @Override
-                        public void onFail(int code,String msg) {
-                            if(view != null) view.onFailure(code,msg);
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
         }
@@ -217,34 +217,34 @@ public class TrashPresenter implements TrashContract.Presenter {
 
     @Override
     public void likeTrashTag(TagLikeEntity entity, boolean isLike, final int position) {
-        if(!isLike){
+        if (!isLike) {
             apiService.likeTrashTag(entity)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetSimpleResultSubscriber() {
                         @Override
                         public void onSuccess() {
-                            if(view != null) view.onLikeTag(true,position);
+                            if (view != null) view.onLikeTag(true, position);
                         }
 
                         @Override
-                        public void onFail(int code,String msg) {
-                            if(view != null) view.onFailure(code,msg);
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
-        }else {
+        } else {
             apiService.dislikeTrashTag(entity)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetSimpleResultSubscriber() {
                         @Override
                         public void onSuccess() {
-                            if(view != null) view.onLikeTag(false,position);
+                            if (view != null) view.onLikeTag(false, position);
                         }
 
                         @Override
-                        public void onFail(int code,String msg) {
-                            if(view != null) view.onFailure(code,msg);
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
         }
@@ -258,12 +258,12 @@ public class TrashPresenter implements TrashContract.Presenter {
                 .subscribe(new NetResultSubscriber<String>() {
                     @Override
                     public void onSuccess(String s) {
-                        if(view != null) view.onCreateTag(s);
+                        if (view != null) view.onCreateTag(s);
                     }
 
                     @Override
-                    public void onFail(int code,String msg) {
-                        if(view != null) view.onFailure(code,msg);
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
                     }
                 });
     }

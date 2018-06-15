@@ -1173,4 +1173,19 @@ public interface ApiService {
 
     @POST("v2/kira/story/v2/user/record/save")
     Observable<ApiResult> saveRecord(@Body saveRecordEntity entity);
+
+    @GET("v2/kira/story/v2/branch/story/all")
+    Observable<ApiResult<ArrayList<BranchStoryAllEntity>>> loadBranchStoryAll();
+
+    @GET("v2/kira/house/visitor/inHouseObjects/{visitorId}")
+    Observable<ApiResult<ArrayList<MapEntity>>> loadHouseObjects(@Path("visitorId") String visitorId);
+
+    @GET("v2/kira/story/v2/branch/story/all/{level}")
+    Observable<ApiResult<ArrayList<BranchStoryAllEntity>>> loadBranchStoryAllLevel(@Path("level") int level);
+
+    @POST("v2/kira/story/v2/branch/story/join")
+    Observable<ApiResult> loadBranchStoryJoin(@Body BranchStoryJoinEntity entity);
+
+    @POST("v2/kira/story/v2/branch/story/remember/{branchStoryId}")
+    Observable<ApiResult<BranchStoryAllEntity>> loadBranchStoryInfo(@Path("branchStoryId") String branchStoryId);
 }

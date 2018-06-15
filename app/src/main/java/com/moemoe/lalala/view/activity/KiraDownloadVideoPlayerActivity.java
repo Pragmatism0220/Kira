@@ -1,9 +1,6 @@
 package com.moemoe.lalala.view.activity;
 
-import android.annotation.TargetApi;
 import android.content.pm.ActivityInfo;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,11 +9,9 @@ import android.transition.Transition;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.VideoView;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.event.SwitchVideoModel;
-import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.view.widget.video.SampleVideo;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -27,9 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-
-import static com.moemoe.lalala.utils.DensityUtil.getScreenHeight;
-import static com.moemoe.lalala.utils.DensityUtil.getScreenWidth;
 
 /**
  * Created by Hygge on 2018/5/16.

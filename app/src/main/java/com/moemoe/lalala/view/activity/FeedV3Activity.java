@@ -249,6 +249,18 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (MoeMoeApplication.getInstance().GoneDiaLog()) {
+            return true;
+        }
+        if (MoeMoeApplication.getInstance().isMenu()) {
+            MoeMoeApplication.getInstance().GoneMenu();
+            return true;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
     protected void initToolbar(Bundle savedInstanceState) {
         mIncludeToolbar.setEnabled(false);
 

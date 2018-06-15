@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/iv_four_cover"
+        android:layout_width="@dimen/x180"
+        android:layout_marginTop="@dimen/y12"
+        android:layout_height="@dimen/y180"
+        android:src="@drawable/btn_home_plot_memory_add" />
+
+    <ImageView
+        android:id="@+id/iv_four_deletl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/iv_four_cover"
+        android:layout_marginStart="-15dp"
+        android:src="@drawable/btn_camera_cancel"
+        android:visibility="invisible" />
+</RelativeLayout>

@@ -249,22 +249,17 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     finish();
                     break;
                 case R.id.storage_commodity_buy_btn:
-                    Log.i("propInfo", "propInfo: " + furnitureInfo);
                     //家具套装的购买
                     if (furnitureInfo != null) {
                         if (furnitureInfo.equals("套装")) {//套装
                             if (!furnitureInfo.isUserSuitFurnitureHad() && !furnitureInfo.isSuitPutInHouse()) {
-                                showToast("购买");
                                 //TODO 套装购买
                             } else {
-                                showToast("已经拥有");
                             }
                         } else {//单件
                             if (!furnitureInfo.isUserFurnitureHad() && !furnitureInfo.isPutInHouse()) {
-                                showToast("购买");
                                 //TODO 家具单件购买
                             } else {
-                                showToast("已经拥有");
                             }
                         }
                     }
@@ -273,17 +268,14 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     break;
                 case R.id.storage_commodity_use_btn:
                     //家具套装的使用
-                    Log.i("propInfo", "propInfo: " + furnitureInfo);
                     if (furnitureInfo != null) {
                         if (furnitureInfo.equals("套装")) {
                             if (furnitureInfo.isUserSuitFurnitureHad()) {//套装是否拥有
                                 if (!furnitureInfo.isSuitPutInHouse()) {
                                     mPresenter.suitUse(furnitureInfo.getSuitTypeId(), furnitureInfo.getPosition());
                                 } else {
-                                    showToast("使用中");
                                 }
                             } else {
-                                showToast("未拥有该套装");
                             }
                         } else {
                             //家具是否拥有
@@ -291,10 +283,8 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                                 if (!furnitureInfo.isPutInHouse()) {
                                     mPresenter.furnitureUse(furnitureInfo.getId(), furnitureInfo.getPosition());
                                 } else {
-                                    showToast("使用中");
                                 }
                             } else {
-                                showToast("未拥有该套装");
                             }
                         }
                     }
@@ -332,7 +322,6 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     public void propInfo(PropInfoEntity propEvent) {
         if (propEvent != null) {
             mPropInfoEntity = propEvent;
-            Log.i("propInfo", "propInfo: " + mPropInfoEntity);
         }
     }
 
