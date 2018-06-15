@@ -117,7 +117,6 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     public void initMap() {
         mPresenter.addMapMark(HouseActivity.this, mContainer, binding.map, "house");
     }
-
     @Override
     protected void onResume() {
         super.onResume();

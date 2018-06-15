@@ -142,7 +142,7 @@ public class MapLayout extends FrameLayout {
         touchImageView.addRenWuMark(wuView);
         if (type.equals("1")) {
             if (entity.getId().equals("65ac0b01-907f-440e-89e2-40a136053cc5")) {
-                wuView.setTouch(false);
+                wuView.setTouch(true);
             } else {
                 wuView.setTouch(false);
             }
@@ -166,7 +166,7 @@ public class MapLayout extends FrameLayout {
                 } else if (type.equals("3")) {
                     EventBus.getDefault().post(new HouseLikeEvent("", 3));
                     wuView.setVisibility(GONE);
-                } else if (entity.getId().equals("2b262ee5-930a-4a2e-8b13-fb40189cc00d")) {
+                } else if (entity.getId().equals("65ac0b01-907f-440e-89e2-40a136053cc5")) {
                     //从左向右
                     Animation rotateAnim = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                     rotateAnim.setDuration(100);
@@ -255,8 +255,8 @@ public class MapLayout extends FrameLayout {
                 if (entity.isTimerIsSleep()) {
                     HouseView sleepView = new HouseView(getContext());
                     sleepView.setBackgroundResource(R.drawable.ic_home_roles_sleep);
-                    float sleepX = (float) (x - ((getContext().getResources().getDimension(R.dimen.x132)) / 2));
-                    float sleepY = (float) (y - getContext().getResources().getDimension(R.dimen.y80));
+                    float sleepX = (float) (x - (int) getContext().getResources().getDimension(R.dimen.x40));
+                    float sleepY = (float) (y - getContext().getResources().getDimension(R.dimen.y60));
                     sleepView.setMapX(sleepX);
                     sleepView.setMapY(sleepY);
                     addView(sleepView);

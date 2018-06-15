@@ -209,24 +209,6 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
     }
 
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        isPause = true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (isPause){
-            isPause = false;
-            info = mAdapter.getList();
-            Log.i("role", "onResume: "+info);
-            mAdapter.setList(info);
-        }
-
-    }
-
     private int dip2px(Context context, float dipValue) {
         Resources r = context.getResources();
         return (int) TypedValue.applyDimension(

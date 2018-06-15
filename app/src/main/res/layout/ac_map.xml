@@ -101,10 +101,11 @@
 
     <RelativeLayout
         android:id="@+id/rl_map_new"
-        android:layout_width="@dimen/x280"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/y148"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="@dimen/y60"
+        android:layout_below="@+id/ll_tool_bar"
+        android:layout_marginTop="@dimen/y12"
         android:background="@drawable/shape_map_new"
         android:visibility="gone">
 
@@ -113,7 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/y10"
-            android:layout_toLeftOf="@+id/rl_map_refresh"
+            android:layout_toEndOf="@+id/rl_map_refresh"
             android:visibility="gone">
 
             <ImageView
@@ -138,10 +139,9 @@
             android:id="@+id/rl_map_refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/x24"
-            android:layout_marginStart="@dimen/x8"
-            android:layout_marginTop="@dimen/y10"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/x12"
+            android:layout_marginStart="@dimen/x50"
             android:visibility="gone">
 
             <ImageView
@@ -266,5 +266,5 @@
     <include layout="@layout/float_send_layout" />
 
     <!--<include layout="@layout/float_comprehensive_layout" />-->
-    
+
 </RelativeLayout>

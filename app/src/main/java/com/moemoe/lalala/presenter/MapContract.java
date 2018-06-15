@@ -44,7 +44,6 @@ public interface MapContract {
         void loadMapPics();
         void addMapMark(Context context,MapMarkContainer container, MapWidget map,String type);
         void addEventMark(String id,String icon,MapMarkContainer container,Context context, MapWidget map,String storyId);
-        void addNewEventMark(String id,String icon,int w,int h,int x,int y,String md5,MapMarkContainer container,Context context,MapWidget map,String storyId);
         void loadRcToken();
         void saveUserLocation(UserLocationEntity entity);
         void loadMapAllUser();

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.moemoe.lalala.view.widget.view.WindowView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_main"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="@dimen/x280"
+    android:layout_height="@dimen/y360"
     android:background="@color/transparent">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="@dimen/x225"
-        android:layout_height="@dimen/y275"
+        android:layout_width="@dimen/x280"
+        android:layout_height="@dimen/y360"
+        android:scaleType="fitXY"
         android:src="@drawable/btn_classmate_len_right" />
-</com.moemoe.lalala.view.widget.view.WindowView> 
+</RelativeLayout> 

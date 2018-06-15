@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.provider.Settings;
 import android.support.multidex.BuildConfig;
 import android.support.multidex.MultiDex;
@@ -19,9 +18,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -35,10 +32,7 @@ import com.moemoe.lalala.di.components.DaggerNetComponent;
 import com.moemoe.lalala.di.components.NetComponent;
 import com.moemoe.lalala.di.modules.NetModule;
 import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
-import com.moemoe.lalala.greendao.gen.MySQLiteOpenHelper;
-import com.moemoe.lalala.model.entity.BagFolderInfo;
 import com.moemoe.lalala.model.entity.DeskmateEntils;
-import com.moemoe.lalala.model.entity.MapDbEntity;
 import com.moemoe.lalala.model.entity.StageLineEntity;
 import com.moemoe.lalala.model.entity.StageLineOptionsEntity;
 import com.moemoe.lalala.netamusic.player.MusicPreferences;
@@ -59,7 +53,6 @@ import com.moemoe.lalala.view.activity.NewBagV5Activity;
 import com.moemoe.lalala.view.activity.NoticeActivity;
 import com.moemoe.lalala.view.activity.PersonalV2Activity;
 import com.moemoe.lalala.view.activity.PhoneMenuV3Activity;
-import com.moemoe.lalala.view.widget.view.WindowView;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
@@ -169,21 +162,7 @@ public class MoeMoeApplication extends Application {
 
     public void VisibilityWindowMager(Context context) {
         if (windowManager != null && inflate != null && wmParams != null) {
-//            imageView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void VisibleDiaLog(Context context) {
-        if (windowManager != null && dialog != null && dialog.getVisibility() == View.GONE) {
-
-            mTvContent.setText(stageLineEntity.getContent());
-            dialog.setVisibility(View.VISIBLE);
-            if (stageLineEntity.equals("dialog_option")) {
-                mRlSelect.setVisibility(View.VISIBLE);
-            } else {
-                mRlSelect.setVisibility(View.GONE);
-            }
         }
     }
 
@@ -234,7 +213,7 @@ public class MoeMoeApplication extends Application {
         }
         wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         width = windowManager.getDefaultDisplay().getWidth();
-        height = windowManager.getDefaultDisplay().getHeight();
+        height = getResources().getDisplayMetrics().heightPixels;
         wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         wmParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
@@ -242,9 +221,10 @@ public class MoeMoeApplication extends Application {
         wmParams.format = PixelFormat.RGBA_8888;
         wmParams.gravity = Gravity.LEFT | Gravity.TOP;
         final DeskmateEntils entity = entilsRight;
-        wmParams.x = width - (int) getResources().getDimension(R.dimen.x225);
-        wmParams.y = height / 2 - (int) getResources().getDimension(R.dimen.x110);
-
+//        wmParams.x = width - (int) getResources().getDimension(R.dimen.x280);
+//        wmParams.y = height / 2 - (int) getResources().getDimension(R.dimen.x180);
+        wmParams.x = width - (int) getResources().getDimension(R.dimen.x280);
+        wmParams.y = height / 2 - (int) getResources().getDimension(R.dimen.x180);
         inflate = LayoutInflater.from(context).inflate(R.layout.ac_window, null);
         imageView = inflate.findViewById(R.id.imageView);
         final Drawable drawable;
@@ -258,8 +238,8 @@ public class MoeMoeApplication extends Application {
         } else {
             FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entity.getFileName());
         }
-        functionalX = width - (int) getResources().getDimension(R.dimen.x225);
-        functionalY = height / 2 - (int) getResources().getDimension(R.dimen.x110);
+        functionalX = width - (int) getResources().getDimension(R.dimen.x280);
+        functionalY = height / 2 - (int) getResources().getDimension(R.dimen.x180);
         if (getActivity(MapActivity.class.getName()) instanceof MapActivity) {
             windowManager.addView(this.inflate, wmParams);
         }
@@ -546,7 +526,7 @@ public class MoeMoeApplication extends Application {
                         return;
                     }
                     if (!isMove) {
-                        windowManagerOnclick(functionalX, functionalY, inflate.getMeasuredWidth(), inflate.getMeasuredHeight());
+                        windowManagerOnclick(functionalX, functionalY, imageView.getMeasuredWidth(), imageView.getMeasuredHeight());
                     }
                 }
             });
@@ -649,12 +629,12 @@ public class MoeMoeApplication extends Application {
     public void setDialogView(StageLineEntity entity) {
         if (dialog != null) {
             if (entity.getId() != null) {
-                if (TextUtils.isEmpty(entity.getSchema())){
-                                        
-                }else {
+                if (TextUtils.isEmpty(entity.getSchema())) {
+
+                } else {
                     mTvContent.setText(entity.getContent());
                 }
-                if (entity.getDialogType() != null && entity.getDialogType().equals("dialog_option")) { 
+                if (entity.getDialogType() != null && entity.getDialogType().equals("dialog_option")) {
                     mRlSelect.setVisibility(View.VISIBLE);
                     for (int i = 0; i < entity.getOptions().size(); i++) {
                         if (i == 0) {
@@ -721,8 +701,6 @@ public class MoeMoeApplication extends Application {
             if (x <= 0) {
                 if (y == 0) {
                     mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
-//                    mRlRenWu.setX(x + getResources().getDimension(R.dimen.x24));
-//                    mRlRenWu.setY(y + height - (int) getResources().getDimension(R.dimen.status_bar_height));
                     RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
                     layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
                     mLlFrist.setLayoutParams(layoutParams);
@@ -731,8 +709,6 @@ public class MoeMoeApplication extends Application {
                     windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
                 } else {
                     if (y > mapY / 2) {
-//                        mRlRenWu.setX(x + getResources().getDimension(R.dimen.x24));
-//                        mRlRenWu.setY(y - marginHeight / 2 - getResources().getDimension(R.dimen.y24));
                         mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
                         layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
@@ -742,8 +718,6 @@ public class MoeMoeApplication extends Application {
                         windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
                     } else {
                         mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
-//                        mRlRenWu.setX(x + getResources().getDimension(R.dimen.x24));
-//                        mRlRenWu.setY(y + marginHeight / 2 - getResources().getDimension(R.dimen.y24));
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
                         layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
                         mLlFrist.setLayoutParams(layoutParams);
@@ -754,8 +728,6 @@ public class MoeMoeApplication extends Application {
                 }
             } else if (x >= mapX - width) {
                 if (y > (mapY - getResources().getDimension(R.dimen.status_bar_height)) / 2) {
-//                    mRlRenWu.setX(x - getResources().getDimension(R.dimen.x428) + width - getResources().getDimension(R.dimen.x24));
-//                    mRlRenWu.setY(y - height / 2 - getResources().getDimension(R.dimen.y24));
                     mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
                     RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
                     layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
@@ -765,8 +737,6 @@ public class MoeMoeApplication extends Application {
                     windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
                 } else {
                     mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
-//                    mRlRenWu.setX(x - (int) getResources().getDimension(R.dimen.x428) + width - getResources().getDimension(R.dimen.x24));
-//                    mRlRenWu.setY(y + height / 2 - getResources().getDimension(R.dimen.y24));
                     RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
                     layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
                     mLlFrist.setLayoutParams(layoutParams);
@@ -778,47 +748,38 @@ public class MoeMoeApplication extends Application {
                 if (y == 0) {
                     if (x > (mapX - width) / 2) {
                         mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
-//                        mRlRenWu.setX(x - width);
-//                        mRlRenWu.setY(y + height - getResources().getDimension(R.dimen.status_bar_height));
                         mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
                         layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
                         mLlFrist.setLayoutParams(layoutParams);
-                        wmParamsTwo.x = (int) (x - width);
-                        wmParamsTwo.y = (int) (y + height - getResources().getDimension(R.dimen.status_bar_height));
+                        wmParamsTwo.x = (int) (x - (width / 2));
+                        wmParamsTwo.y = (int) (y + (height / 2) - getResources().getDimension(R.dimen.status_bar_height));
                         windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
                     } else {
-//                        mRlRenWu.setX(x + width / 2);
-//                        mRlRenWu.setY(y + height - getResources().getDimension(R.dimen.status_bar_height));
                         mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
                         layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
                         mLlFrist.setLayoutParams(layoutParams);
                         wmParamsTwo.x = (int) (x - (int) getResources().getDimension(R.dimen.x24));
-
-                        wmParamsTwo.y = (int) (y + height - getResources().getDimension(R.dimen.status_bar_height));
+                        wmParamsTwo.y = (int) (y + (height / 2) - getResources().getDimension(R.dimen.status_bar_height));
                         windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
                     }
                 } else if (y >= mapY - height) {
                     if (x > (mapX - width) / 2) {
                         mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
-//                        mRlRenWu.setX(x - width);
-//                        mRlRenWu.setY(y - height + getResources().getDimension(R.dimen.y24));
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
                         layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
                         mLlFrist.setLayoutParams(layoutParams);
-                        wmParamsTwo.x = x - width;
-                        wmParamsTwo.y = (int) (y - height);
+                        wmParamsTwo.x = x - (width / 2);
+                        wmParamsTwo.y = (int) (y - (height / 2));
                         windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
                     } else {
                         mRlRenWu.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
-//                        mRlRenWu.setX(x);
-//                        mRlRenWu.setY(y - height + getResources().getDimension(R.dimen.y24));
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLlFrist.getLayoutParams();
                         layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
                         mLlFrist.setLayoutParams(layoutParams);
                         wmParamsTwo.x = x;
-                        wmParamsTwo.y = (int) (y - height);
+                        wmParamsTwo.y = (int) (y - (height / 2));
                         windowManager.updateViewLayout(inflateTwo, wmParamsTwo);
                     }
                 }
@@ -880,25 +841,25 @@ public class MoeMoeApplication extends Application {
                 if (y == 0) {
                     if (x > (mapX - width) / 2) {
                         mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_right);
-                        wmParamsThree.x = (int) (x - width);
-                        wmParamsThree.y = (int) (y + height - getResources().getDimension(R.dimen.status_bar_height));
+                        wmParamsThree.x = (int) (x - (width/2));
+                        wmParamsThree.y = (int) (y + (height / 2) - getResources().getDimension(R.dimen.status_bar_height));
                         windowManager.updateViewLayout(dialog, wmParamsThree);
                     } else {
                         mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_left);
-                        wmParamsThree.x = (int) (x - (int) getResources().getDimension(R.dimen.x24));
-                        wmParamsThree.y = (int) (y + height - getResources().getDimension(R.dimen.status_bar_height));
+                        wmParamsThree.x = (int) (x + (int) getResources().getDimension(R.dimen.x24));
+                        wmParamsThree.y = (int) (y + (height / 2) - getResources().getDimension(R.dimen.status_bar_height));
                         windowManager.updateViewLayout(dialog, wmParamsThree);
                     }
                 } else if (y >= mapY - height) {
                     if (x > (mapX - width) / 2) {
                         mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_right);
                         wmParamsThree.x = x - width;
-                        wmParamsThree.y = (int) (y - height);
+                        wmParamsThree.y = (int) (y - (height / 2));
                         windowManager.updateViewLayout(dialog, wmParamsThree);
                     } else {
                         mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_left);
                         wmParamsThree.x = x;
-                        wmParamsThree.y = (int) (y - height);
+                        wmParamsThree.y = (int) (y - (height / 2));
                         windowManager.updateViewLayout(dialog, wmParamsThree);
                     }
                 }
