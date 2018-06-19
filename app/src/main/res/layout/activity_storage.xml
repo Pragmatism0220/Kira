@@ -11,7 +11,7 @@
 
     </data>
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/top_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -104,7 +104,7 @@
                 android:layout_below="@+id/storage_commodity_image"
                 android:layout_marginBottom="@dimen/y20"
                 android:layout_marginStart="@dimen/x136"
-                android:layout_marginTop="@dimen/y30"
+                android:layout_marginTop="@dimen/y34"
                 android:background="@drawable/storage_buy_btn_bg"
                 android:onClick="@{presenter.onClick}" />
 
@@ -116,7 +116,7 @@
                 android:layout_below="@+id/storage_commodity_image"
                 android:layout_marginBottom="@dimen/y20"
                 android:layout_marginEnd="@dimen/x136"
-                android:layout_marginTop="@dimen/y30"
+                android:layout_marginTop="@dimen/y34"
                 android:background="@drawable/storage_use_btn_bg"
                 android:onClick="@{presenter.onClick}" />
 
@@ -129,10 +129,10 @@
                 android:layout_below="@+id/storage_commodity_use_btn"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/x40"
+                android:layout_marginTop="@dimen/y15"
                 android:background="@drawable/checkbox_selector"
                 android:button="@null"
                 android:checked="false"
-                android:layout_marginTop="@dimen/y15"
                 android:onClick="@{presenter.onClick}" />
 
 
@@ -145,14 +145,25 @@
                 android:layout_toStartOf="@+id/storage_check_box_btn"
                 android:background="@drawable/ic_show_unowned" />
 
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/storage_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/storage_check_box_btn"
+                android:layout_marginTop="@dimen/y2"
+                />
+
+
             <RadioGroup
                 android:id="@+id/radio_group"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/y120"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/storage_commodity_buy_btn"
                 android:layout_marginStart="@dimen/x16"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
 
                 <RadioButton
                     android:id="@+id/choose_prop_btn"
@@ -172,16 +183,6 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@+id/storage_top_bg">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/storage_viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </RelativeLayout>
-    </RelativeLayout>
+    </FrameLayout>
 </layout>

@@ -20,6 +20,8 @@ import com.moemoe.lalala.model.entity.FurnitureInfoEntity;
 import com.moemoe.lalala.model.entity.SuitFurnituresInfo;
 import com.moemoe.lalala.view.base.FurnitureInfo;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,14 +37,27 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
     private int position;
     private int mSelectedPos = -1;//保存当前选中的position 重点！
 
+    private boolean isHava;
+    private View mDefaultedPos;
+
     public FurnitureInfoAdapter(Context mContext) {
         this.mContext = mContext;
         this.infos = new ArrayList<>();
+//        EventBus.getDefault().register(this);
     }
+
+    public void unRegister() {
+        EventBus.getDefault().unregister(this);
+    }
+
 
     public void setList(List<AllFurnitureInfo> mData) {
         this.infos = mData;
         notifyDataSetChanged();
+    }
+
+    public void setHava(boolean hava) {
+        isHava = hava;
     }
 
     public List<AllFurnitureInfo> getList() {
@@ -72,12 +87,23 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
         //套装是否拥有
         if (!data.isUserSuitFurnitureHad()) {
             holder.mFphoto.setAlpha(0.5f);
+//            if (!isHava) {
+//                holder.itemView.setVisibility(View.GONE);
+//            } else {
+//                holder.itemView.setVisibility(View.VISIBLE);
+//            }
         } else {
             holder.mFphoto.setAlpha(1.0f);
         }
+
         //判断家具是否拥有
         if (!data.isUserFurnitureHad()) {
             holder.mFphoto.setAlpha(0.5f);
+//            if (!isHava) {
+//                holder.itemView.setVisibility(View.GONE);
+//            } else {
+//                holder.itemView.setVisibility(View.VISIBLE);
+//            }
         } else {
             holder.mFphoto.setAlpha(1.0f);
         }

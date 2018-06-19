@@ -78,6 +78,12 @@ public class FurnitureInfoFragment extends BaseFragment {
         EventBus.getDefault().register(this);
     }
 
+    public void showHava(boolean isHava) {
+        if (mAdapter != null) {
+            mAdapter.setHava(isHava);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)

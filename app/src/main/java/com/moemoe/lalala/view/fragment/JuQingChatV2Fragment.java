@@ -258,9 +258,14 @@ public class JuQingChatV2Fragment extends BaseFragment implements IPhoneFragment
     }
 
     @Override
-    public void newDownSuccess() {
+    public void newDownSuccess(long time) {
 
     }
+
+//    @Override
+//    public void newDownSuccess() {
+//
+//    }
 
 
     @Override

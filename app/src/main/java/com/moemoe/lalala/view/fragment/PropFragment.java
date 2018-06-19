@@ -129,7 +129,6 @@ public class PropFragment extends BaseFragment implements PropContract.View {
      * 显示未拥有
      */
     public void showNotHave() {
-        Log.i("asd", "showNotHave: " + lists);
         newLists = new ArrayList<>();
         if (lists != null && lists.size() > 0) {
             for (int i = 0; i < lists.size(); i++) {

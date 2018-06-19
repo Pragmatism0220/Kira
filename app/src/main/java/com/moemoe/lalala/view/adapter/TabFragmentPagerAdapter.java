@@ -12,23 +12,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * Created by yi on 2016/12/1.
  */
 
-public class TabFragmentPagerAdapter extends FragmentPagerAdapter{
+public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
 
     List<BaseFragment> fragmentList = new ArrayList<>();
     private List<String> mTitles;
-    private String signId="";
+    private String signId = "";
+
     public TabFragmentPagerAdapter(FragmentManager fm, List<BaseFragment> fragmentList, List<String> mTitles) {
         super(fm);
         this.mTitles = mTitles;
-        setFragments(fm,fragmentList,mTitles);
+        setFragments(fm, fragmentList, mTitles);
+    }
+
+    public List<BaseFragment> getData() {
+        return fragmentList;
     }
 
     //刷新fragment
-    public void setFragments(FragmentManager fm,List<BaseFragment> fragments,List<String> mTitles) {
+    public void setFragments(FragmentManager fm, List<BaseFragment> fragments, List<String> mTitles) {
         this.mTitles = mTitles;
         if (this.fragmentList != null) {
             FragmentTransaction ft = fm.beginTransaction();
@@ -45,11 +49,13 @@ public class TabFragmentPagerAdapter extends FragmentPagerAdapter{
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mTitles != null? mTitles.get(position) : "";
+        return mTitles != null ? mTitles.get(position) : "";
     }
-    public void setSignId(String signId){
-        this.signId=signId;
+
+    public void setSignId(String signId) {
+        this.signId = signId;
     }
+
     @Override
     public Fragment getItem(int position) {
         return fragmentList.get(position);
@@ -60,9 +66,9 @@ public class TabFragmentPagerAdapter extends FragmentPagerAdapter{
         return fragmentList.size();
     }
 
-    public void release(){
+    public void release() {
 
-        for (BaseFragment fragment : fragmentList){
+        for (BaseFragment fragment : fragmentList) {
             fragment.release();
         }
     }

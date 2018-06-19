@@ -88,17 +88,9 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
     @Override
     public void getFurnitureInfoSuccess(FurnitureInfoEntity furnitureInfoEntity) {
 
-        Log.i(TAG, "getFurnitureInfoSuccess:furnitureInfoEntity: " + furnitureInfoEntity);
-
-
         Map<String, ArrayList<AllFurnitureInfo>> map = new HashMap<>();
-
         Map<String, ArrayList<AllFurnitureInfo>> allFurnitures = furnitureInfoEntity.getAllFurnitures();
-        Log.i(TAG, "getFurnitureInfoSuccess: allFurnitures:" + allFurnitures);
-
         ArrayList<AllFurnitureInfo> allList = new ArrayList<>();
-
-
         for (String key : allFurnitures.keySet()) {
             ArrayList<AllFurnitureInfo> infos = allFurnitures.get(key);
             for (AllFurnitureInfo allFurnitureInfo : infos) {
@@ -145,16 +137,28 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
     /**
      * 家具显示未拥有
      */
-    public void FurnShowNotHave() {
-
+    public void furnShowNotHave() {
+        List<BaseFragment> data = mAdapter.getData();
+        for (BaseFragment datum : data) {
+            if (datum instanceof FurnitureInfoFragment) {
+                ((FurnitureInfoFragment) datum).showHava(false);
+            }
+        }
     }
 
     /**
      * 家具显示拥有
      */
-    public void FurnShowHave(){
-
+    public void furnShowHave() {
+        List<BaseFragment> data = mAdapter.getData();
+        for (BaseFragment datum : data) {
+            if (datum instanceof FurnitureInfoFragment) {
+                ((FurnitureInfoFragment) datum).showHava(true);
+            }
+        }
     }
+
+
 
     @Override
     public void onDestroy() {

@@ -1,15 +1,18 @@
 package com.moemoe.lalala.view.activity;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
@@ -26,9 +29,7 @@ import com.moemoe.lalala.presenter.StoragePresenter;
 import com.moemoe.lalala.view.adapter.TabPageAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.fragment.FurnitureFragment;
-import com.moemoe.lalala.view.fragment.FurnitureInfoFragment;
 import com.moemoe.lalala.view.fragment.PropFragment;
-import com.moemoe.lalala.view.widget.tooltip.TooltipAnimation;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -60,6 +61,8 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     private int toolCount;
     private String id;
     private boolean isUserHadTool;
+
+    private boolean isProp;
 
 
     @Inject
@@ -98,6 +101,8 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
         binding.storageViewpager.setAdapter(mTabAdapter);
         binding.storageViewpager.setOnPageChangeListener(new myOnPageChangeListener());
         binding.radioGroup.setOnCheckedChangeListener(new myCheckChangeListener());
+        binding.radioGroup.check(R.id.choose_prop_btn);
+
     }
 
     /**
@@ -163,6 +168,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                 case R.id.choose_prop_btn:
                     binding.topBg.setBackgroundResource(R.drawable.bg_home_items_prop_background);
                     binding.storageViewpager.setCurrentItem(0, false);
+
                     break;
                 case R.id.choose_furniture_btn:
                     binding.topBg.setBackgroundResource(R.drawable.ic_role_top_bg);
@@ -171,6 +177,8 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                 default:
                     break;
             }
+
+
         }
     }
 
@@ -190,19 +198,37 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
             switch (position) {
                 case 0:
                     binding.radioGroup.check(R.id.choose_prop_btn);
+                    isProp = true;
                     break;
                 case 1:
                     binding.radioGroup.check(R.id.choose_furniture_btn);
+                    isProp = false;
                     break;
                 default:
                     break;
             }
+            View propView = binding.choosePropBtn;
+            View furnitureView = binding.chooseFurnitureBtn;
+
+            propView.layout(propView.getLeft(), isProp ? propView.getTop() + 6 : propView.getTop() - 6, propView.getRight(),
+                    isProp ? propView.getBottom() + 6 : propView.getBottom() - 6);
+
+            furnitureView.layout(furnitureView.getLeft(), isProp ? furnitureView.getTop() - 6 : furnitureView.getTop() + 6, furnitureView.getRight(),
+                    isProp ? furnitureView.getBottom() - 6 : furnitureView.getBottom() + 6);
+
         }
+
 
         @Override
         public void onPageScrollStateChanged(int state) {
 
         }
+    }
+
+
+    public static int dp2px(Context context, float dipValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale + 0.5f);
     }
 
     @Override
@@ -222,9 +248,10 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     mPropFragment.showNotHave();
-                    mFurnitureFragment.FurnShowNotHave();
+                    mFurnitureFragment.furnShowNotHave();
                 } else {
                     mPropFragment.showHave();
+                    mFurnitureFragment.furnShowHave();
                 }
             }
         });
