@@ -590,47 +590,14 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                                     mTvMsg.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(MapActivity.this, R.drawable.ic_inform_reddot), null, null, null);
                                     mTvMsg.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.x4));
                                 }
-
-                                if (entity.getType().equals("map")) {
-//                                    String extra = entity.getExtra();
-                                    String extra = entity.getExtra();
-                                    boolean isForce = entity.isForce();
-                                    JsonObject jsonObject = new Gson().fromJson(extra, JsonObject.class);
-                                    //TODO 触摸器图片处理
-                                    String icon = jsonObject.get("icon").getAsString();
-                                    String eventId = jsonObject.get("map").getAsString();
-                                    int w = jsonObject.get("w").getAsInt();
-                                    int h = jsonObject.get("h").getAsInt();
-                                    int x = jsonObject.get("x").getAsInt();
-                                    int y = jsonObject.get("y").getAsInt();
-                                    String md5 = jsonObject.get("md5").getAsString();
-//                                    mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getStoryId());
-                                    mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getScriptId());
-
-                                    if (isForce) {
-                                        Intent i = new Intent(MapActivity.this, MapEventNewActivity.class);
-                                        i.putExtra("id", entity.getStoryId());
-                                        startActivity(i);
-                                    }
-                                }
                                 if (entity.getType().equals("story")) {
-//                                    String extra = entity.getExtra();
                                     String extra = entity.getExtra();
                                     boolean isForce = entity.isForce();
                                     JsonObject jsonObject = new Gson().fromJson(extra, JsonObject.class);
                                     //TODO 触摸器图片处理
                                     String icon = jsonObject.get("icon").getAsString();
                                     String eventId = jsonObject.get("iconId").getAsString();
-
-                                    int w = jsonObject.get("w").getAsInt();
-                                    int h = jsonObject.get("h").getAsInt();
-                                    int x = jsonObject.get("x").getAsInt();
-                                    int y = jsonObject.get("y").getAsInt();
-                                    String md5 = jsonObject.get("md5").getAsString();
-//                                    mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getStoryId());
-                                    mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getType());
-
-//                                    mPresenter.addNewEventMark(eventId, icon, w, h, x, y, md5, mContainer, MapActivity.this, mapWidget, entity.getStoryId());
+                                    mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getType(),entity, mapWidget.getLayerById(1));
                                     if (isForce) {//false
                                         Intent i = new Intent(MapActivity.this, MapEventNewActivity.class);
                                         i.putExtra("id", entity.getScriptId());
@@ -688,6 +655,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             @Override
             public void onComplete() {
                 GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao().insertOrReplaceInTx(res);
+
             }
         });
 //        ArrayList<JuQingTriggerEntity> mapPics = (ArrayList<JuQingTriggerEntity>) GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao()
@@ -968,7 +936,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 mTvMsg.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 mTvMsg.setCompoundDrawablePadding(0);
             }
-        } else if (eventDoneEvent.getType().equals("map")) {
+        } else if (eventDoneEvent.getType().equals("story")) {
             Layer layer = mapWidget.getLayerById(1);
             layer.setVisible(false);
             mapWidget.invalidate();

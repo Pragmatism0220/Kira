@@ -148,11 +148,12 @@ public class JuQingUtil {
     public static ArrayList<JuQingTriggerEntity> checkJuQingAll(Calendar calendar) {
         ArrayList<JuQingTriggerEntity> res = new ArrayList<>();
         List<JuQingTriggerEntity> list = GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao().loadAll();
-        for (JuQingTriggerEntity entity : list) {
-            JuQingDoneEntity tmp = GreenDaoManager.getInstance().getSession().getJuQingDoneEntityDao().load(entity.getStoryId());
+        for (int i = 0; i < list.size(); i++) {
+            JuQingTriggerEntity entity = list.get(i);
+            JuQingDoneEntity tmp = GreenDaoManager.getInstance().getSession().getJuQingDoneEntityDao().load(entity.getScriptId());
             if (tmp != null) continue;
             if (entity.getLevel() == 3) {
-                JuQingNormalEvent event = GreenDaoManager.getInstance().getSession().getJuQingNormalEventDao().load(entity.getStoryId());
+                JuQingNormalEvent event = GreenDaoManager.getInstance().getSession().getJuQingNormalEventDao().load(entity.getScriptId());
                 if (event != null) continue;
             }
             JsonArray condition = new Gson().fromJson(entity.getConditionStr(), JsonArray.class);

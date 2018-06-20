@@ -1068,13 +1068,12 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
 
     @Override
     public void newDownSuccess(long time) {
-        Log.i("Map", "newDownSuccess: 保存");
         if (3 != JuQingUtil.getLevel(mId)) {
             JuQingUtil.saveJuQingDone(mId, time);
         } else {
             JuQingUtil.saveJuQingNormal(new JuQingNormalEvent(mId));
         }
-        EventBus.getDefault().post(new EventDoneEvent("map", ""));
+        EventBus.getDefault().post(new EventDoneEvent("story", ""));
         finish();
     }
 

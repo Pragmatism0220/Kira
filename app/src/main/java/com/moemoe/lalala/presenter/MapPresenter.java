@@ -361,34 +361,38 @@ public class MapPresenter implements MapContract.Presenter {
     }
 
     @Override
-    public void addEventMark(String id, String icon, MapMarkContainer container, Context context, MapWidget map, String type) {
-        Layer layer;
-        ArrayList<JuQingTriggerEntity> mapPics = (ArrayList<JuQingTriggerEntity>) GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao()
-                .queryBuilder()
-                .where(JuQingTriggerEntityDao.Properties.Type.eq(type))
-                .list();
-        if (mapPics != null && mapPics.size() > 0) {
-            for (JuQingTriggerEntity entity : mapPics) {
-                if ("story".equals(type)) {
-                    Layer tmp = map.getLayerById(1);
-                    if (tmp != null) map.removeLayer(1);
-                    layer = map.createLayer(1);
-                } else {
-                    Layer tmp = map.getLayerById(100);
-                    if (tmp != null) map.removeLayer(100);
-                    layer = map.createLayer(100);
-                }
-                if (entity.getDownloadState() == 2) {
-                    if (FileUtil.isExists(StorageUtils.getMapRootPath() + entity.getFileName())) {
-                        MapMarkEntity entity1 = new MapMarkEntity
-                                ("地图剧情" + id, entity.getX(), entity.getY(), "neta://com.moemoe.lalala/map_event_1.0?id=" + entity.getScriptId() + "&groupId=" + entity.getGroupId(), entity.getFileName(),
-                                        entity.getW(), entity.getH(), entity.getGroupId());
-                        container.addMark(entity1);
-                        addMarkToMap(context, entity1, layer);
-                    }
+    public void addEventMark(String id, String icon, MapMarkContainer container, Context context, MapWidget map, String type, JuQingTriggerEntity entity, Layer layer) {
+//        ArrayList<JuQingTriggerEntity> mapPics = (ArrayList<JuQingTriggerEntity>) GreenDaoManager.getInstance().getSession().getJuQingTriggerEntityDao()
+//                .queryBuilder()
+//                .where(JuQingTriggerEntityDao.Properties.Type.eq(type))
+//                .list();
+//        if (mapPics != null && mapPics.size() > 0) {
+//            for (JuQingTriggerEntity entity : mapPics) {
+//        if ("story".equals(type)) {
+//            Layer tmp = map.getLayerById(1);
+//            if (tmp != null) map.removeLayer(1);
+//            layer = map.createLayer(1);
+//        } else {
+//            Layer tmp = map.getLayerById(100);
+//            if (tmp != null) map.removeLayer(100);
+//            layer = map.createLayer(100);
+//        }
+        Layer layer1 = map.getLayerById(1);
+        if (entity.getDownloadState() == 2) {
+            if (FileUtil.isExists(StorageUtils.getMapRootPath() + entity.getFileName())) {
+                MapObject object = layer.getMapObject("地图剧情" + id);
+                if (object == null) {
+                    MapMarkEntity entity1 = new MapMarkEntity
+                            ("地图剧情" + id, entity.getX(), entity.getY(), "neta://com.moemoe.lalala/map_event_1.0?id=" + entity.getScriptId() + "&groupId=" + entity.getGroupId(), entity.getFileName(),
+                                    entity.getW(), entity.getH(), entity.getGroupId());
+                    container.removeMarkById("地图剧情" + id);
+                    container.addMark(entity1);
+                    addMarkToMap(context, entity1, layer1);
                 }
             }
         }
+//            }
+//        }
 
     }
 

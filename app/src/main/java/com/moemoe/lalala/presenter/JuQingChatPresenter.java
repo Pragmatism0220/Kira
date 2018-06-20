@@ -59,7 +59,7 @@ public class JuQingChatPresenter implements JuQIngChatContract.Presenter {
                 .subscribe(new NetResultSubscriber<Long>() {
                     @Override
                     public void onSuccess(Long aLong) {
-                        if (view != null) view.onDoneSuccess(aLong);
+                        if (view != null) view.newDownSuccess(aLong);
                     }
 
                     @Override

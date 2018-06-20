@@ -21,6 +21,7 @@ import com.moemoe.lalala.model.entity.SplashEntity;
 import com.moemoe.lalala.model.entity.UserDeskmateEntity;
 import com.moemoe.lalala.model.entity.UserLocationEntity;
 import com.moemoe.lalala.view.widget.map.MapWidget;
+import com.moemoe.lalala.view.widget.map.interfaces.Layer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,7 +44,7 @@ public interface MapContract {
         void findMyDoneJuQing();
         void loadMapPics();
         void addMapMark(Context context,MapMarkContainer container, MapWidget map,String type);
-        void addEventMark(String id,String icon,MapMarkContainer container,Context context, MapWidget map,String storyId);
+        void addEventMark(String id, String icon, MapMarkContainer container, Context context, MapWidget map, String storyId, JuQingTriggerEntity entity, Layer layer);
         void loadRcToken();
         void saveUserLocation(UserLocationEntity entity);
         void loadMapAllUser();

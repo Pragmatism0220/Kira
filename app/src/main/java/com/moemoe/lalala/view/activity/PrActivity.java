@@ -69,7 +69,9 @@ public class PrActivity extends BaseActivity implements PrincipalContract.View {
 
     @Override
     public void getPrincipalGroupInfoSuccess(ArrayList<NewStoryGroupInfo> newStoryGroupInfos) {
-
+        if (newStoryGroupInfos.size()==0){
+            finish();
+        }
         initAdapter(newStoryGroupInfos);
     }
 
