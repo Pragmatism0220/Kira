@@ -269,7 +269,7 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
                     public void ConfirmOnClick() {
                         mCurIndex = -1;
                         if (!type) {
-                            mPresenter.doneJuQing(mId);
+//                            mPresenter.doneJuQing(mId);
                             saveRecordEntity entity = new saveRecordEntity(mGroupId, mId, 1);
                             mPresenter.newDownJuQing(entity);
                         } else {

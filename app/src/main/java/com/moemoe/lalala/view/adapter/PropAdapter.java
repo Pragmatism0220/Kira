@@ -17,9 +17,14 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.event.OnItemListener;
+import com.moemoe.lalala.event.StorageDefaultDataEvent;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.PropInfoEntity;
 import com.moemoe.lalala.view.base.PropInfo;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -34,6 +39,7 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
     private List<PropInfoEntity> infos;
 
     private RoleItemClickListener listener;
+    private View mDefaultData;
 
     private int mSelectedPos = -1;//保存当前选中的position 重点！
 
@@ -41,6 +47,11 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
     public PropAdapter(Context mContext, List<PropInfoEntity> infos) {
         this.mContext = mContext;
         this.infos = infos;
+        EventBus.getDefault().register(this);
+    }
+
+    public void unregister(){
+        EventBus.getDefault().unregister(this);
     }
 
     public List<PropInfoEntity> getList() {
@@ -80,6 +91,9 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
                 }
             });
         }
+        if (position == 0) {
+            mDefaultData = holder.mBg;
+        }
 
     }
 
@@ -104,6 +118,13 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
     @Override
     public int getItemCount() {
         return infos != null ? infos.size() : 0;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(StorageDefaultDataEvent e) {
+        if (e != null && !e.isFurniture()) {
+            mDefaultData.performClick();
+        }
     }
 
     /**

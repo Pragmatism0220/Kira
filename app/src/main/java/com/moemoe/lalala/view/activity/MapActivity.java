@@ -639,7 +639,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                                         i.putExtra("id", entity.getScriptId());
                                         startActivity(i);
                                     }
-
                                 }
 
 

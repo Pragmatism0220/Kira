@@ -12,6 +12,7 @@ import com.moemoe.lalala.event.FurnitureEvent;
 import com.moemoe.lalala.event.OnItemListener;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
 import com.moemoe.lalala.view.adapter.FurnitureInfoAdapter;
+import com.moemoe.lalala.view.adapter.PropAdapter;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
@@ -62,25 +63,49 @@ public class FurnitureInfoFragment extends BaseFragment {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        info.get(0).setSelected(true);
         mAdapter = new FurnitureInfoAdapter(getContext());
         mRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         mRecycleView.addItemDecoration(new SpacesItemDecoration(10, 9, 0));
         mRecycleView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(new OnItemListener() {
+
+        mAdapter.setOnItemClickListener(new PropAdapter.RoleItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onClick(View v, int position, int which) {
                 AllFurnitureInfo infoEvent = info.get(position);
                 infoEvent.setPosition(position);
                 EventBus.getDefault().post(infoEvent);
+                Log.i("asd", "onClick: " + infoEvent);
+
+                for (int i = 0; i < info.size(); i++) {
+                    info.get(i).setSelected(i == which);
+                }
+                mAdapter.notifyDataSetChanged();
             }
         });
         mAdapter.setList(info);
         EventBus.getDefault().register(this);
     }
 
-    public void showHava(boolean isHava) {
-        if (mAdapter != null) {
-            mAdapter.setHava(isHava);
+    public void showHava(boolean isOnlyShowNotHave) {
+        if (mAdapter != null && info != null && info.size() > 0) {
+            List<AllFurnitureInfo> newList = new ArrayList<>();
+            if (isOnlyShowNotHave) {
+                for (AllFurnitureInfo allFurnitureInfo : info) {
+                    if ("套装".equals(allFurnitureInfo.getType())) {
+                        if (!allFurnitureInfo.isUserSuitFurnitureHad()) {
+                            newList.add(allFurnitureInfo);
+                        }
+                    } else {
+                        if (!allFurnitureInfo.isUserFurnitureHad()) {
+                            newList.add(allFurnitureInfo);
+                        }
+                    }
+                }
+            } else {
+                newList.addAll(info);
+            }
+            mAdapter.setList(newList);
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -102,7 +127,8 @@ public class FurnitureInfoFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        if (mAdapter != null) {
+            mAdapter.unRegister();
+        }
     }
-
-
 }

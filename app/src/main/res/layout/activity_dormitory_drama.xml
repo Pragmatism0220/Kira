@@ -16,9 +16,9 @@
         android:id="@+id/dormitory_drama_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/drama_dormitory_bg"
         android:orientation="vertical"
         tools:context="com.moemoe.lalala.view.activity.DormitoryDramaActivity">
+
 
         <View
             android:id="@+id/top_view"
@@ -29,7 +29,13 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-    
+
+            <ImageView
+                android:id="@+id/bg_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
 
             <ImageView
                 android:id="@+id/drama_image"

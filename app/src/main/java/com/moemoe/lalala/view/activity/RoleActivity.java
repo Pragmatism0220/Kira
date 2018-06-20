@@ -105,21 +105,15 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
             /**
              * 好感度计时器
              */
-//            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
-//            if (entities.get(0).getUserLikeRoleDefine() <= 20) {
-//                params.width = 60;
-//            } else if (entities.get(0).getUserLikeRoleDefine() <= 40) {
-//                params.width = 120;
-//            } else if (entities.get(0).getUserLikeRoleDefine() <= 60) {
-//                params.width = 180;
-//            } else if (entities.get(0).getUserLikeRoleDefine() <= 90) {
-//                params.width = 240;
-//            } else if (entities.get(0).getUserLikeRoleDefine() < 120) {
-//                params.width = 300;
-//            } else if (entities.get(0).getUserLikeRoleDefine() == 0) {
-//                binding.roleHeartNumSmall.setVisibility(View.GONE);
-//            }
-//            binding.roleHeartNumSmall.setLayoutParams(params);
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
+
+            if (entities.get(0).getUserLikeRoleDefine() < entities.get(0).getUserLikeRoleDefineFull()) {
+                binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
+                params.width = 240 * entities.get(0).getUserLikeRoleDefine() / entities.get(0).getUserLikeRoleDefineFull();
+            } else if (entities.get(0).getUserLikeRoleDefine() >= entities.get(0).getUserLikeRoleDefineFull()) {
+                binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine());
+            }
+            binding.roleHeartNumSmall.setLayoutParams(params);
 
             binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine() + "/" + entities.get(0).getUserLikeRoleDefineFull());
             binding.roleNum.setText("编号" + entities.get(0).getRoleNumber());
@@ -166,29 +160,20 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
                     binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefine() + "/" + entities.get(position).getUserLikeRoleDefineFull());
 
-                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
-//                    //好感度       10                                                               12
-//                    if (entities.get(position).getUserLikeRoleDefine() <= entities.get(position).getUserLikeRoleDefineFull() / 5) {
-//                        binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
-//                        params.width = 240;
-//                    } else if (entities.get(position).getUserLikeRoleDefine() <= entities.get(position).getUserLikeRoleDefineFull() / 4) {
-//                        binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
-//                        params.width = 180;
-//                    } else if (entities.get(position).getUserLikeRoleDefine() <= entities.get(position).getUserLikeRoleDefineFull() / 3) {
-//                        binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
-//                        params.width = 120;
-//                    } else if (entities.get(position).getUserLikeRoleDefine() <= entities.get(position).getUserLikeRoleDefineFull() / 2) {
-//                        binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
-//                        params.width = 60;
-//                    } else if (entities.get(position).getUserLikeRoleDefine() >= 320) {
-//                        binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefine());
-//                    }
-                    if (entities.get(position).getUserLikeRoleDefine() >= 320) {
-                        binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefine());
+                    if (entities.get(position).getUserLikeRoleDefine() >= entities.get(position).getUserLikeRoleDefineFull()) {
+                        binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefineFull()+"");
                     }
+
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
+                    if (entities.get(position).getUserLikeRoleDefine() < entities.get(position).getUserLikeRoleDefineFull()) {
+                        binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
+                        params.width = 240 * entities.get(position).getUserLikeRoleDefine() / entities.get(position).getUserLikeRoleDefineFull();
+                    }
+//                    else if (entities.get(position).getUserLikeRoleDefine() >= entities.get(position).getUserLikeRoleDefineFull()) {
+//                        binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefineFull());
+//                    }
+
                     binding.roleHeartNumSmall.setLayoutParams(params);
-
-
                     binding.roleNum.setText("编号" + entities.get(position).getRoleNumber());
                     binding.roleNameText.setText(entities.get(position).getName());
                     Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(position).getShowHeadIcon()).into(binding.roleImage);

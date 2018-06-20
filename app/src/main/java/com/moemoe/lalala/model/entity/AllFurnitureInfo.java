@@ -26,6 +26,16 @@ public class AllFurnitureInfo implements Serializable {
     private String schema;//跳转地址
     private String schemaShop;//家具跳转商店
 
+    private boolean isSelected = false;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
     private String suitTypeDetailIcon;//套装图标
 
     public String getSuitTypeDetailIcon() {

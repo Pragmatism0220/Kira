@@ -12,6 +12,7 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.di.components.DaggerPropComponent;
 import com.moemoe.lalala.di.modules.PropModule;
 import com.moemoe.lalala.event.OnItemListener;
+import com.moemoe.lalala.event.StorageDefaultDataEvent;
 import com.moemoe.lalala.model.entity.Image;
 import com.moemoe.lalala.model.entity.PropInfoEntity;
 import com.moemoe.lalala.presenter.PropContract;
@@ -20,6 +21,8 @@ import com.moemoe.lalala.view.adapter.PropAdapter;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,6 +146,9 @@ public class PropFragment extends BaseFragment implements PropContract.View {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mAdapter != null) {
+            mAdapter.unregister();
+        }
     }
 
     /**
@@ -152,6 +158,8 @@ public class PropFragment extends BaseFragment implements PropContract.View {
         Log.i("asd", "showHave: " + lists);
         mAdapter.setRestore(lists);
     }
+
+
 
 
     public interface CallBack {

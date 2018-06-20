@@ -1,17 +1,13 @@
 package com.moemoe.lalala.view.activity;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +17,7 @@ import com.moemoe.lalala.databinding.ActivityStorageBinding;
 import com.moemoe.lalala.di.components.DaggerStorageComponents;
 import com.moemoe.lalala.di.modules.StorageModule;
 import com.moemoe.lalala.event.FurnitureEvent;
+import com.moemoe.lalala.event.StorageDefaultDataEvent;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
 import com.moemoe.lalala.model.entity.PropInfoEntity;
@@ -45,6 +42,7 @@ import javax.inject.Inject;
  */
 
 public class StorageActivity extends BaseActivity implements PropFragment.CallBack, PropFragment.firstCallBack, StorageContract.View {
+    public static boolean sIsRegist = false;
 
     private ActivityStorageBinding binding;
 
@@ -168,7 +166,6 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                 case R.id.choose_prop_btn:
                     binding.topBg.setBackgroundResource(R.drawable.bg_home_items_prop_background);
                     binding.storageViewpager.setCurrentItem(0, false);
-
                     break;
                 case R.id.choose_furniture_btn:
                     binding.topBg.setBackgroundResource(R.drawable.ic_role_top_bg);
@@ -198,15 +195,20 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
             switch (position) {
                 case 0:
                     binding.radioGroup.check(R.id.choose_prop_btn);
+                    EventBus.getDefault().post(new StorageDefaultDataEvent(false));
                     isProp = true;
                     break;
                 case 1:
                     binding.radioGroup.check(R.id.choose_furniture_btn);
+                    EventBus.getDefault().post(new StorageDefaultDataEvent(true));
                     isProp = false;
                     break;
                 default:
                     break;
             }
+
+            //有没有好的办法解决这
+
             View propView = binding.choosePropBtn;
             View furnitureView = binding.chooseFurnitureBtn;
 

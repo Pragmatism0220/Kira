@@ -135,25 +135,25 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
     }
 
     /**
-     * 家具显示未拥有
+     * 家具仅显示未拥有
      */
     public void furnShowNotHave() {
         List<BaseFragment> data = mAdapter.getData();
         for (BaseFragment datum : data) {
             if (datum instanceof FurnitureInfoFragment) {
-                ((FurnitureInfoFragment) datum).showHava(false);
+                ((FurnitureInfoFragment) datum).showHava(true);
             }
         }
     }
 
     /**
-     * 家具显示拥有
+     * 家具显示全部
      */
     public void furnShowHave() {
         List<BaseFragment> data = mAdapter.getData();
         for (BaseFragment datum : data) {
             if (datum instanceof FurnitureInfoFragment) {
-                ((FurnitureInfoFragment) datum).showHava(true);
+                ((FurnitureInfoFragment) datum).showHava(false);
             }
         }
     }
