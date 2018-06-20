@@ -133,7 +133,10 @@ public class MapToolTipUtils {
                 int x = xToScreenCoords(entity.getX());
                 int y = yToScreenCoords(entity.getY());
                 if (x >= 0 && x <= screenW && y >= 0 && y <= screenH) {
-                    tmpList.add(entity);
+                    if (!entity.getId().contains("地图剧情")) {
+                        tmpList.add(entity);
+                    }
+
                 }
             }
         }

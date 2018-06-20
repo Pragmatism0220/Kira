@@ -1,6 +1,7 @@
 package com.moemoe.lalala.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
@@ -24,6 +26,8 @@ import com.moemoe.lalala.utils.LevelSpan;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
+import com.moemoe.lalala.view.activity.HouseActivity;
+import com.moemoe.lalala.view.activity.HouseHisActivity;
 import com.moemoe.lalala.view.widget.adapter.BaseRecyclerViewAdapter;
 
 import java.text.SimpleDateFormat;
@@ -131,8 +135,21 @@ public class NewVisitorAdapter extends BaseRecyclerViewAdapter<VisitorsEntity, N
                     ViewUtils.toPersonal(mContext, item.getVisitorId());
                 }
 
+        }
+        });
+
+        helper.mRoot.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (!TextUtils.isEmpty(item.getVisitorId())) {
+                    Intent intent = new Intent(mContext, HouseHisActivity.class);
+                    intent.putExtra("id", item.getVisitorId());
+                    mContext.startActivity(intent);
+                }
             }
         });
+
+
     }
 
     @Override

@@ -5,6 +5,9 @@
 
     <corners
         android:bottomRightRadius="@dimen/x30"
-        android:topRightRadius="@dimen/x30" />
+        android:topRightRadius="@dimen/y30"
+        android:topLeftRadius="@dimen/x30"
+        android:bottomLeftRadius="@dimen/y30"
+        />
 
 </shape>

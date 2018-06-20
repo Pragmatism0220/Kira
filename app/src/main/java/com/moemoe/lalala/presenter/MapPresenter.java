@@ -381,7 +381,7 @@ public class MapPresenter implements MapContract.Presenter {
                 if (entity.getDownloadState() == 2) {
                     if (FileUtil.isExists(StorageUtils.getMapRootPath() + entity.getFileName())) {
                         MapMarkEntity entity1 = new MapMarkEntity
-                                ("地图剧情" + id, entity.getX(), entity.getY(), "neta://com.moemoe.lalala/map_event_1.0?id=" + entity.getScriptId(), entity.getFileName(),
+                                ("地图剧情" + id, entity.getX(), entity.getY(), "neta://com.moemoe.lalala/map_event_1.0?id=" + entity.getScriptId() + "&groupId=" + entity.getGroupId(), entity.getFileName(),
                                         entity.getW(), entity.getH(), entity.getGroupId());
                         container.addMark(entity1);
                         addMarkToMap(context, entity1, layer);
@@ -391,6 +391,7 @@ public class MapPresenter implements MapContract.Presenter {
         }
 
     }
+
     @Override
     public void addMapMark(Context context, MapMarkContainer container, MapWidget map, String type) {
         addMapMark(context, map, container, type);

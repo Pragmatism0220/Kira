@@ -89,6 +89,7 @@ public class FurnitureInfoFragment extends BaseFragment {
 
     public void showHava(boolean isOnlyShowNotHave) {
         if (mAdapter != null && info != null && info.size() > 0) {
+
             List<AllFurnitureInfo> newList = new ArrayList<>();
             if (isOnlyShowNotHave) {
                 for (AllFurnitureInfo allFurnitureInfo : info) {

@@ -1,8 +1,10 @@
 package com.moemoe.lalala.view.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,10 +36,12 @@ import javax.inject.Inject;
 public class NewVisitorActivity extends BaseActivity implements NewVisitorsContract.View {
 
     private ActivityNewVisitorBinding binding;
+    private PullAndLoadView mItemView;
     private TextView mTvTitle;
     private ImageView mIvBack;
     private boolean isLoading = false;
     private NewVisitorAdapter mAdapter;
+    private ArrayList<VisitorsEntity> info;
 
     private PullAndLoadView mRv;
 
@@ -54,6 +58,7 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
                 .inject(this);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_new_visitor);
         binding.setPresenter(new Presenter());
+        mItemView = findViewById(R.id.root_rv);
         mTvTitle = findViewById(R.id.tv_toolbar_title);
         mIvBack = findViewById(R.id.iv_back);
         mRv = findViewById(R.id.new_root_rv);
@@ -62,6 +67,7 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
         mAdapter = new NewVisitorAdapter();
         mRv.getRecyclerView().setAdapter(mAdapter);
         mRv.setLoadMoreEnabled(false);
+
     }
 
 
@@ -110,10 +116,14 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
                 return false;
             }
         });
-
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+//                if (!TextUtils.isEmpty(entities.get(position).getVisitorId())) {
+//                    Intent intent = new Intent(getApplicationContext(), HouseHisActivity.class);
+//                    intent.putExtra("id", entities.get(position).getVisitorId());
+//                    startActivity(intent);
+//                }
             }
 
             @Override
@@ -131,8 +141,11 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
 
 
     @Override
-    public void getNewVisitorsInfoSuccess(ArrayList<VisitorsEntity> entities, boolean isPull) {
+    public void getNewVisitorsInfoSuccess(final ArrayList<VisitorsEntity> entities, boolean isPull) {
         Log.i("asd", "getNewVisitorsInfoSuccess: " + entities);
+        info = new ArrayList<>();
+        info.clear();
+        info.addAll(entities);
         isLoading = false;
         mRv.setComplete();
         if (isPull) {
@@ -140,6 +153,7 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
         } else {
             mAdapter.addList(entities);
         }
+
 
     }
 

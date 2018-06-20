@@ -12,7 +12,7 @@ public class PropInfoEntity {
     private String name;//名称
     private int toolCount;//拥有道具个数
     private String describe;//道具信息描述
-    private String productId;
+    private String productId;//商品ID
 
     public String getProductId() {
         return productId;

@@ -103,14 +103,15 @@ public class PropFragment extends BaseFragment implements PropContract.View {
 //                int toolCount = lists.get(position).getToolCount();
 //                String describe = lists.get(position).getDescribe();
 //                boolean isUserHadTool = lists.get(position).isUserHadTool();
+
                 PropInfoEntity propInfoEntity = mAdapter.getData().get(position);
                 EventBus.getDefault().post(propInfoEntity);
-                String id = mAdapter.getData().get(position).getId();
-                String name = mAdapter.getData().get(position).getName();
-                String image = mAdapter.getData().get(position).getImage();
-                int toolCount = mAdapter.getData().get(position).getToolCount();
-                String describe = mAdapter.getData().get(position).getDescribe();
-                boolean isUserHadTool = mAdapter.getData().get(position).isUserHadTool();
+//                String id = mAdapter.getData().get(position).getId();
+//                String name = mAdapter.getData().get(position).getName();
+//                String image = mAdapter.getData().get(position).getImage();
+//                int toolCount = mAdapter.getData().get(position).getToolCount();
+//                String describe = mAdapter.getData().get(position).getDescribe();
+//                boolean isUserHadTool = mAdapter.getData().get(position).isUserHadTool();
 
 
                 callBack.getResult(propInfoEntity, position);
@@ -150,7 +151,6 @@ public class PropFragment extends BaseFragment implements PropContract.View {
      * 显示拥有
      */
     public void showHave() {
-        Log.i("asd", "showHave: " + lists);
         mAdapter.setRestore(lists);
     }
 

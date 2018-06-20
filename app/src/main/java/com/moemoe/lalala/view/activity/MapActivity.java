@@ -607,10 +607,8 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 //                                    mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getStoryId());
                                     mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getScriptId());
 
-                                    //                                    mPresenter.addNewEventMark(eventId, icon, w, h, x, y, md5, mContainer, MapActivity.this, mapWidget, entity.getStoryId());
                                     if (isForce) {
                                         Intent i = new Intent(MapActivity.this, MapEventNewActivity.class);
-
                                         i.putExtra("id", entity.getStoryId());
                                         startActivity(i);
                                     }
@@ -633,10 +631,10 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                                     mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getType());
 
 //                                    mPresenter.addNewEventMark(eventId, icon, w, h, x, y, md5, mContainer, MapActivity.this, mapWidget, entity.getStoryId());
-                                    if (isForce) {
+                                    if (isForce) {//false
                                         Intent i = new Intent(MapActivity.this, MapEventNewActivity.class);
-                                        i.putExtra("groupId", entity.getGroupId());
                                         i.putExtra("id", entity.getScriptId());
+                                        i.putExtra("groupId", entity.getGroupId());
                                         startActivity(i);
                                     }
                                 }
@@ -655,7 +653,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
     @Override
     public void onGetNewTriggerSuccess(final ArrayList<NewJuQingTriggerEntity> newJuQingTriggerEntities) {
-
         Log.i("asd", "onGetNewTriggerSuccess: " + newJuQingTriggerEntities);
         final ArrayList<JuQingTriggerEntity> res = new ArrayList<>();
         final ArrayList<JuQingTriggerEntity> errorList = new ArrayList<>();
@@ -765,6 +762,8 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                     }
                 }
                 if (objectTouchEvents.size() == 1) {
+
+
                     ObjectTouchEvent objectTouchEvent = objectTouchEvents.get(0);
                     Object objectId = objectTouchEvent.getObjectId();
                     MapMarkEntity entity = mContainer.getMarkById((String) objectId);

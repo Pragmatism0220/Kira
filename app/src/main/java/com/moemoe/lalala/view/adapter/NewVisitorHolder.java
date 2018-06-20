@@ -9,6 +9,7 @@ import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -40,6 +41,8 @@ public class NewVisitorHolder extends ClickableViewHolder {
     TextView mLevel;
     TextView mInfo;
 
+    RelativeLayout mRoot;
+
 
     int viewType;
 
@@ -59,6 +62,7 @@ public class NewVisitorHolder extends ClickableViewHolder {
         mImage = $(R.id.visitor_image);
         mSex = $(R.id.visitor_sex);
         mLevel = $(R.id.visitor_level);
+        mRoot = $(R.id.visitor_root);
     }
 
 }

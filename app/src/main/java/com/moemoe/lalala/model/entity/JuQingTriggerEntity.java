@@ -25,7 +25,7 @@ public class JuQingTriggerEntity {
     @Id
     private String id;
     private String extra;
-    private boolean force;//是否为强制剧情
+    private boolean force;//是否为强制剧情   true强制
     private int level;//1:主线 2:支线 3:日常 ,
     private String roleOf;//关联的角色
     private String storyId;//关联剧情ID

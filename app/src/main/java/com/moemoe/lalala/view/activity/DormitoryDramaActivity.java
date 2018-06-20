@@ -92,9 +92,8 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
             Glide.with(this).load(ApiService.URL_QINIU + event.getBgImage())
                     .into(binding.bgImage);
         } else {
-            binding.bgImage.setImageResource(R.drawable.drama_dormitory_bg);
+            binding.bgImage.setBackgroundResource(R.drawable.drama_dormitory_bg);
         }
-
     }
 
 
@@ -105,12 +104,18 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
                     finish();
                     break;
                 case R.id.principal_line_btn:
+//                    if (mList.getMasterCollectPercent() == 0) {
+//                        return;
+//                    }
                     if (mList != null) {
                         Intent intent = new Intent(DormitoryDramaActivity.this, PrActivity.class);
                         startActivity(intent);
                     }
                     break;
                 case R.id.branch_btn:
+                    if (mList.getBranchR() == 0 && mList.getBranchN() == 0 && mList.getBranchSR() == 0) {
+                        return;
+                    }
                     if (mList != null) {
                         Intent i = new Intent(DormitoryDramaActivity.this, BranchActivity.class);
                         i.putExtra("BranchN", mList.getBranchN() + "");

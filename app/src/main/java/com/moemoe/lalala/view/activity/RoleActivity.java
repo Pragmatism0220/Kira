@@ -82,6 +82,24 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
             binding.roleListRv.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
 
+
+            //未拥有角色取消放入宅屋点击事件
+            if (!entities.get(0).getIsUserHadRole()) {
+                binding.roleHeartTitle.setVisibility(View.GONE);
+                binding.fl.setVisibility(View.GONE);
+                binding.roleDiaryBtn.setVisibility(View.GONE);
+                binding.putHouseBtn.setVisibility(View.GONE);
+                binding.setDeskmakeBtn.setVisibility(View.GONE);
+                binding.checkClothBtn.setVisibility(View.GONE);
+            } else if (entities.get(0).getIsUserHadRole()) {
+                binding.roleHeartTitle.setVisibility(View.VISIBLE);
+                binding.fl.setVisibility(View.VISIBLE);
+                binding.roleDiaryBtn.setVisibility(View.VISIBLE);
+                binding.putHouseBtn.setVisibility(View.VISIBLE);
+                binding.setDeskmakeBtn.setVisibility(View.VISIBLE);
+                binding.checkClothBtn.setVisibility(View.VISIBLE);
+            }
+
             //数组为0的位置默认初始化
             if (!entities.get(0).getIsPutInHouse()) {
                 binding.putHouseBtn.setBackgroundResource(R.drawable.ic_role_put_house_bg);
@@ -106,14 +124,15 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
              * 好感度计时器
              */
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
-
             if (entities.get(0).getUserLikeRoleDefine() < entities.get(0).getUserLikeRoleDefineFull()) {
                 binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
                 params.width = 240 * entities.get(0).getUserLikeRoleDefine() / entities.get(0).getUserLikeRoleDefineFull();
             } else if (entities.get(0).getUserLikeRoleDefine() >= entities.get(0).getUserLikeRoleDefineFull()) {
-                binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine());
+                binding.roleHeartNum.setText("");
+                binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefineFull());
             }
             binding.roleHeartNumSmall.setLayoutParams(params);
+
 
             binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine() + "/" + entities.get(0).getUserLikeRoleDefineFull());
             binding.roleNum.setText("编号" + entities.get(0).getRoleNumber());
@@ -160,20 +179,19 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
                     binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefine() + "/" + entities.get(position).getUserLikeRoleDefineFull());
 
-                    if (entities.get(position).getUserLikeRoleDefine() >= entities.get(position).getUserLikeRoleDefineFull()) {
-                        binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefineFull()+"");
-                    }
-
+                    /**
+                     * 好感度比例计算
+                     */
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
                     if (entities.get(position).getUserLikeRoleDefine() < entities.get(position).getUserLikeRoleDefineFull()) {
                         binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
                         params.width = 240 * entities.get(position).getUserLikeRoleDefine() / entities.get(position).getUserLikeRoleDefineFull();
                     }
-//                    else if (entities.get(position).getUserLikeRoleDefine() >= entities.get(position).getUserLikeRoleDefineFull()) {
-//                        binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefineFull());
-//                    }
-
                     binding.roleHeartNumSmall.setLayoutParams(params);
+                    if (entities.get(position).getUserLikeRoleDefine() >= entities.get(position).getUserLikeRoleDefineFull()) {
+                        binding.roleHeartNum.setText("");
+                        binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefineFull());
+                    }
                     binding.roleNum.setText("编号" + entities.get(position).getRoleNumber());
                     binding.roleNameText.setText(entities.get(position).getName());
                     Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(position).getShowHeadIcon()).into(binding.roleImage);
@@ -206,6 +224,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
     @Override
     public void setDeskMateSuccess() {
+        showToast("操作成功");
 
     }
 
@@ -215,6 +234,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
         mAdapter.getList().get(mPosition).setPutInHouse(true);
         mAdapter.notifyDataSetChanged();
         binding.putHouseBtn.setBackgroundResource(R.drawable.ic_role_move_house_bg);
+        showToast("操作成功");
     }
 
     @Override
@@ -222,7 +242,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
         mAdapter.getList().get(mPosition).setPutInHouse(false);
         mAdapter.notifyDataSetChanged();
         binding.putHouseBtn.setBackgroundResource(R.drawable.ic_role_put_house_bg);
-
+        showToast("操作成功");
     }
 
     @Override

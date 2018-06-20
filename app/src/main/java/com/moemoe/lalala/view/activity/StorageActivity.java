@@ -221,14 +221,6 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                         } else if (result.contains("invalid")) {
                             result = "invalid";
                         }
-                /* 处理返回值
-                 * "success" - payment succeed
-                 * "fail"    - payment failed
-                 * "cancel"  - user canceld
-                 * "invalid" - payment plugin not installed
-                 */
-                        //      String errorMsg = intent.getExtras().getString("error_msg"); // 错误信息
-                        //      String extraMsg = intent.getExtras().getString("extra_msg"); // 错误信息
                         finalizeDialog();
                         if ("success".equals(result)) {
                             showToast("支付成功");
@@ -262,10 +254,12 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
             switch (checkedId) {
                 case R.id.choose_prop_btn:
                     binding.topBg.setBackgroundResource(R.drawable.bg_home_items_prop_background);
+                    binding.storageCommodityNum.setVisibility(View.VISIBLE);
                     binding.storageViewpager.setCurrentItem(0, false);
                     break;
                 case R.id.choose_furniture_btn:
                     binding.topBg.setBackgroundResource(R.drawable.ic_role_top_bg);
+                    binding.storageCommodityNum.setVisibility(View.GONE);
                     binding.storageViewpager.setCurrentItem(1, false);
                     break;
                 default:
@@ -304,7 +298,6 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     break;
             }
 
-            //有没有好的办法解决这
 
             View propView = binding.choosePropBtn;
             View furnitureView = binding.chooseFurnitureBtn;
@@ -413,15 +406,15 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     break;
                 case R.id.storage_commodity_buy_btn:
                     if (!mPropFragment.isHidden()) {
-                        if (entity != null && entity.isUserHadTool()) {
-                            if (TextUtils.isEmpty(entity.getProductId())) {
+                        if (entity != null) {//&& entity.isUserHadTool()
+                            if (!TextUtils.isEmpty(entity.getProductId())) {
                                 mPresenter.createOrder(entity.getProductId());
                             } else {
                                 showToast("该道具还未上架~~~");
                             }
                         }
+
                     } else if (!mFurnitureFragment.isHidden()) {
-                        //家具套装的购买
                         if (furnitureInfo != null) {
                             if (furnitureInfo.getType().equals("套装")) {//套装
                                 if (!furnitureInfo.isUserSuitFurnitureHad()) {
@@ -455,8 +448,10 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                                 if (!furnitureInfo.isSuitPutInHouse()) {
                                     mPresenter.suitUse(furnitureInfo.getSuitTypeId(), furnitureInfo.getPosition());
                                 } else {
+                                    showToast("已经使用中");
                                 }
                             } else {
+                                showToast("套装未拥有");
                             }
                         } else {
                             //家具是否拥有
@@ -464,8 +459,10 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                                 if (!furnitureInfo.isPutInHouse()) {
                                     mPresenter.furnitureUse(furnitureInfo.getId(), furnitureInfo.getPosition());
                                 } else {
+                                    showToast("已经使用中");
                                 }
                             } else {
+                                showToast("家具未拥有");
                             }
                         }
                     }
@@ -481,6 +478,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     break;
             }
         }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

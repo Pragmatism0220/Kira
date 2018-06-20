@@ -37,7 +37,6 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
     private int position;
     private int mSelectedPos = -1;//保存当前选中的position 重点！
 
-//    private boolean isHava;
     private View mDefaultedData;
 
     private PropAdapter.RoleItemClickListener listener;
@@ -51,9 +50,6 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
         }
     }
 
-    //这里就是监听注册啊 先看这个吧，你泡一下泡谁？ 还是炮？
-
-
     public void unRegister() {
         EventBus.getDefault().unregister(this);
         StorageActivity.sIsRegist = false;
@@ -64,10 +60,6 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
         this.infos = mData;
         notifyDataSetChanged();
     }
-
-//    public void setHava(boolean hava) {
-//        isHava = hava;
-//    }
 
     public List<AllFurnitureInfo> getList() {
         return infos;

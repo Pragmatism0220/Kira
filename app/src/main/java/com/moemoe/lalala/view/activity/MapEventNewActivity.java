@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -253,6 +254,7 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
         } else {
             finish();
         }
+
         mIvSkip.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
@@ -1066,6 +1068,7 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
 
     @Override
     public void newDownSuccess(long time) {
+        Log.i("Map", "newDownSuccess: 保存");
         if (3 != JuQingUtil.getLevel(mId)) {
             JuQingUtil.saveJuQingDone(mId, time);
         } else {
