@@ -96,7 +96,7 @@ public class IntentUtils {//TODO 待优化代码结构与跳转方式 by yi
                 path = path.substring(1);
             }
             if(path.equals(context.getResources().getString(R.string.label_tag_action))){
-                return;
+                return;     
             }
             if(sSupportSchame.contains(path)){
                 if(path.equals("event_1.0")){

@@ -268,6 +268,7 @@ public class JuQingChatV2Fragment extends BaseFragment implements IPhoneFragment
 //    }
 
 
+    
     @Override
     public String getTitle() {
         if ("len".equals(role)) {

@@ -35,14 +35,14 @@ public class BranchHolder extends ClubChildHolder {
         ((TextView) $(R.id.item_branch_num)).setText("已拥有:" + entity.getUserBranchLevelCount());
         if (entity.isShowJoinButton()) {
             $(R.id.iv_plot_memory).setVisibility(View.VISIBLE);
-            ((ImageView) $(R.id.item_branch_bg)).setAlpha(0.2f);
-            ((TextView) $(R.id.item_branch_title)).setAlpha(0.2f);
-            ((TextView) $(R.id.item_branch_num)).setAlpha(0.2f);
+            ((ImageView) $(R.id.item_branch_bg)).setAlpha(0.5f);
+            ((TextView) $(R.id.item_branch_title)).setAlpha(0.5f);
+            ((TextView) $(R.id.item_branch_num)).setAlpha(0.5f);
         } else {
-            if (entity.getHoleCount() == 0) {
-                ((ImageView) $(R.id.item_branch_bg)).setAlpha(0.2f);
-                ((TextView) $(R.id.item_branch_title)).setAlpha(0.2f);
-                ((TextView) $(R.id.item_branch_num)).setAlpha(0.2f);
+            if (entity.getUserBranchLevelCount() == 0) {
+                ((ImageView) $(R.id.item_branch_bg)).setAlpha(0.5f);
+                ((TextView) $(R.id.item_branch_title)).setAlpha(0.5f);
+                ((TextView) $(R.id.item_branch_num)).setAlpha(0.5f);
             } else {
                 ((ImageView) $(R.id.item_branch_bg)).setAlpha(1.0f);
                 ((TextView) $(R.id.item_branch_title)).setAlpha(1.0f);
@@ -51,7 +51,7 @@ public class BranchHolder extends ClubChildHolder {
             $(R.id.iv_plot_memory).setVisibility(View.GONE);
         }
         if (isSelect) {
-            ((TextView) $(R.id.tv_branch_num_new)).setVisibility(View.VISIBLE);
+            ((TextView) $(R.id.tv_branch_num_new)).setVisibility(View.GONE);
             ((TextView) $(R.id.tv_branch_num_new)).setText(entity.getUserBranchLevelCount() + "");
         } else {
             ((TextView) $(R.id.tv_branch_num_new)).setVisibility(View.GONE);

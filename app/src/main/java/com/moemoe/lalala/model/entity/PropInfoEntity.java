@@ -12,6 +12,15 @@ public class PropInfoEntity {
     private String name;//名称
     private int toolCount;//拥有道具个数
     private String describe;//道具信息描述
+    private String productId;
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
 
     public boolean isSelected() {
         return isSelected;

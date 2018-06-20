@@ -221,12 +221,12 @@ public class SimplePresenter implements SimpleContract.Presenter {
                     .subscribe(new NetResultSubscriber<Boolean>() {
                         @Override
                         public void onSuccess(Boolean aBoolean) {
-//                            AppSetting.TXBB = aBoolean;
-//                            if (!aBoolean) {
-//                                RetrofitUrlManager.getInstance().setGlobalDomain("http://pgbb.moemoe.la/");
-//                            } else {
-//                                RetrofitUrlManager.getInstance().setGlobalDomain("http://2333.moemoe.la/");
-//                            }
+                            AppSetting.TXBB = aBoolean;
+                            if (!aBoolean) {
+                                RetrofitUrlManager.getInstance().setGlobalDomain("http://pgbb.moemoe.la/");
+                            } else {
+                                RetrofitUrlManager.getInstance().setGlobalDomain("http://2333.moemoe.la/");
+                            }
                         }
 
                         @Override  

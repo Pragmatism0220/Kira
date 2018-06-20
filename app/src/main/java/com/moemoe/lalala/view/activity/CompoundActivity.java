@@ -130,6 +130,11 @@ public class CompoundActivity extends BaseActivity implements BranchContract.Vie
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_GO_COMPOUND_SELECT && resultCode == RESULT_OK) {
             if (data != null) {
+                boolean isEntity = data.getBooleanExtra("isEntity", false);
+                if (isEntity) {
+                    showToast("没有角色可选~~~~");
+                    return;
+                }
                 String coverImage = data.getStringExtra("coverImage");
                 String roleId = data.getStringExtra("roleId");
                 int position = data.getIntExtra("position", 0);
@@ -154,7 +159,6 @@ public class CompoundActivity extends BaseActivity implements BranchContract.Vie
                 } else {
                     mAdapter.notifyItemChanged(position);
                 }
-
             }
         }
     }

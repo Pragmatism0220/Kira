@@ -14,7 +14,9 @@ import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -25,6 +27,10 @@ import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.AppSetting;
 import com.moemoe.lalala.event.HouseLikeEvent;
@@ -62,6 +68,7 @@ public class MapLayout extends FrameLayout {
     private ValueAnimator valueAnimator3;
     private ValueAnimator valueAnimator4;
     private AnimatorSet s1a;
+    private boolean isMove;
 
     public MapLayout(Context context) {
         this(context, null);
@@ -97,7 +104,6 @@ public class MapLayout extends FrameLayout {
         touchImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         addView(touchImageView, params);
-
     }
 
     public void setOnImageClickLietener(OnClickListener lietener) {
@@ -111,7 +117,7 @@ public class MapLayout extends FrameLayout {
 
         int heightPixels = getContext().getResources().getDisplayMetrics().heightPixels;
         final double v = 3600.0 * heightPixels / 1920.0;
-        double wight = 1080.0 * v / 3600.0;
+        final double wight = (2160.0 * v / 3600.0) - wdp;
 
         if (entity.getType().equals("2") && entity.getImage_w() > 0 && entity.getImage_h() > 0) {
             HouseView shadowView = new HouseView(getContext());
@@ -147,12 +153,7 @@ public class MapLayout extends FrameLayout {
                 wuView.setTouch(false);
             }
         }
-        isJump = true;
-        if (entity.getPointX() > wight) {
-            isJump = true;
-        } else {
-            isJump = false;
-        }
+
         wuView.setOnClickListener(new NoDoubleClickListener(700) {
             @Override
             public void onNoDoubleClick(View view) {
@@ -160,8 +161,53 @@ public class MapLayout extends FrameLayout {
                     if (entity.isTimerIsSleep()) {
                         ToastUtils.showShortToast(getContext(), "睡觉中~~~");
                     } else {
-                        onHouseClick(view, schame, type, entity.getId(), isJump);
-                        isJump = !isJump;
+                        view.setOnTouchListener(new OnTouchListener() {
+                            float downX = 0;
+                            float upX = 0;
+
+                            @Override
+                            public boolean onTouch(View view, MotionEvent motionEvent) {
+                                switch (motionEvent.getAction()) {
+                                    case MotionEvent.ACTION_DOWN:
+                                        isMove = false;
+                                        downX = motionEvent.getRawX();
+                                        break;
+                                    case MotionEvent.ACTION_MOVE:
+                                        break;
+                                    case MotionEvent.ACTION_UP:
+                                        float viewX = view.getX();
+                                        upX = motionEvent.getRawX();
+                                        if (downX == upX) {
+                                            isMove = true;
+                                            if (downX >= viewX) {
+                                                if (downX < viewX + view.getMeasuredWidth()) {
+                                                    isJump = true;
+                                                } else {
+                                                    isJump = false;
+                                                }
+                                            }
+                                            if (upX * v / 3600.0 > wight) {
+                                                isMove = false;
+                                            } else if (upX * v / 3600.0 == (0.0 * v / 3600.0)) {
+                                                isMove = false;
+                                            } else {
+                                                isMove = true;
+                                            }
+                                        } else {
+                                            isMove = false;
+                                        }
+                                        Log.e("-----viewX----", viewX + "");
+                                        Log.e("-----downX----", downX + "");
+                                        Log.e("-----wight----", wight + "");
+                                        Log.e("-----upX3600.0----", upX * v / 3600.0 + "");
+                                        break;
+                                }
+                                return false;
+                            }
+                        });
+                        if (isMove) {
+                            onHouseClick(view, schame, type, entity.getId(), isJump);
+                        }
                     }
                 } else if (type.equals("3")) {
                     EventBus.getDefault().post(new HouseLikeEvent("", 3));
@@ -180,7 +226,11 @@ public class MapLayout extends FrameLayout {
 
         mChildView.add(entity.getId());
 
-        if (entity.getType().equals("2") && entity.getImage_w() > 0 && entity.getImage_h() > 0) {
+        if (entity.getType().
+
+                equals("2") && entity.getImage_w() > 0 && entity.getImage_h() > 0)
+
+        {
             HouseImage image = new HouseImage();
             image.setH(hdp);
             image.setW(wdp);
@@ -253,7 +303,7 @@ public class MapLayout extends FrameLayout {
                     }
                 });
                 if (entity.isTimerIsSleep()) {
-                    HouseView sleepView = new HouseView(getContext());
+                    final HouseView sleepView = new HouseView(getContext());
                     sleepView.setBackgroundResource(R.drawable.ic_home_roles_sleep);
                     float sleepX = (float) (x - (int) getContext().getResources().getDimension(R.dimen.x40));
                     float sleepY = (float) (y - getContext().getResources().getDimension(R.dimen.y60));
@@ -263,11 +313,12 @@ public class MapLayout extends FrameLayout {
                     wuViews.add(sleepView);
                     touchImageView.addRenWuMark(sleepView);
                     mChildView.add("sleep" + entity.getId());
-                    FrameLayout.LayoutParams sleepParams = (FrameLayout.LayoutParams) sleepView.getLayoutParams();
+                    final FrameLayout.LayoutParams sleepParams = (FrameLayout.LayoutParams) sleepView.getLayoutParams();
                     sleepParams.width = (int) getContext().getResources().getDimension(R.dimen.x132);
                     sleepParams.height = (int) getContext().getResources().getDimension(R.dimen.y132);
                     sleepView.setLayoutParams(sleepParams);
                 }
+
                 image.setRoleTimer(true);
             } else {
                 image.setRoleTimer(false);
@@ -284,6 +335,7 @@ public class MapLayout extends FrameLayout {
      * @param hdp
      * @param wuView
      */
+
     private void goAnimator(final double wdp, double hdp, final View wuView, final View childView, final View shadowView, boolean isSleep, String id) {
 
 //        CancelValueAnimator();
@@ -461,32 +513,12 @@ public class MapLayout extends FrameLayout {
      */
     public void startAnimatorPath(final View view, float x, float y, final String id, boolean isJump) {
         touchImageView.setIsTouch(true);
-        int widthPixels = getContext().getResources().getDisplayMetrics().widthPixels;
-        int measuredWidth = view.getMeasuredWidth();
-        int measuredHeight = view.getMeasuredHeight();
-        float rightX = 0;
-        float leftX = 0;
-        if (x > (widthPixels - measuredWidth) / 2) {
-            if (isJump) {
-                leftX = x + getContext().getResources().getDimension(R.dimen.x100);
-            } else {
-                rightX = x - getContext().getResources().getDimension(R.dimen.x100);
-            }
-        } else {
-            if (isJump) {
-                leftX = x + getContext().getResources().getDimension(R.dimen.x100);
-            } else {
-                rightX = x - getContext().getResources().getDimension(R.dimen.x100);
-            }
-        }
         int child = 0;
         int shadow = 0;
-        int sleep = 0;
         for (int i = 0; i < mChildView.size(); i++) {
             if (id.equals(mChildView.get(i))) {
                 child = i + 2;
                 shadow = i;
-                sleep = i + 3;
             }
         }
         HouseImage houseImage = mapImage.get(id);
@@ -496,18 +528,17 @@ public class MapLayout extends FrameLayout {
         float childAtY = childAt.getY();
         View shadowAt = getChildAt(shadow);
         float shadowAtX = shadowAt.getX();
-        float shadowAtY = shadowAt.getY();
-        final View sleepAt = getChildAt(sleep);
+
 
         ObjectAnimator translateAnimation = null;
         ObjectAnimator translateAnimation1 = null;
         ObjectAnimator translateAnimation2 = null;
         if (isJump) {
-            translateAnimation = ObjectAnimator.ofFloat(view, "X", x, leftX);
+            translateAnimation = ObjectAnimator.ofFloat(view, "X", x, x + getContext().getResources().getDimension(R.dimen.x100));
             translateAnimation1 = ObjectAnimator.ofFloat(childAt, "X", chlidX, chlidX + getContext().getResources().getDimension(R.dimen.x100));
             translateAnimation2 = ObjectAnimator.ofFloat(shadowAt, "X", shadowAtX, shadowAtX + getContext().getResources().getDimension(R.dimen.x100));
         } else {
-            translateAnimation = ObjectAnimator.ofFloat(view, "X", x, rightX);
+            translateAnimation = ObjectAnimator.ofFloat(view, "X", x, x - getContext().getResources().getDimension(R.dimen.x100));
             translateAnimation1 = ObjectAnimator.ofFloat(childAt, "X", chlidX, chlidX - getContext().getResources().getDimension(R.dimen.x100));
             translateAnimation2 = ObjectAnimator.ofFloat(shadowAt, "X", shadowAtX, shadowAtX - getContext().getResources().getDimension(R.dimen.x100));
         }
@@ -725,21 +756,21 @@ public class MapLayout extends FrameLayout {
     public void setImageDrawable(Drawable drawable) {
         touchImageView.setImageDrawable(drawable);
 
-        new CountDownTimer(5000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-            }
-
-            @Override
-            public void onFinish() {
-                for (int i = 0; i < mChildView.size(); i++) {
-                    HouseImage houseImage = mapImage.get(mChildView.get(i));
-                    if (houseImage != null && houseImage.getId().equals(mChildView.get(i))) {
-                        goAnimator(houseImage.getW(), houseImage.getH(), getChildAt(i + 1), getChildAt(i + 2), getChildAt(i + 3), houseImage.isSleep(), houseImage.getId());
-                    }
-                }
-            }
-        }.start();
+//        new CountDownTimer(5000, 1000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                for (int i = 0; i < mChildView.size(); i++) {
+//                    HouseImage houseImage = mapImage.get(mChildView.get(i));
+//                    if (houseImage != null && houseImage.getId().equals(mChildView.get(i))) {
+//                        goAnimator(houseImage.getW(), houseImage.getH(), getChildAt(i + 1), getChildAt(i + 2), getChildAt(i + 3), houseImage.isSleep(), houseImage.getId());
+//                    }
+//                }
+//            }
+//        }.start();
     }
 
     public void setMapUrl(String name) {

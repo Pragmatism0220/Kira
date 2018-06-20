@@ -25,6 +25,15 @@ public class AllFurnitureInfo implements Serializable {
     private String name;//名称
     private String schema;//跳转地址
     private String schemaShop;//家具跳转商店
+    private String furnitureProductId;
+
+    public void setFurnitureProductId(String furnitureProductId) {
+        this.furnitureProductId = furnitureProductId;
+    }
+
+    public String getFurnitureProductId() {
+        return furnitureProductId;
+    }
 
     private boolean isSelected = false;
 
@@ -53,6 +62,7 @@ public class AllFurnitureInfo implements Serializable {
     private String suitTypeName;//套装风格名称
     private String suitTypeSchemaShop;//套装家具跳转
     private String type;//区分套装
+    private String furnitureSuitProductId;
 
     public String getSuitTypeSchemaShop() {
         return suitTypeSchemaShop;
@@ -216,6 +226,14 @@ public class AllFurnitureInfo implements Serializable {
 
     public void setSuitTypeName(String suitTypeName) {
         this.suitTypeName = suitTypeName;
+    }
+
+    public String getFurnitureSuitProductId() {
+        return furnitureSuitProductId;
+    }
+
+    public void setFurnitureSuitProductId(String furnitureSuitProductId) {
+        this.furnitureSuitProductId = furnitureSuitProductId;
     }
 
     @Override

@@ -1,6 +1,11 @@
 package com.moemoe.lalala.presenter;
 
 import com.moemoe.lalala.model.entity.ClothingEntity;
+import com.moemoe.lalala.model.entity.CoinShopEntity;
+import com.moemoe.lalala.model.entity.CreateOrderEntity;
+import com.moemoe.lalala.model.entity.OrderEntity;
+import com.moemoe.lalala.model.entity.PayReqEntity;
+import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.model.entity.RoleInfoEntity;
 
 import java.util.ArrayList;
@@ -13,10 +18,14 @@ public interface ClothingContrarct {
     interface Presenter extends BasePresenter {
         void loadHouseClothesAll(String roleId);
         void loadRoleColthesSelect(int position,String roleId, String clothesId);
+        void createOrder(String id);
+        void payOrder(PayReqEntity entity);
     }
 
     interface View extends BaseView {
         void loadHouseClothSuccess(ArrayList<ClothingEntity> entities);
         void loadRoleColthesSelectSuccess(int position);
+        void onCreateOrderSuccess(OrderEntity entity);
+        void onPayOrderSuccess(PayResEntity entity);
     }
 }

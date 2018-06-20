@@ -29,7 +29,6 @@ public class EveryDayInfoActivity extends BaseActivity {
     protected void initComponent() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_every_day_info);
         binding.setPresenter(new Presenter());
-        getData();
         initAdapter();
     }
 
@@ -60,19 +59,6 @@ public class EveryDayInfoActivity extends BaseActivity {
 
     }
 
-    public void getData() {
-        data = new ArrayList<>();
-        extraBmps = new ArrayList<>();
-
-        extraBmps.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_demo_example));
-        extraBmps.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_demo_example));
-        extraBmps.add(BitmapFactory.decodeResource(getResources(), R.drawable.ic_demo_example));
-
-        data.add(new PrincipalListBean("1", "意外的惊喜", false, null));
-        data.add(new PrincipalListBean("2", "意外的惊喜", false, extraBmps));
-        data.add(new PrincipalListBean("3", "意外的惊喜", false, null));
-        data.add(new PrincipalListBean("4", "意外的惊喜", true, null));
-    }
 
     public class Presenter {
         public void onClick(View v) {
@@ -83,7 +69,6 @@ public class EveryDayInfoActivity extends BaseActivity {
                 default:
                     break;
             }
-
         }
     }
 }

@@ -99,16 +99,16 @@ public class BranchInfoActivity extends BaseActivity implements BranchInfoContra
                 holeName = "限定";
             }
             binding.branchInfoPossessCount.setText("使用" + entity.getHoleCount() + "张" + holeName + "卡进行合成");
-            binding.branchInfoBg.setAlpha(0.2f);
-            binding.branchInfoTitle.setAlpha(0.2f);
-            binding.branchInfoAuthorby.setAlpha(0.2f);
+            binding.branchInfoBg.setAlpha(0.5f);
+            binding.branchInfoTitle.setAlpha(0.5f);
+            binding.branchInfoAuthorby.setAlpha(0.5f);
             binding.branchInfoRecall.setImageResource(R.drawable.branch_info_recall_selector);
         } else {
             binding.branchInfoPossessCount.setText("已拥有:" + entity.getUserBranchLevelCount());
             if (entity.getUserBranchLevelCount() == 0) {
-                binding.branchInfoBg.setAlpha(0.2f);
-                binding.branchInfoTitle.setAlpha(0.2f);
-                binding.branchInfoAuthorby.setAlpha(0.2f);
+                binding.branchInfoBg.setAlpha(0.5f);
+                binding.branchInfoTitle.setAlpha(0.5f);
+                binding.branchInfoAuthorby.setAlpha(0.5f);
                 binding.branchInfoRecall.setImageResource(R.drawable.bg_ic_home_detialplay_no);
             } else {
                 binding.branchInfoBg.setAlpha(1.0f);

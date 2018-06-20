@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
@@ -14,13 +15,22 @@ import com.moemoe.lalala.di.components.DaggerClothComponent;
 import com.moemoe.lalala.di.modules.ClothModule;
 import com.moemoe.lalala.event.KiraTabLayoutEvent;
 import com.moemoe.lalala.model.entity.ClothingEntity;
+import com.moemoe.lalala.model.entity.OrderEntity;
+import com.moemoe.lalala.model.entity.PayReqEntity;
+import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.presenter.ClothingContrarct;
 import com.moemoe.lalala.presenter.ClothingPresenter;
+import com.moemoe.lalala.utils.AlertDialogUtil;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
+import com.moemoe.lalala.utils.IpAdressUtils;
 import com.moemoe.lalala.view.adapter.TabFragmentPagerV3Adapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.fragment.BaseFragment;
 import com.moemoe.lalala.view.fragment.ClothingFragment;
+import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
+import com.moemoe.lalala.view.widget.netamenu.MenuItem;
+import com.pingplusplus.ui.PaymentHandler;
+import com.pingplusplus.ui.PingppUI;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -46,6 +56,8 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
     private TabFragmentPagerV3Adapter mAdapter;
     private String roleId;
     private ArrayList<ClothingEntity> titles;
+    private BottomMenuFragment bottomFragment;
+    private OrderEntity entit;
 
     public static void startActivity(Context context, String roleId) {
         Intent i = new Intent(context, ClothingActivity.class);
@@ -73,7 +85,7 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
             finish();
         }
         mPresenter.loadHouseClothesAll(roleId);
-
+        initPayMenu();
     }
 
     @Override
@@ -147,6 +159,129 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
         binding.ivClothNameSelect.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * 提交订单
+     *
+     * @param entity
+     */
+    @Override
+    public void onCreateOrderSuccess(OrderEntity entity) {
+        entit = entity;
+        final AlertDialogUtil dialogUtil1 = AlertDialogUtil.getInstance();
+        dialogUtil1.createPromptNormalDialog(ClothingActivity.this, "确定购买");
+        dialogUtil1.setButtonText(getString(R.string.label_confirm), getString(R.string.label_cancel), 0);
+        dialogUtil1.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+            @Override
+            public void CancelOnClick() {
+                dialogUtil1.dismissDialog();
+            }
+
+            @Override
+            public void ConfirmOnClick() {
+                dialogUtil1.dismissDialog();
+                bottomFragment.show(getSupportFragmentManager(), "payMenu");
+
+            }
+        });
+        dialogUtil1.showDialog();
+    }
+
+    /**
+     * 去支付
+     *
+     * @param entity
+     */
+    @Override
+    public void onPayOrderSuccess(PayResEntity entity) {
+        if (entity.isSuccess()) {
+            finalizeDialog();
+            showToast("支付成功");
+            Intent i = new Intent();
+            i.putExtra("position", -1);
+            i.putExtra("type", "pay");
+            setResult(RESULT_OK, i);
+            finish();
+        } else {
+            if (entity.getCharge() != null) {
+//                if("qpay".equals(entity.getCharge().get("channel"))){
+//                    Pingpp.createPayment(OrderActivity.this, entity.getCharge().toString(),"qwallet1104765197");
+//                }else {
+//                    Pingpp.createPayment(OrderActivity.this, entity.getCharge().toString());
+//                }
+                PingppUI.createPay(ClothingActivity.this, entity.getCharge().toString(), new PaymentHandler() {
+                    @Override
+                    public void handlePaymentResult(Intent intent) {
+                        String result = intent.getExtras().getString("result");
+                        if (result.contains("success")) {
+                            result = "success";
+                        } else if (result.contains("fail")) {
+                            result = "fail";
+                        } else if (result.contains("cancel")) {
+                            result = "cancel";
+                        } else if (result.contains("invalid")) {
+                            result = "invalid";
+                        }
+                /* 处理返回值
+                 * "success" - payment succeed
+                 * "fail"    - payment failed
+                 * "cancel"  - user canceld
+                 * "invalid" - payment plugin not installed
+                 */
+                        //      String errorMsg = intent.getExtras().getString("error_msg"); // 错误信息
+                        //      String extraMsg = intent.getExtras().getString("extra_msg"); // 错误信息
+                        finalizeDialog();
+                        if ("success".equals(result)) {
+                            showToast("支付成功");
+                            Intent i = new Intent();
+                            i.putExtra("position", -1);
+                            i.putExtra("type", "pay");
+                            setResult(RESULT_OK, i);
+                            finish();
+                        } else {
+                            showToast(result);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    private void initPayMenu() {
+        ArrayList<MenuItem> items = new ArrayList<>();
+        MenuItem item = new MenuItem(0, getString(R.string.label_alipay));
+        items.add(item);
+        item = new MenuItem(1, getString(R.string.label_wx));
+        items.add(item);
+        item = new MenuItem(2, getString(R.string.label_qpay));
+        items.add(item);
+        bottomFragment = new BottomMenuFragment();
+        bottomFragment.setShowTop(true);
+        bottomFragment.setTopContent("选择支付方式");
+        bottomFragment.setMenuItems(items);
+        bottomFragment.setMenuType(BottomMenuFragment.TYPE_VERTICAL);
+        bottomFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
+            @Override
+            public void OnMenuItemClick(int itemId) {
+                createDialog();
+                String payType = "";
+                if (itemId == 0) {
+                    payType = "alipay";
+                } else if (itemId == 1) {
+                    payType = "wx";
+                } else if (itemId == 2) {
+                    payType = "qpay";
+                }
+                PayReqEntity entity = new PayReqEntity(entit.getAddress().getAddress(),
+                        payType,
+                        IpAdressUtils.getIpAdress(ClothingActivity.this),
+                        entit.getOrderId(),
+                        entit.getAddress().getPhone(),
+                        "",
+                        entit.getAddress().getUserName());
+                mPresenter.payOrder(entity);
+            }
+        });
+    }
 
     public class Presenter {
         public void onClick(View v) {
@@ -159,7 +294,7 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
                     if (titles.get(viewPosition).isUserClothesHad()) {
                         mPresenter.loadRoleColthesSelect(viewPosition, roleId, titles.get(viewPosition).getId());
                     } else {
-                        showToast("你还没拥有该皮肤哟~~~");
+                        mPresenter.createOrder(titles.get(viewPosition).getProductId());
                     }
                     break;
                 case R.id.iv_left:
@@ -201,6 +336,13 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
                 binding.ivClothNameSelect.setVisibility(View.GONE);
             }
             binding.tvClothContent.setText(entity.getDescribe());
+            if (TextUtils.isEmpty(entity.getProductId())) {
+                binding.ivClothSelect.setText("选择");
+                binding.ivClothSelect.setBackgroundResource(R.drawable.cloth_select_btn_shop);
+            } else {
+                binding.ivClothSelect.setText("购买");
+                binding.ivClothSelect.setBackgroundResource(R.drawable.cloth_select_btn);
+            }
         }
     }
 

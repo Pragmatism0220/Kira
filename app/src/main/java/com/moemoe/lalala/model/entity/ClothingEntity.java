@@ -13,6 +13,15 @@ public class ClothingEntity {
     private boolean isUse;
     private boolean isUserClothesHad;
     private String name;
+    private String productId;
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
 
     public String getName() {
         return name;

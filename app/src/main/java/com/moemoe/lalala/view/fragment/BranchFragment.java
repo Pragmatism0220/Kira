@@ -138,7 +138,10 @@ public class BranchFragment extends BaseFragment {
             }
             if (isSelect && key.equals("全部")) {
                 if (objects == null || objects.size() == 0) {
-                    ((BranchActivity) getContext()).finish();
+                    Intent intent = new Intent();
+                    intent.putExtra("isEntity", true);
+                    ((BranchActivity) mContext).setResult(RESULT_OK, intent);
+                    ((BranchActivity) mContext).finish();
                 }
             }
             mAdapter.setList(objects);

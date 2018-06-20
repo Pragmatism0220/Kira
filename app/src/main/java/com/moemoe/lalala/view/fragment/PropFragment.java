@@ -81,13 +81,8 @@ public class PropFragment extends BaseFragment implements PropContract.View {
     public void getPropInfoSuccess(final ArrayList<PropInfoEntity> propInfoEntities) {
         lists = new ArrayList<>();
         this.lists = propInfoEntities;
-
-        String firstImage = propInfoEntities.get(0).getImage();
-        String name = propInfoEntities.get(0).getName();
-        String describe = propInfoEntities.get(0).getDescribe();
-        int toolCount = propInfoEntities.get(0).getToolCount();
-        String id = propInfoEntities.get(0).getId();
-        firstCallBack.firstResult(id, name, firstImage, toolCount, describe);
+        PropInfoEntity infoEntity = propInfoEntities.get(0);
+        firstCallBack.firstResult(infoEntity);
         propInfoEntities.get(0).setSelected(true);
 
 
@@ -118,7 +113,7 @@ public class PropFragment extends BaseFragment implements PropContract.View {
                 boolean isUserHadTool = mAdapter.getData().get(position).isUserHadTool();
 
 
-                callBack.getResult(id, name, image, toolCount, describe, isUserHadTool);
+                callBack.getResult(propInfoEntity, position);
                 for (int i = 0; i < propInfoEntities.size(); i++) {
                     propInfoEntities.get(i).setSelected(i == which);
                 }
@@ -160,14 +155,12 @@ public class PropFragment extends BaseFragment implements PropContract.View {
     }
 
 
-
-
     public interface CallBack {
-        void getResult(String id, String name, String image, int toolCount, String describe, boolean isUserHadTool);
+        void getResult(PropInfoEntity entity, int position);
     }
 
     public interface firstCallBack {
-        void firstResult(String id, String name, String image, int toolCount, String describe);
+        void firstResult(PropInfoEntity entity);
     }
 
     public void setCallBack(CallBack callBack) {

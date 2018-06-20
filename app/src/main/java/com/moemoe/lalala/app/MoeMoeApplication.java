@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.multidex.BuildConfig;
@@ -32,6 +33,7 @@ import com.moemoe.lalala.di.components.DaggerNetComponent;
 import com.moemoe.lalala.di.components.NetComponent;
 import com.moemoe.lalala.di.modules.NetModule;
 import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
+import com.moemoe.lalala.model.entity.AuthorInfo;
 import com.moemoe.lalala.model.entity.DeskmateEntils;
 import com.moemoe.lalala.model.entity.StageLineEntity;
 import com.moemoe.lalala.model.entity.StageLineOptionsEntity;
@@ -39,6 +41,7 @@ import com.moemoe.lalala.netamusic.player.MusicPreferences;
 import com.moemoe.lalala.utils.DialogUtils;
 import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.GreenDaoManager;
+import com.moemoe.lalala.utils.IntentUtils;
 import com.moemoe.lalala.utils.NetworkUtils;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.StorageUtils;
@@ -53,12 +56,17 @@ import com.moemoe.lalala.view.activity.NewBagV5Activity;
 import com.moemoe.lalala.view.activity.NoticeActivity;
 import com.moemoe.lalala.view.activity.PersonalV2Activity;
 import com.moemoe.lalala.view.activity.PhoneMenuV3Activity;
+import com.moemoe.lalala.view.activity.WebViewActivity;
+import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
+import com.moemoe.lalala.view.widget.netamenu.MenuItem;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
+import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -605,7 +613,7 @@ public class MoeMoeApplication extends Application {
                     if (stageLineEntity == null) {
                         dialog.setVisibility(View.GONE);
                     } else {
-                        setDialogView(stageLineEntity);
+                        setDialogView(context, stageLineEntity, dialog);
                     }
                 }
             }
@@ -618,7 +626,7 @@ public class MoeMoeApplication extends Application {
                     if (stageLineEntity == null) {
                         dialog.setVisibility(View.GONE);
                     } else {
-                        setDialogView(stageLineEntity);
+                        setDialogView(context, stageLineEntity, dialog);
                     }
                 }
             }
@@ -626,10 +634,50 @@ public class MoeMoeApplication extends Application {
 
     }
 
-    public void setDialogView(StageLineEntity entity) {
+    public void setDialogView(Context context, StageLineEntity entity, View v) {
         if (dialog != null) {
             if (entity.getId() != null) {
-                if (TextUtils.isEmpty(entity.getSchema())) {
+                if (!TextUtils.isEmpty(entity.getSchema())) {
+                    String temp = entity.getSchema();
+                    if (temp.contains("map_event_1.0") || temp.contains("game_1.0")) {
+                        if (!DialogUtils.checkLoginAndShowDlg(context)) {
+                            return;
+                        }
+                    }
+
+                    if (temp.contains("http://s.moemoe.la/game/devil/index.html")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?user_id=" + authorInfo.getUserId() + "&full_screen";
+                    }
+
+                    if (temp.contains("http://kiratetris.leanapp.cn/tab001/index.html")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?id=" + authorInfo.getUserId() + "&name=" + authorInfo.getUserName();
+                    }
+                    if (temp.contains("http://prize.moemoe.la:8000/mt")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?user_id=" + authorInfo.getUserId() + "&nickname=" + authorInfo.getUserName();
+                    }
+                    if (temp.contains("http://prize.moemoe.la:8000/netaopera/chap")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?pass=" + PreferenceUtils.getPassEvent(context) + "&user_id=" + authorInfo.getUserId();
+                    }
+                    if (temp.contains("http://neta.facehub.me/")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?open_id=" + authorInfo.getUserId() + "&nickname=" + authorInfo.getUserName() + "&pay_way=alipay,wx,qq" + "&full_screen";
+                    }
+                    if (temp.contains("fanxiao/final.html")) {
+                        temp += "?token=" + PreferenceUtils.getToken()
+                                + "&full_screen";
+                    }
+                    if (temp.contains("fanxiao/paihang.html")) {
+                        temp += "?token=" + PreferenceUtils.getToken();
+                    }
+                    if (temp.contains("game_1.0")) {
+                        temp += "&token=" + PreferenceUtils.getToken() + "&version=" + AppSetting.VERSION_CODE + "&userId=" + PreferenceUtils.getUUid() + "&channel=" + AppSetting.CHANNEL;
+                    }
+                    Uri uri = Uri.parse(temp);
+                    IntentUtils.toActivityFromUri(context, uri, v);
 
                 } else {
                     mTvContent.setText(entity.getContent());
@@ -841,7 +889,7 @@ public class MoeMoeApplication extends Application {
                 if (y == 0) {
                     if (x > (mapX - width) / 2) {
                         mRlDialog.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_right);
-                        wmParamsThree.x = (int) (x - (width/2));
+                        wmParamsThree.x = (int) (x - (width / 2));
                         wmParamsThree.y = (int) (y + (height / 2) - getResources().getDimension(R.dimen.status_bar_height));
                         windowManager.updateViewLayout(dialog, wmParamsThree);
                     } else {
@@ -868,7 +916,7 @@ public class MoeMoeApplication extends Application {
             String stageLine = PreferenceUtils.getStageLine(context);
             Gson gson = new Gson();
             stageLineEntity = gson.fromJson(stageLine, StageLineEntity.class);
-            setDialogView(stageLineEntity);
+            setDialogView(context, stageLineEntity, dialog);
         } else {
             dialog.setVisibility(View.GONE);
         }

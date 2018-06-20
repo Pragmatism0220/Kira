@@ -1,10 +1,12 @@
 package com.moemoe.lalala.view.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -20,13 +22,23 @@ import com.moemoe.lalala.event.FurnitureEvent;
 import com.moemoe.lalala.event.StorageDefaultDataEvent;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
+import com.moemoe.lalala.model.entity.OrderEntity;
+import com.moemoe.lalala.model.entity.PayReqEntity;
+import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.model.entity.PropInfoEntity;
 import com.moemoe.lalala.presenter.StorageContract;
 import com.moemoe.lalala.presenter.StoragePresenter;
+import com.moemoe.lalala.utils.AlertDialogUtil;
+import com.moemoe.lalala.utils.ErrorCodeUtils;
+import com.moemoe.lalala.utils.IpAdressUtils;
 import com.moemoe.lalala.view.adapter.TabPageAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.fragment.FurnitureFragment;
 import com.moemoe.lalala.view.fragment.PropFragment;
+import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
+import com.moemoe.lalala.view.widget.netamenu.MenuItem;
+import com.pingplusplus.ui.PaymentHandler;
+import com.pingplusplus.ui.PingppUI;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,12 +66,6 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     private List<Fragment> mFragmentLists;
     private TabPageAdapter mTabAdapter;
 
-    private String name;
-    private String describe;
-    private int toolCount;
-    private String id;
-    private boolean isUserHadTool;
-
     private boolean isProp;
 
 
@@ -69,6 +75,9 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     private AllFurnitureInfo furnitureInfo;
     //道具
     private PropInfoEntity mPropInfoEntity;
+    private BottomMenuFragment bottomFragment;
+    private OrderEntity entit;
+    private PropInfoEntity entity;
 
 
     @Override
@@ -82,6 +91,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
         binding.setPresenter(new Presenter());
         EventBus.getDefault().register(this);
         initViewPager();
+        initPayMenu();
     }
 
     private void initViewPager() {
@@ -107,30 +117,30 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
      * 选中信息返回
      */
     @Override
-    public void getResult(String id, String name, String image, int toolCount, String describe, boolean isUserHadTool) {
-        this.isUserHadTool = isUserHadTool;
-        this.name = name;
-        this.id = id;
-        this.toolCount = toolCount;
-
-        binding.storageCommodityName.setText(name);
-        Glide.with(this).load(ApiService.URL_QINIU + image).into(binding.storageImage);
-        binding.storageCommodityNum.setText("X" + toolCount);
-        binding.storageCommodityInfo.setText(describe);
+    public void getResult(PropInfoEntity entity, int position) {
+        if (entity != null) {
+            this.entity = entity;
+            binding.storageCommodityName.setText(entity.getName());
+            Glide.with(this).load(ApiService.URL_QINIU + entity.getImage()).into(binding.storageImage);
+            binding.storageCommodityNum.setText("X" + entity.getToolCount());
+            binding.storageCommodityInfo.setText(entity.getDescribe());
+        }
     }
 
     @Override
-    public void firstResult(String id, String name, String image, int toolCount, String describe) {
-        Glide.with(this).load(ApiService.URL_QINIU + image).into(binding.storageImage);
-        binding.storageCommodityName.setText(name);
-        binding.storageCommodityInfo.setText(describe);
-        binding.storageCommodityNum.setText(toolCount + "");
-
+    public void firstResult(PropInfoEntity entity) {
+        if (entity != null) {
+            this.entity = entity;
+            Glide.with(this).load(ApiService.URL_QINIU + entity.getImage()).into(binding.storageImage);
+            binding.storageCommodityName.setText(entity.getName());
+            binding.storageCommodityInfo.setText(entity.getDescribe());
+            binding.storageCommodityNum.setText(entity.getToolCount() + "");
+        }
     }
 
     @Override
     public void onFailure(int code, String msg) {
-
+        ErrorCodeUtils.showErrorMsgByCode(this, code, msg);
     }
 
     /**
@@ -147,6 +157,93 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     @Override
     public void suitUseSuccess(int position) {
         EventBus.getDefault().post(new FurnitureEvent(position, furnitureInfo.getType()));
+    }
+
+    /**
+     * 提交訂單
+     *
+     * @param entity
+     */
+    @Override
+    public void onCreateOrderSuccess(OrderEntity entity) {
+        entit = entity;
+        final AlertDialogUtil dialogUtil1 = AlertDialogUtil.getInstance();
+        dialogUtil1.createPromptNormalDialog(StorageActivity.this, "确定购买");
+        dialogUtil1.setButtonText(getString(R.string.label_confirm), getString(R.string.label_cancel), 0);
+        dialogUtil1.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+            @Override
+            public void CancelOnClick() {
+                dialogUtil1.dismissDialog();
+            }
+
+            @Override
+            public void ConfirmOnClick() {
+                dialogUtil1.dismissDialog();
+                bottomFragment.show(getSupportFragmentManager(), "payMenu");
+
+            }
+        });
+        dialogUtil1.showDialog();
+    }
+
+    /**
+     * 支付回調
+     *
+     * @param entity
+     */
+    @Override
+    public void onPayOrderSuccess(PayResEntity entity) {
+        if (entity.isSuccess()) {
+            finalizeDialog();
+            showToast("支付成功");
+            Intent i = new Intent();
+            i.putExtra("position", -1);
+            i.putExtra("type", "pay");
+            setResult(RESULT_OK, i);
+            finish();
+        } else {
+            if (entity.getCharge() != null) {
+//                if("qpay".equals(entity.getCharge().get("channel"))){
+//                    Pingpp.createPayment(OrderActivity.this, entity.getCharge().toString(),"qwallet1104765197");
+//                }else {
+//                    Pingpp.createPayment(OrderActivity.this, entity.getCharge().toString());
+//                }
+                PingppUI.createPay(StorageActivity.this, entity.getCharge().toString(), new PaymentHandler() {
+                    @Override
+                    public void handlePaymentResult(Intent intent) {
+                        String result = intent.getExtras().getString("result");
+                        if (result.contains("success")) {
+                            result = "success";
+                        } else if (result.contains("fail")) {
+                            result = "fail";
+                        } else if (result.contains("cancel")) {
+                            result = "cancel";
+                        } else if (result.contains("invalid")) {
+                            result = "invalid";
+                        }
+                /* 处理返回值
+                 * "success" - payment succeed
+                 * "fail"    - payment failed
+                 * "cancel"  - user canceld
+                 * "invalid" - payment plugin not installed
+                 */
+                        //      String errorMsg = intent.getExtras().getString("error_msg"); // 错误信息
+                        //      String extraMsg = intent.getExtras().getString("extra_msg"); // 错误信息
+                        finalizeDialog();
+                        if ("success".equals(result)) {
+                            showToast("支付成功");
+                            Intent i = new Intent();
+                            i.putExtra("position", -1);
+                            i.putExtra("type", "pay");
+                            setResult(RESULT_OK, i);
+                            finish();
+                        } else {
+                            showToast(result);
+                        }
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -243,6 +340,43 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
 
     }
 
+    private void initPayMenu() {
+        ArrayList<MenuItem> items = new ArrayList<>();
+        MenuItem item = new MenuItem(0, getString(R.string.label_alipay));
+        items.add(item);
+        item = new MenuItem(1, getString(R.string.label_wx));
+        items.add(item);
+        item = new MenuItem(2, getString(R.string.label_qpay));
+        items.add(item);
+        bottomFragment = new BottomMenuFragment();
+        bottomFragment.setShowTop(true);
+        bottomFragment.setTopContent("选择支付方式");
+        bottomFragment.setMenuItems(items);
+        bottomFragment.setMenuType(BottomMenuFragment.TYPE_VERTICAL);
+        bottomFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
+            @Override
+            public void OnMenuItemClick(int itemId) {
+                createDialog();
+                String payType = "";
+                if (itemId == 0) {
+                    payType = "alipay";
+                } else if (itemId == 1) {
+                    payType = "wx";
+                } else if (itemId == 2) {
+                    payType = "qpay";
+                }
+                PayReqEntity entity = new PayReqEntity(entit.getAddress().getAddress(),
+                        payType,
+                        IpAdressUtils.getIpAdress(StorageActivity.this),
+                        entit.getOrderId(),
+                        entit.getAddress().getPhone(),
+                        "",
+                        entit.getAddress().getUserName());
+                mPresenter.payOrder(entity);
+            }
+        });
+    }
+
     @Override
     protected void initListeners() {
         binding.storageCheckBoxBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -278,27 +412,45 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     finish();
                     break;
                 case R.id.storage_commodity_buy_btn:
-                    //家具套装的购买
-                    if (furnitureInfo != null) {
-                        if (furnitureInfo.equals("套装")) {//套装
-                            if (!furnitureInfo.isUserSuitFurnitureHad() && !furnitureInfo.isSuitPutInHouse()) {
-                                //TODO 套装购买
+                    if (!mPropFragment.isHidden()) {
+                        if (entity != null && entity.isUserHadTool()) {
+                            if (TextUtils.isEmpty(entity.getProductId())) {
+                                mPresenter.createOrder(entity.getProductId());
                             } else {
+                                showToast("该道具还未上架~~~");
                             }
-                        } else {//单件
-                            if (!furnitureInfo.isUserFurnitureHad() && !furnitureInfo.isPutInHouse()) {
-                                //TODO 家具单件购买
-                            } else {
+                        }
+                    } else if (!mFurnitureFragment.isHidden()) {
+                        //家具套装的购买
+                        if (furnitureInfo != null) {
+                            if (furnitureInfo.getType().equals("套装")) {//套装
+                                if (!furnitureInfo.isUserSuitFurnitureHad()) {
+                                    if (TextUtils.isEmpty(furnitureInfo.getFurnitureSuitProductId())) {
+                                        showToast("该套装还未上架~~~");
+                                    } else {
+                                        mPresenter.createOrder(furnitureInfo.getFurnitureSuitProductId());
+                                    }
+                                } else {
+                                    showToast("已拥有该套装~~~");
+                                }
+                            } else {//单件
+                                if (!furnitureInfo.isUserFurnitureHad()) {
+                                    if (TextUtils.isEmpty(furnitureInfo.getFurnitureProductId())) {
+                                        showToast("该家具还未上架~~~");
+                                    } else {
+                                        mPresenter.createOrder(furnitureInfo.getFurnitureSuitProductId());
+                                    }
+                                } else {
+                                    showToast("已拥有该家具~~~");
+                                }
                             }
                         }
                     }
-                    //TODO 道具购买
-
                     break;
                 case R.id.storage_commodity_use_btn:
                     //家具套装的使用
                     if (furnitureInfo != null) {
-                        if (furnitureInfo.equals("套装")) {
+                        if (furnitureInfo.getType().equals("套装")) {
                             if (furnitureInfo.isUserSuitFurnitureHad()) {//套装是否拥有
                                 if (!furnitureInfo.isSuitPutInHouse()) {
                                     mPresenter.suitUse(furnitureInfo.getSuitTypeId(), furnitureInfo.getPosition());

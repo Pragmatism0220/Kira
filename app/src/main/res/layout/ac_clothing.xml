@@ -152,7 +152,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/x24" />
 
-                <Button
+                <TextView
                     android:id="@+id/iv_cloth_select"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

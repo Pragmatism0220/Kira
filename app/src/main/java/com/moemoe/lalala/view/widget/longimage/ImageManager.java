@@ -888,7 +888,7 @@ public class ImageManager {
                         }
                     } catch (Exception e) {
                         Log.d("nnnn", position.toString() + " " + clipImageRect.toShortString());
-                        e.printStackTrace();
+                         e.printStackTrace();
                     }
                 }
             }
