@@ -2,6 +2,7 @@ package com.moemoe.lalala.presenter;
 
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetResultSubscriber;
+import com.moemoe.lalala.model.entity.HouseSleepEntity;
 import com.moemoe.lalala.model.entity.Live2dMusicEntity;
 import com.moemoe.lalala.model.entity.ShareLive2dEntity;
 
@@ -40,12 +41,12 @@ public class Live2dPresenter implements Live2dContract.Presenter {
                 .subscribe(new NetResultSubscriber<ArrayList<Live2dMusicEntity>>() {
                     @Override
                     public void onSuccess(ArrayList<Live2dMusicEntity> entities) {
-                        if(view != null) view.onLoadMusicListSuccess(entities);
+                        if (view != null) view.onLoadMusicListSuccess(entities);
                     }
 
                     @Override
                     public void onFail(int code, String msg) {
-                        if(view != null) view.onFailure(code, msg);
+                        if (view != null) view.onFailure(code, msg);
                     }
                 });
     }
@@ -58,12 +59,30 @@ public class Live2dPresenter implements Live2dContract.Presenter {
                 .subscribe(new NetResultSubscriber<ArrayList<ShareLive2dEntity>>() {
                     @Override
                     public void onSuccess(ArrayList<ShareLive2dEntity> entities) {
-                        if(view != null) view.onLoadShareListSuccess(entities);
+                        if (view != null) view.onLoadShareListSuccess(entities);
                     }
 
                     @Override
                     public void onFail(int code, String msg) {
-                        if(view != null) view.onFailure(code, msg);
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+    @Override
+    public void loadHouseSleep() {
+        apiService.loadHouseSleep()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<ArrayList<HouseSleepEntity>>() {
+                    @Override
+                    public void onSuccess(ArrayList<HouseSleepEntity> entities) {
+                        if (view != null) view.onLoadHouseListSuccess(entities);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
                     }
                 });
     }

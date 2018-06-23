@@ -6,8 +6,8 @@ package com.moemoe.lalala.galgame;
 public class Live2DDefine {
 
     public static boolean DEBUG_LOG = false;
-    public static boolean DEBUG_TOUCH_LOG=false;
-    public static boolean DEBUG_DRAW_HIT_AREA=false;
+    public static boolean DEBUG_TOUCH_LOG = false;
+    public static boolean DEBUG_DRAW_HIT_AREA = false;
 
     public static final float VIEW_MAX_SCALE = 2f;
     public static final float VIEW_MIN_SCALE = 0.8f;
@@ -15,19 +15,20 @@ public class Live2DDefine {
     public static final float VIEW_LOGICAL_LEFT = -1;
     public static final float VIEW_LOGICAL_RIGHT = 1;
 
-    public static final String MODEL_LEN	= "live2d/len/莲_睡.model.json";
-    public static final String MODEL_MEI	= "live2d/mei/双树_睡.model.json";
-    public static final String MODEL_SARI	= "live2d/sari/沙丽尔_睡.model.json";
-    public static final String MODEL_DEFAULT	= "model.json";
+    public static final String MODEL_LEN = "live2d/len/莲_睡.model.json";
+    public static final String MODEL_MEI = "live2d/mei/双树_睡.model.json";
+    public static final String MODEL_SARI = "live2d/sari/沙丽尔_睡.model.json";
+    public static final String MODEL_ICHIGO = "live2d/ichigo/莓_睡.model.json";
+    public static final String MODEL_DEFAULT = "model.json";
 //    public static final String MODEL_LEN_SWIN = "live2d/len/model_swim.json";
 //    public static final String MODEL_LEN_IMPACT = "live2d/len/model_impact.json";
 //    public static final String MODEL_LEN_SPACE = "live2d/len/model_space.json";
 //    public static final String MODEL_LEN_XMAS = "live2d/len/model_xmas.json";
 
-    public static final String BACK_IMAGE_NAME = "image/bg_companion_background.png" ;
+    public static final String BACK_IMAGE_NAME = "image/bg_companion_background.png";
 //    public static final String BACK_IMAGE_IMPACT = "image/bg_len_impact.png" ;
 
-//    static final String MOTION_GROUP_IDLE ="idle";
+    //    static final String MOTION_GROUP_IDLE ="idle";
 //    static final String MOTION_GROUP_START_FIRST ="start_first";
 //    static final String MOTION_GROUP_TAP_BELLY	="tap_belly";
 //    static final String MOTION_GROUP_TAP_CHEST	="tap_chest";
@@ -44,42 +45,42 @@ public class Live2DDefine {
 //    static final String MOTION_GROUP_TAP_HAND_L	="tap_hand_l";
 //    static final String MOTION_GROUP_TAP_HEAD	="tap_head";
 //    static final String MOTION_GROUP_TAP_SKIRT	="tap_skirt";
-    static final String MOTION_GROUP_FLICK_HEAD	="flick_head";
-    static final String MOTION_GROUP_PINCH_IN	="pinch_in";
-    static final String MOTION_GROUP_PINCH_OUT	="pinch_out";
-    static final String MOTION_GROUP_SHAKE		="shake";
+    static final String MOTION_GROUP_FLICK_HEAD = "flick_head";
+    static final String MOTION_GROUP_PINCH_IN = "pinch_in";
+    static final String MOTION_GROUP_PINCH_OUT = "pinch_out";
+    static final String MOTION_GROUP_SHAKE = "shake";
 
-    static final String MOTION_GROUP_IDLE ="idle";
-    static final String MOTION_GROUP_TAP_HEAD	="tap_head";
-    static final String MOTION_GROUP_TAP_OP	="tap_op";
-    static final String MOTION_GROUP_TAP_HAND	="tap_hand";
-    static final String MOTION_GROUP_TAP_BELLY	="tap_belly";
-    static final String MOTION_GROUP_TAP_FACE	="tap_face";
-    static final String MOTION_GROUP_TAP_SKIRT	="tap_skirt";
-    static final String MOTION_GROUP_TAP_BODY	="tap_body";
-    static final String MOTION_GROUP_TAP_HAND_L	="tap_hand_l";
-    static final String MOTION_GROUP_TAP_HAND_R	="tap_hand_r";
-    static final String MOTION_GROUP_TAP_XQ	="tap_XQ";
-    static final String MOTION_GROUP_TAP_XQOP ="tap_XQOP";
-    static final String MOTION_GROUP_TAP_XQS ="tap_XQS";
-    static final String MOTION_GROUP_TAP_TT ="tap_TT";
-    static final String MOTION_GROUP_TAP_CHESET	="tap_chest";
-    static final String MOTION_GROUP_TAP	="tap";
+    static final String MOTION_GROUP_IDLE = "idle";
+    static final String MOTION_GROUP_TAP_HEAD = "tap_head";
+    static final String MOTION_GROUP_TAP_OP = "tap_op";
+    static final String MOTION_GROUP_TAP_HAND = "tap_hand";
+    static final String MOTION_GROUP_TAP_BELLY = "tap_belly";
+    static final String MOTION_GROUP_TAP_FACE = "tap_face";
+    static final String MOTION_GROUP_TAP_SKIRT = "tap_skirt";
+    static final String MOTION_GROUP_TAP_BODY = "tap_body";
+    static final String MOTION_GROUP_TAP_HAND_L = "tap_hand_l";
+    static final String MOTION_GROUP_TAP_HAND_R = "tap_hand_r";
+    static final String MOTION_GROUP_TAP_XQ = "tap_XQ";
+    static final String MOTION_GROUP_TAP_XQOP = "tap_XQOP";
+    static final String MOTION_GROUP_TAP_XQS = "tap_XQS";
+    static final String MOTION_GROUP_TAP_TT = "tap_TT";
+    static final String MOTION_GROUP_TAP_CHESET = "tap_chest";
+    static final String MOTION_GROUP_TAP = "tap";
 
-    static final String HIT_AREA_HEAD		= "head";
-    static final String HIT_AREA_OP 	    = "op";
-    static final String HIT_AREA_FACE 	    = "face";
-    static final String HIT_AREA_HAND 	    = "hand";
-    static final String HIT_AREA_BELLY	    = "belly";
-    static final String HIT_AREA_SKIRT	    = "skirt";
-    static final String HIT_AREA_BODY	    = "body";
-    static final String HIT_AREA_HAND_L	    = "hand_l";
-    static final String HIT_AREA_HAND_R	    = "hand_r";
+    static final String HIT_AREA_HEAD = "head";
+    static final String HIT_AREA_OP = "op";
+    static final String HIT_AREA_FACE = "face";
+    static final String HIT_AREA_HAND = "hand";
+    static final String HIT_AREA_BELLY = "belly";
+    static final String HIT_AREA_SKIRT = "skirt";
+    static final String HIT_AREA_BODY = "body";
+    static final String HIT_AREA_HAND_L = "hand_l";
+    static final String HIT_AREA_HAND_R = "hand_r";
     static final String HIT_AREA_XQ = "XQ";
     static final String HIT_AREA_XQOP = "tap_XQOP";
     static final String HIT_AREA_XQS = "tap_XQS";
     static final String HIT_AREA_TT = "tap_TT";
-    static final String HIT_AREA_CHEST= "chest";
+    static final String HIT_AREA_CHEST = "chest";
 
 //    static final String HIT_AREA_HEAD		="head";
 //    static final String HIT_AREA_CHEST		="chest";

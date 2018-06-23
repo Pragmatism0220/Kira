@@ -27,6 +27,7 @@ import com.moemoe.lalala.greendao.gen.AlarmClockEntityDao;
 import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
 import com.moemoe.lalala.model.entity.AlarmClockEntity;
 import com.moemoe.lalala.model.entity.DeskMateEntity;
+import com.moemoe.lalala.model.entity.HouseSleepEntity;
 import com.moemoe.lalala.model.entity.Live2dMusicEntity;
 import com.moemoe.lalala.model.entity.ShareLive2dEntity;
 import com.moemoe.lalala.netamusic.data.model.Music;
@@ -81,6 +82,8 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
     ImageView mIvSari;
     @BindView(R.id.iv_live_mei)
     ImageView mIvMei;
+    @BindView(R.id.iv_live_ichigo)
+    ImageView mIvIchiGo;
     @BindView(R.id.iv_play)
     ImageView mIvPlay;
     @BindView(R.id.iv_next)
@@ -126,46 +129,48 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
 
         musicList = new ArrayList<>();
 
-        ArrayList<DeskMateEntity> list = PreferenceUtils.getAuthorInfo().getDeskMateEntities();
-        if (!PreferenceUtils.isLogin() || !TextUtils.isEmpty(PreferenceUtils.getAuthorInfo().getVipTime())) {
-            if (list != null) {
-                for (DeskMateEntity entity : list) {
-                    if (entity.isDeskmate()) {
-                        if (entity.getRoleOf().equals("len")) {
-                            model = Live2DDefine.MODEL_LEN;
-                            mCurRole = "len";
-                            mIvLen.setAlpha(1.0f);
-                            mIvSari.setAlpha(0.3f);
-                            mIvMei.setAlpha(0.3f);
-                        } else if (entity.getRoleOf().equals("mei")) {
-                            model = Live2DDefine.MODEL_MEI;
-                            mCurRole = "mei";
-                            mIvLen.setAlpha(0.3f);
-                            mIvSari.setAlpha(1.0f);
-                            mIvMei.setAlpha(0.3f);
-                        } else if (entity.getRoleOf().equals("sari")) {
-                            model = Live2DDefine.MODEL_SARI;
-                            mCurRole = "sari";
-                            mIvLen.setAlpha(0.3f);
-                            mIvSari.setAlpha(0.3f);
-                            mIvMei.setAlpha(1.0f);
-                        }
-                    }
-                }
-            }
-
-        } else {
-            model = Live2DDefine.MODEL_LEN;
-            mCurRole = "len";
-            mIvLen.setAlpha(1.0f);
-            mIvSari.setAlpha(0.3f);
-            mIvMei.setAlpha(0.3f);
-        }
+//        ArrayList<DeskMateEntity> list = PreferenceUtils.getAuthorInfo().getDeskMateEntities();
+//        if (!PreferenceUtils.isLogin() || !TextUtils.isEmpty(PreferenceUtils.getAuthorInfo().getVipTime())) {
+//            if (list != null) {
+//                for (DeskMateEntity entity : list) {
+//                    if (entity.isDeskmate()) {
+//                        if (entity.getRoleOf().equals("len")) {
+//                            model = Live2DDefine.MODEL_LEN;
+//                            mCurRole = "len";
+//                            mIvLen.setAlpha(1.0f);
+//                            mIvSari.setAlpha(0.3f);
+//                            mIvMei.setAlpha(0.3f);
+//                        } else if (entity.getRoleOf().equals("mei")) {
+//                            model = Live2DDefine.MODEL_MEI;
+//                            mCurRole = "mei";
+//                            mIvLen.setAlpha(0.3f);
+//                            mIvSari.setAlpha(1.0f);
+//                            mIvMei.setAlpha(0.3f);
+//                        } else if (entity.getRoleOf().equals("sari")) {
+//                            model = Live2DDefine.MODEL_SARI;
+//                            mCurRole = "sari";
+//                            mIvLen.setAlpha(0.3f);
+//                            mIvSari.setAlpha(0.3f);
+//                            mIvMei.setAlpha(1.0f);
+//                        } 
+//                    }
+//                }
+//            }
+//
+//        } else {
+        model = Live2DDefine.MODEL_LEN;
+        mCurRole = "len";
+        mIvLen.setAlpha(1.0f);
+        mIvSari.setAlpha(0.3f);
+        mIvMei.setAlpha(0.3f);
+        mIvIchiGo.setAlpha(0.3f);
+//        }
         mTvMusicName.setSelected(true);
         // mPlayer = Player.getInstance(this);
         //  mPlayer.registerCallback(this);
         mPresenter.loadMusicList();
         mPresenter.loadShareLive2dList();
+        mPresenter.loadHouseSleep();
         AudioPlayer.get().addOnPlayEventListener(this);
         mPreMode = MusicPreferences.getPlayMode();
         live2DMgr = new Live2DManager(model, false);
@@ -257,7 +262,7 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
         FileManager.release();
     }
 
-    @OnClick({R.id.rl_root_1, R.id.rl_alarm_root, R.id.iv_live_len, R.id.iv_live_mei, R.id.iv_live_sari, R.id.tv_text_1, R.id.tv_text_2, R.id.tv_text_3})
+    @OnClick({R.id.rl_root_1, R.id.rl_alarm_root, R.id.iv_live_len, R.id.iv_live_mei, R.id.iv_live_sari, R.id.iv_live_ichigo, R.id.tv_text_1, R.id.tv_text_2, R.id.tv_text_3})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_root_1:
@@ -283,6 +288,8 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                     mAlarmClock.setRoleName("美藤双树");
                 } else if ("sari".equals(mCurRole)) {
                     mAlarmClock.setRoleName("沙利尔");
+                } else if ("ichigo".equals("莓")) {
+                    mAlarmClock.setRoleName("莓");
                 }
                 mAlarmClock.setRoleId(mCurRole);
                 mAlarmClock.setRingName("按时休息");
@@ -327,6 +334,7 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                     live2DMgr.changeModel(Live2DDefine.MODEL_LEN);
                     mIvLen.setAlpha(1.0f);
                     mIvSari.setAlpha(0.3f);
+                    mIvIchiGo.setAlpha(0.3f);
                     mIvMei.setAlpha(0.3f);
                 }
                 break;
@@ -382,6 +390,7 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                     mIvLen.setAlpha(0.3f);
                     mIvSari.setAlpha(0.3f);
                     mIvMei.setAlpha(1.0f);
+                    mIvIchiGo.setAlpha(0.3f);
                 }
                 break;
             case R.id.iv_live_sari:
@@ -436,7 +445,18 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                     mIvLen.setAlpha(0.3f);
                     mIvSari.setAlpha(1.0f);
                     mIvMei.setAlpha(0.3f);
+                    mIvIchiGo.setAlpha(0.3f);
                 }
+                break;
+            case R.id.iv_live_ichigo:
+//                if (!"sari".equals(mCurRole)) {
+                mCurRole = "ichigo";
+                live2DMgr.changeModel(Live2DDefine.MODEL_ICHIGO);
+                mIvLen.setAlpha(0.3f);
+                mIvSari.setAlpha(0.3f);
+                mIvMei.setAlpha(0.3f);
+                mIvIchiGo.setAlpha(1.0f);
+//                }
                 break;
             case R.id.tv_text_1:
             case R.id.tv_text_2:
@@ -574,6 +594,11 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
     @Override
     public void onLoadShareListSuccess(ArrayList<ShareLive2dEntity> entities) {
         mEntites = entities;
+    }
+
+    @Override
+    public void onLoadHouseListSuccess(ArrayList<HouseSleepEntity> entities) {
+
     }
 
 //    @Override
