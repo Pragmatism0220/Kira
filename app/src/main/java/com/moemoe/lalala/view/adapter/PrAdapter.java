@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
-import com.moemoe.lalala.model.entity.NewStoryGroupInfo;
+import com.moemoe.lalala.model.entity.NewStoryGroupInfoEntity;
+import com.moemoe.lalala.model.entity.OnItemListener;
+import com.moemoe.lalala.model.entity.NewStoryGroupInfoEntity;
 import com.moemoe.lalala.model.entity.OnItemListener;
 import com.moemoe.lalala.model.api.ApiService;
 
@@ -27,10 +29,10 @@ public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int NO_VIEW = -1;//未解锁
 
     private Context mContext;
-    private List<NewStoryGroupInfo> infos;
+    private List<NewStoryGroupInfoEntity> infos;
     private OnItemListener clickListener;
 
-    public PrAdapter(Context mContext, List<NewStoryGroupInfo> infos) {
+    public PrAdapter(Context mContext, List<NewStoryGroupInfoEntity> infos) {
         this.mContext = mContext;
         this.infos = infos;
     }
@@ -83,7 +85,7 @@ public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         });
 
-        NewStoryGroupInfo data = infos.get(position);
+        NewStoryGroupInfoEntity data = infos.get(position);
         if (holder instanceof ALLViewHolder) {
             ALLViewHolder allHolder = (ALLViewHolder) holder;
             allHolder.mBottomTitle.setText(data.getContent());

@@ -8,6 +8,7 @@ public interface SimpleContract {
     interface Presenter extends BasePresenter{
         void doRequest(Object data,int type);
         void loadGameShare(String id);
+        void loadHouseInit();
     }
 
     interface View extends BaseView{

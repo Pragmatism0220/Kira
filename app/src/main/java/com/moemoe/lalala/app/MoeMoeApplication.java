@@ -201,9 +201,9 @@ public class MoeMoeApplication extends Application {
     @SuppressLint({"NewApi", "ClickableViewAccessibility"})
     public void initWindowManager(final Context context, final WindowManager mWindowManager) {
         if (Build.VERSION.SDK_INT >= 23) {
-            if (!Settings.canDrawOverlays(this)) {
-                return;
-            }
+//            if (!Settings.canDrawOverlays(this)) {
+//                return;
+//            }
         }
         if (!isWindow) {
             return;
@@ -546,7 +546,7 @@ public class MoeMoeApplication extends Application {
                     //埋点统计：手机个人中心
                     Intent i1 = new Intent(context, PersonalV2Activity.class);
                     i1.putExtra(UUID, PreferenceUtils.getUUid());
-                    startActivity(i1);
+                    context.startActivity(i1);
                 }
                 inflateTwo.setVisibility(View.GONE);
             }
@@ -558,10 +558,10 @@ public class MoeMoeApplication extends Application {
                     if (PreferenceUtils.getAuthorInfo().isOpenBag()) {
                         Intent i4 = new Intent(context, NewBagV5Activity.class);
                         i4.putExtra("uuid", PreferenceUtils.getUUid());
-                        startActivity(i4);
+                        context.startActivity(i4);
                     } else {
                         Intent i4 = new Intent(context, BagOpenActivity.class);
-                        startActivity(i4);
+                        context.startActivity(i4);
                     }
                 }
                 inflateTwo.setVisibility(View.GONE);
@@ -589,7 +589,7 @@ public class MoeMoeApplication extends Application {
             public void onClick(View view) {
                 if (NetworkUtils.checkNetworkAndShowError(context) && DialogUtils.checkLoginAndShowDlg(context)) {
                     //埋点统计：通讯录
-                    startActivity(new Intent(context, PhoneMenuV3Activity.class));
+                    startActivity(new Intent(getActivity(MapActivity.class.getName()), PhoneMenuV3Activity.class));
                 }
                 inflateTwo.setVisibility(View.GONE);
             }
@@ -925,7 +925,7 @@ public class MoeMoeApplication extends Application {
     /**
      * 数据压制
      */
-    public int goGreenDao() {
+    public int goGreenDao(Context context) {
         ArrayList<DeskmateEntils> entilsDao = (ArrayList<DeskmateEntils>) GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao()
                 .queryBuilder()
                 .where(DeskmateEntilsDao.Properties.Type.eq("HousUser"))
@@ -945,6 +945,24 @@ public class MoeMoeApplication extends Application {
                 }
             }
         }
+//        if (entilsDao != null && entilsDao.size() > 0) {
+//            Drawable drawable;
+//            if (!TextUtils.isEmpty(entilsRight.getPath())) {
+//                drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entilsRight.getFileName());
+//            } else {
+//                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_right);
+//            }
+//            if (drawable != null) {
+//                imageView.setImageDrawable(drawable);
+//            } else {
+//                FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entilsRight.getFileName());
+//            }
+//            functionalX = width - (int) getResources().getDimension(R.dimen.x280);
+//            functionalY = height / 2 - (int) getResources().getDimension(R.dimen.x180);
+//            wmParams.x = width - (int) getResources().getDimension(R.dimen.x280);
+//            wmParams.y = height / 2 - (int) getResources().getDimension(R.dimen.x180);
+//            windowManager.updateViewLayout(inflate, wmParams);
+//        }
         return entilsDao.size() > 0 ? entilsDao.size() : 0;
     }
 

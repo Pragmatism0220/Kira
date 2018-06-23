@@ -154,7 +154,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/tv_boutique"
+            android:layout_toEndOf="@+id/tv_boutique"
             android:ellipsize="end"
             android:lineSpacingExtra="@dimen/y12"
             android:maxLines="1"

@@ -1,6 +1,6 @@
 package com.moemoe.lalala.presenter;
 
-import com.moemoe.lalala.model.entity.NewStoryInfoEvent;
+import com.moemoe.lalala.model.entity.NewStoryInfoEventEntity;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetResultSubscriber;
 
@@ -31,13 +31,13 @@ public class NewDormitoryPresenter implements NewDormitioryContract.Presenter {
 
     @Override
     public void getStoryInfo() {
-        apiService.GetNewStoryInfo()
+        apiService.getNewStoryInfo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new NetResultSubscriber<NewStoryInfoEvent>() {
+                .subscribe(new NetResultSubscriber<NewStoryInfoEventEntity>() {
                     @Override
-                    public void onSuccess(NewStoryInfoEvent newStoryInfoEvent) {
-                        if (view != null) view.getStoryInfoSuccess(newStoryInfoEvent);
+                    public void onSuccess(NewStoryInfoEventEntity newStoryInfoEventEntity) {
+                        if (view != null) view.getStoryInfoSuccess(newStoryInfoEventEntity);
                     }
 
                     @Override

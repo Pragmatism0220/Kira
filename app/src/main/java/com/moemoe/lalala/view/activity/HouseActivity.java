@@ -5,7 +5,9 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -59,12 +61,23 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class HouseActivity extends BaseActivity implements DormitoryContract.View {
@@ -84,6 +97,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     private RelativeLayout mRlRoleRoot;
     private TextView mTvRoleNum;
     private TextView mTvRoleName;
+    private RelativeLayout mRlRoleJuQing;
+    private ImageView mIvCover;
 
     @Override
     protected void initComponent() {
@@ -92,6 +107,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mRlRoleRoot = findViewById(R.id.rl_role_root);
         mTvRoleNum = findViewById(R.id.tv_role_num);
         mTvRoleName = findViewById(R.id.tv_role_name);
+        mRlRoleJuQing = findViewById(R.id.rl_role_juqing);
+        mIvCover = findViewById(R.id.iv_cover_next);
     }
 
     @Override
@@ -117,6 +134,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     public void initMap() {
         mPresenter.addMapMark(HouseActivity.this, mContainer, binding.map, "house");
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -159,6 +177,13 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
             @Override
             public void onClick(View view) {
                 mRlRoleRoot.setVisibility(View.GONE);
+            }
+        });
+        mRlRoleJuQing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mRlRoleJuQing.setVisibility(View.GONE);
+                mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
             }
         });
     }
@@ -293,10 +318,31 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         }
     }
 
+    /**
+     * 捡垃圾
+     */
     @Override
     public void saveVisitorSuccess() {
         if (type == 3) {
-            showToast("捡起了一个垃圾哟~~真勤快~~");
+            mRlRoleJuQing.setVisibility(View.VISIBLE);
+            Flowable.create(new FlowableOnSubscribe<Integer>() {
+                @Override
+                public void subscribe(FlowableEmitter<Integer> e) throws Exception {
+                    e.onNext(R.drawable.bg_garbage_background_2);
+                    e.onNext(R.drawable.bg_garbage_background_3);
+
+                }
+            }, BackpressureStrategy.ERROR)
+                    .subscribeOn(Schedulers.io())
+                    .sample(1, TimeUnit.SECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Integer>() {
+                        @Override
+                        public void accept(Integer integer) throws Exception {
+                            Log.e("ObservableConcatMap", "------------------");
+                            mIvCover.setImageResource(integer);
+                        }
+                    });
         } else {
             showToast("咻咻咻咻~~~");
         }
@@ -443,7 +489,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                     startActivity(i8);
                     break;
                 case R.id.iv_sleep:
-                    Intent i9 = new Intent(HouseActivity.this, Live2dActivity.class);
+                    Intent i9 = new Intent(HouseActivity.this, Live3dActivity.class);
                     startActivity(i9);
                     break;
             }

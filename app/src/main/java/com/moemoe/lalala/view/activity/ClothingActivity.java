@@ -1,5 +1,6 @@
 package com.moemoe.lalala.view.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -29,6 +30,7 @@ import com.moemoe.lalala.view.fragment.BaseFragment;
 import com.moemoe.lalala.view.fragment.ClothingFragment;
 import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
 import com.moemoe.lalala.view.widget.netamenu.MenuItem;
+import com.pingplusplus.android.Pingpp;
 import com.pingplusplus.ui.PaymentHandler;
 import com.pingplusplus.ui.PingppUI;
 
@@ -114,7 +116,7 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
             List<BaseFragment> fragmentList = new ArrayList<>();
             titles = entities;
             for (ClothingEntity entity : titles) {
-                fragmentList.add(ClothingFragment.newInstance(entity));
+                fragmentList.add(ClothingFragment.newInstance(this, entity));
             }
             if (mAdapter == null) {
                 mAdapter = new TabFragmentPagerV3Adapter(getSupportFragmentManager(), fragmentList, titles);
@@ -124,7 +126,7 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
 
             binding.viewPager.setAdapter(mAdapter);
             binding.kiraBar.setViewPager(binding.viewPager);
-
+            binding.viewPager.setCurrentItem(0);
             ClothingEntity entity = titles.get(0);
             binding.tvName.setText(entity.getName());
             binding.tvAcquisitonName.setText(entity.getCondition());
@@ -294,7 +296,11 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
                     if (titles.get(viewPosition).isUserClothesHad()) {
                         mPresenter.loadRoleColthesSelect(viewPosition, roleId, titles.get(viewPosition).getId());
                     } else {
-                        mPresenter.createOrder(titles.get(viewPosition).getProductId());
+                        if (TextUtils.isEmpty(titles.get(viewPosition).getProductId())) {
+                            showToast("该服装还未上架~~~");
+                        } else {
+                            mPresenter.createOrder(titles.get(viewPosition).getProductId());
+                        }
                     }
                     break;
                 case R.id.iv_left:
@@ -313,6 +319,19 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
                     break;
             }
 
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
+            if (resultCode == Activity.RESULT_OK) {
+                binding.ivClothSelect.setText("选择");
+                binding.ivClothSelect.setBackgroundResource(R.drawable.cloth_select_btn_shop);
+                int viewPosition = binding.kiraBar.getViewPosition();
+                titles.get(viewPosition).setUserClothesHad(true);
+            }
         }
     }
 
@@ -336,7 +355,7 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
                 binding.ivClothNameSelect.setVisibility(View.GONE);
             }
             binding.tvClothContent.setText(entity.getDescribe());
-            if (TextUtils.isEmpty(entity.getProductId())) {
+            if (entity.isUserClothesHad()) {
                 binding.ivClothSelect.setText("选择");
                 binding.ivClothSelect.setBackgroundResource(R.drawable.cloth_select_btn_shop);
             } else {

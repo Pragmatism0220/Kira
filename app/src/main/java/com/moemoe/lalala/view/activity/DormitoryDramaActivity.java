@@ -11,8 +11,9 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityDormitoryDramaBinding;
 import com.moemoe.lalala.di.components.DaggerNewDormitoryComponent;
 import com.moemoe.lalala.di.modules.NewDormitorModule;
-import com.moemoe.lalala.model.entity.NewStoryInfoEvent;
+import com.moemoe.lalala.model.entity.NewStoryInfoEventEntity;
 import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.entity.NewStoryInfoEventEntity;
 import com.moemoe.lalala.presenter.NewDormitioryContract;
 import com.moemoe.lalala.presenter.NewDormitoryPresenter;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
@@ -32,7 +33,7 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
 
     @Inject
     NewDormitoryPresenter mPresenter;
-    private NewStoryInfoEvent mList;
+    private NewStoryInfoEventEntity mList;
 
     @Override
     protected void initComponent() {
@@ -48,7 +49,7 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-
+        mPresenter.getStoryInfo();
     }
 
     @Override
@@ -63,7 +64,7 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
 
     @Override
     protected void initData() {
-        mPresenter.getStoryInfo();
+   
     }
 
     @Override
@@ -73,7 +74,7 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
     }
 
     @Override
-    public void getStoryInfoSuccess(NewStoryInfoEvent event) {
+    public void getStoryInfoSuccess(NewStoryInfoEventEntity event) {
         mList = event;
         binding.principalLineSchedule.setText("收集度:" + event.getMasterCollectPercent() + "%");
         binding.branchSchedule.setText("N(" + event.getBranchN() + ")" +
@@ -95,18 +96,12 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
                     finish();
                     break;
                 case R.id.principal_line_btn:
-                    if (mList.getMasterCollectPercent() == 0) {
-                        return;
-                    }
                     if (mList != null) {
                         Intent intent = new Intent(DormitoryDramaActivity.this, PrActivity.class);
                         startActivity(intent);
                     }
                     break;
                 case R.id.branch_btn:
-                    if (mList.getBranchR() == 0 && mList.getBranchN() == 0 && mList.getBranchSR() == 0) {
-                        return;
-                    }
                     if (mList != null) {
                         Intent i = new Intent(DormitoryDramaActivity.this, BranchActivity.class);
                         i.putExtra("BranchN", mList.getBranchN() + "");
@@ -115,10 +110,6 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
                         startActivity(i);
                     }
                     break;
-//                case R.id.every_day_btn:
-//                    Intent intent1 = new Intent(DormitoryDramaActivity.this, EveryDayActivity.class);
-//                    startActivity(intent1);
-//                    break;
                 default:
                     break;
             }

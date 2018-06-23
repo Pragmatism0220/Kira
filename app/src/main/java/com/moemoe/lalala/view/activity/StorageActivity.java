@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 
@@ -285,11 +286,27 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
         public void onPageSelected(int position) {
             switch (position) {
                 case 0:
+                    RadioGroup.LayoutParams layoutParams = (RadioGroup.LayoutParams) binding.choosePropBtn.getLayoutParams();
+                    layoutParams.height = (int) getResources().getDimension(R.dimen.y81);
+                    binding.choosePropBtn.setLayoutParams(layoutParams);
+                    RadioGroup.LayoutParams layoutParams1 = (RadioGroup.LayoutParams) binding.chooseFurnitureBtn.getLayoutParams();
+                    layoutParams1.height = (int) getResources().getDimension(R.dimen.y74);
+                    binding.chooseFurnitureBtn.setLayoutParams(layoutParams1);
+
+
                     binding.radioGroup.check(R.id.choose_prop_btn);
                     EventBus.getDefault().post(new StorageDefaultDataEvent(false));
                     isProp = true;
                     break;
                 case 1:
+                    RadioGroup.LayoutParams layoutParams2 = (RadioGroup.LayoutParams) binding.choosePropBtn.getLayoutParams();
+                    layoutParams2.height = (int) getResources().getDimension(R.dimen.y74);
+                    binding.choosePropBtn.setLayoutParams(layoutParams2);
+                    RadioGroup.LayoutParams layoutParams3 = (RadioGroup.LayoutParams) binding.chooseFurnitureBtn.getLayoutParams();
+                    layoutParams3.height = (int) getResources().getDimension(R.dimen.y81);
+                    binding.chooseFurnitureBtn.setLayoutParams(layoutParams3);
+
+
                     binding.radioGroup.check(R.id.choose_furniture_btn);
                     EventBus.getDefault().post(new StorageDefaultDataEvent(true));
                     isProp = false;

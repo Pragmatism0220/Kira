@@ -222,14 +222,14 @@ public class SimplePresenter implements SimpleContract.Presenter {
                         @Override
                         public void onSuccess(Boolean aBoolean) {
                             AppSetting.TXBB = aBoolean;
-//                            if (!aBoolean) {
-//                                RetrofitUrlManager.getInstance().setGlobalDomain("http://pgbb.moemoe.la/");
-//                            } else {
-//                                RetrofitUrlManager.getInstance().setGlobalDomain("http://2333.moemoe.la/");
-//                            }
+                            if (!aBoolean) {
+                                RetrofitUrlManager.getInstance().setGlobalDomain("http://pgbb.moemoe.la/");
+                            } else {
+                                RetrofitUrlManager.getInstance().setGlobalDomain("http://2333.moemoe.la/");
+                            }
                         }
 
-                        @Override  
+                        @Override
                         public void onFail(int code, String msg) {
 
                         }
@@ -252,6 +252,24 @@ public class SimplePresenter implements SimpleContract.Presenter {
                     @Override
                     public void onFail(int code, String msg) {
                         if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+    @Override
+    public void loadHouseInit() {
+        apiService.loadHoustInit()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetSimpleResultSubscriber() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+
                     }
                 });
     }

@@ -2,10 +2,10 @@ package com.moemoe.lalala.model.api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.moemoe.lalala.model.entity.NewStoryGroupInfo;
-import com.moemoe.lalala.model.entity.NewStoryInfo;
-import com.moemoe.lalala.model.entity.NewStoryInfoEvent;
-import com.moemoe.lalala.model.entity.NewStoryJsonInfo;
+import com.moemoe.lalala.model.entity.NewStoryGroupInfoEntity;
+import com.moemoe.lalala.model.entity.NewStoryInfoEntity;
+import com.moemoe.lalala.model.entity.NewStoryInfoEventEntity;
+import com.moemoe.lalala.model.entity.NewStoryJsonInfoEntity;
 import com.moemoe.lalala.model.entity.*;
 
 import java.util.ArrayList;
@@ -1156,16 +1156,16 @@ public interface ApiService {
     Observable<ApiResult<HouseLikeEntity>> loadRoleLikeCollect(@Path("roleId") String roleId);
 
     @GET("v2/kira/story/v2/main/progress")
-    Observable<ApiResult<NewStoryInfoEvent>> GetNewStoryInfo();
+    Observable<ApiResult<NewStoryInfoEventEntity>> getNewStoryInfo();
 
     @GET("v2/kira/story/v2/master/group/all")
-    Observable<ApiResult<ArrayList<NewStoryGroupInfo>>> getNewStoryGroupInfo();
+    Observable<ApiResult<ArrayList<NewStoryGroupInfoEntity>>> getNewStoryGroupInfo();
 
     @GET("v2/kira/story/v2/master/story/all/{groupId}")
-    Observable<ApiResult<ArrayList<NewStoryInfo>>> getNewStoryListInfo(@Path("groupId") String groupId);
+    Observable<ApiResult<ArrayList<com.moemoe.lalala.model.entity.NewStoryInfoEntity>>> getNewStoryListInfo(@Path("groupId") String groupId);
 
     @GET("v2/kira/story/v2/remember/{scriptId}")
-    Observable<ApiResult<NewStoryJsonInfo>> playStory(@Path("scriptId") String scriptId);
+    Observable<ApiResult<NewStoryJsonInfoEntity>> playStory(@Path("scriptId") String scriptId);
 
     @GET("v2/kira/story/v2/trigger/all")
     Observable<ApiResult<ArrayList<NewJuQingTriggerEntity>>> searchAllTrigger();
@@ -1187,4 +1187,7 @@ public interface ApiService {
 
     @POST("v2/kira/story/v2/branch/story/remember/{branchStoryId}")
     Observable<ApiResult<BranchStoryAllEntity>> loadBranchStoryInfo(@Path("branchStoryId") String branchStoryId);
+
+    @GET("v2/kira/house/init")
+    Observable<ApiResult> loadHoustInit();
 }

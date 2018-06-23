@@ -246,9 +246,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/title"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginStart="@dimen/x40"
                         android:layout_marginTop="@dimen/y4"
-                        android:text="30天内连续分享20天分享"
+                        android:text="过去30天内分享满20次"
                         android:textColor="@color/white" />
 
                     <TextView
@@ -259,7 +260,7 @@
                         android:layout_centerInParent="true"
                         android:layout_marginStart="@dimen/x40"
                         android:layout_marginTop="@dimen/y20"
-                        android:text="已经完成：13/30"
+                        android:text="已完成：13/30"
                         android:textColor="@color/white"
                         android:textSize="@dimen/x30"
                         android:textStyle="bold" />

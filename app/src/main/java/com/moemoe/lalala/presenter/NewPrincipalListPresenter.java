@@ -1,7 +1,7 @@
 package com.moemoe.lalala.presenter;
 
-import com.moemoe.lalala.model.entity.NewStoryInfo;
-import com.moemoe.lalala.model.entity.NewStoryJsonInfo;
+import com.moemoe.lalala.model.entity.NewStoryInfoEntity;
+import com.moemoe.lalala.model.entity.NewStoryJsonInfoEntity;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetResultSubscriber;
 
@@ -39,9 +39,9 @@ public class NewPrincipalListPresenter implements PrincipalListContract.Presente
         apiService.getNewStoryListInfo(groupId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new NetResultSubscriber<ArrayList<NewStoryInfo>>() {
+                .subscribe(new NetResultSubscriber<ArrayList<NewStoryInfoEntity>>() {
                     @Override
-                    public void onSuccess(ArrayList<NewStoryInfo> newStoryInfos) {
+                    public void onSuccess(ArrayList<NewStoryInfoEntity> newStoryInfos) {
                         if (view != null) view.getPrincipalListInfoSuccess(newStoryInfos);
                     }
 
@@ -58,10 +58,10 @@ public class NewPrincipalListPresenter implements PrincipalListContract.Presente
         apiService.playStory(scriptId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new NetResultSubscriber<NewStoryJsonInfo>() {
+                .subscribe(new NetResultSubscriber<NewStoryJsonInfoEntity>() {
                     @Override
-                    public void onSuccess(NewStoryJsonInfo newStoryJsonInfo) {
-                        if (view != null) view.playStorySuccess(newStoryJsonInfo);
+                    public void onSuccess(NewStoryJsonInfoEntity newStoryJsonInfoEntity) {
+                        if (view != null) view.playStorySuccess(newStoryJsonInfoEntity);
                     }
 
                     @Override

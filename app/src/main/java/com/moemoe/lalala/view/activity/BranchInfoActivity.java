@@ -79,7 +79,7 @@ public class BranchInfoActivity extends BaseActivity implements BranchInfoContra
     private void setData(BranchStoryAllEntity entity) {
         binding.branchInfoTitle.setText(entity.getName());
         binding.branchInfoAuthorby.setText("剧本作者:" + entity.getAuthorBy());
-
+        binding.tvHuashi.setText("画师:" + entity.getPainterBy());
         int w = (int) getResources().getDimension(R.dimen.x456);
         int h = (int) getResources().getDimension(R.dimen.y608);
         Glide.with(this)

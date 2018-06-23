@@ -100,6 +100,24 @@ public class RolePresenter implements RoleContract.Presenter {
                 });
     }
 
+    @Override
+    public void getStoryInfo() {
+//        apiService.getstroyIfo()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new NetResultSubscriber<NewStoryInfoEventEntity>() {
+//                    @Override
+//                    public void onSuccess(NewStoryInfoEventEntity newStoryInfoEvent) {
+//                        Log.e("---StorySuccess---", newStoryInfoEvent.getBgImage() + "---");
+//                    }
+//
+//                    @Override
+//                    public void onFail(int code, String msg) {
+//
+//                    }
+//                });
+    }
+
 
     @Override
     public void release() {

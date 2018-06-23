@@ -1,6 +1,6 @@
 package com.moemoe.lalala.presenter;
 
-import com.moemoe.lalala.model.entity.NewStoryGroupInfo;
+import com.moemoe.lalala.model.entity.NewStoryGroupInfoEntity;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetResultSubscriber;
 
@@ -37,10 +37,10 @@ public class PrincipalPresenter implements PrincipalContract.Presenter {
         apiService.getNewStoryGroupInfo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new NetResultSubscriber<ArrayList<NewStoryGroupInfo>>() {
+                .subscribe(new NetResultSubscriber<ArrayList<NewStoryGroupInfoEntity>>() {
                     @Override
-                    public void onSuccess(ArrayList<NewStoryGroupInfo> newStoryGroupInfos) {
-                        if (view != null) view.getPrincipalGroupInfoSuccess(newStoryGroupInfos);
+                    public void onSuccess(ArrayList<NewStoryGroupInfoEntity> newStoryGroupInfoEntities) {
+                        if (view != null) view.getPrincipalGroupInfoSuccess(newStoryGroupInfoEntities);
                     }
 
                     @Override

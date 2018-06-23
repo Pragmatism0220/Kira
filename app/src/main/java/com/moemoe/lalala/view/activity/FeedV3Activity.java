@@ -525,15 +525,20 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
     public void onEvent(ScrollMessage message) {
         if (message != null) {
             int scrollY = message.getScrollY();
+
             float ratio = scrollY < maxScroll ? (maxScroll - scrollY) / maxScroll : 0;
             float alpha = oldAlpha * ratio;
             mTitle.setAlpha(alpha);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mTitle.getLayoutParams();
+//            if (((int) (-titleHeight * (1 - ratio)) <= (-titleHeight))) {
+//                params.topMargin = -titleHeight;
+//            } else {
             params.topMargin = (int) (-titleHeight * (1 - ratio));
+//            }
             mTitle.setLayoutParams(params);
             mTitle.invalidate();
-
         }
+
     }
 
     @Override

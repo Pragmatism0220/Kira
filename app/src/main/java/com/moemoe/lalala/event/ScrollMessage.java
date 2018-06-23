@@ -8,9 +8,19 @@ package com.moemoe.lalala.event;
 public class ScrollMessage {
 
     private int scrollY;
-
-    public ScrollMessage(int scrollY) {
+    private boolean isScroll;
+    
+    public ScrollMessage(int scrollY,boolean isScroll) {
         this.scrollY = scrollY;
+        this.isScroll=isScroll;
+    }
+
+    public void setScroll(boolean scroll) {
+        isScroll = scroll;
+    }
+
+    public boolean isScroll() {
+        return isScroll;
     }
 
     public int getScrollY() {

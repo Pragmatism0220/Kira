@@ -129,6 +129,7 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
     private Disposable mdecrptDisposable;
     private boolean isError;
     private boolean type;
+    private String storyId;
 
 
     @Override
@@ -145,6 +146,7 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
                 .inject(this);
         mId = getIntent().getStringExtra("id");
         mGroupId = getIntent().getStringExtra("groupId");
+        storyId = getIntent().getStringExtra("storyId");
         type = getIntent().getBooleanExtra("type", false);
         if (TextUtils.isEmpty(mId)) {
             finish();
@@ -272,7 +274,7 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
                         mCurIndex = -1;
                         if (!type) {
 //                            mPresenter.doneJuQing(mId);
-                            saveRecordEntity entity = new saveRecordEntity(mGroupId, mId, 1);
+                            saveRecordEntity entity = new saveRecordEntity(mGroupId, storyId, 1);
                             mPresenter.newDownJuQing(entity);
                         } else {
                             finish();
@@ -398,7 +400,7 @@ public class MapEventNewActivity extends BaseAppCompatActivity implements JuQIng
                         mCurIndex = -1;
                         if (!type) {
 //                            mPresenter.doneJuQing(mId);
-                            saveRecordEntity entity1 = new saveRecordEntity(mGroupId, mId, 1);
+                            saveRecordEntity entity1 = new saveRecordEntity(mGroupId, storyId, 1);
                             mPresenter.newDownJuQing(entity1);
 
                         } else {

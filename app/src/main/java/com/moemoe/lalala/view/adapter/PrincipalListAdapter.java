@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.moemoe.lalala.R;
-import com.moemoe.lalala.model.entity.NewStoryInfo;
+import com.moemoe.lalala.model.entity.NewStoryInfoEntity;
 import com.moemoe.lalala.model.entity.OnItemListener;
 import com.moemoe.lalala.view.widget.view.ImageViewWithNeedle;
 
@@ -27,9 +27,9 @@ import java.util.List;
 public class PrincipalListAdapter extends RecyclerView.Adapter<PrincipalListAdapter.PrincipalListViewHolder> {
 
     private Context mContext;
-    private List<NewStoryInfo> mData;
+    private List<NewStoryInfoEntity> mData;
 
-    public PrincipalListAdapter(Context mContext, List<NewStoryInfo> lists) {
+    public PrincipalListAdapter(Context mContext, List<NewStoryInfoEntity> lists) {
         this.mContext = mContext;
         this.mData = lists;
     }
@@ -56,7 +56,7 @@ public class PrincipalListAdapter extends RecyclerView.Adapter<PrincipalListAdap
 
     @Override
     public void onBindViewHolder(final PrincipalListViewHolder holder, final int position) {
-        NewStoryInfo data = mData.get(position);
+        NewStoryInfoEntity data = mData.get(position);
         Log.i("asd", "onBindViewHolder: " + mData);
 
         holder.mNumberImage.setEnabled(!data.isLock());

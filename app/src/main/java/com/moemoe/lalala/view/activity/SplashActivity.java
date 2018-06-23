@@ -348,7 +348,7 @@ public class SplashActivity extends AppCompatActivity implements EasyPermissions
 
     @Override
     public void onSuccess(Object o) {
-
+        mPresenter.loadHouseInit();
     }
 
     @Override

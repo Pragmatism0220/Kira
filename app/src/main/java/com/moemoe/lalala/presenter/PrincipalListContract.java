@@ -1,7 +1,7 @@
 package com.moemoe.lalala.presenter;
 
-import com.moemoe.lalala.model.entity.NewStoryInfo;
-import com.moemoe.lalala.model.entity.NewStoryJsonInfo;
+import com.moemoe.lalala.model.entity.NewStoryInfoEntity;
+import com.moemoe.lalala.model.entity.NewStoryJsonInfoEntity;
 
 import java.util.ArrayList;
 
@@ -17,8 +17,8 @@ public interface PrincipalListContract {
     }
 
     interface View extends BaseView {
-        void getPrincipalListInfoSuccess(ArrayList<NewStoryInfo> newStoryInfos);
+        void getPrincipalListInfoSuccess(ArrayList<NewStoryInfoEntity> newStoryInfos);
 
-        void playStorySuccess(NewStoryJsonInfo newStoryJsonInfo);
+        void playStorySuccess(NewStoryJsonInfoEntity newStoryJsonInfoEntity);
     }
 }

@@ -124,7 +124,7 @@
                         android:gravity="center"
                         android:paddingEnd="@dimen/x20"
                         android:paddingStart="@dimen/x20"
-                        android:text="获取方式"
+                        android:text="服装画师"
                         android:textColor="@color/pink_fb7ba2"
                         android:textSize="@dimen/x24" />
 
@@ -157,7 +157,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/y28"
-                    android:background="@drawable/cloth_select_btn"
+                    android:background="@drawable/cloth_select_btn_shop"
                     android:gravity="center"
                     android:onClick="@{presenter.onClick}"
                     android:text="@string/label_select"

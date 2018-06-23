@@ -233,13 +233,10 @@ public class DialogUtils {
         if (PreferenceUtils.isLogin()) {
             res = true;
         } else {
-            AlertDialogUtil alertDialogUtil1 = AlertDialogUtil.getInstance();
-            if (context instanceof MapActivity && !((MapActivity) context).isFinishing()) {
-                if (alertDialogUtil1.isShow()) {
-                    alertDialogUtil1.dismissDialog();
-                }
-            }
             alertDialogUtil = AlertDialogUtil.getInstance();
+            if (alertDialogUtil.isShow()) {
+                alertDialogUtil.dismissDialog();
+            }
             alertDialogUtil.createPromptNormalDialog(context, context.getString(R.string.a_dlg_msg_need_login_first));
             alertDialogUtil.setButtonText(context.getString(R.string.a_dlg_go_2_login), context.getString(R.string.label_cancel), 0);
             alertDialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {

@@ -56,6 +56,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_role);
         binding.setPresenter(new Presenter());
         mPresenter.getRoleInfo();
+        mPresenter.getStoryInfo();
         initView();
     }
 

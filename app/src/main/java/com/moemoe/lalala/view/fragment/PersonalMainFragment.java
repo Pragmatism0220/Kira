@@ -243,7 +243,7 @@ public class PersonalMainFragment extends BaseFragment implements PersonMainCont
         super.init();
     }
 
-    @OnClick({R.id.iv_level_name_details, R.id.tv_all_liuyan, R.id.tv_more_add, R.id.tv_all_huizhang})
+    @OnClick({R.id.iv_level_name_details, R.id.tv_all_liuyan, R.id.tv_liuyan_add, R.id.tv_more_add, R.id.tv_all_huizhang})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_level_name_details:
@@ -255,6 +255,11 @@ public class PersonalMainFragment extends BaseFragment implements PersonMainCont
                 Intent i = new Intent(getContext(), CommentsListActivity.class);
                 i.putExtra("uuid", uuid);
                 startActivity(i);
+                break;
+            case R.id.tv_liuyan_add:
+                Intent i1 = new Intent(getContext(), CommentsListActivity.class);
+                i1.putExtra("uuid", uuid);
+                startActivity(i1);
                 break;
             case R.id.tv_more_add:
                 if (isOpenBag) {

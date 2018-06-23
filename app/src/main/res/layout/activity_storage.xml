@@ -151,30 +151,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/storage_check_box_btn"
-                android:layout_marginTop="@dimen/y2"
-                />
+                android:layout_marginTop="@dimen/y2" />
 
 
             <RadioGroup
                 android:id="@+id/radio_group"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/y120"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/storage_commodity_buy_btn"
                 android:layout_marginStart="@dimen/x16"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/choose_prop_btn"
-                    android:layout_width="@dimen/x188"
-                    android:layout_height="@dimen/y74"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/y81"
                     android:background="@drawable/ic_home_items_prop_tag"
                     android:button="@null" />
 
                 <RadioButton
                     android:id="@+id/choose_furniture_btn"
-                    android:layout_width="@dimen/x188"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/y74"
                     android:layout_marginStart="@dimen/x8"
                     android:background="@drawable/ic_home_items_furniture_tag"

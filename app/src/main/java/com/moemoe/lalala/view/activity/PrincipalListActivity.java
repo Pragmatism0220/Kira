@@ -13,8 +13,8 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityPrincipalListBinding;
 import com.moemoe.lalala.di.components.DaggerPrincipalListComponent;
 import com.moemoe.lalala.di.modules.PrincipalListModule;
-import com.moemoe.lalala.model.entity.NewStoryInfo;
-import com.moemoe.lalala.model.entity.NewStoryJsonInfo;
+import com.moemoe.lalala.model.entity.NewStoryJsonInfoEntity;
+import com.moemoe.lalala.model.entity.NewStoryInfoEntity;
 import com.moemoe.lalala.model.entity.OnItemListener;
 import com.moemoe.lalala.presenter.NewPrincipalListPresenter;
 import com.moemoe.lalala.presenter.PrincipalListContract;
@@ -83,16 +83,16 @@ public class PrincipalListActivity extends BaseActivity implements PrincipalList
     }
 
     @Override
-    public void getPrincipalListInfoSuccess(ArrayList<NewStoryInfo> newStoryInfos) {
+    public void getPrincipalListInfoSuccess(ArrayList<NewStoryInfoEntity> newStoryInfos) {
         initAdapter(newStoryInfos);
     }
 
     @Override
-    public void playStorySuccess(NewStoryJsonInfo newStoryJsonInfo) {
+    public void playStorySuccess(NewStoryJsonInfoEntity newStoryJsonInfoEntity) {
 
     }
 
-    private void initAdapter(final List<NewStoryInfo> infos) {
+    private void initAdapter(final List<NewStoryInfoEntity> infos) {
         mAdapter = new PrincipalListAdapter(this, infos);
         binding.principalListRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.VERTICAL, false));
         binding.principalListRecycleView.addItemDecoration(new SpacesItemDecoration(30));

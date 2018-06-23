@@ -11,7 +11,9 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityPrBinding;
 import com.moemoe.lalala.di.components.DaggerPrincipalComponent;
 import com.moemoe.lalala.di.modules.PrincipalModule;
-import com.moemoe.lalala.model.entity.NewStoryGroupInfo;
+import com.moemoe.lalala.model.entity.NewStoryGroupInfoEntity;
+import com.moemoe.lalala.model.entity.OnItemListener;
+import com.moemoe.lalala.model.entity.NewStoryGroupInfoEntity;
 import com.moemoe.lalala.model.entity.OnItemListener;
 import com.moemoe.lalala.presenter.PrincipalContract;
 import com.moemoe.lalala.presenter.PrincipalPresenter;
@@ -68,14 +70,15 @@ public class PrActivity extends BaseActivity implements PrincipalContract.View {
     }
 
     @Override
-    public void getPrincipalGroupInfoSuccess(ArrayList<NewStoryGroupInfo> newStoryGroupInfos) {
-        if (newStoryGroupInfos != null && newStoryGroupInfos.size() == 0) {
+    public void getPrincipalGroupInfoSuccess(ArrayList<NewStoryGroupInfoEntity> newStoryGroupInfoEntities) {
+
+        if (newStoryGroupInfoEntities == null || newStoryGroupInfoEntities.size() == 0) {
             finish();
         }
-        initAdapter(newStoryGroupInfos);
+        initAdapter(newStoryGroupInfoEntities);
     }
 
-    private void initAdapter(final List<NewStoryGroupInfo> list) {
+    private void initAdapter(final List<NewStoryGroupInfoEntity> list) {
         mAdapter = new PrAdapter(this, list);
         binding.prLineRecycle.setLayoutManager(new GridLayoutManager(this, 2));
         int rightSpace = 22;

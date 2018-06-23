@@ -153,7 +153,6 @@ public class MapLayout extends FrameLayout {
                 wuView.setTouch(false);
             }
         }
-
         wuView.setOnClickListener(new NoDoubleClickListener(700) {
             @Override
             public void onNoDoubleClick(View view) {
@@ -161,53 +160,8 @@ public class MapLayout extends FrameLayout {
                     if (entity.isTimerIsSleep()) {
                         ToastUtils.showShortToast(getContext(), "睡觉中~~~");
                     } else {
-                        view.setOnTouchListener(new OnTouchListener() {
-                            float downX = 0;
-                            float upX = 0;
-
-                            @Override
-                            public boolean onTouch(View view, MotionEvent motionEvent) {
-                                switch (motionEvent.getAction()) {
-                                    case MotionEvent.ACTION_DOWN:
-                                        isMove = false;
-                                        downX = motionEvent.getRawX();
-                                        break;
-                                    case MotionEvent.ACTION_MOVE:
-                                        break;
-                                    case MotionEvent.ACTION_UP:
-                                        float viewX = view.getX();
-                                        upX = motionEvent.getRawX();
-                                        if (downX == upX) {
-                                            isMove = true;
-                                            if (downX >= viewX) {
-                                                if (downX < viewX + view.getMeasuredWidth()) {
-                                                    isJump = true;
-                                                } else {
-                                                    isJump = false;
-                                                }
-                                            }
-                                            if (upX * v / 3600.0 > wight) {
-                                                isMove = false;
-                                            } else if (upX * v / 3600.0 == (0.0 * v / 3600.0)) {
-                                                isMove = false;
-                                            } else {
-                                                isMove = true;
-                                            }
-                                        } else {
-                                            isMove = false;
-                                        }
-                                        Log.e("-----viewX----", viewX + "");
-                                        Log.e("-----downX----", downX + "");
-                                        Log.e("-----wight----", wight + "");
-                                        Log.e("-----upX3600.0----", upX * v / 3600.0 + "");
-                                        break;
-                                }
-                                return false;
-                            }
-                        });
-                        if (isMove) {
-                            onHouseClick(view, schame, type, entity.getId(), isJump);
-                        }
+                        onHouseClick(view, schame, type, entity.getId(), isJump);
+                        isJump = !isJump;
                     }
                 } else if (type.equals("3")) {
                     EventBus.getDefault().post(new HouseLikeEvent("", 3));
@@ -226,11 +180,7 @@ public class MapLayout extends FrameLayout {
 
         mChildView.add(entity.getId());
 
-        if (entity.getType().
-
-                equals("2") && entity.getImage_w() > 0 && entity.getImage_h() > 0)
-
-        {
+        if (entity.getType().equals("2") && entity.getImage_w() > 0 && entity.getImage_h() > 0) {
             HouseImage image = new HouseImage();
             image.setH(hdp);
             image.setW(wdp);
@@ -259,7 +209,7 @@ public class MapLayout extends FrameLayout {
                     houseView.setText("");
                 } else {
                     houseView.setBackgroundResource(R.drawable.bg_ic_home_heart_selector);
-                    CountDownTimer countDownTimer = new CountDownTimer(entity.getTimerRemainTime(), 1000) {
+                    new CountDownTimer(entity.getTimerRemainTime(), 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             String value = StringUtils.getTimeFromMillisecond(millisUntilFinished);
@@ -756,21 +706,21 @@ public class MapLayout extends FrameLayout {
     public void setImageDrawable(Drawable drawable) {
         touchImageView.setImageDrawable(drawable);
 
-//        new CountDownTimer(5000, 1000) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//                for (int i = 0; i < mChildView.size(); i++) {
-//                    HouseImage houseImage = mapImage.get(mChildView.get(i));
-//                    if (houseImage != null && houseImage.getId().equals(mChildView.get(i))) {
-//                        goAnimator(houseImage.getW(), houseImage.getH(), getChildAt(i + 1), getChildAt(i + 2), getChildAt(i + 3), houseImage.isSleep(), houseImage.getId());
-//                    }
-//                }
-//            }
-//        }.start();
+        new CountDownTimer(5000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+
+            @Override
+            public void onFinish() {
+                for (int i = 0; i < mChildView.size(); i++) {
+                    HouseImage houseImage = mapImage.get(mChildView.get(i));
+                    if (houseImage != null && houseImage.getId().equals(mChildView.get(i))) {
+                        goAnimator(houseImage.getW(), houseImage.getH(), getChildAt(i + 1), getChildAt(i + 2), getChildAt(i + 3), houseImage.isSleep(), houseImage.getId());
+                    }
+                }
+            }
+        }.start();
     }
 
     public void setMapUrl(String name) {

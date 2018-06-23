@@ -74,7 +74,7 @@ public class CreateRichDocHideActivity extends BaseAppCompatActivity {
     @BindView(R.id.rl_release_position)
     RelativeLayout mRlRelease;
 
-    private HashMap<String,String> mPathMap;
+    private HashMap<String, String> mPathMap;
     private int mImageSize;
     private ArrayList<RichEntity> mHideList;
     private boolean coinComment;//false coin  true comment
@@ -90,34 +90,34 @@ public class CreateRichDocHideActivity extends BaseAppCompatActivity {
         ViewUtils.setStatusBarLight(getWindow(), $(R.id.top_view));
         AndroidBug5497Workaround.assistActivity(this);
         Intent i = getIntent();
-        if(i == null){
+        if (i == null) {
             finish();
             return;
         }
         mHideList = i.getParcelableArrayListExtra("hide_list");
-        coinComment = i.getBooleanExtra("hide_type",false);
-        if(coinComment){
-            mTvCoin.setTextColor(ContextCompat.getColor(this,R.color.gray_d7d7d7));
-            mTvComment.setTextColor(ContextCompat.getColor(this,R.color.main_cyan));
+        coinComment = i.getBooleanExtra("hide_type", false);
+        if (coinComment) {
+            mTvCoin.setTextColor(ContextCompat.getColor(this, R.color.gray_d7d7d7));
+            mTvComment.setTextColor(ContextCompat.getColor(this, R.color.main_cyan));
             mTvTypeInfo.setText(getString(R.string.label_report_watch_info));
-        }else {
-            mTvCoin.setTextColor(ContextCompat.getColor(this,R.color.main_cyan));
-            mTvComment.setTextColor(ContextCompat.getColor(this,R.color.gray_d7d7d7));
+        } else {
+            mTvCoin.setTextColor(ContextCompat.getColor(this, R.color.main_cyan));
+            mTvComment.setTextColor(ContextCompat.getColor(this, R.color.gray_d7d7d7));
             mTvTypeInfo.setText(getString(R.string.label_coin_watch_info));
         }
         mTypeRoot.setVisibility(View.VISIBLE);
         mPathMap = new HashMap<>();
         mImageSize = 0;
         mTvMenuLeft.setVisibility(View.VISIBLE);
-        ViewUtils.setLeftMargins(mTvMenuLeft,(int)getResources().getDimension(R.dimen.x36));
+        ViewUtils.setLeftMargins(mTvMenuLeft, (int) getResources().getDimension(R.dimen.x36));
         mTvMenuLeft.setText(getString(R.string.label_cancel));
-        mTvMenuLeft.setTextColor(ContextCompat.getColor(this,R.color.black_1e1e1e));
+        mTvMenuLeft.setTextColor(ContextCompat.getColor(this, R.color.black_1e1e1e));
         mTvTitle.setVisibility(View.VISIBLE);
         mTvTitle.setText(getString(R.string.label_hide_area));
         mTvMenuRight.setVisibility(View.VISIBLE);
-        ViewUtils.setRightMargins(mTvMenuRight, (int)getResources().getDimension(R.dimen.x36));
+        ViewUtils.setRightMargins(mTvMenuRight, (int) getResources().getDimension(R.dimen.x36));
         mTvMenuRight.setText(getString(R.string.label_done));
-        mTvMenuRight.setTextColor(ContextCompat.getColor(this,R.color.main_cyan));
+        mTvMenuRight.setTextColor(ContextCompat.getColor(this, R.color.main_cyan));
         EventBus.getDefault().register(this);
     }
 
@@ -138,10 +138,10 @@ public class CreateRichDocHideActivity extends BaseAppCompatActivity {
 
     @Override
     protected void initData() {
-        if(mHideList.size() > 0){
+        if (mHideList.size() > 0) {
             RichEntity entity = mHideList.get(0);
-            if(TextUtils.isEmpty(entity.getInputStr())){
-                mRichEt.addEditTextAtIndex(mRichEt.getLastIndex(),"");
+            if (TextUtils.isEmpty(entity.getInputStr())) {
+                mRichEt.addEditTextAtIndex(mRichEt.getLastIndex(), "");
             }
             Observable.fromIterable(mHideList)
                     .subscribeOn(Schedulers.io())
@@ -156,8 +156,8 @@ public class CreateRichDocHideActivity extends BaseAppCompatActivity {
                         @Override
                         public void onComplete() {
                             RichEntity entity1 = mHideList.get(mHideList.size() - 1);
-                            if(TextUtils.isEmpty(entity1.getInputStr())){
-                                mRichEt.addEditTextAtIndex(mRichEt.getLastIndex(),"");
+                            if (TextUtils.isEmpty(entity1.getInputStr())) {
+                                mRichEt.addEditTextAtIndex(mRichEt.getLastIndex(), "");
                             }
                         }
 
@@ -168,22 +168,22 @@ public class CreateRichDocHideActivity extends BaseAppCompatActivity {
 
                         @Override
                         public void onNext(RichEntity richEntity) {
-                            if(!TextUtils.isEmpty(richEntity.getInputStr())){
-                                mRichEt.addEditTextAtIndex(mRichEt.getLastIndex(),StringUtils.buildAtUserToEdit(CreateRichDocHideActivity.this,richEntity.getInputStr().toString()));
-                            }else if(richEntity.getImage() != null && !TextUtils.isEmpty(richEntity.getImage().getPath())){
-                                mRichEt.addImageViewAtIndex(mRichEt.getLastIndex(),richEntity.getImage().getPath(),richEntity.getImage().getW(),richEntity.getImage().getH(),richEntity.getImage().getSize());
-                                mPathMap.put(richEntity.getImage().getPath(),richEntity.getImage().getPath());
+                            if (!TextUtils.isEmpty(richEntity.getInputStr())) {
+                                mRichEt.addEditTextAtIndex(mRichEt.getLastIndex(), StringUtils.buildAtUserToEdit(CreateRichDocHideActivity.this, richEntity.getInputStr().toString()));
+                            } else if (richEntity.getImage() != null && !TextUtils.isEmpty(richEntity.getImage().getPath())) {
+                                mRichEt.addImageViewAtIndex(mRichEt.getLastIndex(), richEntity.getImage().getPath(), richEntity.getImage().getW(), richEntity.getImage().getH(), richEntity.getImage().getSize());
+                                mPathMap.put(richEntity.getImage().getPath(), richEntity.getImage().getPath());
                                 mImageSize++;
                             }
                         }
                     });
-        }else {
+        } else {
             mRichEt.createFirstEdit();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void richImgRemove(RichImgRemoveEvent event){
+    public void richImgRemove(RichImgRemoveEvent event) {
         mPathMap.remove(event.getPath());
         mImageSize--;
     }
@@ -194,58 +194,58 @@ public class CreateRichDocHideActivity extends BaseAppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    @OnClick({R.id.iv_add_img,R.id.iv_alt_user,R.id.tv_menu,R.id.tv_change_type})
-    public void onClick(View v){
-        switch (v.getId()){
+    @OnClick({R.id.iv_add_img, R.id.iv_alt_user, R.id.tv_menu, R.id.tv_change_type})
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.iv_add_img:
                 choosePhoto();
                 break;
             case R.id.iv_alt_user:
-                Intent i3 = new Intent(CreateRichDocHideActivity.this,SearchActivity.class);
-                i3.putExtra("show_type",SearchActivity.SHOW_USER);
-                startActivityForResult(i3,REQ_ADD_SEARCH);
+                Intent i3 = new Intent(CreateRichDocHideActivity.this, SearchActivity.class);
+                i3.putExtra("show_type", SearchActivity.SHOW_USER);
+                startActivityForResult(i3, REQ_ADD_SEARCH);
                 break;
             case R.id.tv_menu:
                 done();
                 break;
             case R.id.tv_change_type:
                 coinComment = !coinComment;
-                if(coinComment){
-                    mTvCoin.setTextColor(ContextCompat.getColor(this,R.color.gray_d7d7d7));
-                    mTvComment.setTextColor(ContextCompat.getColor(this,R.color.main_cyan));
+                if (coinComment) {
+                    mTvCoin.setTextColor(ContextCompat.getColor(this, R.color.gray_d7d7d7));
+                    mTvComment.setTextColor(ContextCompat.getColor(this, R.color.main_cyan));
                     mTvTypeInfo.setText(getString(R.string.label_report_watch_info));
-                }else {
-                    mTvCoin.setTextColor(ContextCompat.getColor(this,R.color.main_cyan));
-                    mTvComment.setTextColor(ContextCompat.getColor(this,R.color.gray_d7d7d7));
+                } else {
+                    mTvCoin.setTextColor(ContextCompat.getColor(this, R.color.main_cyan));
+                    mTvComment.setTextColor(ContextCompat.getColor(this, R.color.gray_d7d7d7));
                     mTvTypeInfo.setText(getString(R.string.label_coin_watch_info));
                 }
                 break;
         }
     }
 
-    private void done(){
-        if(mRichEt.hasContent()){
+    private void done() {
+        if (mRichEt.hasContent()) {
             mHideList = (ArrayList<RichEntity>) mRichEt.buildEditData();
             ArrayList<String> ids = new ArrayList<>();
-            for (RichEntity entity : mHideList){
+            for (RichEntity entity : mHideList) {
                 if (!TextUtils.isEmpty(entity.getInputStr())) {
                     entity.setInputStr(StringUtils.buildDataAtUser(entity.getInputStr()));
                     ids.addAll(StringUtils.getAtUserIds(entity.getInputStr()));
                 }
             }
             Intent i = new Intent();
-            i.putParcelableArrayListExtra("hide_list",mHideList);
-            i.putExtra("hide_type",coinComment);
-            i.putStringArrayListExtra("at_user",ids);
-            setResult(RESULT_OK,i);
-        }else {
+            i.putParcelableArrayListExtra("hide_list", mHideList);
+            i.putExtra("hide_type", coinComment);
+            i.putStringArrayListExtra("at_user", ids);
+            setResult(RESULT_OK, i);
+        } else {
             setResult(RESULT_OK);
         }
         finish();
     }
 
     private void choosePhoto() {
-      //  if (mPathMap.size() < ICON_NUM_LIMIT) {
+        //  if (mPathMap.size() < ICON_NUM_LIMIT) {
         if (mImageSize < ICON_NUM_LIMIT) {
             try {
                 ArrayList<String> temp = new ArrayList<>();
@@ -260,13 +260,13 @@ public class CreateRichDocHideActivity extends BaseAppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQ_ADD_SEARCH && resultCode == RESULT_OK){
-            if(data != null){
+        if (requestCode == REQ_ADD_SEARCH && resultCode == RESULT_OK) {
+            if (data != null) {
                 String userId = data.getStringExtra("user_id");
                 String userName = data.getStringExtra("user_name");
-                mRichEt.insertTextInCurSelection("@" + userName,userId);
+                mRichEt.insertTextInCurSelection("@" + userName, userId);
             }
-        }else {
+        } else {
             DialogUtils.handleImgChooseResult(this, requestCode, resultCode, data, new DialogUtils.OnPhotoGetListener() {
 
                 @Override
@@ -283,43 +283,43 @@ public class CreateRichDocHideActivity extends BaseAppCompatActivity {
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<String> res) throws Exception {
-                mRichEt.measure(0,0);
-                try{
-                    for (String s : paths){
+                mRichEt.measure(0, 0);
+                try {
+                    for (String s : paths) {
                         res.onNext(s);
                     }
                     res.onComplete();
-                }catch (Exception e){
+                } catch (Exception e) {
                     res.onError(e);
                 }
             }
         })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<String>() {
-            @Override
-            public void onError(Throwable e) {
-                finalizeDialog();
-                showToast("图片插入失败");
-            }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        finalizeDialog();
+                        showToast("图片插入失败");
+                    }
 
-            @Override
-            public void onComplete() {
-                finalizeDialog();
-                showToast("图片插入成功");
-            }
+                    @Override
+                    public void onComplete() {
+                        finalizeDialog();
+                        showToast("图片插入成功");
+                    }
 
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
 
-            }
+                    }
 
-            @Override
-            public void onNext(String s) {
-                mRichEt.insertImage(s);
-                mImageSize++;
-            }
-        });
+                    @Override
+                    public void onNext(String s) {
+                        mRichEt.insertImage(s);
+                        mImageSize++;
+                    }
+                });
     }
 
     @Override

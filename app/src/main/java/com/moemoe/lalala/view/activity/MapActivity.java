@@ -831,6 +831,11 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 //                                AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
 //                                temp += "?user_id=" + authorInfo.getUserId() + "&full_screen";
 //                            }
+                            if (temp.contains("http://106.75.229.108:4001")) {
+                                AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                                temp += "?open_id=" + authorInfo.getUserId() + "&nickname=" + authorInfo.getUserName() + "&pay_way=alipay,wx,qq" + "&full_screen";
+                            }
+
 
                             if (temp.contains("http://kiratetris.leanapp.cn/tab001/index.html")) {
                                 AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
@@ -1523,7 +1528,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                     resolvErrorListDeskmate(errorListTmp, type);
                 } else {
                     if ("HousUser".equals(type)) {
-                        MoeMoeApplication.getInstance().goGreenDao();
+                        MoeMoeApplication.getInstance().goGreenDao(MapActivity.this);
                     }
                 }
             }
@@ -1974,7 +1979,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                     @Override
                     public void onComplete() {
                         GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao().insertOrReplaceInTx(res);
-                        int i = MoeMoeApplication.getInstance().goGreenDao();
+                        int i = MoeMoeApplication.getInstance().goGreenDao(MapActivity.this);
                         if (i == 5) {
                             if (MoeMoeApplication.getInstance().isWindow()) {
                                 MoeMoeApplication.getInstance().activities.add(MapActivity.this);
@@ -2101,16 +2106,5 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         if (PreferenceUtils.isLogin()) {
             AlertDialogUtil.getInstance().dismissDialog();
         }
-//        if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
-//            mIvPresonal.setImageResource(R.drawable.bg_default_circle);
-//        } else {
-//            int size = (int) getResources().getDimension(R.dimen.x64);
-//            Glide.with(this)
-//                    .load(StringUtils.getUrl(this, PreferenceUtils.getAuthorInfo().getHeadPath(), size, size, false, true))
-//                    .error(R.drawable.bg_default_circle)
-//                    .placeholder(R.drawable.bg_default_circle)
-//                    .bitmapTransform(new CropCircleTransformation(this))
-//                    .into(mIvPresonal);
-//        }
     }
 }

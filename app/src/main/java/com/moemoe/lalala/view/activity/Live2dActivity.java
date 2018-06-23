@@ -123,20 +123,20 @@ public class Live2dActivity extends BaseAppCompatActivity implements Live2dContr
         if (!PreferenceUtils.isLogin() || !TextUtils.isEmpty(PreferenceUtils.getAuthorInfo().getVipTime())) {
             if (list != null) {
                 for (DeskMateEntity entity : list) {
-                    if (entity.isDeskmate()){
-                        if (entity.getRoleOf().equals("len")){
+                    if (entity.isDeskmate()) {
+                        if (entity.getRoleOf().equals("len")) {
                             model = Live2DDefine.MODEL_LEN;
                             mCurRole = "len";
                             mIvLen.setAlpha(1.0f);
                             mIvSari.setAlpha(0.3f);
                             mIvMei.setAlpha(0.3f);
-                        }else if (entity.getRoleOf().equals("mei")){
+                        } else if (entity.getRoleOf().equals("mei")) {
                             model = Live2DDefine.MODEL_MEI;
                             mCurRole = "mei";
                             mIvLen.setAlpha(0.3f);
                             mIvSari.setAlpha(1.0f);
                             mIvMei.setAlpha(0.3f);
-                        }else if (entity.getRoleOf().equals("sari")){
+                        } else if (entity.getRoleOf().equals("sari")) {
                             model = Live2DDefine.MODEL_SARI;
                             mCurRole = "sari";
                             mIvLen.setAlpha(0.3f);
@@ -147,7 +147,7 @@ public class Live2dActivity extends BaseAppCompatActivity implements Live2dContr
                 }
             }
 
-        }else {
+        } else {
             model = Live2DDefine.MODEL_LEN;
             mCurRole = "len";
             mIvLen.setAlpha(1.0f);

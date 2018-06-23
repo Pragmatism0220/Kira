@@ -383,7 +383,7 @@ public class MapPresenter implements MapContract.Presenter {
                 MapObject object = layer.getMapObject("地图剧情" + id);
                 if (object == null) {
                     MapMarkEntity entity1 = new MapMarkEntity
-                            ("地图剧情" + id, entity.getX(), entity.getY(), "neta://com.moemoe.lalala/map_event_1.0?id=" + entity.getScriptId() + "&groupId=" + entity.getGroupId(), entity.getFileName(),
+                            ("地图剧情" + id, entity.getX(), entity.getY(), "neta://com.moemoe.lalala/map_event_1.0?id=" + entity.getScriptId() + "&groupId=" + entity.getGroupId() + "&storyId=" + entity.getStoryId(), entity.getFileName(),
                                     entity.getW(), entity.getH(), entity.getGroupId());
                     container.removeMarkById("地图剧情" + id);
                     container.addMark(entity1);

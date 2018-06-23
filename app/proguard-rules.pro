@@ -403,12 +403,12 @@ public void EventError();
 -keep class android.app.**{*;}
 -keep class **.R$* {*;}
 #talking data
- 
 
-#databinding
--dontwarn android.databinding.**
--keep class android.databinding.** { *; }
--keepclasseswithmembers class *$Presenter { 
-     <methods>; 
-}
+
+##databinding
+#-dontwarn android.databinding.**
+#-keep class android.databinding.** { *; }
+#-keepclasseswithmembers class *$Presenter { 
+#     <methods>; 
+#}
 

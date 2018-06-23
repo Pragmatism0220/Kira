@@ -334,7 +334,7 @@ public class MapUtil {
                     public boolean test(JuQingTriggerEntity entity) throws Exception {
                         if (entity.getDownloadState() != 2) {
                             return true;
-                        }else {
+                        } else {
                             return false;
                         }
                     }
@@ -347,7 +347,7 @@ public class MapUtil {
                             @Override
                             public void subscribe(final ObservableEmitter<JuQingTriggerEntity> res) throws Exception {
                                 FileDownloader.getImpl().create(ApiService.URL_QINIU + entity.getIconPath())
-                                        .setPath(StorageUtils.getMapRootPath()+entity.getFileName())
+                                        .setPath(StorageUtils.getMapRootPath() + entity.getFileName())
                                         .setCallbackProgressTimes(1)
                                         .setListener(new FileDownloadListener() {
                                             @Override

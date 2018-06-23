@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
@@ -30,7 +31,6 @@ public class PullAndLoadView extends FrameLayout {
     private boolean mIsLoadMoreEnabled = false;
     private int yDown = 0;
     private int lastY = 0;
-
 
 
     static {
@@ -117,6 +117,7 @@ public class PullAndLoadView extends FrameLayout {
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int scrollY;//当前已向下滚动的像素值
+            boolean isScroll;
 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -126,11 +127,18 @@ public class PullAndLoadView extends FrameLayout {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                Log.e("---onScrolled----", dy + "");
                 scrollY += dy;
                 if (scrollY < 0) {
                     scrollY = 0;
                 }
-                EventBus.getDefault().post(new ScrollMessage(scrollY));
+
+                if (dy >= 0) {
+                    isScroll = true;
+                } else {
+                    isScroll = false;
+                }
+                EventBus.getDefault().post(new ScrollMessage(scrollY, isScroll));
             }
         });
     }

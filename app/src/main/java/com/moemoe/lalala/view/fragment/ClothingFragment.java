@@ -1,6 +1,7 @@
 package com.moemoe.lalala.view.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
+import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.ClothingEntity;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ToastUtils;
@@ -34,14 +36,16 @@ public class ClothingFragment extends BaseFragment {
     ImageView mIvClothCover;
 
     private ClothingEntity mData;
+    private Context context;
 
     @SuppressLint("ValidFragment")
-    public ClothingFragment(ClothingEntity entities) {
+    public ClothingFragment(Context context, ClothingEntity entities) {
+        this.context = context;
         this.mData = entities;
     }
 
-    public static ClothingFragment newInstance(ClothingEntity entities) {
-        return new ClothingFragment(entities);
+    public static ClothingFragment newInstance(Context context, ClothingEntity entities) {
+        return new ClothingFragment(context, entities);
     }
 
     @Override
@@ -51,11 +55,10 @@ public class ClothingFragment extends BaseFragment {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-        Glide.with(getContext())
-                .load(StringUtils.getUrl(mData.getImage()))
+        Glide.with(context)
+                .load(ApiService.URL_QINIU + mData.getImage())
                 .error(R.drawable.shape_transparent_background)
                 .placeholder(R.drawable.shape_transparent_background)
                 .into(mIvClothCover);
     }
-
 }

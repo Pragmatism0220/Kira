@@ -201,6 +201,8 @@
             android:src="@drawable/bg_role_selector" />
 
         <include layout="@layout/dialog_role_house" />
+
+        <include layout="@layout/dialog_role_house_garbage" />
     </RelativeLayout>
 
 </layout>

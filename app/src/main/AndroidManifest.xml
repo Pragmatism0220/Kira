@@ -561,6 +561,11 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/FullScreen" />
+        <activity
+            android:name=".view.activity.Live3dActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/FullScreen" />
         <!-- <activity android:name=".view.activity.CameraPreview2Activity" -->
         <!-- android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" -->
         <!-- android:screenOrientation="portrait" -->

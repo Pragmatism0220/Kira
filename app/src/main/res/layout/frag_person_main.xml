@@ -418,8 +418,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y110"
                 android:background="@color/white"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="@dimen/x92"
@@ -540,6 +540,26 @@
                 android:textColor="@color/main_cyan"
                 android:textSize="@dimen/x24"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/size_8"
+                android:layout_weight="1"
+                android:textColor="@color/gray_929292" />
+
+            <TextView
+                android:id="@+id/tv_liuyan_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/x24"
+                android:drawableEnd="@drawable/ic_bag_more"
+                android:drawablePadding="@dimen/x8"
+                android:text="显示全部"
+                android:textColor="@color/main_cyan"
+                android:textSize="@dimen/x24" />
         </LinearLayout>
 
         <LinearLayout
@@ -557,6 +577,7 @@
             android:background="@drawable/bg_normal_white_btn"
             android:gravity="center"
             android:text="查看全部"
+            android:visibility="gone"
             android:textColor="@color/gray_d7d7d7"
             android:textSize="@dimen/x30" />
     </LinearLayout>

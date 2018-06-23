@@ -1,5 +1,8 @@
 package com.moemoe.lalala.model.api;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
 import com.moemoe.lalala.model.entity.ApiResult;
 
 import io.reactivex.Observer;
@@ -39,6 +42,7 @@ public abstract class NetResultSubscriber<T> implements Observer<ApiResult<T>> {
     @Override
     public void onNext(ApiResult<T> tApiResult) {
         if (tApiResult.getState() == 200) {
+            Log.e("--ApiResult---", new Gson().toJson(tApiResult.getData()) + "");
             onSuccess(tApiResult.getData());
         } else {
             onFail(tApiResult.getState(), tApiResult.getMessage());

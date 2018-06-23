@@ -1,6 +1,6 @@
 package com.moemoe.lalala.presenter;
 
-import com.moemoe.lalala.model.entity.NewStoryGroupInfo;
+import com.moemoe.lalala.model.entity.NewStoryGroupInfoEntity;
 
 import java.util.ArrayList;
 
@@ -14,6 +14,6 @@ public interface PrincipalContract {
     }
 
     interface View extends BaseView {
-        void getPrincipalGroupInfoSuccess(ArrayList<NewStoryGroupInfo> newStoryGroupInfos);
+        void getPrincipalGroupInfoSuccess(ArrayList<NewStoryGroupInfoEntity> newStoryGroupInfoEntities);
     }
 }

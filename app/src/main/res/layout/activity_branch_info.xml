@@ -102,13 +102,27 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/tv_huashi"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y56"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/y24"
+                android:background="@drawable/black_round_bg_branch"
+                android:gravity="center"
+                android:paddingEnd="@dimen/x44"
+                android:paddingStart="@dimen/x44"
+                android:text="画师：橙子"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x30" />
+
+            <TextView
                 android:id="@+id/branch_info_possess_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/y16"
+                android:layout_marginTop="@dimen/y36"
                 android:textColor="@color/gray_929292"
-                android:textSize="@dimen/x24" />
+                android:textSize="@dimen/x30" />
 
             <ImageView
                 android:id="@+id/branch_info_recall"

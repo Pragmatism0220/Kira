@@ -61,8 +61,8 @@ public class AuthorInfo {
 
     @Generated(hash = 1406400735)
     public AuthorInfo(long id, String headPath, String userId, String openId, String platform,
-            String token, String password, String phone, int coin, String userName, int level,
-            boolean openBag, String rcToken, String vipTime, int inviteNum, String picPath) {
+                      String token, String password, String phone, int coin, String userName, int level,
+                      boolean openBag, String rcToken, String vipTime, int inviteNum, String picPath) {
         this.id = id;
         this.headPath = headPath;
         this.userId = userId;

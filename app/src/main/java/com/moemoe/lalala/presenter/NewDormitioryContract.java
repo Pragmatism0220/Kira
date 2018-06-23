@@ -1,6 +1,6 @@
 package com.moemoe.lalala.presenter;
 
-import com.moemoe.lalala.model.entity.NewStoryInfoEvent;
+import com.moemoe.lalala.model.entity.NewStoryInfoEventEntity;
 
 /**
  * Created by Administrator on 2018/6/11.
@@ -12,6 +12,6 @@ public interface NewDormitioryContract {
     }
 
     interface View extends BaseView {
-        void getStoryInfoSuccess(NewStoryInfoEvent event);
+        void getStoryInfoSuccess(NewStoryInfoEventEntity event);
     }
 }
