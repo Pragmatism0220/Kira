@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2018/5/23.
+ * Created by zhangyan on 2018/5/23.
  */
 
 public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdapter.FurnitureHolder> {
@@ -56,7 +56,7 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
 
     public void setList(List<AllFurnitureInfo> mData) {
         this.infos = mData;
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
     }
 
     public List<AllFurnitureInfo> getList() {
@@ -74,30 +74,40 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
         this.position = position;
         AllFurnitureInfo data = infos.get(position);
 
-        if (data.isSuitPutInHouse()) {
-            holder.mFusing.setVisibility(View.VISIBLE);
-        } else {
-            holder.mFusing.setVisibility(View.GONE);
-        }
-        if (data.isPutInHouse()) {
-            holder.mFusing.setVisibility(View.VISIBLE);
-        } else {
 
-            holder.mFusing.setVisibility(View.GONE);
-        }
-        //套装是否拥有
-        if (!data.isUserSuitFurnitureHad()) {
-            holder.mFphoto.setAlpha(0.5f);//未拥有
+        //如果是套装
+        if (data.getType().equals("套装")) {
+            //套装是否拥有
+            if (!data.isUserSuitFurnitureHad()) {
+                holder.mFphoto.setAlpha(0.5f);//未拥有
+            } else {
+                holder.mFphoto.setAlpha(1.0f);//拥有
+            }
         } else {
-            holder.mFphoto.setAlpha(1.0f);//拥有
+            //判断家具是否拥有
+            if (!data.isUserFurnitureHad()) {
+                holder.mFphoto.setAlpha(0.5f);
+            } else {
+                holder.mFphoto.setAlpha(1.0f);
+            }
         }
 
-        //判断家具是否拥有
-        if (!data.isUserFurnitureHad()) {
-            holder.mFphoto.setAlpha(0.5f);
+        if (data.getType().equals("套装")) {
+            //套装是否（使用）放入宅屋
+            if (data.isSuitPutInHouse()) {
+                holder.mFusing.setVisibility(View.VISIBLE);//放入
+            } else {
+                holder.mFusing.setVisibility(View.GONE);//未放入
+            }
         } else {
-            holder.mFphoto.setAlpha(1.0f);
+            //家具是否（使用）放入宅屋，
+            if (data.isPutInHouse()) {
+                holder.mFusing.setVisibility(View.VISIBLE);//放入
+            } else {
+                holder.mFusing.setVisibility(View.GONE);
+            }
         }
+
 
 
         if (data.getType().equals("套装")) {

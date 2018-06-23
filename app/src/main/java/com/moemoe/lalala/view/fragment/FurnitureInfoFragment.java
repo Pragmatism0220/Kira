@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.event.FurnitureEvent;
+import com.moemoe.lalala.event.FurnitureSelectEvent;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
 import com.moemoe.lalala.view.adapter.FurnitureInfoAdapter;
 import com.moemoe.lalala.view.adapter.PropAdapter;
@@ -62,7 +63,8 @@ public class FurnitureInfoFragment extends BaseFragment {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-        info.get(0).setSelected(true);
+        info.get(0).setSelected(true);//就是这里的选中漏了  要咋半
+        EventBus.getDefault().post(new FurnitureSelectEvent(info.get(0).getId()));
         mAdapter = new FurnitureInfoAdapter(getContext());
         mRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         mRecycleView.addItemDecoration(new SpacesItemDecoration(10, 9, 0));
@@ -78,6 +80,9 @@ public class FurnitureInfoFragment extends BaseFragment {
 
                 for (int i = 0; i < info.size(); i++) {
                     info.get(i).setSelected(i == which);
+                    if (i == which) {
+                        EventBus.getDefault().post(new FurnitureSelectEvent(info.get(i).getId()));
+                    }
                 }
                 mAdapter.notifyDataSetChanged();
             }
@@ -88,7 +93,6 @@ public class FurnitureInfoFragment extends BaseFragment {
 
     public void showHava(boolean isOnlyShowNotHave) {
         if (mAdapter != null && info != null && info.size() > 0) {
-
             List<AllFurnitureInfo> newList = new ArrayList<>();
             if (isOnlyShowNotHave) {
                 for (AllFurnitureInfo allFurnitureInfo : info) {
@@ -106,6 +110,12 @@ public class FurnitureInfoFragment extends BaseFragment {
                 newList.addAll(info);
             }
             mAdapter.setList(newList);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void updateData(){
+        if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
     }

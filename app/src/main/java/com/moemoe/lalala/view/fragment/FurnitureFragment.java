@@ -12,6 +12,7 @@ import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.di.components.DaggerFurnitureComponent;
 import com.moemoe.lalala.di.modules.FurnitureModule;
+import com.moemoe.lalala.event.FurnitureSelectEvent;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
 import com.moemoe.lalala.model.entity.FurnitureInfoEntity;
 import com.moemoe.lalala.model.entity.MapDbEntity;
@@ -52,6 +53,9 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
     @BindView(R.id.furniture_tab)
     KiraTabLayout mTab;
 
+    private List<AllFurnitureInfo> mAllListData;//全部标签下的数据源
+    private List<BaseFragment> fragmentList = new ArrayList<>();//当前页面子fragment集合
+
     @Inject
     FurniturePresenter mPresenter;
 
@@ -78,6 +82,7 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
                 .inject(this);
 
         mPresenter.getFurnitureInfo();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -106,6 +111,7 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
             }
         });
         map.put("全部", allList);
+        mAllListData = allList;
         ArrayList<AllFurnitureInfo> suitFurnitures = furnitureInfoEntity.getSuitFurnitures();
         for (AllFurnitureInfo allFurnitureInfo : suitFurnitures) {
             allFurnitureInfo.setType("套装");
@@ -120,7 +126,6 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
             map.put(key, allFurnitures.get(key));
         }
         if (map != null) {
-            List<BaseFragment> fragmentList = new ArrayList<>();
             for (int i = 0; i < mTitle.size(); i++) {
                 fragmentList.add(FurnitureInfoFragment.newInstance(map.get(mTitle.get(i))));
             }
@@ -158,6 +163,23 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(FurnitureSelectEvent event) {
+        if (event != null && mAllListData != null && mAllListData.size() >0) {
+            for (AllFurnitureInfo mAlldata : mAllListData) {
+                if (event.getId().equals(mAlldata.getId())) {
+                    mAlldata.setSelected(true);
+                } else {
+                    mAlldata.setSelected(false);
+                }
+            }
+            if (fragmentList != null && fragmentList.size() >0) {
+                if (fragmentList.get(0) instanceof FurnitureInfoFragment) {
+                    ((FurnitureInfoFragment) fragmentList.get(0)).updateData();
+                }
+            }
+        }
+    }
 
 
     @Override
@@ -166,6 +188,7 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
             mPresenter.release();
         }
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
 }

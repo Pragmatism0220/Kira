@@ -5,6 +5,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.method.SingleLineTransformationMethod;
 
+import com.moemoe.lalala.event.FurnitureSelectEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.Serializable;
 
 import butterknife.BindView;
@@ -26,6 +30,18 @@ public class AllFurnitureInfo implements Serializable {
     private String schema;//跳转地址
     private String schemaShop;//家具跳转商店
     private String furnitureProductId;
+
+    private boolean isSuitPutInHouse;//套装是否（使用）放入宅屋，true：已经放入宅屋 ,
+    private boolean isUserSuitFurnitureHad;// 套装是否拥有，true：拥有当前家具 ,
+    private String suitTypeDescribe;//套装风格描述
+    private String suitTypeImage;//套装风格封面图片
+    private String suitTypeName;//套装风格名称
+    private String suitTypeSchemaShop;//套装家具跳转
+    private String type;//区分套装
+    private String furnitureSuitProductId;
+    private int sortId;//排序值
+    private String suitTypeId;// 套装风格ID ,
+    private int position;
 
     public void setFurnitureProductId(String furnitureProductId) {
         this.furnitureProductId = furnitureProductId;
@@ -55,15 +71,6 @@ public class AllFurnitureInfo implements Serializable {
         this.suitTypeDetailIcon = suitTypeDetailIcon;
     }
 
-    private boolean isSuitPutInHouse;//套装是否（使用）放入宅屋，true：已经放入宅屋 ,
-    private boolean isUserSuitFurnitureHad;// 套装是否拥有，true：拥有当前家具 ,
-    private String suitTypeDescribe;//套装风格描述
-    private String suitTypeImage;//套装风格封面图片
-    private String suitTypeName;//套装风格名称
-    private String suitTypeSchemaShop;//套装家具跳转
-    private String type;//区分套装
-    private String furnitureSuitProductId;
-
     public String getSuitTypeSchemaShop() {
         return suitTypeSchemaShop;
     }
@@ -72,9 +79,6 @@ public class AllFurnitureInfo implements Serializable {
         this.suitTypeSchemaShop = suitTypeSchemaShop;
     }
 
-    private int sortId;//排序值
-    private String suitTypeId;// 套装风格ID ,
-    private int position;
 
     public String getDetailIcon() {
         return detailIcon;
