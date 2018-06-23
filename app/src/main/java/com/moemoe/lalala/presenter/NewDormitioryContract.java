@@ -1,6 +1,6 @@
 package com.moemoe.lalala.presenter;
 
-import com.moemoe.lalala.event.NewStoryInfoEvent;
+import com.moemoe.lalala.model.entity.NewStoryInfoEvent;
 
 /**
  * Created by Administrator on 2018/6/11.

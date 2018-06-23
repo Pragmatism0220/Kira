@@ -1,4 +1,4 @@
-package com.moemoe.lalala.event;
+package com.moemoe.lalala.model.entity;
 
 import android.view.View;
 

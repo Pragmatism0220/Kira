@@ -3,17 +3,12 @@ package com.moemoe.lalala.view.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.di.components.DaggerPropComponent;
 import com.moemoe.lalala.di.modules.PropModule;
-import com.moemoe.lalala.event.OnItemListener;
-import com.moemoe.lalala.event.StorageDefaultDataEvent;
-import com.moemoe.lalala.model.entity.Image;
 import com.moemoe.lalala.model.entity.PropInfoEntity;
 import com.moemoe.lalala.presenter.PropContract;
 import com.moemoe.lalala.presenter.PropPresenter;
@@ -21,8 +16,6 @@ import com.moemoe.lalala.view.adapter.PropAdapter;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;

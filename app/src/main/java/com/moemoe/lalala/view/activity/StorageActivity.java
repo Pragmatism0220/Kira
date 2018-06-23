@@ -298,16 +298,13 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     break;
             }
 
-
             View propView = binding.choosePropBtn;
             View furnitureView = binding.chooseFurnitureBtn;
 
             propView.layout(propView.getLeft(), isProp ? propView.getTop() + 6 : propView.getTop() - 6, propView.getRight(),
                     isProp ? propView.getBottom() + 6 : propView.getBottom() - 6);
-
             furnitureView.layout(furnitureView.getLeft(), isProp ? furnitureView.getTop() - 6 : furnitureView.getTop() + 6, furnitureView.getRight(),
                     isProp ? furnitureView.getBottom() - 6 : furnitureView.getBottom() + 6);
-
         }
 
 

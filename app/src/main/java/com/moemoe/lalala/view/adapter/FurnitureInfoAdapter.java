@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
-import com.moemoe.lalala.event.OnItemListener;
 import com.moemoe.lalala.event.StorageDefaultDataEvent;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
@@ -75,6 +73,7 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
     public void onBindViewHolder(final FurnitureHolder holder, final int position) {
         this.position = position;
         AllFurnitureInfo data = infos.get(position);
+
         if (data.isSuitPutInHouse()) {
             holder.mFusing.setVisibility(View.VISIBLE);
         } else {
@@ -83,17 +82,18 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
         if (data.isPutInHouse()) {
             holder.mFusing.setVisibility(View.VISIBLE);
         } else {
+
             holder.mFusing.setVisibility(View.GONE);
         }
         //套装是否拥有
-        if (!data.isUserSuitFurnitureHad() ) {
-            holder.mFphoto.setAlpha(0.5f);
+        if (!data.isUserSuitFurnitureHad()) {
+            holder.mFphoto.setAlpha(0.5f);//未拥有
         } else {
-            holder.mFphoto.setAlpha(1.0f);
+            holder.mFphoto.setAlpha(1.0f);//拥有
         }
 
         //判断家具是否拥有
-        if (!data.isUserFurnitureHad() ) {
+        if (!data.isUserFurnitureHad()) {
             holder.mFphoto.setAlpha(0.5f);
         } else {
             holder.mFphoto.setAlpha(1.0f);

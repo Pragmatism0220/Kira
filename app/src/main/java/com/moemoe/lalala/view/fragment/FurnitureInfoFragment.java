@@ -9,7 +9,6 @@ import android.view.View;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.event.FurnitureEvent;
-import com.moemoe.lalala.event.OnItemListener;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
 import com.moemoe.lalala.view.adapter.FurnitureInfoAdapter;
 import com.moemoe.lalala.view.adapter.PropAdapter;

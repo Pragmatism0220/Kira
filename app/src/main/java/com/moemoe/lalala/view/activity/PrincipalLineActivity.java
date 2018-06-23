@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.databinding.ActivityPrincipalLineBinding;
-import com.moemoe.lalala.event.OnItemListener;
+import com.moemoe.lalala.model.entity.OnItemListener;
 import com.moemoe.lalala.view.adapter.PrincipalLineAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.base.TestPrincipalInfo;

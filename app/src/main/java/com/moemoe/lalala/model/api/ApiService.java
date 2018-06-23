@@ -2,11 +2,10 @@ package com.moemoe.lalala.model.api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.moemoe.lalala.event.NewStoryGroupInfo;
-import com.moemoe.lalala.event.NewStoryInfo;
-import com.moemoe.lalala.event.NewStoryInfoEvent;
-import com.moemoe.lalala.event.NewStoryJsonInfo;
-import com.moemoe.lalala.event.SearchAllTriggerEntity;
+import com.moemoe.lalala.model.entity.NewStoryGroupInfo;
+import com.moemoe.lalala.model.entity.NewStoryInfo;
+import com.moemoe.lalala.model.entity.NewStoryInfoEvent;
+import com.moemoe.lalala.model.entity.NewStoryJsonInfo;
 import com.moemoe.lalala.model.entity.*;
 
 import java.util.ArrayList;

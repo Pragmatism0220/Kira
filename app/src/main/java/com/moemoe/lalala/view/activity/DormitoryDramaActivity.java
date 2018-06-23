@@ -3,7 +3,6 @@ package com.moemoe.lalala.view.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -12,23 +11,15 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityDormitoryDramaBinding;
 import com.moemoe.lalala.di.components.DaggerNewDormitoryComponent;
 import com.moemoe.lalala.di.modules.NewDormitorModule;
-import com.moemoe.lalala.event.NewStoryInfoEvent;
+import com.moemoe.lalala.model.entity.NewStoryInfoEvent;
 import com.moemoe.lalala.model.api.ApiService;
-import com.moemoe.lalala.model.entity.HouseLikeEntity;
-import com.moemoe.lalala.model.entity.MapEntity;
-import com.moemoe.lalala.presenter.DormitoryContract;
 import com.moemoe.lalala.presenter.NewDormitioryContract;
 import com.moemoe.lalala.presenter.NewDormitoryPresenter;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.base.BaseActivity;
-import com.moemoe.lalala.view.widget.map.MapLayout;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
-
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
  * do(zhangyan)
@@ -104,9 +95,9 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
                     finish();
                     break;
                 case R.id.principal_line_btn:
-//                    if (mList.getMasterCollectPercent() == 0) {
-//                        return;
-//                    }
+                    if (mList.getMasterCollectPercent() == 0) {
+                        return;
+                    }
                     if (mList != null) {
                         Intent intent = new Intent(DormitoryDramaActivity.this, PrActivity.class);
                         startActivity(intent);

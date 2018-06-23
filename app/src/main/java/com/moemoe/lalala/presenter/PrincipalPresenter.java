@@ -1,6 +1,6 @@
 package com.moemoe.lalala.presenter;
 
-import com.moemoe.lalala.event.NewStoryGroupInfo;
+import com.moemoe.lalala.model.entity.NewStoryGroupInfo;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetResultSubscriber;
 

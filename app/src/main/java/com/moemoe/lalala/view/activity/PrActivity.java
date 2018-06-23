@@ -11,8 +11,8 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityPrBinding;
 import com.moemoe.lalala.di.components.DaggerPrincipalComponent;
 import com.moemoe.lalala.di.modules.PrincipalModule;
-import com.moemoe.lalala.event.NewStoryGroupInfo;
-import com.moemoe.lalala.event.OnItemListener;
+import com.moemoe.lalala.model.entity.NewStoryGroupInfo;
+import com.moemoe.lalala.model.entity.OnItemListener;
 import com.moemoe.lalala.presenter.PrincipalContract;
 import com.moemoe.lalala.presenter.PrincipalPresenter;
 import com.moemoe.lalala.view.adapter.PrAdapter;
@@ -69,7 +69,7 @@ public class PrActivity extends BaseActivity implements PrincipalContract.View {
 
     @Override
     public void getPrincipalGroupInfoSuccess(ArrayList<NewStoryGroupInfo> newStoryGroupInfos) {
-        if (newStoryGroupInfos.size()==0){
+        if (newStoryGroupInfos != null && newStoryGroupInfos.size() == 0) {
             finish();
         }
         initAdapter(newStoryGroupInfos);
@@ -105,6 +105,8 @@ public class PrActivity extends BaseActivity implements PrincipalContract.View {
             switch (v.getId()) {
                 case R.id.pr_line_back_btn:
                     finish();
+                    break;
+                default:
                     break;
             }
         }

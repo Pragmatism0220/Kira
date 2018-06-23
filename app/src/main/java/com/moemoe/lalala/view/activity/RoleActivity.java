@@ -1,17 +1,12 @@
 package com.moemoe.lalala.view.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
@@ -19,18 +14,14 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityRoleBinding;
 import com.moemoe.lalala.di.components.DaggerRoleComponent;
 import com.moemoe.lalala.di.modules.RoleModule;
-import com.moemoe.lalala.event.OnItemListener;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.RoleInfoEntity;
 import com.moemoe.lalala.presenter.RoleContract;
 import com.moemoe.lalala.presenter.RolePresenter;
-import com.moemoe.lalala.utils.PreferenceUtils;
-import com.moemoe.lalala.utils.ToastUtils;
 import com.moemoe.lalala.view.adapter.RoleAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,18 +115,18 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
              * 好感度计时器
              */
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
+
             if (entities.get(0).getUserLikeRoleDefine() < entities.get(0).getUserLikeRoleDefineFull()) {
                 binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
                 params.width = 240 * entities.get(0).getUserLikeRoleDefine() / entities.get(0).getUserLikeRoleDefineFull();
             } else if (entities.get(0).getUserLikeRoleDefine() >= entities.get(0).getUserLikeRoleDefineFull()) {
-                binding.roleHeartNum.setText("");
-                binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefineFull());
+                binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefineFull() + "");
+
             }
             binding.roleHeartNumSmall.setLayoutParams(params);
-
-
             binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine() + "/" + entities.get(0).getUserLikeRoleDefineFull());
-            binding.roleNum.setText("编号" + entities.get(0).getRoleNumber());
+
+            binding.roleNum.setText(String.format("编号%s", entities.get(0).getRoleNumber()));
             Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(0).getShowHeadIcon()).into(binding.roleImage);
             binding.roleNameText.setText(entities.get(0).getName());
             entities.get(0).setSelected(true);
@@ -177,8 +168,8 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                         binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_6);
                     }
 
-                    binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefine() + "/" + entities.get(position).getUserLikeRoleDefineFull());
 
+                    binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefine() + "/" + entities.get(position).getUserLikeRoleDefineFull());
                     /**
                      * 好感度比例计算
                      */
@@ -189,10 +180,13 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     }
                     binding.roleHeartNumSmall.setLayoutParams(params);
                     if (entities.get(position).getUserLikeRoleDefine() >= entities.get(position).getUserLikeRoleDefineFull()) {
-                        binding.roleHeartNum.setText("");
-                        binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefineFull());
+                        binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefine() + "");
                     }
-                    binding.roleNum.setText("编号" + entities.get(position).getRoleNumber());
+
+
+                    binding.roleNum.setText(String.format("编号%s", entities.get(position).getRoleNumber()));
+
+
                     binding.roleNameText.setText(entities.get(position).getName());
                     Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(position).getShowHeadIcon()).into(binding.roleImage);
                     roleId = entities.get(position).getId();

@@ -2,7 +2,6 @@ package com.moemoe.lalala.view.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,8 +10,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
-import com.moemoe.lalala.event.NewStoryGroupInfo;
-import com.moemoe.lalala.event.OnItemListener;
+import com.moemoe.lalala.model.entity.NewStoryGroupInfo;
+import com.moemoe.lalala.model.entity.OnItemListener;
 import com.moemoe.lalala.model.api.ApiService;
 
 import java.util.List;

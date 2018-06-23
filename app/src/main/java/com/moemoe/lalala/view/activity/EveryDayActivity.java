@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.databinding.ActivityEveryDayBinding;
-import com.moemoe.lalala.event.OnItemListener;
+import com.moemoe.lalala.model.entity.OnItemListener;
 import com.moemoe.lalala.view.adapter.EveryDayRecycleAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.base.EveryDayBean;

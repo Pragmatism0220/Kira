@@ -1,4 +1,4 @@
-package com.moemoe.lalala.event;
+package com.moemoe.lalala.model.entity;
 
 /**
  * Created by Administrator on 2018/6/11.

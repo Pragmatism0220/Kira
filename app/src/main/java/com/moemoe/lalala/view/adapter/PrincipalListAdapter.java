@@ -2,22 +2,19 @@ package com.moemoe.lalala.view.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.moemoe.lalala.R;
-import com.moemoe.lalala.event.NewStoryInfo;
-import com.moemoe.lalala.event.OnItemListener;
-import com.moemoe.lalala.view.base.PrincipalListBean;
+import com.moemoe.lalala.model.entity.NewStoryInfo;
+import com.moemoe.lalala.model.entity.OnItemListener;
 import com.moemoe.lalala.view.widget.view.ImageViewWithNeedle;
 
 import java.util.List;
