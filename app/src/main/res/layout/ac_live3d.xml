@@ -125,7 +125,7 @@
 
         <HorizontalScrollView
             android:id="@+id/horizontal"
-            android:layout_width="@dimen/x530"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollbars="none"
             android:visibility="visible">
@@ -174,8 +174,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/x16"
                     android:layout_marginTop="@dimen/y8"
-                    android:visibility="gone"
-                    android:src="@drawable/btn_companion_select_sari" />
+                    android:src="@drawable/btn_companion_select_sari"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/iv_live_mei2"
@@ -183,8 +183,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/x16"
                     android:layout_marginTop="@dimen/y8"
-                    android:visibility="gone"
-                    android:src="@drawable/btn_companion_select_mei" />
+                    android:src="@drawable/btn_companion_select_mei"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/iv_live_len3"
@@ -192,8 +192,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/x16"
                     android:layout_marginTop="@dimen/y8"
-                    android:visibility="gone"
-                    android:src="@drawable/btn_companion_select_len" />
+                    android:src="@drawable/btn_companion_select_len"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/iv_live_sari3"
@@ -201,8 +201,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/x16"
                     android:layout_marginTop="@dimen/y8"
-                    android:visibility="gone"
-                    android:src="@drawable/btn_companion_select_sari" />
+                    android:src="@drawable/btn_companion_select_sari"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/iv_live_mei3"
@@ -210,8 +210,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/x16"
                     android:layout_marginTop="@dimen/y8"
-                    android:visibility="gone"
-                    android:src="@drawable/btn_companion_select_mei" />
+                    android:src="@drawable/btn_companion_select_mei"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/iv_live_mei4"
@@ -219,8 +219,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/x16"
                     android:layout_marginTop="@dimen/y8"
-                    android:visibility="gone"
-                    android:src="@drawable/btn_companion_select_mei" />
+                    android:src="@drawable/btn_companion_select_mei"
+                    android:visibility="gone" />
             </LinearLayout>
         </HorizontalScrollView>
 

@@ -58,6 +58,7 @@ import com.moemoe.lalala.view.widget.map.TouchImageView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.reactivestreams.Subscription;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -70,6 +71,7 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.FlowableSubscriber;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
@@ -99,6 +101,11 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     private TextView mTvRoleName;
     private RelativeLayout mRlRoleJuQing;
     private ImageView mIvCover;
+    private TextView mTvRewardName;
+    private RelativeLayout mRleSelect;
+    private TextView mTvLeft;
+    private TextView mTvRight;
+    private ImageView mIvGongXI;
 
     @Override
     protected void initComponent() {
@@ -109,6 +116,11 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mTvRoleName = findViewById(R.id.tv_role_name);
         mRlRoleJuQing = findViewById(R.id.rl_role_juqing);
         mIvCover = findViewById(R.id.iv_cover_next);
+        mTvRewardName = findViewById(R.id.tv_reward_name);
+        mRleSelect = findViewById(R.id.rl_select);
+        mTvLeft = findViewById(R.id.tv_left);
+        mTvRight = findViewById(R.id.tv_right);
+        mIvGongXI = findViewById(R.id.iv_gongxi);
     }
 
     @Override
@@ -184,6 +196,20 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
             public void onClick(View view) {
                 mRlRoleJuQing.setVisibility(View.GONE);
                 mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
+            }
+        });
+        mTvLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showToast("放入成功");
+                mRlRoleJuQing.setVisibility(View.GONE);
+            }
+        });
+        mTvRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showToast("放入成功");
+                mRlRoleJuQing.setVisibility(View.GONE);
             }
         });
     }
@@ -325,22 +351,39 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     public void saveVisitorSuccess() {
         if (type == 3) {
             mRlRoleJuQing.setVisibility(View.VISIBLE);
-            Flowable.create(new FlowableOnSubscribe<Integer>() {
+            io.reactivex.Observable.create(new ObservableOnSubscribe<Integer>() {
                 @Override
-                public void subscribe(FlowableEmitter<Integer> e) throws Exception {
+                public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                    Thread.sleep(500);
                     e.onNext(R.drawable.bg_garbage_background_2);
+                    Thread.sleep(500);
                     e.onNext(R.drawable.bg_garbage_background_3);
-
+                    e.onComplete();
                 }
-            }, BackpressureStrategy.ERROR)
-                    .subscribeOn(Schedulers.io())
-                    .sample(1, TimeUnit.SECONDS)
+            }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<Integer>() {
+                    .subscribe(new Observer<Integer>() {
                         @Override
-                        public void accept(Integer integer) throws Exception {
-                            Log.e("ObservableConcatMap", "------------------");
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(Integer integer) {
                             mIvCover.setImageResource(integer);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            mTvRewardName.setText("啥都没有");
+                            mRleSelect.setVisibility(View.VISIBLE);
+                            mTvLeft.setText("放入储物箱");
+                            mTvRight.setText("立即使用");
                         }
                     });
         } else {

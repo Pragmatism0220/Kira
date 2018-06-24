@@ -3,7 +3,6 @@ package com.moemoe.lalala.view.activity;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
@@ -26,7 +25,6 @@ import com.moemoe.lalala.galgame.SoundManager;
 import com.moemoe.lalala.greendao.gen.AlarmClockEntityDao;
 import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
 import com.moemoe.lalala.model.entity.AlarmClockEntity;
-import com.moemoe.lalala.model.entity.DeskMateEntity;
 import com.moemoe.lalala.model.entity.HouseSleepEntity;
 import com.moemoe.lalala.model.entity.Live2dMusicEntity;
 import com.moemoe.lalala.model.entity.ShareLive2dEntity;
@@ -109,6 +107,7 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
     private int mPreMode;
     private boolean isFirstClick = true;
     private String model;
+    private ArrayList<HouseSleepEntity> mSleepEntites;
 
     @Override
     protected int getLayoutId() {
@@ -126,38 +125,8 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
         SoundManager.init(this);
         FileManager.init(this);
 
-
         musicList = new ArrayList<>();
 
-//        ArrayList<DeskMateEntity> list = PreferenceUtils.getAuthorInfo().getDeskMateEntities();
-//        if (!PreferenceUtils.isLogin() || !TextUtils.isEmpty(PreferenceUtils.getAuthorInfo().getVipTime())) {
-//            if (list != null) {
-//                for (DeskMateEntity entity : list) {
-//                    if (entity.isDeskmate()) {
-//                        if (entity.getRoleOf().equals("len")) {
-//                            model = Live2DDefine.MODEL_LEN;
-//                            mCurRole = "len";
-//                            mIvLen.setAlpha(1.0f);
-//                            mIvSari.setAlpha(0.3f);
-//                            mIvMei.setAlpha(0.3f);
-//                        } else if (entity.getRoleOf().equals("mei")) {
-//                            model = Live2DDefine.MODEL_MEI;
-//                            mCurRole = "mei";
-//                            mIvLen.setAlpha(0.3f);
-//                            mIvSari.setAlpha(1.0f);
-//                            mIvMei.setAlpha(0.3f);
-//                        } else if (entity.getRoleOf().equals("sari")) {
-//                            model = Live2DDefine.MODEL_SARI;
-//                            mCurRole = "sari";
-//                            mIvLen.setAlpha(0.3f);
-//                            mIvSari.setAlpha(0.3f);
-//                            mIvMei.setAlpha(1.0f);
-//                        } 
-//                    }
-//                }
-//            }
-//
-//        } else {
         model = Live2DDefine.MODEL_LEN;
         mCurRole = "len";
         mIvLen.setAlpha(1.0f);
@@ -214,10 +183,10 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                     .getHour(), entity.getMinute()));
         }
 
-//        int heightPixels = getResources().getDisplayMetrics().heightPixels;
-//        LinearLayout.LayoutParams mScrollViewLayoutParams = (LinearLayout.LayoutParams) mScrollView.getLayoutParams();
-//        mScrollViewLayoutParams.width = (int) (heightPixels - getResources().getDimension(R.dimen.x572));
-//        mScrollView.setLayoutParams(mScrollViewLayoutParams);
+        int heightPixels = getResources().getDisplayMetrics().heightPixels;
+        RelativeLayout.LayoutParams mScrollViewLayoutParams = (RelativeLayout.LayoutParams) mScrollView.getLayoutParams();
+        mScrollViewLayoutParams.width = (int) (heightPixels - mRlDianTai.getMeasuredWidth() - getResources().getDimension(R.dimen.x50) - getResources().getDimension(R.dimen.status_bar_height));
+        mScrollView.setLayoutParams(mScrollViewLayoutParams);
     }
 
     private void soundLoading() {
@@ -318,145 +287,100 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                 alertDialogUtil.showDialog();
                 break;
             case R.id.iv_live_len:
-                boolean have = false;
-                for (DeskMateEntity temp : PreferenceUtils.getAuthorInfo().getDeskMateEntities()) {
-                    if ("len".equals(temp.getRoleOf())) {
-                        have = true;
-                        break;
+                if (mSleepEntites != null && mSleepEntites.size() > 0) {
+                    HouseSleepEntity entity = null;
+                    for (HouseSleepEntity entity1 : mSleepEntites) {
+                        if ("mei".equals(entity1.getRoleOfId())) {
+                            entity = entity1;
+                        }
                     }
-                }
-                if (!have) {
-                    showToast("还未拥有角色");
-                    return;
-                }
-                if (!"len".equals(mCurRole)) {
-                    mCurRole = "len";
-                    live2DMgr.changeModel(Live2DDefine.MODEL_LEN);
-                    mIvLen.setAlpha(1.0f);
-                    mIvSari.setAlpha(0.3f);
-                    mIvIchiGo.setAlpha(0.3f);
-                    mIvMei.setAlpha(0.3f);
+                    if (entity != null) {
+                        if (entity.isCompanion()) {
+                            if (!"mei".equals(mCurRole)) {
+                                mCurRole = "mei";
+                                live2DMgr.changeModel(Live2DDefine.MODEL_LEN);
+                                mIvLen.setAlpha(1.0f);
+                                mIvSari.setAlpha(0.3f);
+                                mIvIchiGo.setAlpha(0.3f);
+                                mIvMei.setAlpha(0.3f);
+                            }
+                        } else {
+                            showToast(entity.getWhyCannotSleepWithYou());
+                        }
+                    }
                 }
                 break;
             case R.id.iv_live_mei:
-                boolean have1 = false;
-                for (DeskMateEntity temp : PreferenceUtils.getAuthorInfo().getDeskMateEntities()) {
-                    if ("mei".equals(temp.getRoleOf())) {
-                        have1 = true;
-                        break;
-                    }
-                }
-                if (!have1) {
-                    showToast("还未拥有角色");
-                    return;
-                }
-                if (!PreferenceUtils.isLogin() || TextUtils.isEmpty(PreferenceUtils.getAuthorInfo().getVipTime())) {
-                    if (mEntites != null) {
-                        ShareLive2dEntity entity = null;
-                        for (ShareLive2dEntity entity1 : mEntites) {
-                            if ("mei".equals(entity1.getRoleOf())) {
-                                entity = entity1;
-                            }
+                if (mSleepEntites != null && mSleepEntites.size() > 0) {
+                    HouseSleepEntity entity = null;
+                    for (HouseSleepEntity entity1 : mSleepEntites) {
+                        if ("mei".equals(entity1.getRoleOfId())) {
+                            entity = entity1;
                         }
-                        if (entity != null) {
-                            if (!entity.isHave()) {
-                                final AlertDialogUtil alertDialogUtil1 = AlertDialogUtil.getInstance();
-                                alertDialogUtil1.createShareLive2dDialog(Live3dActivity.this, entity);
-                                alertDialogUtil1.setOnClickListener(new AlertDialogUtil.OnClickListener() {
-                                    @Override
-                                    public void CancelOnClick() {
-                                        alertDialogUtil1.dismissDialog();
-                                    }
-
-                                    @Override
-                                    public void ConfirmOnClick() {
-                                        showShareToBuy("mei");
-                                        alertDialogUtil1.dismissDialog();
-                                    }
-                                });
-                                alertDialogUtil1.showDialog();
-                                break;
+                    }
+                    if (entity != null) {
+                        if (entity.isCompanion()) {
+                            if (!"mei".equals(mCurRole)) {
+                                mCurRole = "mei";
+                                live2DMgr.changeModel(Live2DDefine.MODEL_MEI);
+                                mIvLen.setAlpha(0.3f);
+                                mIvSari.setAlpha(0.3f);
+                                mIvMei.setAlpha(1.0f);
+                                mIvIchiGo.setAlpha(0.3f);
                             }
                         } else {
-                            break;
+                            showToast(entity.getWhyCannotSleepWithYou());
                         }
-                    } else {
-                        break;
                     }
-                }
-                if (!"mei".equals(mCurRole)) {
-                    mCurRole = "mei";
-                    live2DMgr.changeModel(Live2DDefine.MODEL_MEI);
-                    mIvLen.setAlpha(0.3f);
-                    mIvSari.setAlpha(0.3f);
-                    mIvMei.setAlpha(1.0f);
-                    mIvIchiGo.setAlpha(0.3f);
                 }
                 break;
             case R.id.iv_live_sari:
-                boolean have2 = false;
-                for (DeskMateEntity temp : PreferenceUtils.getAuthorInfo().getDeskMateEntities()) {
-                    if ("sari".equals(temp.getRoleOf())) {
-                        have2 = true;
-                        break;
-                    }
-                }
-                if (!have2) {
-                    showToast("还未拥有角色");
-                    return;
-                }
-                if (!PreferenceUtils.isLogin() || TextUtils.isEmpty(PreferenceUtils.getAuthorInfo().getVipTime())) {
-                    if (mEntites != null) {
-                        ShareLive2dEntity entity = null;
-                        for (ShareLive2dEntity entity1 : mEntites) {
-                            if ("sari".equals(entity1.getRoleOf())) {
-                                entity = entity1;
-                            }
+                if (mSleepEntites != null && mSleepEntites.size() > 0) {
+                    HouseSleepEntity entity = null;
+                    for (HouseSleepEntity entity1 : mSleepEntites) {
+                        if ("sari".equals(entity1.getRoleOfId())) {
+                            entity = entity1;
                         }
-                        if (entity != null) {
-                            if (!entity.isHave()) {
-                                final AlertDialogUtil alertDialogUtil1 = AlertDialogUtil.getInstance();
-                                alertDialogUtil1.createShareLive2dDialog(Live3dActivity.this, entity);
-                                alertDialogUtil1.setOnClickListener(new AlertDialogUtil.OnClickListener() {
-                                    @Override
-                                    public void CancelOnClick() {
-                                        alertDialogUtil1.dismissDialog();
-                                    }
-
-                                    @Override
-                                    public void ConfirmOnClick() {
-                                        showShareToBuy("sari");
-                                        alertDialogUtil1.dismissDialog();
-                                    }
-                                });
-                                alertDialogUtil1.showDialog();
-                                break;
+                    }
+                    if (entity != null) {
+                        if (entity.isCompanion()) {
+                            if (!"sari".equals(mCurRole)) {
+                                mCurRole = "sari";
+                                live2DMgr.changeModel(Live2DDefine.MODEL_SARI);
+                                mIvLen.setAlpha(0.3f);
+                                mIvSari.setAlpha(1.0f);
+                                mIvMei.setAlpha(0.3f);
+                                mIvIchiGo.setAlpha(0.3f);
                             }
                         } else {
-                            break;
+                            showToast(entity.getWhyCannotSleepWithYou());
                         }
-                    } else {
-                        break;
                     }
-                }
-                if (!"sari".equals(mCurRole)) {
-                    mCurRole = "sari";
-                    live2DMgr.changeModel(Live2DDefine.MODEL_SARI);
-                    mIvLen.setAlpha(0.3f);
-                    mIvSari.setAlpha(1.0f);
-                    mIvMei.setAlpha(0.3f);
-                    mIvIchiGo.setAlpha(0.3f);
                 }
                 break;
             case R.id.iv_live_ichigo:
-//                if (!"sari".equals(mCurRole)) {
-                mCurRole = "ichigo";
-                live2DMgr.changeModel(Live2DDefine.MODEL_ICHIGO);
-                mIvLen.setAlpha(0.3f);
-                mIvSari.setAlpha(0.3f);
-                mIvMei.setAlpha(0.3f);
-                mIvIchiGo.setAlpha(1.0f);
-//                }
+                if (mSleepEntites != null && mSleepEntites.size() > 0) {
+                    HouseSleepEntity entity = null;
+                    for (HouseSleepEntity entity1 : mSleepEntites) {
+                        if ("ichigo".equals(entity1.getRoleOfId())) {
+                            entity = entity1;
+                        }
+                    }
+                    if (entity != null) {
+                        if (entity.isCompanion()) {
+                            if (!"ichigo".equals(mCurRole)) {
+                                mCurRole = "ichigo";
+                                live2DMgr.changeModel(Live2DDefine.MODEL_ICHIGO);
+                                mIvLen.setAlpha(0.3f);
+                                mIvSari.setAlpha(0.3f);
+                                mIvMei.setAlpha(0.3f);
+                                mIvIchiGo.setAlpha(1.0f);
+                            }
+                        } else {
+                            showToast(entity.getWhyCannotSleepWithYou());
+                        }
+                    }
+                }
                 break;
             case R.id.tv_text_1:
             case R.id.tv_text_2:
@@ -598,7 +522,7 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
 
     @Override
     public void onLoadHouseListSuccess(ArrayList<HouseSleepEntity> entities) {
-
+        mSleepEntites = entities;
     }
 
 //    @Override

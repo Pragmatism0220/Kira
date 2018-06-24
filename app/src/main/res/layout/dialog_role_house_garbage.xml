@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/iv_cover_next"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_garbage_get_prosit"
-        android:visibility="gone" />
+        android:layout_marginBottom="@dimen/y28"
+        android:src="@drawable/ic_garbage_get_prosit" />
 
     <ImageView
         android:id="@+id/iv_cover_next"
@@ -22,6 +22,15 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:src="@drawable/bg_garbage_background_1" />
+
+    <TextView
+        android:id="@+id/tv_reward_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/black"
+        android:textSize="@dimen/x48"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_juqing"
@@ -41,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_juqing"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/y50"
+        android:layout_marginTop="@dimen/y40"
         android:visibility="gone">
 
         <TextView
@@ -50,16 +59,20 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn_phone_garbage"
             android:gravity="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/x30"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/x24"
+            android:layout_marginStart="@dimen/x40"
             android:layout_toEndOf="@+id/tv_left"
             android:background="@drawable/btn_phone_garbage"
             android:gravity="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/x30"
+            android:textStyle="bold" />
     </RelativeLayout>
 </RelativeLayout>

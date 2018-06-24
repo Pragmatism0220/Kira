@@ -18,7 +18,7 @@ public class Live2DDefine {
     public static final String MODEL_LEN = "live2d/len/莲_睡.model.json";
     public static final String MODEL_MEI = "live2d/mei/双树_睡.model.json";
     public static final String MODEL_SARI = "live2d/sari/沙丽尔_睡.model.json";
-    public static final String MODEL_ICHIGO = "live2d/ichigo/莓_睡.model.json";
+    public static final String MODEL_ICHIGO = "live2d/ichigo/莓.model.json";
     public static final String MODEL_DEFAULT = "model.json";
 //    public static final String MODEL_LEN_SWIN = "live2d/len/model_swim.json";
 //    public static final String MODEL_LEN_IMPACT = "live2d/len/model_impact.json";

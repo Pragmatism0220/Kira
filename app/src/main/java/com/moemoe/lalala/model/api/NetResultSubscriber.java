@@ -42,7 +42,6 @@ public abstract class NetResultSubscriber<T> implements Observer<ApiResult<T>> {
     @Override
     public void onNext(ApiResult<T> tApiResult) {
         if (tApiResult.getState() == 200) {
-            Log.e("--ApiResult---", new Gson().toJson(tApiResult.getData()) + "");
             onSuccess(tApiResult.getData());
         } else {
             onFail(tApiResult.getState(), tApiResult.getMessage());
