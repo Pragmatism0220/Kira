@@ -122,14 +122,15 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                 params.width = 240 * entities.get(0).getUserLikeRoleDefine() / entities.get(0).getUserLikeRoleDefineFull();
             } else if (entities.get(0).getUserLikeRoleDefine() >= entities.get(0).getUserLikeRoleDefineFull()) {
                 binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefineFull() + "");
-
             }
+
             binding.roleHeartNumSmall.setLayoutParams(params);
             binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine() + "/" + entities.get(0).getUserLikeRoleDefineFull());
             if (entities.get(0).getRoleNumber() != null) {
+                binding.roleNum.setVisibility(View.VISIBLE);
                 binding.roleNum.setText(String.format("编号%s", entities.get(0).getRoleNumber()));
             } else {
-                binding.roleHeartNum.setVisibility(View.GONE);
+                binding.roleNum.setVisibility(View.GONE);
             }
 
             Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(0).getShowHeadIcon()).into(binding.roleImage);
@@ -189,13 +190,11 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     }
 
                     if (entities.get(position).getRoleNumber() != null) {
+                        binding.roleNum.setVisibility(View.VISIBLE);
                         binding.roleNum.setText(String.format("编号%s", entities.get(position).getRoleNumber()));
                     } else {
                         binding.roleNum.setVisibility(View.GONE);
                     }
-
-
-
                     binding.roleNameText.setText(entities.get(position).getName());
                     Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(position).getShowHeadIcon()).into(binding.roleImage);
                     roleId = entities.get(position).getId();
@@ -221,7 +220,6 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     mAdapter.notifyDataSetChanged();
                 }
             });
-            Log.i("asd", "getRoleInfo: " + entities);
         }
     }
 
