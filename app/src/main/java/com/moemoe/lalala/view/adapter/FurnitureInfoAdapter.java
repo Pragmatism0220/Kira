@@ -56,7 +56,6 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
 
     public void setList(List<AllFurnitureInfo> mData) {
         this.infos = mData;
-//        notifyDataSetChanged();
     }
 
     public List<AllFurnitureInfo> getList() {

@@ -28,6 +28,9 @@ public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
     }
 
     public List<BaseFragment> getData() {
+        if (fragmentList.size() == 0 && fragmentList == null) {
+
+        }
         return fragmentList;
     }
 

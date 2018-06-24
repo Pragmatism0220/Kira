@@ -126,8 +126,12 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
             }
             binding.roleHeartNumSmall.setLayoutParams(params);
             binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine() + "/" + entities.get(0).getUserLikeRoleDefineFull());
+            if (entities.get(0).getRoleNumber() != null) {
+                binding.roleNum.setText(String.format("编号%s", entities.get(0).getRoleNumber()));
+            } else {
+                binding.roleHeartNum.setVisibility(View.GONE);
+            }
 
-            binding.roleNum.setText(String.format("编号%s", entities.get(0).getRoleNumber()));
             Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(0).getShowHeadIcon()).into(binding.roleImage);
             binding.roleNameText.setText(entities.get(0).getName());
             entities.get(0).setSelected(true);
@@ -184,8 +188,12 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                         binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefine() + "");
                     }
 
+                    if (entities.get(position).getRoleNumber() != null) {
+                        binding.roleNum.setText(String.format("编号%s", entities.get(position).getRoleNumber()));
+                    } else {
+                        binding.roleNum.setVisibility(View.GONE);
+                    }
 
-                    binding.roleNum.setText(String.format("编号%s", entities.get(position).getRoleNumber()));
 
 
                     binding.roleNameText.setText(entities.get(position).getName());

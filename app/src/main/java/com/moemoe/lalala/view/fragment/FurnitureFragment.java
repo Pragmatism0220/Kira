@@ -125,7 +125,7 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
             mTitle.add(key);
             map.put(key, allFurnitures.get(key));
         }
-        if (map != null) {
+        if (map != null ) {
             for (int i = 0; i < mTitle.size(); i++) {
                 fragmentList.add(FurnitureInfoFragment.newInstance(map.get(mTitle.get(i))));
             }
@@ -165,7 +165,7 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(FurnitureSelectEvent event) {
-        if (event != null && mAllListData != null && mAllListData.size() >0) {
+        if (event != null && mAllListData != null && mAllListData.size() > 0) {
             for (AllFurnitureInfo mAlldata : mAllListData) {
                 if (event.getId().equals(mAlldata.getId())) {
                     mAlldata.setSelected(true);
@@ -173,7 +173,7 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
                     mAlldata.setSelected(false);
                 }
             }
-            if (fragmentList != null && fragmentList.size() >0) {
+            if (fragmentList != null && fragmentList.size() > 0) {
                 if (fragmentList.get(0) instanceof FurnitureInfoFragment) {
                     ((FurnitureInfoFragment) fragmentList.get(0)).updateData();
                 }

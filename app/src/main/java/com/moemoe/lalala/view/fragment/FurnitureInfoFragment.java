@@ -36,8 +36,6 @@ public class FurnitureInfoFragment extends BaseFragment {
     @BindView(R.id.furniture_recycle_view)
     RecyclerView mRecycleView;
 
-    private String furnId;
-
     private FurnitureInfoAdapter mAdapter;
 
     private List<AllFurnitureInfo> info = new ArrayList<>();
@@ -63,7 +61,7 @@ public class FurnitureInfoFragment extends BaseFragment {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-        info.get(0).setSelected(true);//就是这里的选中漏了  要咋半
+        info.get(0).setSelected(true);
         EventBus.getDefault().post(new FurnitureSelectEvent(info.get(0).getId()));
         mAdapter = new FurnitureInfoAdapter(getContext());
         mRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 4));
