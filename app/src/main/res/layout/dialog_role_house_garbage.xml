@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/iv_cover_next"
         android:layout_centerHorizontal="true"
+        android:visibility="gone"
         android:layout_marginBottom="@dimen/y28"
         android:src="@drawable/ic_garbage_get_prosit" />
 

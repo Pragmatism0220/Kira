@@ -196,6 +196,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
             public void onClick(View view) {
                 mRlRoleJuQing.setVisibility(View.GONE);
                 mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
+                mIvGongXI.setVisibility(View.VISIBLE);
             }
         });
         mTvLeft.setOnClickListener(new View.OnClickListener() {
@@ -203,6 +204,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
             public void onClick(View view) {
                 showToast("放入成功");
                 mRlRoleJuQing.setVisibility(View.GONE);
+                mIvGongXI.setVisibility(View.VISIBLE);
+                mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
             }
         });
         mTvRight.setOnClickListener(new View.OnClickListener() {
@@ -210,6 +213,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
             public void onClick(View view) {
                 showToast("放入成功");
                 mRlRoleJuQing.setVisibility(View.GONE);
+                mIvGongXI.setVisibility(View.VISIBLE); 
+                mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
             }
         });
     }
@@ -382,6 +387,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                         public void onComplete() {
                             mTvRewardName.setText("啥都没有");
                             mRleSelect.setVisibility(View.VISIBLE);
+                            mIvGongXI.setVisibility(View.VISIBLE);
                             mTvLeft.setText("放入储物箱");
                             mTvRight.setText("立即使用");
                         }
