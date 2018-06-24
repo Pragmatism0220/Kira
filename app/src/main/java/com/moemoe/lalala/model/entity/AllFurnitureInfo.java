@@ -1,20 +1,13 @@
 package com.moemoe.lalala.model.entity;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.text.method.SingleLineTransformationMethod;
 
-import com.moemoe.lalala.event.FurnitureSelectEvent;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.Serializable;
 
-import butterknife.BindView;
+
 
 /**
- * Created by Administrator on 2018/5/30.
+ * Created by zhangyan on 2018/5/30.
  */
 
 public class AllFurnitureInfo implements Serializable {

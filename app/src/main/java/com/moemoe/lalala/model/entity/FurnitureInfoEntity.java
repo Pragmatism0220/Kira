@@ -1,22 +1,19 @@
 package com.moemoe.lalala.model.entity;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 
-import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by Administrator on 2018/5/30.
+ * Created by zhangyan on 2018/5/30.
  */
 
-public class FurnitureInfoEntity implements Serializable {
-
+public class FurnitureInfoEntity {
 
     private Map<String, ArrayList<AllFurnitureInfo>> allFurnitures = new LinkedHashMap<>();//全部家具集合，key：家具类型名称（如桌子、电脑、电视机），value：家具明细集合信息 ,
+
     private ArrayList<AllFurnitureInfo> suitFurnitures;//套装家具集合
 
 

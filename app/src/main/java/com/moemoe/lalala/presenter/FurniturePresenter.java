@@ -2,10 +2,7 @@ package com.moemoe.lalala.presenter;
 
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetResultSubscriber;
-import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
 import com.moemoe.lalala.model.entity.FurnitureInfoEntity;
-
-import java.util.Map;
 
 import javax.inject.Inject;
 

@@ -1,7 +1,7 @@
 package com.moemoe.lalala.event;
 
 /**
- * Created by Administrator on 2018/6/19.
+ * Created by zhangyan on 2018/6/19.
  */
 
 public class StorageDefaultDataEvent {
