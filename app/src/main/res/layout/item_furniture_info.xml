@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/item_furniture_image"
-            android:layout_width="@dimen/x130"
-            android:layout_height="@dimen/y130"
+            android:layout_width="@dimen/x140"
+            android:layout_height="@dimen/y140"
             android:layout_gravity="center"
             />
 

@@ -2,7 +2,9 @@ package com.moemoe.lalala.view.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import static android.graphics.Color.BLACK;
 
 
 /**
@@ -119,7 +123,8 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
             if (entities.get(0).getUserLikeRoleDefine() < entities.get(0).getUserLikeRoleDefineFull()) {
                 binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
-                params.width = 240 * entities.get(0).getUserLikeRoleDefine() / entities.get(0).getUserLikeRoleDefineFull();
+                int favorability = 240 - (240 * entities.get(0).getUserLikeRoleDefine() / entities.get(0).getUserLikeRoleDefineFull());
+                params.width = favorability;
             } else if (entities.get(0).getUserLikeRoleDefine() >= entities.get(0).getUserLikeRoleDefineFull()) {
                 binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefineFull() + "");
             }
@@ -183,7 +188,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
                     if (entities.get(position).getUserLikeRoleDefine() < entities.get(position).getUserLikeRoleDefineFull()) {
                         binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
-                        params.width = 240 * entities.get(position).getUserLikeRoleDefine() / entities.get(position).getUserLikeRoleDefineFull();
+                        params.width = 240 - (240 * entities.get(position).getUserLikeRoleDefine() / entities.get(position).getUserLikeRoleDefineFull());
                     }
                     binding.roleHeartNumSmall.setLayoutParams(params);
                     if (entities.get(position).getUserLikeRoleDefine() >= entities.get(position).getUserLikeRoleDefineFull()) {
@@ -317,8 +322,9 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
                     break;
                 case R.id.role_diary_btn:
-                    Intent diary = new Intent(RoleActivity.this, DiaryActivity.class);
-                    startActivity(diary);
+//                    Intent diary = new Intent(RoleActivity.this, DiaryActivity.class);
+//                    startActivity(diary);
+                    showToast("暂未开放");
                     break;
                 default:
                     break;

@@ -87,26 +87,8 @@ public class PropFragment extends BaseFragment implements PropContract.View {
         mAdapter.setOnItemClickListener(new PropAdapter.RoleItemClickListener() {
             @Override
             public void onClick(View v, int position, int which) {
-//                PropInfoEntity propInfoEntity = propInfoEntities.get(position);
-//                EventBus.getDefault().post(propInfoEntity);
-//
-//                String id = lists.get(position).getId();
-//                String name = lists.get(position).getName();
-//                String image = lists.get(position).getImage();
-//                int toolCount = lists.get(position).getToolCount();
-//                String describe = lists.get(position).getDescribe();
-//                boolean isUserHadTool = lists.get(position).isUserHadTool();
-
                 PropInfoEntity propInfoEntity = mAdapter.getData().get(position);
                 EventBus.getDefault().post(propInfoEntity);
-//                String id = mAdapter.getData().get(position).getId();
-//                String name = mAdapter.getData().get(position).getName();
-//                String image = mAdapter.getData().get(position).getImage();
-//                int toolCount = mAdapter.getData().get(position).getToolCount();
-//                String describe = mAdapter.getData().get(position).getDescribe();
-//                boolean isUserHadTool = mAdapter.getData().get(position).isUserHadTool();
-
-
                 callBack.getResult(propInfoEntity, position);
                 for (int i = 0; i < propInfoEntities.size(); i++) {
                     propInfoEntities.get(i).setSelected(i == which);

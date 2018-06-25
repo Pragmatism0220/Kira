@@ -168,6 +168,47 @@
                 android:src="@drawable/ic_bag_more_white" />
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/dormitory_storage"
+            >
+
+            <ImageView
+                android:id="@+id/power_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y5"
+                android:src="@drawable/ic_home_power" />
+
+            <FrameLayout
+                android:id="@+id/fl"
+                android:layout_width="@dimen/x220"
+                android:layout_height="@dimen/y52"
+                android:layout_marginStart="@dimen/x10"
+                android:layout_toEndOf="@+id/power_view"
+                android:background="@drawable/shape_power_bg">
+
+                <TextView
+                    android:id="@+id/power_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/power_num_small"
+                android:layout_width="@dimen/x10"
+                android:layout_height="@dimen/y52"
+                android:layout_alignParentBottom="true"
+                android:layout_alignStart="@+id/fl"
+                android:layout_gravity="end"
+                android:background="@drawable/role_heart_small_bg_one"
+                android:visibility="gone" />
+
+        </RelativeLayout>
 
         <ImageView
             android:id="@+id/dormitory_storage"

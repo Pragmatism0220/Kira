@@ -4,16 +4,16 @@
 
     <RelativeLayout
         android:id="@+id/item_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/x200"
+        android:layout_height="@dimen/y250"
         android:background="@drawable/role_official_btn">
 
         <ImageView
             android:id="@+id/item_choose_role_image"
             android:layout_width="@dimen/x180"
-            android:layout_height="@dimen/y200"
+            android:layout_height="@dimen/y180"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/y10"
+            android:layout_marginTop="@dimen/y12"
             android:src="@drawable/choose_role" />
 
         <ImageView

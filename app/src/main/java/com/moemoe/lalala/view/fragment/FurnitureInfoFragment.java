@@ -87,6 +87,7 @@ public class FurnitureInfoFragment extends BaseFragment {
         });
         mAdapter.setList(info);
         EventBus.getDefault().register(this);
+
     }
 
     public void showHava(boolean isOnlyShowNotHave) {

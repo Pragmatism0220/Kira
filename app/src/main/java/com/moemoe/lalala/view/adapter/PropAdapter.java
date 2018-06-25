@@ -21,6 +21,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 /**
  * Created by zhangyan on 2018/5/21.
  */
@@ -63,14 +65,18 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
         final PropInfoEntity data = infos.get(position);
 
         if (data.isUserHadTool()) {
-            Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).into(holder.mView);
+            Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).
+                    bitmapTransform(new RoundedCornersTransformation(mContext, 12, 0)).crossFade(1000).
+                    into(holder.mView);
             holder.mName.setText(data.getName());
             holder.mNum.setText("数量" + data.getToolCount());
             holder.mView.setAlpha(1.0f);
         } else {
             holder.mName.setText(data.getName());
             holder.mNum.setText("数量" + data.getToolCount());
-            Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).into(holder.mView);
+            Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).
+                    bitmapTransform(new RoundedCornersTransformation(mContext, 12, 0)).crossFade(1000).
+                    into(holder.mView);
             holder.mView.setAlpha(0.5f);
         }
 

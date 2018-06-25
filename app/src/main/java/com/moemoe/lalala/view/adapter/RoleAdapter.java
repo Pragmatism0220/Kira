@@ -126,6 +126,7 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder
                     listener.onClick(holder.mItem, position, holder.getAdapterPosition());
                 }
             });
+
         }
     }
 

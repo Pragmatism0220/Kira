@@ -136,6 +136,14 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
             binding.storageCommodityName.setText(entity.getName());
             binding.storageCommodityInfo.setText(entity.getDescribe());
             binding.storageCommodityNum.setText(entity.getToolCount() + "");
+
+            if (!entity.isUserHadTool() && entity.getToolCount() == 0) {
+                binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
+                binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_use_null_normal);
+            } else {
+                binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.storage_buy_btn_bg);
+                binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_use_btn_bg);
+            }
         }
     }
 
@@ -256,10 +264,12 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                 case R.id.choose_prop_btn:
                     binding.topBg.setBackgroundResource(R.drawable.bg_home_items_prop_background);
                     binding.storageCommodityNum.setVisibility(View.VISIBLE);
+                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_use_btn_bg);
                     binding.storageViewpager.setCurrentItem(0, false);
                     break;
                 case R.id.choose_furniture_btn:
                     binding.topBg.setBackgroundResource(R.drawable.ic_role_top_bg);
+                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_put_btn_bg);
                     binding.storageCommodityNum.setVisibility(View.GONE);
                     binding.storageViewpager.setCurrentItem(1, false);
                     break;
@@ -503,10 +513,31 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                 binding.storageCommodityName.setText(event.getSuitTypeName());
                 Glide.with(this).load(ApiService.URL_QINIU + event.getSuitTypeDetailIcon()).into(binding.storageImage);
                 binding.storageCommodityInfo.setText(event.getSuitTypeDescribe());
+                if (!event.isUserSuitFurnitureHad()) {//未拥有
+                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_use_null_normal);
+                } else {
+                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_put_btn_bg);
+                }
+                if (!event.isSuitPutInHouse()) {
+                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_null_normal);
+                } else {
+                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_put_btn_bg);
+                }
+
             } else {
                 binding.storageCommodityName.setText(event.getName());
                 Glide.with(this).load(ApiService.URL_QINIU + event.getDetailIcon()).into(binding.storageImage);
                 binding.storageCommodityInfo.setText(event.getDescribe());
+                if (!event.isUserFurnitureHad()) {
+                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_use_null_normal);
+                } else {
+                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_put_btn_bg);
+                }
+                if (!event.isSuitPutInHouse()) {
+                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_null_normal);
+                } else {
+                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_put_btn_bg);
+                }
             }
         }
     }

@@ -23,6 +23,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 /**
  * Created by zhangyan on 2018/5/23.
  */
@@ -108,13 +110,18 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
         }
 
 
-
         if (data.getType().equals("套装")) {
             holder.mFName.setText(data.getSuitTypeName());
-            Glide.with(mContext).load(ApiService.URL_QINIU + data.getSuitTypeDetailIcon()).into(holder.mFphoto);
+//            Glide.with(mContext).load(ApiService.URL_QINIU + data.getSuitTypeDetailIcon()).into(holder.mFphoto);
+            Glide.with(mContext).load(ApiService.URL_QINIU + data.getSuitTypeDetailIcon()).
+                    bitmapTransform(new RoundedCornersTransformation(mContext, 12, 0)).crossFade(1000)
+                    .into(holder.mFphoto);
         } else {
             holder.mFName.setText(data.getName());
-            Glide.with(mContext).load(ApiService.URL_QINIU + data.getDetailIcon()).into(holder.mFphoto);
+//            Glide.with(mContext).load(ApiService.URL_QINIU + data.getDetailIcon()).into(holder.mFphoto);
+            Glide.with(mContext).load(ApiService.URL_QINIU + data.getDetailIcon()).
+                    bitmapTransform(new RoundedCornersTransformation(mContext, 12, 0)).crossFade(1000)
+                    .into(holder.mFphoto);
             holder.mFStyle.setText(data.getSuitTypeName());
         }
 

@@ -137,6 +137,9 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
             mFurnitureViewPager.setAdapter(mAdapter);
             mTab.setViewPager(mFurnitureViewPager);
         }
+
+
+
     }
 
     /**

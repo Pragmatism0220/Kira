@@ -354,16 +354,23 @@ public class NetaRichEditor extends ScrollView {
             mTag2.setVisibility(View.VISIBLE);
             mTag2.setText(mTags.get(1));
             TagUtils.setBackGround(mTags.get(1), mTag2);
+
+//            mTag3.setVisibility(View.VISIBLE);
+//            mTag3.setText(mTags.get(2));
+//            TagUtils.setBackGround(mTags.get(2), mTag3);
+
         } else if (mTags.size() == 1) {
             mTag1.setVisibility(View.VISIBLE);
             mTag1.setText(mTags.get(0));
             TagUtils.setBackGround(mTags.get(0), mTag1);
             mTag2.setVisibility(View.GONE);
+//            mTag3.setVisibility(GONE);
         } else {
             mTag1.setVisibility(View.VISIBLE);
             mTag1.setText("");
             mTag1.setBackgroundResource(R.drawable.ic_bag_tag_add);
             mTag2.setVisibility(View.GONE);
+//            mTag3.setVisibility(GONE);
         }
 
     }
@@ -396,6 +403,8 @@ public class NetaRichEditor extends ScrollView {
 //        });
         mTag1 = labelRoot.findViewById(R.id.tv_label_add_1);
         mTag2 = labelRoot.findViewById(R.id.tv_label_add_2);
+//        mTag3 = labelRoot.findViewById(R.id.tv_label_add_3);
+
         mTag1.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
@@ -414,6 +423,15 @@ public class NetaRichEditor extends ScrollView {
                 ((BaseAppCompatActivity) getContext()).startActivityForResult(i2, REQ_RECOMMEND_TAG);
             }
         });
+//        mTag3.setOnClickListener(new NoDoubleClickListener() {
+//            @Override
+//            public void onNoDoubleClick(View v) {
+//                Intent i3 = new Intent(getContext(), RecommendTagActivity.class);
+//                i3.putStringArrayListExtra("tags", mTags);
+//                i3.putExtra("folderType", "DOC");
+//                ((BaseAppCompatActivity) getContext()).startActivityForResult(i3, REQ_RECOMMEND_TAG);
+//            }
+//        });
         View view = new View(getContext());
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
         view.setLayoutParams(layoutParams);

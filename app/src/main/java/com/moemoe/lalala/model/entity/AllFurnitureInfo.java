@@ -11,8 +11,10 @@ public class AllFurnitureInfo {
     private String furnitureType;//家具类型
     private String id;
     private String image;//家具图片
+
     private boolean isPutInHouse;// 家具是否（使用）放入宅屋，true：已经放入宅屋 ,
     private boolean isUserFurnitureHad;//家具是否拥有，true：拥有当前家具
+
     private String name;//名称
     private String schema;//跳转地址
     private String schemaShop;//家具跳转商店
@@ -20,6 +22,8 @@ public class AllFurnitureInfo {
 
     private boolean isSuitPutInHouse;//套装是否（使用）放入宅屋，true：已经放入宅屋 ,
     private boolean isUserSuitFurnitureHad;// 套装是否拥有，true：拥有当前家具 ,
+
+
     private String suitTypeDescribe;//套装风格描述
     private String suitTypeImage;//套装风格封面图片
     private String suitTypeName;//套装风格名称
