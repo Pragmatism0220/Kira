@@ -13,9 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/iv_cover_next"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
         android:layout_marginBottom="@dimen/y28"
-        android:src="@drawable/ic_garbage_get_prosit" />
+        android:src="@drawable/ic_garbage_get_prosit"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/iv_cover_next"
@@ -25,13 +25,14 @@
         android:src="@drawable/bg_garbage_background_1" />
 
     <TextView
-        android:id="@+id/tv_reward_name"
+        android:id="@+id/tv_content_gongxi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textColor="@color/black"
         android:textSize="@dimen/x48"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_juqing"
@@ -40,8 +41,9 @@
         android:layout_below="@+id/iv_cover_next"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/y24"
+        android:text="(点击任意区域关闭)"
         android:textColor="@color/white"
-        android:textSize="@dimen/x20"
+        android:textSize="@dimen/x30"
         android:textStyle="bold"
         android:visibility="gone" />
 

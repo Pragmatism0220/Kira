@@ -21,50 +21,48 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         this.space = space;
     }
 
-    private int getSpanCount(RecyclerView parent){
+    private int getSpanCount(RecyclerView parent) {
         // 列数
         int spanCount = -1;
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
-        if (layoutManager instanceof GridLayoutManager)
-        {
+        if (layoutManager instanceof GridLayoutManager) {
             spanCount = ((GridLayoutManager) layoutManager).getSpanCount();
-        } else if (layoutManager instanceof StaggeredGridLayoutManager)
-        {
+        } else if (layoutManager instanceof StaggeredGridLayoutManager) {
             spanCount = ((StaggeredGridLayoutManager) layoutManager)
                     .getSpanCount();
         }
         return spanCount;
     }
 
-    private int isLastColumn(RecyclerView parent, int pos, int spanCount, int childCount){
+    private int isLastColumn(RecyclerView parent, int pos, int spanCount, int childCount) {
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
-        if (layoutManager instanceof GridLayoutManager){
+        if (layoutManager instanceof GridLayoutManager) {
             int spanSize = ((GridLayoutManager) layoutManager).getSpanSizeLookup().getSpanSize(pos);
-            if(spanSize == spanCount){
+            if (spanSize == spanCount) {
                 return 0;
-            }else{
-                if(pos > 0 && pos < childCount - 1){
+            } else {
+                if (pos > 0 && pos < childCount - 1) {
                     int preSpanSize = ((GridLayoutManager) layoutManager).getSpanSizeLookup().getSpanSize(pos - 1);
-                    if(preSpanSize == spanCount){
+                    if (preSpanSize == spanCount) {
                         return 1;
-                    }else{
+                    } else {
                         //int firstVisibleItem = ((GridLayoutManager) layoutManager).findFirstVisibleItemPosition();
                         // View view = parent.getChildAt(pos - firstVisibleItem);
                         View view = layoutManager.findViewByPosition(pos - 1);
-                        if(view != null){
+                        if (view != null) {
                             int rightMargin = getRightMargins(view);
-                            if(rightMargin == space){
+                            if (rightMargin == space) {
                                 return 1;
-                            }else {
+                            } else {
                                 return 2;
                             }
-                        }else{
+                        } else {
                             int preSpanSize1 = ((GridLayoutManager) layoutManager).getSpanSizeLookup().getSpanSize(pos + 1);
                             view = layoutManager.findViewByPosition(pos + 1);
                             int rightMargin = getRightMargins(view);
-                            if(rightMargin == space && preSpanSize1 != spanCount){
+                            if (rightMargin == space && preSpanSize1 != spanCount) {
                                 return 1;
-                            }else {
+                            } else {
                                 return 2;
                             }
                         }
@@ -80,45 +78,45 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         int spanCount = getSpanCount(parent);
         int childCount = parent.getAdapter().getItemCount();
         int itemPosition = parent.getChildAdapterPosition(view);
-        View firstChild = ((ViewGroup)view).getChildAt(0);
+        View firstChild = ((ViewGroup) view).getChildAt(0);
 
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
-        if(layoutManager instanceof GridLayoutManager){
-            if(firstChild instanceof ViewPager){
+        if (layoutManager instanceof GridLayoutManager) {
+            if (firstChild instanceof ViewPager) {
 
-            }else if(firstChild instanceof ListView){
+            } else if (firstChild instanceof ListView) {
 
-            }else if (firstChild instanceof RecyclerView){
+            } else if (firstChild instanceof RecyclerView) {
 
             } else {
-                int i = isLastColumn(parent,itemPosition,spanCount,childCount);
-                if(i == 0){
-                    setRightMargins(view,space);
+                int i = isLastColumn(parent, itemPosition, spanCount, childCount);
+                if (i == 0) {
+                    setRightMargins(view, space);
                     setLeftMargins(view, space);
-                }else if(i == 1){
+                } else if (i == 1) {
                     setRightMargins(view, space / 2);
                     setLeftMargins(view, space);
-                }else{
-                    setRightMargins(view,space);
-                    setLeftMargins(view,space / 2);
+                } else {
+                    setRightMargins(view, space);
+                    setLeftMargins(view, space / 2);
                 }
             }
-        }else if(layoutManager instanceof LinearLayoutManager){
+        } else if (layoutManager instanceof LinearLayoutManager) {
             /*if(!isLastColumn(parent,itemPosition,spanCount,childCount)){
                 outRect.right = space;
             }else{
                 outRect.right = 0;
             }
             outRect.left = 0;*/
-            if(itemPosition == childCount - 1){
-                setRightMargins(view,0);
+            if (itemPosition == childCount - 1) {
+                setRightMargins(view, 0);
             }
         }
 
     }
 
 
-    public void setMargins (View v, int l, int t, int r, int b) {
+    public void setMargins(View v, int l, int t, int r, int b) {
         if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             p.setMargins(l, t, r, b);
@@ -126,7 +124,7 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    public void setLeftMargins (View v, int l) {
+    public void setLeftMargins(View v, int l) {
         if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             p.leftMargin = l;
@@ -134,7 +132,7 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    public int getRightMargins (View v) {
+    public int getRightMargins(View v) {
         if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             return p.rightMargin;
@@ -142,7 +140,7 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         return 0;
     }
 
-    public void setRightMargins (View v, int r) {
+    public void setRightMargins(View v, int r) {
         if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             p.rightMargin = r;
@@ -150,7 +148,7 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    public void setTopMargins (View v, int t) {
+    public void setTopMargins(View v, int t) {
         if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             p.topMargin = t;
@@ -158,7 +156,7 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    public void setBottomMargins (View v, int b) {
+    public void setBottomMargins(View v, int b) {
         if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             p.bottomMargin = b;

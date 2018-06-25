@@ -74,7 +74,6 @@ public class FurnitureInfoFragment extends BaseFragment {
                 AllFurnitureInfo infoEvent = info.get(position);
                 infoEvent.setPosition(position);
                 EventBus.getDefault().post(infoEvent);
-                Log.i("asd", "onClick: " + infoEvent);
 
                 for (int i = 0; i < info.size(); i++) {
                     info.get(i).setSelected(i == which);

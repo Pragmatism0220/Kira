@@ -24,6 +24,7 @@ import com.moemoe.lalala.databinding.VisitorsItemBinding;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.utils.LevelSpan;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
+import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.activity.HouseActivity;
@@ -135,13 +136,13 @@ public class NewVisitorAdapter extends BaseRecyclerViewAdapter<VisitorsEntity, N
                     ViewUtils.toPersonal(mContext, item.getVisitorId());
                 }
 
-        }
+            }
         });
 
         helper.mRoot.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if (!TextUtils.isEmpty(item.getVisitorId())) {
+                if (!TextUtils.isEmpty(item.getVisitorId()) && !item.getVisitorId().equals(PreferenceUtils.getUUid())) {
                     Intent intent = new Intent(mContext, HouseHisActivity.class);
                     intent.putExtra("id", item.getVisitorId());
                     mContext.startActivity(intent);

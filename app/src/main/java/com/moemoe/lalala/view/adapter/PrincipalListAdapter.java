@@ -57,7 +57,6 @@ public class PrincipalListAdapter extends RecyclerView.Adapter<PrincipalListAdap
     @Override
     public void onBindViewHolder(final PrincipalListViewHolder holder, final int position) {
         NewStoryInfoEntity data = mData.get(position);
-        Log.i("asd", "onBindViewHolder: " + mData);
 
         holder.mNumberImage.setEnabled(!data.isLock());
         holder.mPlayImage.setEnabled(!data.isLock());
@@ -66,8 +65,11 @@ public class PrincipalListAdapter extends RecyclerView.Adapter<PrincipalListAdap
 
         if (data.getImages() != null && data.getImages().size() > 0) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.mBackImage.getLayoutParams();
-            params.height = formatDipToPx(mContext, 105);
+            params.height = (int) mContext.getResources().getDimension(R.dimen.y190);
             holder.mBackImage.setLayoutParams(params);
+            RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) holder.mRlRoot.getLayoutParams();
+            params1.height = (int) mContext.getResources().getDimension(R.dimen.y190);
+            holder.mRlRoot.setLayoutParams(params1);
             for (int i = 0; i < data.getImages().size(); i++) {
                 ImageViewWithNeedle image = new ImageViewWithNeedle(mContext);
                 image.setExtraImage(data.getImages().get(i));
@@ -107,6 +109,7 @@ public class PrincipalListAdapter extends RecyclerView.Adapter<PrincipalListAdap
         private TextView mTitleText;
         private ImageView mPlayImage;
         private LinearLayout mExtraLayout;
+        RelativeLayout mRlRoot;
 
         public PrincipalListViewHolder(View itemView) {
             super(itemView);
@@ -116,6 +119,7 @@ public class PrincipalListAdapter extends RecyclerView.Adapter<PrincipalListAdap
             mTitleText = itemView.findViewById(R.id.text_plot_detail_title);
             mPlayImage = itemView.findViewById(R.id.image_plot_detail_play);
             mExtraLayout = itemView.findViewById(R.id.container_plot_extra_image);
+            mRlRoot = itemView.findViewById(R.id.rl_root);
         }
     }
 }

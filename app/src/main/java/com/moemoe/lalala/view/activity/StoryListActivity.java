@@ -142,7 +142,7 @@ public class StoryListActivity extends BaseAppCompatActivity implements StoryLis
                 if (mAdapter.getItem(position).isFlag()) {
                     Intent i = new Intent(StoryListActivity.this, MapEventNewActivity.class);
                     i.putExtra("id", mAdapter.getItem(position).getStoryId());
-                    i.putExtra("type",true);
+                    i.putExtra("type", true);
 //                    RESULT_BACK = position;
 //                    startActivityForResult(i, RESULT_BACK);
                     startActivity(i);

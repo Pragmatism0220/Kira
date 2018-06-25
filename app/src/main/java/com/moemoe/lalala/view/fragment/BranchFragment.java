@@ -166,8 +166,8 @@ public class BranchFragment extends BaseFragment {
             }
         });
         mBranch.setText("N(" + branchN + ")" +
-                "R(" + branchR + ")" +
-                "+SR(" + branchSR + ")");
+                " R(" + branchR + ") " +
+                " SR(" + branchSR + ")");
     }
 
     @Override

@@ -1,69 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="wrap_content">
 
-    >
-
-    <ImageView
-        android:id="@+id/image_plot_item_bg"
+    <RelativeLayout
+        android:id="@+id/rl_root"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y150"
-        android:layout_marginTop="@dimen/y18"
-        android:background="@drawable/bg_home_plot_detail_paper"
-        android:scaleType="fitXY" />
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/x20">
+        android:layout_height="@dimen/y150">
 
         <ImageView
-            android:id="@+id/image_plot_detail_num"
+            android:id="@+id/image_plot_item_bg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y150"
+            android:background="@drawable/bg_home_plot_detail_paper"
+            android:scaleType="fitXY" />
+
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_item_number" />
+            android:layout_marginStart="@dimen/x20">
+
+            <ImageView
+                android:id="@+id/image_plot_detail_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_item_number" />
+
+            <TextView
+                android:id="@+id/text_plot_detail_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:rotation="-17"
+                android:text="1"
+                android:textColor="#ffffff"
+                android:textSize="17sp" />
+        </FrameLayout>
 
         <TextView
-            android:id="@+id/text_plot_detail_num"
+            android:id="@+id/text_plot_detail_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:rotation="-17"
-            android:text="1"
-            android:textColor="#ffffff"
-            android:textSize="17sp" />
-    </FrameLayout>
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="@dimen/x112"
+            android:text="[意外的惊喜]"
+            android:textColor="@color/black"
+            android:textSize="@dimen/x30"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/text_plot_detail_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="@dimen/x112"
-        android:text="[意外的惊喜]"
-        android:textColor="@color/black"
-        android:textSize="@dimen/x30"
-        android:textStyle="bold" />
-
-    <ImageView
-        android:id="@+id/image_plot_detail_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerInParent="true"
-        android:layout_marginEnd="@dimen/x48"
-        android:src="@drawable/selector_plot_play" />
-
+        <ImageView
+            android:id="@+id/image_plot_detail_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="@dimen/x48"
+            android:src="@drawable/selector_plot_play" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/container_plot_extra_image"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/image_plot_item_bg"
         android:layout_marginStart="@dimen/x14"
-        android:layout_marginTop="-35dp"
-        android:orientation="horizontal"/>
+        android:layout_marginTop="@dimen/y110"
+        android:orientation="horizontal" />
 
 </RelativeLayout>

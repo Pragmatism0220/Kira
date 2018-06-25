@@ -34,6 +34,8 @@
             android:layout_below="@+id/top_view"
             android:onClick="@{presenter.onClick}"
             android:src="@drawable/role_back_btn" />
+
+        <include layout="@layout/dialog_role_house_garbage" />
     </RelativeLayout>
 
 </layout>

@@ -1,15 +1,12 @@
 package com.moemoe.lalala.view.activity;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;

@@ -1,8 +1,5 @@
 package com.moemoe.lalala.model.api;
 
-import android.util.Log;
-
-import com.google.gson.Gson;
 import com.moemoe.lalala.model.entity.ApiResult;
 
 import io.reactivex.Observer;

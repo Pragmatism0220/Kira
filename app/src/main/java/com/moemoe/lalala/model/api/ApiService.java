@@ -1190,7 +1190,13 @@ public interface ApiService {
 
     @GET("v2/kira/house/init")
     Observable<ApiResult> loadHoustInit();
-    
+
     @GET("v2/kira/house/sleep/role/all")
     Observable<ApiResult<ArrayList<HouseSleepEntity>>> loadHouseSleep();
+
+    @POST("v2/kira/house/user/rubblish/pickup")
+    Observable<ApiResult<RubbishEntity>> loadHouseRubblish(@Body RubblishBody req);
+
+    @POST("v2/kira/house/user/tool/save")
+    Observable<ApiResult> loadHouseSave(@Body RubblishBody req);
 }

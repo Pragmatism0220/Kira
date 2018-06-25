@@ -33,6 +33,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.AppSetting;
+import com.moemoe.lalala.event.HouseHisLikeEvent;
 import com.moemoe.lalala.event.HouseLikeEvent;
 import com.moemoe.lalala.model.entity.HouseDbEntity;
 import com.moemoe.lalala.model.entity.HouseImage;
@@ -110,7 +111,7 @@ public class MapLayout extends FrameLayout {
         touchImageView.setOnClickListener(lietener);
     }
 
-    public void addMapMarkView(Drawable markView, final float x, final float y, final double wdp, final double hdp, final String schame, String content, final String type, MapMark.RenderDelegate renderDelegate, final HouseDbEntity entity) {
+    public void addMapMarkView(Drawable markView, final float x, final float y, final double wdp, final double hdp, final String schame, final String content, final String type, MapMark.RenderDelegate renderDelegate, final HouseDbEntity entity) {
         if (markView == null) {
             throw new IllegalArgumentException("View for bubble cannot be null !");
         }
@@ -164,7 +165,11 @@ public class MapLayout extends FrameLayout {
                         isJump = !isJump;
                     }
                 } else if (type.equals("3")) {
-                    EventBus.getDefault().post(new HouseLikeEvent("", 3));
+                    if (isHisHouse) {
+                        EventBus.getDefault().post(new HouseHisLikeEvent(entity.getId(), 3));
+                    } else {
+                        EventBus.getDefault().post(new HouseLikeEvent(entity.getId(), 3));
+                    }
                     wuView.setVisibility(GONE);
                 } else if (entity.getId().equals("65ac0b01-907f-440e-89e2-40a136053cc5")) {
                     //从左向右
@@ -228,7 +233,7 @@ public class MapLayout extends FrameLayout {
                     @Override
                     public void onNoDoubleClick(View view) {
                         if (isHisHouse) {
-                            EventBus.getDefault().post(new HouseLikeEvent(entity.getTimerRoleId(), 3));
+                            EventBus.getDefault().post(new HouseHisLikeEvent(entity.getTimerRoleId(), 2));
                             mapImage.get(entity.getId()).setRoleTimer(false);
                             houseView.setVisibility(GONE);
                             setLikeAnimtion(view);
@@ -238,7 +243,8 @@ public class MapLayout extends FrameLayout {
                             } else {
                                 if (entity.getTimerIsCollectable()) {
                                     entity.setTimerIsCollectable(false);
-                                    EventBus.getDefault().post(new HouseLikeEvent(entity.getTimerRoleId(), 0));
+                                    //点击爱心动画
+                                    EventBus.getDefault().post(new HouseLikeEvent(entity.getTimerRoleId(), 2));
                                     setLikeAnimtion(view);
                                 } else {
                                     //从左向右
@@ -252,7 +258,9 @@ public class MapLayout extends FrameLayout {
                         }
                     }
                 });
+                
                 if (entity.isTimerIsSleep()) {
+                    houseView.setVisibility(GONE);
                     final HouseView sleepView = new HouseView(getContext());
                     sleepView.setBackgroundResource(R.drawable.ic_home_roles_sleep);
                     float sleepX = (float) (x - (int) getContext().getResources().getDimension(R.dimen.x40));
@@ -267,6 +275,8 @@ public class MapLayout extends FrameLayout {
                     sleepParams.width = (int) getContext().getResources().getDimension(R.dimen.x132);
                     sleepParams.height = (int) getContext().getResources().getDimension(R.dimen.y132);
                     sleepView.setLayoutParams(sleepParams);
+                }else {
+                    houseView.setVisibility(VISIBLE);
                 }
 
                 image.setRoleTimer(true);

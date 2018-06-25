@@ -24,6 +24,8 @@ import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
 import com.moemoe.lalala.model.entity.MapMarkEntity;
 import com.moemoe.lalala.model.entity.NearUserEntity;
+import com.moemoe.lalala.model.entity.RubbishEntity;
+import com.moemoe.lalala.model.entity.RubblishBody;
 import com.moemoe.lalala.model.entity.SaveVisitorEntity;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.utils.FileUtil;
@@ -160,6 +162,43 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                     }
                 });
 
+    }
+
+    @Override
+    public void loadHouseRubblish(RubblishBody userRubbishId) {
+        apiService.loadHouseRubblish(userRubbishId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<RubbishEntity>() {
+                    @Override
+                    public void onSuccess(RubbishEntity entity) {
+                        if (view != null) view.onLoadHouseRubblish(entity);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+    @Override
+    public void loadHouseSave(RubblishBody toolId) {
+        apiService.loadHouseSave(toolId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetSimpleResultSubscriber() {
+                               @Override
+                               public void onSuccess() {
+                                   if (view != null) view.onLoadHouseSave();
+                               }
+
+                               @Override
+                               public void onFail(int code, String msg) {
+                                   if (view != null) view.onFailure(code, msg);
+                               }
+                           }
+                );
     }
 
     @Override

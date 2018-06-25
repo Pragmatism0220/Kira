@@ -31,10 +31,10 @@ public class BranchHolder extends ClubChildHolder {
                 .error(R.drawable.shape_gray_e8e8e8_background)
                 .placeholder(R.drawable.shape_gray_e8e8e8_background)
                 .into((ImageView) $(R.id.item_branch_bg));
-        ((TextView) $(R.id.item_branch_title)).setText(entity.getAuthorBy());
+        ((TextView) $(R.id.item_branch_title)).setText(entity.getName());
         ((TextView) $(R.id.item_branch_num)).setText("已拥有:" + entity.getUserBranchLevelCount());
         if (entity.isShowJoinButton()) {
-            $(R.id.iv_plot_memory).setVisibility(View.VISIBLE);
+            $(R.id.iv_plot_memory).setVisibility(View.GONE);
             ((ImageView) $(R.id.item_branch_bg)).setAlpha(0.5f);
             ((TextView) $(R.id.item_branch_title)).setAlpha(0.5f);
             ((TextView) $(R.id.item_branch_num)).setAlpha(0.5f);

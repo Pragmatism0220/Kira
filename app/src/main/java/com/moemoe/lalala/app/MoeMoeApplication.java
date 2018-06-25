@@ -55,6 +55,7 @@ import com.moemoe.lalala.view.activity.MapActivity;
 import com.moemoe.lalala.view.activity.NewBagV5Activity;
 import com.moemoe.lalala.view.activity.NoticeActivity;
 import com.moemoe.lalala.view.activity.PersonalV2Activity;
+import com.moemoe.lalala.view.activity.PhoneMainV2Activity;
 import com.moemoe.lalala.view.activity.PhoneMenuV3Activity;
 import com.moemoe.lalala.view.activity.WebViewActivity;
 import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
@@ -152,6 +153,7 @@ public class MoeMoeApplication extends Application {
         if (windowManager != null && inflate != null && wmParams != null) {
 //            imageView.setVisibility(View.GONE);
             imageView.setVisibility(View.GONE);
+            inflate.setVisibility(View.GONE);
         }
     }
 
@@ -171,6 +173,7 @@ public class MoeMoeApplication extends Application {
     public void VisibilityWindowMager(Context context) {
         if (windowManager != null && inflate != null && wmParams != null) {
             imageView.setVisibility(View.VISIBLE);
+            inflate.setVisibility(View.VISIBLE);
         }
     }
 
@@ -201,9 +204,9 @@ public class MoeMoeApplication extends Application {
     @SuppressLint({"NewApi", "ClickableViewAccessibility"})
     public void initWindowManager(final Context context, final WindowManager mWindowManager) {
         if (Build.VERSION.SDK_INT >= 23) {
-//            if (!Settings.canDrawOverlays(this)) {
-//                return;
-//            }
+            if (!Settings.canDrawOverlays(this)) {
+                return;
+            }
         }
         if (!isWindow) {
             return;
@@ -542,11 +545,11 @@ public class MoeMoeApplication extends Application {
         mPersonal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (NetworkUtils.checkNetworkAndShowError(context) && DialogUtils.checkLoginAndShowDlg(context)) {
+                if (NetworkUtils.checkNetworkAndShowError(getActivity(MapActivity.class.getName())) && DialogUtils.checkLoginAndShowDlg(getActivity(MapActivity.class.getName()))) {
                     //埋点统计：手机个人中心
-                    Intent i1 = new Intent(context, PersonalV2Activity.class);
+                    Intent i1 = new Intent(getActivity(MapActivity.class.getName()), PersonalV2Activity.class);
                     i1.putExtra(UUID, PreferenceUtils.getUUid());
-                    context.startActivity(i1);
+                    getActivity(MapActivity.class.getName()).startActivity(i1);
                 }
                 inflateTwo.setVisibility(View.GONE);
             }
@@ -554,14 +557,14 @@ public class MoeMoeApplication extends Application {
         mBag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (NetworkUtils.checkNetworkAndShowError(context) && DialogUtils.checkLoginAndShowDlg(context)) {
+                if (NetworkUtils.checkNetworkAndShowError(getActivity(MapActivity.class.getName())) && DialogUtils.checkLoginAndShowDlg(getActivity(MapActivity.class.getName()))) {
                     if (PreferenceUtils.getAuthorInfo().isOpenBag()) {
-                        Intent i4 = new Intent(context, NewBagV5Activity.class);
+                        Intent i4 = new Intent(getActivity(MapActivity.class.getName()), NewBagV5Activity.class);
                         i4.putExtra("uuid", PreferenceUtils.getUUid());
-                        context.startActivity(i4);
+                        getActivity(MapActivity.class.getName()).startActivity(i4);
                     } else {
-                        Intent i4 = new Intent(context, BagOpenActivity.class);
-                        context.startActivity(i4);
+                        Intent i4 = new Intent(getActivity(MapActivity.class.getName()), BagOpenActivity.class);
+                        getActivity(MapActivity.class.getName()).startActivity(i4);
                     }
                 }
                 inflateTwo.setVisibility(View.GONE);
@@ -570,16 +573,17 @@ public class MoeMoeApplication extends Application {
         mShopping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i7 = new Intent(context, CoinShopActivity.class);
-                startActivity(i7);
+                Intent i7 = new Intent(getActivity(MapActivity.class.getName()), CoinShopActivity.class);
+                getActivity(MapActivity.class.getName()).startActivity(i7);
                 inflateTwo.setVisibility(View.GONE);
+
             }
         });
         mSignRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (DialogUtils.checkLoginAndShowDlg(context)) {
-                    DailyTaskActivity.startActivity(context);
+                if (DialogUtils.checkLoginAndShowDlg(getActivity(MapActivity.class.getName()))) {
+                    DailyTaskActivity.startActivity(getActivity(MapActivity.class.getName()));
                 }
                 inflateTwo.setVisibility(View.GONE);
             }
@@ -587,9 +591,9 @@ public class MoeMoeApplication extends Application {
         mPhoneMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (NetworkUtils.checkNetworkAndShowError(context) && DialogUtils.checkLoginAndShowDlg(context)) {
+                if (NetworkUtils.checkNetworkAndShowError(getActivity(MapActivity.class.getName())) && DialogUtils.checkLoginAndShowDlg(getActivity(MapActivity.class.getName()))) {
                     //埋点统计：通讯录
-                    startActivity(new Intent(getActivity(MapActivity.class.getName()), PhoneMenuV3Activity.class));
+                    getActivity(MapActivity.class.getName()).startActivity(new Intent(getActivity(MapActivity.class.getName()), PhoneMenuV3Activity.class));
                 }
                 inflateTwo.setVisibility(View.GONE);
             }
@@ -597,9 +601,9 @@ public class MoeMoeApplication extends Application {
         mIvMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (NetworkUtils.checkNetworkAndShowError(context) && DialogUtils.checkLoginAndShowDlg(context)) {
+                if (NetworkUtils.checkNetworkAndShowError(getActivity(MapActivity.class.getName())) && DialogUtils.checkLoginAndShowDlg(getActivity(MapActivity.class.getName()))) {
                     //埋点统计：手机聊天
-                    NoticeActivity.startActivity(context, 1);
+                    NoticeActivity.startActivity(getActivity(MapActivity.class.getName()), 1);
                 }
                 inflateTwo.setVisibility(View.GONE);
             }

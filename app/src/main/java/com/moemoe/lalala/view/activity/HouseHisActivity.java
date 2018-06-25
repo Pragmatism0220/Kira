@@ -1,16 +1,12 @@
 package com.moemoe.lalala.view.activity;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.os.WorkSource;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
@@ -18,11 +14,14 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityHouseHisBinding;
 import com.moemoe.lalala.di.components.DaggerHouseComponent;
 import com.moemoe.lalala.di.modules.HouseModule;
-import com.moemoe.lalala.event.HouseLikeEvent;
+import com.moemoe.lalala.event.HouseHisLikeEvent;
+import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.HouseDbEntity;
 import com.moemoe.lalala.model.entity.HouseLikeEntity;
 import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
+import com.moemoe.lalala.model.entity.RubbishEntity;
+import com.moemoe.lalala.model.entity.RubblishBody;
 import com.moemoe.lalala.model.entity.SaveVisitorEntity;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.presenter.DormitoryContract;
@@ -36,7 +35,6 @@ import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.base.BaseActivity;
-import com.moemoe.lalala.view.widget.map.TouchImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -47,10 +45,14 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import io.reactivex.schedulers.Schedulers;
+import jp.wasabeef.glide.transformations.CropTransformation;
 
 public class HouseHisActivity extends BaseActivity implements DormitoryContract.View {
 
@@ -64,6 +66,16 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
     private String id;
     private boolean mIsOut = false;
     private int type;
+    private RelativeLayout mRlRoleJuQing;
+    private ImageView mIvCover;
+    private TextView mTvRewardName;
+    private RelativeLayout mRleSelect;
+    private TextView mTvLeft;
+    private TextView mTvRight;
+    private ImageView mIvGongXI;
+    private RubbishEntity mRubbishEntity;
+    private TextView mTvJuQing;
+    private TextView mTvContent;
 
     @Override
     protected void initComponent() {
@@ -80,6 +92,17 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
                 .netComponent(MoeMoeApplication.getInstance().getNetComponent())
                 .build()
                 .inject(this);
+
+        mRlRoleJuQing = findViewById(R.id.rl_role_juqing);
+        mIvCover = findViewById(R.id.iv_cover_next);
+        mRleSelect = findViewById(R.id.rl_select);
+        mTvLeft = findViewById(R.id.tv_left);
+        mTvRight = findViewById(R.id.tv_right);
+        mIvGongXI = findViewById(R.id.iv_gongxi);
+        mTvJuQing = findViewById(R.id.tv_juqing);
+        mTvContent = findViewById(R.id.tv_content_gongxi);
+
+
         binding.map.setIsHis(true);
         mPresenter.loadHouseObjects(false, id);
         mContainer = new MapMarkContainer();
@@ -112,12 +135,84 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
 
     @Override
     protected void initListeners() {
+        mRlRoleJuQing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int type = mRubbishEntity.getType();
+                if (type == 3 && mIvGongXI.getVisibility() == View.VISIBLE) {
+                    mRlRoleJuQing.setVisibility(View.GONE);
+                    mTvContent.setVisibility(View.GONE);
+                    mTvJuQing.setVisibility(View.GONE);
+                    mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
+                    mIvGongXI.setVisibility(View.GONE);
+                    mRleSelect.setVisibility(View.GONE);
+                }
+            }
+        });
+        mTvLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int type = mRubbishEntity.getType();
+                switch (type) {
+                    case 1:
+                        mRlRoleJuQing.setVisibility(View.GONE);
+                        mTvJuQing.setVisibility(View.GONE);
+                        mTvContent.setVisibility(View.GONE);
+                        mIvGongXI.setVisibility(View.GONE);
+                        mRleSelect.setVisibility(View.GONE);
+                        mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
+                        break;
+                    case 2:
+                        showToast("放入成功");
+                        mRlRoleJuQing.setVisibility(View.GONE);
+                        mIvGongXI.setVisibility(View.GONE);
+                        mTvContent.setVisibility(View.GONE);
+                        mTvJuQing.setVisibility(View.GONE);
+                        mRleSelect.setVisibility(View.GONE);
+                        mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
+                        mPresenter.loadHouseSave(new RubblishBody(PreferenceUtils.getUUid(), "", mRubbishEntity.getId()));
+                        break;
+                    case 3:
 
+                        break;
+                }
+            }
+        });
+        mTvRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int type = mRubbishEntity.getType();
+                switch (type) {
+                    case 1:
+                        mRlRoleJuQing.setVisibility(View.GONE);
+                        mIvGongXI.setVisibility(View.GONE);
+                        mTvJuQing.setVisibility(View.GONE);
+                        mTvContent.setVisibility(View.GONE);
+                        mRleSelect.setVisibility(View.GONE);
+                        mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
+                        Intent i = new Intent(HouseHisActivity.this, MapEventNewActivity.class);
+                        i.putExtra("id", mRubbishEntity.getScriptId());
+                        i.putExtra("type", mRubbishEntity.getId());
+                        startActivity(i);
+                        break;
+                    case 2:
+                    case 3:
+                        showToast("功能未开放~");
+//                        mRlRoleJuQing.setVisibility(View.GONE);
+//                        mIvGongXI.setVisibility(View.GONE);
+//                        mTvContent.setVisibility(View.GONE);
+//                        mTvJuQing.setVisibility(View.GONE);
+//                        mRleSelect.setVisibility(View.GONE);
+//                        mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
+                        break;
+                }
+            }
+        });
     }
 
     @Override
     protected void initData() {
-        
+
     }
 
     @Override
@@ -207,10 +302,121 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
     @Override
     public void saveVisitorSuccess() {
         if (type == 3) {
-            showToast("捡起了一个垃圾哟~~真勤快~~");
+
         } else {
-            showToast("你破坏了对方的好感度气泡");
+            showToast("你破坏了TA的好感度哦~");
         }
+    }
+
+    /**
+     * 捡垃圾获取碎片
+     *
+     * @param entity
+     */
+    @Override
+    public void onLoadHouseRubblish(final RubbishEntity entity) {
+        mRlRoleJuQing.setVisibility(View.GONE);
+        mTvContent.setVisibility(View.GONE);
+        mTvJuQing.setVisibility(View.GONE);
+        mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
+        mIvGongXI.setVisibility(View.GONE);
+        mRleSelect.setVisibility(View.GONE);
+        mRubbishEntity = entity;
+        if (entity != null && entity.getType() != 0) {
+            mRlRoleJuQing.setVisibility(View.VISIBLE);
+            io.reactivex.Observable.create(new ObservableOnSubscribe<Integer>() {
+                @Override
+                public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                    Thread.sleep(200);
+                    e.onNext(1);
+                    Thread.sleep(200);
+                    e.onNext(2);
+                    e.onComplete();
+                }
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<Integer>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(Integer integer) {
+                            if (integer == 1) {
+                                mIvCover.setImageResource(R.drawable.bg_garbage_background_2);
+                            } else if (integer == 2) {
+                                int type = entity.getType();
+                                if (type == 1) {//剧情
+                                    int w = getResources().getDimensionPixelSize(R.dimen.x456);
+                                    int h = getResources().getDimensionPixelSize(R.dimen.y608);
+                                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIvCover.getLayoutParams();
+                                    layoutParams.width = w;
+                                    layoutParams.height = h;
+                                    mIvCover.setLayoutParams(layoutParams);
+                                    Glide.with(HouseHisActivity.this)
+                                            .load(ApiService.URL_QINIU + entity.getImage())
+                                            .error(R.drawable.shape_transparent_background)
+                                            .placeholder(R.drawable.shape_transparent_background)
+                                            .into(mIvCover);
+                                } else if (type == 2) {
+                                    int w = getResources().getDimensionPixelSize(R.dimen.x360);
+                                    int h = getResources().getDimensionPixelSize(R.dimen.y360);
+                                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIvCover.getLayoutParams();
+                                    layoutParams.width = w;
+                                    layoutParams.height = h;
+                                    mIvCover.setLayoutParams(layoutParams);
+                                    Glide.with(HouseHisActivity.this)
+                                            .load(ApiService.URL_QINIU + entity.getImage())
+                                            .error(R.drawable.shape_transparent_background)
+                                            .placeholder(R.drawable.shape_transparent_background)
+                                            .into(mIvCover);
+                                } else if (type == 3) {
+                                    mIvCover.setImageResource(R.drawable.bg_garbage_background_3);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            mIvGongXI.setVisibility(View.VISIBLE);
+                            int type = entity.getType();
+                            if (type == 1) {//剧情
+                                mRleSelect.setVisibility(View.VISIBLE);
+                                mTvJuQing.setText(entity.getName());
+                                mTvJuQing.setVisibility(View.VISIBLE);
+                                mTvLeft.setText("之后再看");
+                                mTvRight.setText("观看剧情");
+                            } else if (type == 2) {
+                                mRleSelect.setVisibility(View.VISIBLE);
+                                mTvJuQing.setText(entity.getName());
+                                mTvJuQing.setVisibility(View.VISIBLE);
+                                mTvLeft.setText("放入储物箱");
+                                mTvRight.setText("立即使用");
+                            } else if (type == 3) {
+                                mRleSelect.setVisibility(View.GONE);
+                                mTvJuQing.setText("(点击任意区域关闭)");
+                                mTvContent.setText(entity.getName());
+                                mTvContent.setVisibility(View.VISIBLE);
+                                mTvJuQing.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+
+        }
+    }
+
+    /**
+     * 获取
+     */
+    @Override
+    public void onLoadHouseSave() {
+        showToast("放入成功");
     }
 
     private void resolvErrorList(ArrayList<HouseDbEntity> errorList, final String type) {
@@ -261,12 +467,13 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void houseLikeEvent(HouseLikeEvent event) {
+    public void houseHisLikeEvent(HouseHisLikeEvent event) {
         if (event != null) {
             String roleId = event.getRoleId();
-            if (TextUtils.isEmpty(roleId)) {
+            if (event.getType() == 3) {
                 type = 3;
                 mPresenter.saveVisitor(new SaveVisitorEntity("", id, 3));
+                mPresenter.loadHouseRubblish(new RubblishBody(id, roleId, ""));
             } else {
                 type = 2;
                 mPresenter.saveVisitor(new SaveVisitorEntity(roleId, id, 2));

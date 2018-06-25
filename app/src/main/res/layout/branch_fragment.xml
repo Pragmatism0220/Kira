@@ -35,7 +35,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/x10"
             android:layout_toStartOf="@+id/check_box_btn"
-            android:src="@drawable/ic_show_unowned" />
+            android:src="@drawable/ic_show_unowned1" />
 
         <CheckBox
             android:id="@+id/check_box_btn"

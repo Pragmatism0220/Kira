@@ -79,6 +79,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     private BottomMenuFragment bottomFragment;
     private OrderEntity entit;
     private PropInfoEntity entity;
+    private boolean isCheck = true;
 
 
     @Override
@@ -263,11 +264,13 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId) {
                 case R.id.choose_prop_btn:
+                    isCheck = true;
                     binding.topBg.setBackgroundResource(R.drawable.bg_home_items_prop_background);
                     binding.storageCommodityNum.setVisibility(View.VISIBLE);
                     binding.storageViewpager.setCurrentItem(0, false);
                     break;
                 case R.id.choose_furniture_btn:
+                    isCheck = false;
                     binding.topBg.setBackgroundResource(R.drawable.ic_role_top_bg);
                     binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_put_btn_bg);
                     binding.storageCommodityNum.setVisibility(View.GONE);
@@ -429,7 +432,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     finish();
                     break;
                 case R.id.storage_commodity_buy_btn:
-                    if (!mPropFragment.isHidden()) {
+                    if (isCheck) {
                         if (entity != null) {//&& entity.isUserHadTool()
                             if (!TextUtils.isEmpty(entity.getProductId())) {
                                 mPresenter.createOrder(entity.getProductId());
@@ -438,7 +441,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                             }
                         }
 
-                    } else if (!mFurnitureFragment.isHidden()) {
+                    } else {
                         if (furnitureInfo != null) {
                             if (furnitureInfo.getType().equals("套装")) {//套装
                                 if (!furnitureInfo.isUserSuitFurnitureHad()) {
@@ -455,7 +458,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                                     if (TextUtils.isEmpty(furnitureInfo.getFurnitureProductId())) {
                                         showToast("该家具还未上架~~~");
                                     } else {
-                                        mPresenter.createOrder(furnitureInfo.getFurnitureSuitProductId());
+                                        mPresenter.createOrder(furnitureInfo.getFurnitureProductId());
                                     }
                                 } else {
                                     showToast("已拥有该家具~~~");

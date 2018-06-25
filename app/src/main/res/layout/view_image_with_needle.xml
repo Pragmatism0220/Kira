@@ -2,20 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/x10"
-    >
+    android:paddingLeft="@dimen/x10">
+
     <ImageView
         android:id="@+id/image_ext_icon_image"
-        android:src="@mipmap/ic_launcher"
         android:layout_width="@dimen/x110"
         android:layout_height="@dimen/y110"
-        android:layout_marginTop="12dp"/>
+        android:layout_marginTop="12dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/bg_home_plot_detail_paperclip"
+        android:layout_centerHorizontal="true"
         android:scaleType="fitXY"
-        android:layout_centerHorizontal="true"/>
+        android:src="@drawable/bg_home_plot_detail_paperclip" />
 
 </RelativeLayout>

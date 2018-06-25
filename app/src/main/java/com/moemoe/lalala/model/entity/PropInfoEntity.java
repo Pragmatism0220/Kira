@@ -80,15 +80,4 @@ public class PropInfoEntity {
         this.toolCount = toolCount;
     }
 
-    @Override
-    public String toString() {
-        return "PropInfoEntity{" +
-                "id='" + id + '\'' +
-                ", image='" + image + '\'' +
-                ", isUserHadTool=" + isUserHadTool +
-                ", name='" + name + '\'' +
-                ", toolCount=" + toolCount +
-                ", describe='" + describe + '\'' +
-                '}';
-    }
 }

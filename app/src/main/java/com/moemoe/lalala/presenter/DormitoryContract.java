@@ -6,6 +6,8 @@ import com.moemoe.lalala.model.entity.HouseLikeEntity;
 import com.moemoe.lalala.model.entity.HouseMarkContainer;
 import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
+import com.moemoe.lalala.model.entity.RubbishEntity;
+import com.moemoe.lalala.model.entity.RubblishBody;
 import com.moemoe.lalala.model.entity.SaveVisitorEntity;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.view.widget.map.MapLayout;
@@ -24,6 +26,8 @@ public interface DormitoryContract {
         void loadRoleLikeCollect(String roleId);
         void getVisitorsInfo();
         void saveVisitor(SaveVisitorEntity request);
+        void loadHouseRubblish(RubblishBody req);
+        void loadHouseSave(RubblishBody re);
     }
 
     interface View extends BaseView {
@@ -31,5 +35,7 @@ public interface DormitoryContract {
         void onLoadRoleLikeCollect(HouseLikeEntity entity);
         void getVisitorsInfoSuccess(ArrayList<VisitorsEntity> entities);
         void saveVisitorSuccess();
+        void onLoadHouseRubblish(RubbishEntity entity);
+        void onLoadHouseSave();
     }
 }

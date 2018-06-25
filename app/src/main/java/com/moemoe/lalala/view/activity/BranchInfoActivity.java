@@ -13,6 +13,7 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityBranchInfoBinding;
 import com.moemoe.lalala.di.components.DaggerBranchInfoComponent;
 import com.moemoe.lalala.di.modules.BranchInfoModule;
+import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.BranchStoryAllEntity;
 import com.moemoe.lalala.presenter.BranchInfoContract;
 import com.moemoe.lalala.presenter.BranchInfoPresenter;
@@ -80,10 +81,8 @@ public class BranchInfoActivity extends BaseActivity implements BranchInfoContra
         binding.branchInfoTitle.setText(entity.getName());
         binding.branchInfoAuthorby.setText("剧本作者:" + entity.getAuthorBy());
         binding.tvHuashi.setText("画师:" + entity.getPainterBy());
-        int w = (int) getResources().getDimension(R.dimen.x456);
-        int h = (int) getResources().getDimension(R.dimen.y608);
         Glide.with(this)
-                .load(StringUtils.getUrl(this, entity.getCoverImage(), w, h, false, true))
+                .load(ApiService.URL_QINIU + entity.getCoverImage())
                 .error(R.drawable.shape_gray_e8e8e8_background)
                 .placeholder(R.drawable.shape_gray_e8e8e8_background)
                 .into(binding.branchInfoBg);

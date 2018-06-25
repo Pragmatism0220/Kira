@@ -79,15 +79,15 @@
 
             <RelativeLayout
                 android:id="@+id/branch_info_photo"
-                android:layout_width="@dimen/x456"
-                android:layout_height="@dimen/y608"
+                android:layout_width="@dimen/x405"
+                android:layout_height="@dimen/y540"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/y24">
 
                 <ImageView
                     android:id="@+id/branch_info_bg"
-                    android:layout_width="@dimen/x456"
-                    android:layout_height="@dimen/y608" />
+                    android:layout_width="@dimen/x405"
+                    android:layout_height="@dimen/y540" />
 
                 <TextView
                     android:id="@+id/branch_info_name"
