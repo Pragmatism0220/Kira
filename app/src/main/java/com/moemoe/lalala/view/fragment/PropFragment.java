@@ -93,6 +93,7 @@ public class PropFragment extends BaseFragment implements PropContract.View {
                 for (int i = 0; i < propInfoEntities.size(); i++) {
                     propInfoEntities.get(i).setSelected(i == which);
                 }
+
                 mAdapter.notifyDataSetChanged();
             }
         });
