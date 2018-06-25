@@ -335,12 +335,12 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                         .placeholder(R.drawable.bg_default_circle)
                         .bitmapTransform(new CropCircleTransformation(this))
                         .into(img);
-                img.setOnClickListener(new NoDoubleClickListener() {
-                    @Override
-                    public void onNoDoubleClick(View v) {
-                        ViewUtils.toPersonal(HouseActivity.this, userEntity.getVisitorId());
-                    }
-                });
+//                img.setOnClickListener(new NoDoubleClickListener() {
+//                    @Override
+//                    public void onNoDoubleClick(View v) {
+//                        ViewUtils.toPersonal(HouseActivity.this, userEntity.getVisitorId());
+//                    }
+//                });
                 binding.llLikeUserRoot.addView(likeUser);
             }
             binding.visitorCount.setText(entities.get(0).getCount() + "");

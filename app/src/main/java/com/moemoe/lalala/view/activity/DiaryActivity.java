@@ -2,24 +2,15 @@ package com.moemoe.lalala.view.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.databinding.ActivityDiaryBinding;
-import com.moemoe.lalala.event.ScrollMessage;
 import com.moemoe.lalala.view.adapter.DiaryAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,9 +19,7 @@ public class DiaryActivity extends BaseActivity {
 
     private ActivityDiaryBinding binding;
     private DiaryAdapter mAdapter;
-    private int topHeight;
-    private final float maxScroll = 500f;
-    private float oldAlpha;
+
     private Handler handler = new Handler();
 
     @Override

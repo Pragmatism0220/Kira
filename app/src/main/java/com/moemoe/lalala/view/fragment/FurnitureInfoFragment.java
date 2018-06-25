@@ -95,11 +95,13 @@ public class FurnitureInfoFragment extends BaseFragment {
             if (isOnlyShowNotHave) {
                 for (AllFurnitureInfo allFurnitureInfo : info) {
                     if ("套装".equals(allFurnitureInfo.getType())) {
-                        if (!allFurnitureInfo.isUserSuitFurnitureHad()) {
+//                        if (!allFurnitureInfo.isUserSuitFurnitureHad()) {//显示未拥有
+                        if (allFurnitureInfo.isUserSuitFurnitureHad()) {
                             newList.add(allFurnitureInfo);
                         }
                     } else {
-                        if (!allFurnitureInfo.isUserFurnitureHad()) {
+//                        if (!allFurnitureInfo.isUserFurnitureHad()) {//未拥有
+                        if (allFurnitureInfo.isUserFurnitureHad()) {
                             newList.add(allFurnitureInfo);
                         }
                     }

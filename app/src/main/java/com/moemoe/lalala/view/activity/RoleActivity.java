@@ -44,7 +44,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
     RolePresenter mPresenter;
 
     int mPosition;
-    private boolean isPause;
+    private boolean isPitch;
 
     @Override
     protected void initComponent() {
@@ -135,6 +135,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
             Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(0).getShowHeadIcon()).into(binding.roleImage);
             binding.roleNameText.setText(entities.get(0).getName());
+
             entities.get(0).setSelected(true);
 
             //点击事件

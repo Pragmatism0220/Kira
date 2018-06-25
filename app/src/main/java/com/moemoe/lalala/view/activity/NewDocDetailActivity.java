@@ -1121,14 +1121,13 @@ public class NewDocDetailActivity extends BaseAppCompatActivity implements DocDe
 
                 item = new MenuItem(MENU_REPORT, getString(R.string.label_jubao), R.drawable.btn_doc_option_report);
                 items.add(item);
-
             }
 
             item = new MenuItem(MENU_JUMPLZ, "跳转楼层", R.drawable.btn_doc_option_jump);
             items.add(item);
 
-            item = new MenuItem(MENU_FORWARD, "转发到动态", R.drawable.btn_doc_option_forward);
-            items.add(item);
+//            item = new MenuItem(MENU_FORWARD, "转发到动态", R.drawable.btn_doc_option_forward);
+//            items.add(item);
 //
 //            item = new MenuItem(MENU_SHARE, getString(R.string.label_share), R.drawable.btn_doc_option_share);
 //            items.add(item);

@@ -124,7 +124,8 @@ public class PropFragment extends BaseFragment implements PropContract.View {
         newLists = new ArrayList<>();
         if (lists != null && lists.size() > 0) {
             for (int i = 0; i < lists.size(); i++) {
-                if (!lists.get(i).isUserHadTool()) {
+//                if (!lists.get(i).isUserHadTool()) {//显示未拥有
+                if (lists.get(i).isUserHadTool()) {
                     newLists.add(lists.get(i));
                 }
             }

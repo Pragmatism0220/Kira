@@ -2,6 +2,7 @@ package com.moemoe.lalala.view.adapter;
 
 import android.view.View;
 
+import com.moemoe.lalala.model.entity.DiaryEntity;
 import com.moemoe.lalala.view.widget.adapter.ClickableViewHolder;
 
 /**
@@ -14,4 +15,8 @@ public class DiaryViewHolder extends ClickableViewHolder {
     public DiaryViewHolder(View itemView) {
         super(itemView);
     }
+    public void createItem(final DiaryEntity entity){
+
+    }
 }
+

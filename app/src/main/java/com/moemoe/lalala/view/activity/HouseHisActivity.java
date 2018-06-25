@@ -209,7 +209,7 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         if (type == 3) {
             showToast("捡起了一个垃圾哟~~真勤快~~");
         } else {
-            showToast("咻咻咻咻~~~");
+            showToast("你破坏了对方的好感度气泡");
         }
     }
 
