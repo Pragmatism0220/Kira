@@ -144,6 +144,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                 binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.storage_buy_btn_bg);
                 binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_use_btn_bg);
             }
+
         }
     }
 
@@ -264,7 +265,6 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                 case R.id.choose_prop_btn:
                     binding.topBg.setBackgroundResource(R.drawable.bg_home_items_prop_background);
                     binding.storageCommodityNum.setVisibility(View.VISIBLE);
-                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_use_btn_bg);
                     binding.storageViewpager.setCurrentItem(0, false);
                     break;
                 case R.id.choose_furniture_btn:
