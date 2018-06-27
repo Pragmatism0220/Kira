@@ -448,5 +448,7 @@
     <string name="moc">Moc电脑</string>
     <string name="label_lotter">抽奖</string>
     <string name="label_select">选择</string>
+    <string name="edit_my_info">编辑我的资料</string>
+    <string name="common">通用</string>
 
 </resources>

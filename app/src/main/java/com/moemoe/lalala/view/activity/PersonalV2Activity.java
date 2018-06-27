@@ -111,6 +111,8 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
     ImageView mEdit;
     @BindView(R.id.iv_menu_list)
     ImageView mMenuList;
+    @BindView(R.id.student_card_item)
+    RelativeLayout mStudentCard;
     //    @BindView(R.id.iv_red_msg)
 //    ImageView mIvRedMsg;
     @BindView(R.id.tv_kira_num)
@@ -230,8 +232,10 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
         if (mIsSelf) {
             // subscribeEvent();
             mIvMsg.setVisibility(View.VISIBLE);
+//            mIvOption.setVisibility(View.VISIBLE);
         } else {
             mIvMsg.setVisibility(View.GONE);
+//            mIvOption.setVisibility(View.GONE);
         }
         /**
          *
@@ -395,11 +399,18 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
     }
 
     @OnClick({R.id.tv_follow, R.id.iv_option, R.id.iv_edit, R.id.iv_menu_list, R.id.iv_avatar, R.id.tv_private_msg
-            , R.id.house_btn, R.id.chat_btn, R.id.attention_btn})
+            , R.id.house_btn, R.id.chat_btn, R.id.attention_btn, R.id.student_card_item})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_follow:
                 mPresenter.followUser(mUserId, mFollow.isSelected());
+                break;
+            case R.id.student_card_item:
+                if (mInfo != null) {
+                    Intent intent1 = new Intent(this, NewEditAccountActivity.class);
+                    intent1.putExtra("info", mInfo);
+                    startActivityForResult(intent1, NewEditAccountActivity.REQ_EDIT);
+                }
                 break;
             case R.id.iv_edit:
                 if (mInfo != null) {
@@ -436,11 +447,14 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
                 }
                 break;
             case R.id.iv_option:
-                if (mInfo != null) {
-                    Intent i = new Intent(this, NewEditAccountActivity.class);
-                    i.putExtra("info", mInfo);
-                    startActivityForResult(i, NewEditAccountActivity.REQ_EDIT);
-                }
+//                if (mInfo != null) {
+//                    Intent i = new Intent(this, NewEditAccountActivity.class);
+//                    i.putExtra("info", mInfo);
+//                    startActivityForResult(i, NewEditAccountActivity.REQ_EDIT);
+//                }
+//                Intent i = new Intent(this, NewSettingActivity.class);
+//                i.putExtra("useId", mUserId);
+//                startActivity(i);
                 break;
             case R.id.attention_btn:
                 /**
@@ -604,6 +618,13 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
                     @Override
                     public void onNext(Integer i) {
                         huiZhangImgs[i].setVisibility(View.INVISIBLE);
+                        huiZhangImgs[i].setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getApplicationContext(), BadgeActivity.class);
+                                startActivity(intent);
+                            }
+                        });
                     }
                 });
         ArrayList<BadgeEntity> badgeList = info.getBadgeList();
@@ -679,24 +700,24 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
                 mToolbar.setNavigationIcon(R.drawable.btn_back_blue_normal_unity);
                 mMenuList.setImageResource(R.drawable.btn_menu_normal);
                 mIvMsg.setImageResource(R.drawable.btn_person_msg_blue);
-                mIvOption.setImageResource(R.drawable.btn_toolbar_option_blue);
+//                mIvOption.setImageResource(R.drawable.btn_toolbar_option_blue);
                 isChanged = true;
             }
             mToolbar.setAlpha(percent);
             mMenuList.setAlpha(percent);
-            mIvOption.setAlpha(percent);
+//            mIvOption.setAlpha(percent);
             mIvMsg.setAlpha(percent);
         } else {
             if (isChanged) {
                 mToolbar.setNavigationIcon(R.drawable.btn_back_white_normal);
                 mMenuList.setImageResource(R.drawable.btn_menu_white_normal);
-                mIvOption.setImageResource(R.drawable.btn_toolbar_option);
+//                mIvOption.setImageResource(R.drawable.btn_toolbar_option);
                 mIvMsg.setImageResource(R.drawable.btn_person_msg);
                 isChanged = false;
             }
             mToolbar.setAlpha(1 - percent);
             mMenuList.setAlpha(1 - percent);
-            mIvOption.setAlpha(1 - percent);
+//            mIvOption.setAlpha(1 - percent);
             mIvMsg.setAlpha(1 - percent);
         }
         mTvTitle.setAlpha(percent);

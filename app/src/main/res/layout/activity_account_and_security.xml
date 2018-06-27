@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.moemoe.lalala.view.activity.AccountAndSecurityActivity.Presenter" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_f6f6f6"
+        android:orientation="vertical"
+        tools:context="com.moemoe.lalala.view.activity.AccountAndSecurityActivity">
+
+        <View
+            android:id="@+id/top_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/status_bar_height"
+            android:background="@color/white" />
+
+        <include
+            android:id="@+id/include_toolbar"
+            layout="@layout/neta_bar" />
+
+        <!--Kira号-->
+        <RelativeLayout
+            android:id="@+id/account_Kira_num_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y100"
+            android:layout_marginTop="@dimen/y36"
+            android:background="@drawable/bg_normal_white_btn"
+            android:onClick="@{presenter.onClick}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/y36"
+                android:text="Kira号"
+                android:textColor="@color/black"
+                android:textSize="@dimen/x30" />
+
+
+            <TextView
+                android:id="@+id/account_Kira_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/y36"
+                android:text="7284917" />
+        </RelativeLayout>
+        <!--修改密码-->
+        <RelativeLayout
+            android:id="@+id/account_modification_pwa"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y100"
+            android:layout_marginTop="@dimen/y36"
+            android:background="@drawable/bg_normal_white_btn"
+            android:onClick="@{presenter.onClick}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/y36"
+                android:text="修改密码"
+                android:textColor="@color/black"
+                android:textSize="@dimen/x30" />
+
+
+            <ImageView
+                android:id="@+id/setting_more_btn_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/y36"
+                android:src="@drawable/ic_center_more" />
+        </RelativeLayout>
+
+        <View style="@style/HorizontalSep" />
+        <!--绑定手机号-->
+        <RelativeLayout
+            android:id="@+id/account_bind_phone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y100"
+            android:background="@drawable/bg_normal_white_btn"
+            android:onClick="@{presenter.onClick}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/y36"
+                android:text="绑定手机号"
+                android:textColor="@color/black"
+                android:textSize="@dimen/x30" />
+
+            <TextView
+                android:id="@+id/account_bind_phone_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/x12"
+                android:layout_toStartOf="@+id/account_bind_phone_bg"
+                android:text="13333333333" />
+
+
+            <ImageView
+                android:id="@+id/account_bind_phone_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/y36"
+                android:src="@drawable/ic_center_more" />
+        </RelativeLayout>
+
+        <!--关联微信-->
+        <RelativeLayout
+            android:id="@+id/account_wx_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y100"
+            android:layout_marginTop="@dimen/y36"
+            android:background="@drawable/bg_normal_white_btn"
+            android:onClick="@{presenter.onClick}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/y36"
+                android:text="关联微信"
+                android:textColor="@color/black"
+                android:textSize="@dimen/x30" />
+
+            <TextView
+                android:id="@+id/account_wx_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/x12"
+                android:layout_toStartOf="@+id/account_wx_item_bg"
+                android:text="moemoe" />
+
+
+            <ImageView
+                android:id="@+id/account_wx_item_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/y36"
+                android:src="@drawable/ic_center_more" />
+        </RelativeLayout>
+
+        <View style="@style/HorizontalSep" />
+        <!--关联QQ-->
+        <RelativeLayout
+            android:id="@+id/account_qq_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y100"
+            android:background="@drawable/bg_normal_white_btn"
+            android:onClick="@{presenter.onClick}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/y36"
+                android:text="关联QQ"
+                android:textColor="@color/black"
+                android:textSize="@dimen/x30" />
+
+            <TextView
+                android:id="@+id/edit_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/x32"
+                android:layout_toStartOf="@+id/account_qq_item_bg"
+                android:text="未关联" />
+
+            <ImageView
+                android:id="@+id/account_qq_item_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/y36"
+                android:src="@drawable/ic_center_more" />
+
+        </RelativeLayout>
+
+        <View style="@style/HorizontalSep" />
+        <!--性别-->
+        <RelativeLayout
+            android:id="@+id/account_weibo_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y100"
+            android:background="@drawable/bg_normal_white_btn"
+            android:onClick="@{presenter.onClick}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/y36"
+                android:text="性别"
+                android:textColor="@color/black"
+                android:textSize="@dimen/x30" />
+
+
+            <TextView
+                android:id="@+id/account_weibo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/x32"
+                android:layout_toStartOf="@+id/account_weibo_bg"
+                android:text="未关联" />
+
+            <ImageView
+                android:id="@+id/account_weibo_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/y36"
+                android:src="@drawable/ic_center_more" />
+
+
+        </RelativeLayout>
+
+        <!--黑名单-->
+        <RelativeLayout
+            android:id="@+id/account_black_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y100"
+            android:layout_marginTop="@dimen/y36"
+            android:background="@drawable/bg_normal_white_btn"
+            android:onClick="@{presenter.onClick}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/y36"
+                android:text="黑名单"
+                android:textColor="@color/black"
+                android:textSize="@dimen/x30" />
+
+            <ImageView
+                android:id="@+id/account_black_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/y36"
+                android:src="@drawable/ic_center_more" />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</layout>

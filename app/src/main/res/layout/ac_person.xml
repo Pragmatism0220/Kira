@@ -80,6 +80,7 @@
                     android:src="@drawable/bg_cover_shading_white" />
 
                 <RelativeLayout
+                    android:id="@+id/student_card_item"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/y370"
                     android:layout_alignParentBottom="true"

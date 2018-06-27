@@ -77,6 +77,7 @@ public class NewEditAccountActivity extends BaseAppCompatActivity implements Edi
     TextView mTvSign;
     @BindView(R.id.tv_birthday)
     TextView mTvBirthday;
+
     @BindView(R.id.edt_comment_input)
     EditText mEdtCommentInput;
     @BindView(R.id.ll_comment_pannel)
@@ -94,6 +95,7 @@ public class NewEditAccountActivity extends BaseAppCompatActivity implements Edi
     private String mUploadPath;
     private boolean mIsNickname;
     private boolean mHasModified = false;
+
 
     @Override
     protected int getLayoutId() {
@@ -115,6 +117,7 @@ public class NewEditAccountActivity extends BaseAppCompatActivity implements Edi
         mTvSave.getPaint().setFakeBoldText(true);
         mTvSave.setText(getString(R.string.label_save_modify));
         mTvTitle.setText(getString(R.string.label_edit_personal_data));
+
         mDatePickerDialog = DatePickerDialog.newInstance(new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -126,6 +129,7 @@ public class NewEditAccountActivity extends BaseAppCompatActivity implements Edi
         }, 1990, 6, 1, false);
         mDatePickerDialog.setYearRange(1949, 2016);
         mDatePickerDialog.setCloseOnSingleTapDay(true);
+
         mEdtCommentInput.addTextChangedListener(new TextWatcher() {
 
             @Override

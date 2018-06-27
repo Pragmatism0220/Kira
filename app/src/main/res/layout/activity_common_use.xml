@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.moemoe.lalala.view.activity.CommonUseActivity.Presenter" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_f6f6f6"
+        android:orientation="vertical"
+        tools:context="com.moemoe.lalala.view.activity.CommonUseActivity">
+
+        <View
+            android:id="@+id/top_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/status_bar_height"
+            android:background="@color/white" />
+
+        <include
+            android:id="@+id/include_toolbar"
+            layout="@layout/neta_bar" />
+
+
+        <RelativeLayout
+            android:id="@+id/wifi_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y100"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_normal_white_btn"
+            android:onClick="@{presenter.onClick}">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/x50"
+                android:text="非WIFI下浏览高清"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/x30" />
+
+            <ImageView
+                android:id="@+id/wifi_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/x50"
+                android:text="当前5.5.5"
+                android:textColor="@color/gray_d7d7d7"
+                android:textSize="@dimen/x30" />
+
+        </RelativeLayout>
+
+        <View style="@style/HorizontalSep" />
+
+        <RelativeLayout
+            android:id="@+id/up_data_number_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y100"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_normal_white_btn"
+            android:onClick="@{presenter.onClick}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/x50"
+                android:text="版本更新"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/x30" />
+
+            <TextView
+                android:id="@+id/up_data_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/x50"
+                android:layout_toStartOf="@+id/up_data_number_img"
+                android:text="当前5.5.5"
+                android:textColor="@color/gray_d7d7d7"
+                android:textSize="@dimen/x28" />
+
+            <ImageView
+                android:id="@+id/up_data_number_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/y36"
+                android:src="@drawable/ic_center_more" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/clean_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y100"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/y36"
+            android:background="@drawable/bg_normal_white_btn"
+            android:onClick="@{presenter.onClick}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/x50"
+                android:text="清理缓存"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/x30" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/clean_img"
+                android:text="0.0"
+                android:layout_marginEnd="@dimen/x16"
+                />
+
+            <ImageView
+                android:id="@+id/clean_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/y36"
+                android:src="@drawable/ic_center_more" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</layout>
