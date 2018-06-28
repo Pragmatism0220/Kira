@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.style.TtsSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -122,6 +123,9 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     private RubbishEntity mRubbishEntity;
     private TextView mTvJuQing;
     private TextView mTvContent;
+    private TextView mTvChuWu;
+    private TextView mTvCnanle;
+    private int count;
 
     @Override
     protected void initComponent() {
@@ -138,6 +142,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mIvGongXI = findViewById(R.id.iv_gongxi);
         mTvJuQing = findViewById(R.id.tv_juqing);
         mTvContent = findViewById(R.id.tv_content_gongxi);
+        mTvChuWu = findViewById(R.id.tv_chuwu);
+        mTvCnanle = findViewById(R.id.tv_canle);
     }
 
     @Override
@@ -165,8 +171,24 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (MoeMoeApplication.getInstance().GoneDiaLog()) {
+            return true;
+        }
+        if (MoeMoeApplication.getInstance().isMenu()) {
+            MoeMoeApplication.getInstance().GoneMenu();
+            return true;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        binding.ivHouseQrCode.setVisibility(View.INVISIBLE);
+        binding.tvHouseName.setVisibility(View.INVISIBLE);
+        binding.tvHouseVivit.setVisibility(View.INVISIBLE);
+        MoeMoeApplication.getInstance().VisibilityWindowMager(this);
         binding.map.clearAllView();
         binding.map.addTouchView(HouseActivity.this);
         mPresenter.getVisitorsInfo();
@@ -212,15 +234,27 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mRlRoleJuQing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int type = mRubbishEntity.getType();
-                if (type == 3 && mIvGongXI.getVisibility() == View.VISIBLE) {
-                    mRlRoleJuQing.setVisibility(View.GONE);
-                    mTvContent.setVisibility(View.GONE);
-                    mTvJuQing.setVisibility(View.GONE);
-                    mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
-                    mIvGongXI.setVisibility(View.GONE);
-                    mRleSelect.setVisibility(View.GONE);
-                }
+//                int type = mRubbishEntity.getType();
+//                if (type == 3 && mIvGongXI.getVisibility() == View.VISIBLE) {
+//                    mRlRoleJuQing.setVisibility(View.GONE);
+//                    mTvContent.setVisibility(View.GONE);
+//                    mTvJuQing.setVisibility(View.GONE);
+//                    mIvGongXI.setVisibility(View.GONE);
+//                    mRleSelect.setVisibility(View.GONE);
+//                } else if (type == 4 && mIvGongXI.getVisibility() == View.VISIBLE) {
+//                    mRlRoleJuQing.setVisibility(View.GONE);
+//                    mTvContent.setVisibility(View.GONE);
+//                    mTvJuQing.setVisibility(View.GONE);
+//                    mIvGongXI.setVisibility(View.GONE);
+//                    mRleSelect.setVisibility(View.GONE);
+//                } else if (type == 2 && mIvGongXI.getVisibility() == View.VISIBLE) {
+//                   
+//                }
+                mRlRoleJuQing.setVisibility(View.GONE);
+                mTvContent.setVisibility(View.GONE);
+                mTvJuQing.setVisibility(View.GONE);
+                mIvGongXI.setVisibility(View.GONE);
+                mRleSelect.setVisibility(View.GONE);
             }
         });
         mTvLeft.setOnClickListener(new View.OnClickListener() {
@@ -234,17 +268,16 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                         mTvContent.setVisibility(View.GONE);
                         mIvGongXI.setVisibility(View.GONE);
                         mRleSelect.setVisibility(View.GONE);
-                        mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
                         break;
                     case 2:
-                        showToast("放入成功");
                         mRlRoleJuQing.setVisibility(View.GONE);
                         mIvGongXI.setVisibility(View.GONE);
                         mTvContent.setVisibility(View.GONE);
                         mTvJuQing.setVisibility(View.GONE);
                         mRleSelect.setVisibility(View.GONE);
-                        mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
-                        mPresenter.loadHouseSave(new RubblishBody(PreferenceUtils.getUUid(), "", mRubbishEntity.getId()));
+//                        mPresenter.loadHouseSave(new RubblishBody(PreferenceUtils.getUUid(), "", mRubbishEntity.getId()));
+                        Intent i6 = new Intent(HouseActivity.this, StorageActivity.class);
+                        startActivity(i6);
                         break;
                     case 3:
 
@@ -263,14 +296,16 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                         mTvJuQing.setVisibility(View.GONE);
                         mTvContent.setVisibility(View.GONE);
                         mRleSelect.setVisibility(View.GONE);
-                        mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
                         Intent i = new Intent(HouseActivity.this, MapEventNewActivity.class);
                         i.putExtra("id", mRubbishEntity.getScriptId());
                         i.putExtra("type", true);
                         startActivity(i);
                         break;
-                    case 2:
                     case 3:
+
+                        break;
+                    case 2:
+                    case 4:
                         showToast("功能未开放~");
 //                        mRlRoleJuQing.setVisibility(View.GONE);
 //                        mIvGongXI.setVisibility(View.GONE);
@@ -408,6 +443,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
 //                });
                 binding.llLikeUserRoot.addView(likeUser);
             }
+            count = entities.get(0).getCount();
             binding.visitorCount.setText(entities.get(0).getCount() + "");
         } else {
             binding.visitorInfo.setVisibility(View.GONE);
@@ -432,92 +468,93 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
      */
     @Override
     public void onLoadHouseRubblish(final RubbishEntity entity) {
+        mRlRoleJuQing.setVisibility(View.GONE);
+        mTvContent.setVisibility(View.GONE);
+        mTvJuQing.setVisibility(View.GONE);
+        mIvGongXI.setVisibility(View.GONE);
+        mRleSelect.setVisibility(View.GONE);
+        mTvContent.setText("");
+        mTvCnanle.setVisibility(View.GONE);
+        mTvCnanle.setText("");
+        mTvChuWu.setText("");
+        mTvChuWu.setVisibility(View.GONE);
         mRubbishEntity = entity;
         if (entity != null && entity.getType() != 0) {
             mRlRoleJuQing.setVisibility(View.VISIBLE);
-            io.reactivex.Observable.create(new ObservableOnSubscribe<Integer>() {
-                @Override
-                public void subscribe(ObservableEmitter<Integer> e) throws Exception {
-                    Thread.sleep(200);
-                    e.onNext(1);
-                    Thread.sleep(200);
-                    e.onNext(2);
-                    e.onComplete();
-                }
-            }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<Integer>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(Integer integer) {
-                            if (integer == 1) {
-                                mIvCover.setImageResource(R.drawable.bg_garbage_background_2);
-                            } else if (integer == 2) {
-                                int type = entity.getType();
-                                if (type == 1) {//剧情
-                                    int w = getResources().getDimensionPixelSize(R.dimen.x456);
-                                    int h = getResources().getDimensionPixelSize(R.dimen.y608);
-                                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIvCover.getLayoutParams();
-                                    layoutParams.width = w;
-                                    layoutParams.height = h;
-                                    mIvCover.setLayoutParams(layoutParams);
-                                    Glide.with(HouseActivity.this)
-                                            .load(ApiService.URL_QINIU + entity.getImage())
-                                            .error(R.drawable.shape_transparent_background)
-                                            .placeholder(R.drawable.shape_transparent_background)
-                                            .into(mIvCover);
-                                } else if (type == 2) {
-                                    int w = getResources().getDimensionPixelSize(R.dimen.x360);
-                                    int h = getResources().getDimensionPixelSize(R.dimen.y360);
-                                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIvCover.getLayoutParams();
-                                    layoutParams.width = w;
-                                    layoutParams.height = h;
-                                    mIvCover.setLayoutParams(layoutParams);
-                                    Glide.with(HouseActivity.this)
-                                            .load(ApiService.URL_QINIU + entity.getImage())
-                                            .error(R.drawable.shape_transparent_background)
-                                            .placeholder(R.drawable.shape_transparent_background)
-                                            .into(mIvCover);
-                                } else if (type == 3) {
-                                    mIvCover.setImageResource(R.drawable.bg_garbage_background_3);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            mIvGongXI.setVisibility(View.VISIBLE);
-                            int type = entity.getType();
-                            if (type == 1) {//剧情
-                                mRleSelect.setVisibility(View.VISIBLE);
-                                mTvJuQing.setText(entity.getName());
-                                mTvJuQing.setVisibility(View.VISIBLE);
-                                mTvLeft.setText("之后再看");
-                                mTvRight.setText("观看剧情");
-                            } else if (type == 2) {
-                                mRleSelect.setVisibility(View.VISIBLE);
-                                mTvJuQing.setText(entity.getName());
-                                mTvJuQing.setVisibility(View.VISIBLE);
-                                mTvLeft.setText("放入储物箱");
-                                mTvRight.setText("立即使用");
-                            } else if (type == 3) {
-                                mRleSelect.setVisibility(View.GONE);
-                                mTvJuQing.setText("(点击任意区域关闭)");
-                                mTvContent.setText(entity.getName());
-                                mTvContent.setVisibility(View.VISIBLE);
-                                mTvJuQing.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    });
+            mTvLeft.setVisibility(View.VISIBLE);
+            mIvGongXI.setVisibility(View.VISIBLE);
+            int type = entity.getType();
+            if (type == 1) {//剧情
+                int w = getResources().getDimensionPixelSize(R.dimen.x456);
+                int h = getResources().getDimensionPixelSize(R.dimen.y608);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIvCover.getLayoutParams();
+                layoutParams.width = w;
+                layoutParams.height = h;
+                mIvCover.setLayoutParams(layoutParams);
+                Glide.with(HouseActivity.this)
+                        .load(ApiService.URL_QINIU + entity.getImage())
+                        .error(R.drawable.shape_transparent_background)
+                        .placeholder(R.drawable.shape_transparent_background)
+                        .into(mIvCover);
+                mRleSelect.setVisibility(View.VISIBLE);
+                mTvJuQing.setText(entity.getName());
+                mTvJuQing.setVisibility(View.VISIBLE);
+                mTvLeft.setVisibility(View.GONE);
+                mTvRight.setText("观看剧情");
+                mTvChuWu.setVisibility(View.VISIBLE);
+                mTvCnanle.setVisibility(View.VISIBLE);
+                mTvChuWu.setText("(已放入储物箱)");
+                mTvCnanle.setText("点击任意区域关闭");
+            } else if (type == 2) {
+                int w = getResources().getDimensionPixelSize(R.dimen.x360);
+                int h = getResources().getDimensionPixelSize(R.dimen.y360);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIvCover.getLayoutParams();
+                layoutParams.width = w;
+                layoutParams.height = h;
+                mIvCover.setLayoutParams(layoutParams);
+                Glide.with(HouseActivity.this)
+                        .load(ApiService.URL_QINIU + entity.getImage())
+                        .error(R.drawable.shape_transparent_background)
+                        .placeholder(R.drawable.shape_transparent_background)
+                        .into(mIvCover);
+                mRleSelect.setVisibility(View.VISIBLE);
+                mTvJuQing.setText(entity.getName());
+                mTvJuQing.setVisibility(View.VISIBLE);
+                mTvChuWu.setVisibility(View.VISIBLE);
+                mTvCnanle.setVisibility(View.VISIBLE);
+                mTvChuWu.setText("(已放入储物箱)");
+                mTvCnanle.setText("点击任意区域关闭");
+                mTvRight.setText("立即使用");
+                mTvLeft.setVisibility(View.VISIBLE);
+                mTvLeft.setText("查看储物箱");
+                mPresenter.loadHouseSave(new RubblishBody(PreferenceUtils.getUUid(), "", mRubbishEntity.getId()));
+            } else if (type == 3) {
+                mIvCover.setImageResource(R.drawable.bg_garbage_background_3);
+                mRleSelect.setVisibility(View.GONE);
+                mTvJuQing.setText("(点击任意区域关闭)");
+                mTvContent.setText(entity.getName());
+                mTvContent.setVisibility(View.VISIBLE);
+                mTvJuQing.setVisibility(View.VISIBLE);
+            } else if (type == 4) {
+                int w = getResources().getDimensionPixelSize(R.dimen.x360);
+                int h = getResources().getDimensionPixelSize(R.dimen.y360);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIvCover.getLayoutParams();
+                layoutParams.width = w;
+                layoutParams.height = h;
+                mIvCover.setLayoutParams(layoutParams);
+                Glide.with(HouseActivity.this)
+                        .load(ApiService.URL_QINIU + entity.getImage())
+                        .error(R.drawable.shape_transparent_background)
+                        .placeholder(R.drawable.shape_transparent_background)
+                        .into(mIvCover);
+                mRleSelect.setVisibility(View.GONE);
+                mTvJuQing.setText(entity.getName());
+                mTvJuQing.setVisibility(View.VISIBLE);
+                mPresenter.loadHouseSave(new RubblishBody(PreferenceUtils.getUUid(), "", mRubbishEntity.getId()));
+                mTvChuWu.setVisibility(View.VISIBLE);
+                mTvCnanle.setVisibility(View.GONE);
+                mTvChuWu.setText("(已放入储物箱)");
+            }
 
         }
     }
@@ -527,7 +564,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
      */
     @Override
     public void onLoadHouseSave() {
-        showToast("放入成功");
+
     }
 
     private void resolvErrorList(ArrayList<HouseDbEntity> errorList, final String type) {
@@ -586,6 +623,14 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    protected void onPause() {
+        MoeMoeApplication.getInstance().GoneWindowMager(this);
+        MoeMoeApplication.getInstance().GoneDiaLog();
+        MoeMoeApplication.getInstance().GoneMenu();
+        super.onPause();
+    }
+
     private void imgIn() {
         ObjectAnimator phoneAnimator = ObjectAnimator.ofFloat(binding.llToolBar, "translationY", -binding.llToolBar.getHeight() - getResources().getDimension(R.dimen.y60), 0).setDuration(300);
         phoneAnimator.setInterpolator(new OvershootInterpolator());
@@ -599,10 +644,18 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mVisitorInfoAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvSleepAnimator = ObjectAnimator.ofFloat(binding.ivSleep, "translationX", getResources().getDisplayMetrics().widthPixels, 0).setDuration(300);
         mIvSleepAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvTrandsAnimator = ObjectAnimator.ofFloat(binding.ivTrends, "translationX", getResources().getDisplayMetrics().widthPixels, 0).setDuration(300);
+        mIvTrandsAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvAlarmsAnimator = ObjectAnimator.ofFloat(binding.ivAlarm, "translationX", getResources().getDisplayMetrics().widthPixels, 0).setDuration(300);
+        mIvAlarmsAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvMesssgeAnimator = ObjectAnimator.ofFloat(binding.ivMessage, "translationX", getResources().getDisplayMetrics().widthPixels, 0).setDuration(300);
+        mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(mRoleAnimator);
         set.play(mStorageAnimator).with(mDramaAnimator);
         set.play(mVisitorInfoAnimator).with(mIvSleepAnimator);
+        set.play(mIvTrandsAnimator).with(mIvAlarmsAnimator);
+        set.play(mIvMesssgeAnimator);
         set.start();
     }
 
@@ -619,10 +672,18 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mVisitorInfoAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvSleepAnimator = ObjectAnimator.ofFloat(binding.ivSleep, "translationX", 0, getResources().getDisplayMetrics().widthPixels).setDuration(300);
         mIvSleepAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvTrandsAnimator = ObjectAnimator.ofFloat(binding.ivTrends, "translationX", 0, getResources().getDisplayMetrics().widthPixels).setDuration(300);
+        mIvTrandsAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvAlarmsAnimator = ObjectAnimator.ofFloat(binding.ivAlarm, "translationX", 0, getResources().getDisplayMetrics().widthPixels).setDuration(300);
+        mIvAlarmsAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvMesssgeAnimator = ObjectAnimator.ofFloat(binding.ivMessage, "translationX", 0, getResources().getDisplayMetrics().widthPixels).setDuration(300);
+        mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(mRoleAnimator);
         set.play(mStorageAnimator).with(mDramaAnimator);
         set.play(mVisitorInfoAnimator).with(mIvSleepAnimator);
+        set.play(mIvTrandsAnimator).with(mIvAlarmsAnimator);
+        set.play(mIvMesssgeAnimator);
         set.start();
     }
 
@@ -673,9 +734,95 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                 case R.id.iv_sleep:
                     Intent i9 = new Intent(HouseActivity.this, Live3dActivity.class);
                     startActivity(i9);
+//                    binding.tvHouseName.setText(PreferenceUtils.getAuthorInfo().getUserName() + "的宅屋");
+//                    binding.tvHouseVivit.setText("访客数量:" + count);
+//                    binding.ivHouseQrCode.setVisibility(View.VISIBLE);
+//                    binding.tvHouseName.setVisibility(View.VISIBLE);
+//                    binding.tvHouseVivit.setVisibility(View.VISIBLE);
+//                    Bitmap bitmap = getBitmap(binding.flShare);
+////                    Bitmap viewBitmap = getViewBitmap(R.layout.activity_house);
+//                    binding.rlCoverInfo.setVisibility(View.VISIBLE);
+//                    binding.ivCoverNextLie.setImageBitmap(bitmap);
+                    break;
+                case R.id.iv_alarm://同桌电话
+                    Intent intent1 = new Intent(HouseActivity.this, AlarmActivity.class);
+                    startActivity(intent1);
+                    break;
+                case R.id.iv_trends://动态
+                    Intent i5 = new Intent(HouseActivity.this, NewDynamicActivity.class);
+                    startActivity(i5);
+                    break;
+                case R.id.iv_message://留言板
+                    Intent i1 = new Intent(HouseActivity.this, CommentsListActivity.class);
+                    i1.putExtra("uuid", PreferenceUtils.getUUid());
+                    startActivity(i1);
                     break;
             }
         }
+    }
+
+    /**
+     * 把一个view转化成bitmap对象
+     */
+
+    public Bitmap getViewBitmap(int layoutId) {
+
+        View view = getLayoutInflater().inflate(layoutId, null);
+
+        int me = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+
+        view.measure(me, me);
+
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+
+        view.buildDrawingCache();
+
+        Bitmap bitmap = view.getDrawingCache();
+
+
+        return bitmap;
+
+    }
+
+    public Bitmap getBitmap(View view) {
+        
+
+
+        Bitmap bitmap = null;
+        int width = view.getRight() - view.getLeft();
+        int height = view.getBottom() - view.getTop();
+        final boolean opaque = view.getDrawingCacheBackgroundColor() != 0 || view.isOpaque();
+        Bitmap.Config quality;
+        if (!opaque) {
+            switch (view.getDrawingCacheQuality()) {
+                case DRAWING_CACHE_QUALITY_AUTO:
+                case DRAWING_CACHE_QUALITY_LOW:
+                case DRAWING_CACHE_QUALITY_HIGH:
+                default:
+                    quality = Bitmap.Config.ARGB_8888;
+                    break;
+            }
+        } else {
+            quality = Bitmap.Config.RGB_565;
+        }
+        bitmap = Bitmap.createBitmap(getResources().getDisplayMetrics(),
+                width, height, quality);
+        bitmap.setDensity(getResources().getDisplayMetrics().densityDpi);
+        if (opaque) bitmap.setHasAlpha(false);
+        boolean clear = view.getDrawingCacheBackgroundColor() != 0;
+        Canvas canvas = new Canvas(bitmap);
+        if (clear) {
+            bitmap.eraseColor(view.getDrawingCacheBackgroundColor());
+        }
+        view.computeScroll();
+        final int restoreCount = canvas.save();
+        canvas.translate(-view.getScrollX(), -view.getScrollY());
+        view.draw(canvas);
+        canvas.restoreToCount(restoreCount);
+        canvas.setBitmap(null);
+
+
+        return bitmap;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

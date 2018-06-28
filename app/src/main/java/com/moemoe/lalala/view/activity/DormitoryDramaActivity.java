@@ -64,7 +64,7 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
 
     @Override
     protected void initData() {
-   
+
     }
 
     @Override

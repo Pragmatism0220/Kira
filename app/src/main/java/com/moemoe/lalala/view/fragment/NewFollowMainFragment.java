@@ -60,7 +60,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 
 /**
- *
  * Created by yi on 2017/9/4.
  */
 
@@ -83,6 +82,7 @@ public class NewFollowMainFragment extends BaseFragment implements FeedContract.
     private long maxIdx;
     private boolean isLoading = false;
     private String type;
+    private String uuidType;
 
     public static NewFollowMainFragment newInstance(String type) {
         NewFollowMainFragment fragment = new NewFollowMainFragment();
@@ -101,6 +101,16 @@ public class NewFollowMainFragment extends BaseFragment implements FeedContract.
         return fragment;
     }
 
+    public static NewFollowMainFragment newInstance(String type, String userId, String uuidType) {
+        NewFollowMainFragment fragment = new NewFollowMainFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("type", type);
+        bundle.putString("id", userId);
+        bundle.putString("uuidType", uuidType);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.frag_onepull;
@@ -115,8 +125,9 @@ public class NewFollowMainFragment extends BaseFragment implements FeedContract.
                 .inject(this);
         type = getArguments().getString("type");
         final String userId = getArguments().getString("id");
+        uuidType = getArguments().getString("uuidType");
         mListDocs.getSwipeRefreshLayout().setColorSchemeResources(R.color.main_light_cyan, R.color.main_cyan);
-        mListDocs.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.bg_f6f6f6));
+        mListDocs.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.bg_f6f6f6));
         mListDocs.setLoadMoreEnabled(true);
         mListDocs.setLayoutManager(new LinearLayoutManager(getContext()));
         mListDocs.getRecyclerView().addItemDecoration(new MenuVItemDecoration((int) getResources().getDimension(R.dimen.y24)));
@@ -175,14 +186,28 @@ public class NewFollowMainFragment extends BaseFragment implements FeedContract.
                 }
             });
         }
+        if (!TextUtils.isEmpty(uuidType) && uuidType.equals("house")) {
+            mIvCreateDynamic.setVisibility(View.VISIBLE);
+            mIvCreateDynamic.setImageResource(R.drawable.btn_feed_create_dynamic);
+            mIvCreateDynamic.setOnClickListener(new NoDoubleClickListener() {
+                @Override
+                public void onNoDoubleClick(View v) {
+                    Intent i4 = new Intent(getContext(), CreateDynamicActivity.class);
+                    i4.putExtra("default_tag", "广场");
+                    startActivity(i4);
+                }
+            });
+        }
         minIdx = PreferenceUtils.getDiscoverMinIdx(getContext(), type);
         maxIdx = PreferenceUtils.getDiscoverMaxIdx(getContext(), type);
         mPresenter.loadDiscoverList(type, minIdx, maxIdx, true);
         mPresenter.loadList(0, type, userId);
     }
-    public void setSmoothScrollToPosition(){
+
+    public void setSmoothScrollToPosition() {
         mListDocs.getRecyclerView().smoothScrollToPosition(0);
     }
+
     public void likeDynamic(String id, boolean isLie, int position) {
         mPresenter.likeDynamic(id, isLie, position);
     }

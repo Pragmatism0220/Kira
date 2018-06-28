@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -298,6 +299,7 @@ public class StringUtils {
     public static boolean isDayEvent() {
         return matchCurrentTime(parseSentenceTime("06:00"), parseSentenceTime("10:00"));
     }
+
     public static boolean matchCurrentTime1(String startTime, String endTime) {
         long start = parseSentenceTime(startTime);
         long end = parseSentenceTime(endTime);
@@ -309,6 +311,7 @@ public class StringUtils {
         }
         return res;
     }
+
     public static boolean matchCurrentTime(String startTime, String endTime) {
         long start = parseSentenceTimeSec(startTime);
         long end = parseSentenceTimeSec(endTime);
@@ -993,9 +996,49 @@ public class StringUtils {
      * @return
      */
     public static String getTimeFromMillisecond(Long millisecond) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
-        Date date = new Date(millisecond);
-        String timeStr = simpleDateFormat.format(date);
-        return timeStr;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+//        Date date = new Date(millisecond);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+00:00"));
+        String hms = simpleDateFormat.format(millisecond);
+        return hms.substring(1);
+    }
+
+    /**
+     * format seconds to HH:mm:ss String
+     *
+     * @param seconds seconds
+     * @return String of formatted in HH:mm:ss
+     */
+    public static String seconds2HH_mm(long seconds) {
+
+        long h = 0;
+        long m = 0;
+        long s = 0;
+        long temp = seconds % 3600;
+
+        if (seconds > 3600) {
+            h = seconds / 3600;
+            if (temp != 0) {
+                if (temp > 60) {
+                    m = temp / 60;
+                    if (temp % 60 != 0) {
+                        s = temp % 60;
+                    }
+                } else {
+                    s = temp;
+                }
+            }
+        } else {
+            m = seconds / 60;
+            if (seconds % 60 != 0) {
+                s = seconds % 60;
+            }
+        }
+
+        String dh = h < 10 ? "0" + h : h + "";
+        String dm = m < 10 ? "0" + m : m + "";
+        String ds = s < 10 ? "0" + s : s + "";
+
+        return dh + ":" + dm;
     }
 }

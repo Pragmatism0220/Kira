@@ -21,8 +21,7 @@
         android:id="@+id/iv_cover_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:src="@drawable/bg_garbage_background_1" />
+        android:layout_centerInParent="true" />
 
     <TextView
         android:id="@+id/tv_content_gongxi"
@@ -47,13 +46,24 @@
         android:textStyle="bold"
         android:visibility="gone" />
 
-    <RelativeLayout
-        android:id="@+id/rl_select"
+    <TextView
+        android:id="@+id/tv_chuwu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_juqing"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/y40"
+        android:layout_marginTop="@dimen/y24"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x30"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/rl_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_chuwu"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/y38"
         android:visibility="gone">
 
         <TextView
@@ -78,4 +88,16 @@
             android:textSize="@dimen/x30"
             android:textStyle="bold" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_canle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_select"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/y16"
+        android:text="(点击任意区域关闭)"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x30"
+        android:visibility="gone" />
 </RelativeLayout>

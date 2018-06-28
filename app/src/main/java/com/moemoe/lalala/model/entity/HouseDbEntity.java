@@ -1,5 +1,7 @@
 package com.moemoe.lalala.model.entity;
 
+import android.text.TextUtils;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
@@ -41,10 +43,12 @@ public class HouseDbEntity {
 
     public HouseDbEntity(MapEntity entity, String type) {
         id = entity.getId();
-        image_path = entity.getImage().getPath();
-        image_w = entity.getImage().getW();
-        image_h = entity.getImage().getH();
-        fileName = entity.getId() + image_path.substring(image_path.lastIndexOf("."));
+        if (!TextUtils.isEmpty(entity.getImage().getPath())) {
+            image_path = entity.getImage().getPath();
+            image_w = entity.getImage().getW();
+            image_h = entity.getImage().getH();
+            fileName = entity.getId() + image_path.substring(image_path.lastIndexOf("."));
+        }
         if (entity.getRoleTimer() != null) {
             this.timerId = entity.getRoleTimer().getId();
             timerIsCollectFull = entity.getRoleTimer().isCollectFull();

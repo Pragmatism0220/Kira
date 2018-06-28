@@ -61,37 +61,38 @@ public class JuQingTriggerEntity {
         groupId = entity.getGroupId();
 
         extra = entity.getExtra();
-        JsonObject jsonObject = new Gson().fromJson(extra, JsonObject.class);
+        if (!TextUtils.isEmpty(extra)) {
+            JsonObject jsonObject = new Gson().fromJson(extra, JsonObject.class);
 
-        String iconId = jsonObject.get("iconId").getAsString();
-        this.iconId = iconId;
-        String iconPath = jsonObject.get("icon").getAsString();
-        this.iconPath = iconPath;
+            String iconId = jsonObject.get("iconId").getAsString();
+            this.iconId = iconId;
+            String iconPath = jsonObject.get("icon").getAsString();
+            this.iconPath = iconPath;
 
-        int w = jsonObject.get("w").getAsInt();
-        this.w = w;
-        int h = jsonObject.get("h").getAsInt();
-        this.h = h;
-        int x = jsonObject.get("x").getAsInt();
-        this.x = x;
-        int y = jsonObject.get("y").getAsInt();
-        this.y = y;
-        String md5 = jsonObject.get("md5").getAsString();
-        this.md5 = md5;
+            int w = jsonObject.get("w").getAsInt();
+            this.w = w;
+            int h = jsonObject.get("h").getAsInt();
+            this.h = h;
+            int x = jsonObject.get("x").getAsInt();
+            this.x = x;
+            int y = jsonObject.get("y").getAsInt();
+            this.y = y;
+            String md5 = jsonObject.get("md5").getAsString();
+            this.md5 = md5;
 
+            fileName = entity.getId() + iconPath.substring(iconPath.lastIndexOf("."));
 
-        fileName = entity.getId() + iconPath.substring(iconPath.lastIndexOf("."));
+        }
+
         downloadState = 1;
         this.type = type;
     }
 
 
-
-
     @Generated(hash = 1163253950)
     public JuQingTriggerEntity(String id, String extra, boolean force, int level, String roleOf, String storyId,
-            String type, String conditionStr, String groupId, String scriptId, String fileName, int downloadState,
-            String iconId, String iconPath, int w, int h, int x, int y, String md5) {
+                               String type, String conditionStr, String groupId, String scriptId, String fileName, int downloadState,
+                               String iconId, String iconPath, int w, int h, int x, int y, String md5) {
         this.id = id;
         this.extra = extra;
         this.force = force;
@@ -114,13 +115,9 @@ public class JuQingTriggerEntity {
     }
 
 
-
-
     @Generated(hash = 901926953)
     public JuQingTriggerEntity() {
     }
-
-
 
 
     public static ArrayList<JuQingTriggerEntity> toDb(ArrayList<NewJuQingTriggerEntity> entities, String type) {

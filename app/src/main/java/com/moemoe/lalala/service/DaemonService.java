@@ -45,7 +45,7 @@ public class DaemonService extends Service {
                 for (AlarmClockEntity alarmClock : list) {
                     // 当闹钟为开时刷新开启闹钟
                     if (alarmClock.isOnOff()) {
-//                        Utils.startAlarmClock(DaemonService.this, alarmClock);
+                        Utils.startAlarmClock(DaemonService.this, alarmClock);
                     }
                 }
             }

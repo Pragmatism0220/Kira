@@ -87,7 +87,7 @@ public class NewVisitorAdapter extends BaseRecyclerViewAdapter<VisitorsEntity, N
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
             helper.mTitleTime.setText(sdf.format(new Date(Long.valueOf(item.getCreateTime()))));
         }
-        helper.mName.setText(item.getRoleName());
+        helper.mName.setText(item.getVisitorName());
 
         int size = (int) mContext.getResources().getDimension(R.dimen.x80);
         Glide.with(mContext).load(StringUtils.getUrl(mContext, item.getVisitorImage(), size, size, false, true))

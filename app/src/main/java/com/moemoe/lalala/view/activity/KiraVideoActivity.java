@@ -42,6 +42,7 @@ import com.moemoe.lalala.utils.DensityUtil;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.GreenDaoManager;
+import com.moemoe.lalala.utils.NetworkUtils;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.StringUtils;
@@ -182,6 +183,13 @@ public class KiraVideoActivity extends BaseAppCompatActivity implements KiraVide
                 .placeholder(R.drawable.shape_gray_e8e8e8_background)
                 .into(mIvCover);
         mPresenter.loadVideoInfo(FolderType.SP.toString(), folderId, fileId);
+        if (NetworkUtils.checkNetworkAndShowError(this)) {
+            if (NetworkUtils.isWifi(this)) {
+                showToast("使用wifi观看中~");
+            } else {
+                showToast("使用流量观看中~");
+            }
+        }
     }
 
     @Override
@@ -192,6 +200,7 @@ public class KiraVideoActivity extends BaseAppCompatActivity implements KiraVide
         EventBus.getDefault().register(this);
         isPause = false;
     }
+
 
     @Override
     protected void onPause() {
@@ -460,6 +469,7 @@ public class KiraVideoActivity extends BaseAppCompatActivity implements KiraVide
 
     @Override
     public void onLoadVideoInfoSuccess(KiraVideoEntity entity) {
+
         mVideo = entity;
         ((TextView) findViewById(R.id.tv_buy)).setText("支付" + mVideo.getCoin() + "节操");
         int size = getResources().getDimensionPixelSize(R.dimen.y50);

@@ -533,7 +533,7 @@ public class PhoneMainV2Activity extends BaseAppCompatActivity implements PhoneM
                             .appendQueryParameter(Conversation.ConversationType.SYSTEM.getName(), "false")//系统
                             .build();
 //                    toFragment(KiraConversationListFragment.newInstance(uri));
-                    NoticeActivity.startActivity(PhoneMainV2Activity.this,1);
+                    NoticeActivity.startActivity(PhoneMainV2Activity.this, 1);
                 }
                 break;
             case R.id.ll_mate_root:

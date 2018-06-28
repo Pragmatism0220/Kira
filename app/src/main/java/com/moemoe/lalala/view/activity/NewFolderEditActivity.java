@@ -344,12 +344,17 @@ public class NewFolderEditActivity extends BaseAppCompatActivity implements NewF
                 done();
                 break;
             case R.id.ll_name_root:
-                    mKlCommentBoard.setVisibility(View.VISIBLE);
+                mKlCommentBoard.setVisibility(View.VISIBLE);
+                if (TextUtils.isEmpty(mTvName.getText().toString())) {
                     mEdtCommentInput.setText("");
                     mEdtCommentInput.setHint(getString(R.string.label_dir_name));
-                    mEdtCommentInput.requestFocus();
-                    mInputType = 1;
-                    SoftKeyboardUtils.showSoftKeyboard(NewFolderEditActivity.this, mEdtCommentInput);
+                } else {
+                    mEdtCommentInput.setText(mTvName.getText().toString());
+                }
+                
+                mEdtCommentInput.requestFocus();
+                mInputType = 1;
+                SoftKeyboardUtils.showSoftKeyboard(NewFolderEditActivity.this, mEdtCommentInput);
                 break;
             case R.id.ll_bg_root:
                 try {
@@ -378,7 +383,7 @@ public class NewFolderEditActivity extends BaseAppCompatActivity implements NewF
                                     } else {
                                         coin = 0;
                                     }
-                                    if (coin == 0){
+                                    if (coin == 0) {
                                         mTvCoin.setText("免费(被观看一次获得0.1节操)");
                                     }
                                     mTvCoin.setText(coin + "节操");
@@ -540,7 +545,7 @@ public class NewFolderEditActivity extends BaseAppCompatActivity implements NewF
             entity.folderName = mTvName.getText().toString();
             entity.folderType = mFolderType;
             entity.orderbyType = mSort;
-            entity.sellFolder=mHasModified;
+            entity.sellFolder = mHasModified;
             entity.texts = mTags;
             if ("create".equals(type)) {
                 mPresenter.addFolder(entity);

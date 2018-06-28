@@ -1,9 +1,12 @@
 package com.moemoe.lalala.view.activity;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -76,6 +79,8 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
     private RubbishEntity mRubbishEntity;
     private TextView mTvJuQing;
     private TextView mTvContent;
+    private TextView mTvChuWu;
+    private TextView mTvCnanle;
 
     @Override
     protected void initComponent() {
@@ -101,7 +106,8 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         mIvGongXI = findViewById(R.id.iv_gongxi);
         mTvJuQing = findViewById(R.id.tv_juqing);
         mTvContent = findViewById(R.id.tv_content_gongxi);
-
+        mTvChuWu = findViewById(R.id.tv_chuwu);
+        mTvCnanle = findViewById(R.id.tv_canle);
 
         binding.map.setIsHis(true);
         mPresenter.loadHouseObjects(false, id);
@@ -111,7 +117,36 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
     }
 
     public void initMap() {
-//        mPresenter.addMapMark(HouseHisActivity.this, mContainer, binding.map, "house");
+        binding.map.setOnImageClickLietener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mIsOut) {
+                    imgIn();
+                    mIsOut = false;
+                } else {
+                    imgOut();
+                    mIsOut = true;
+                }
+            }
+        });
+    }
+
+    private void imgIn() {
+
+        ObjectAnimator mIvMesssgeAnimator = ObjectAnimator.ofFloat(binding.ivMessage, "translationX", getResources().getDisplayMetrics().widthPixels, 0).setDuration(300);
+        mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        AnimatorSet set = new AnimatorSet();
+
+        set.play(mIvMesssgeAnimator);
+        set.start();
+    }
+
+    private void imgOut() {
+        ObjectAnimator mIvMesssgeAnimator = ObjectAnimator.ofFloat(binding.ivMessage, "translationX", 0, getResources().getDisplayMetrics().widthPixels).setDuration(300);
+        mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        AnimatorSet set = new AnimatorSet();
+        set.play(mIvMesssgeAnimator);
+        set.start();
     }
 
     @Override
@@ -138,15 +173,31 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         mRlRoleJuQing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int type = mRubbishEntity.getType();
-                if (type == 3 && mIvGongXI.getVisibility() == View.VISIBLE) {
-                    mRlRoleJuQing.setVisibility(View.GONE);
-                    mTvContent.setVisibility(View.GONE);
-                    mTvJuQing.setVisibility(View.GONE);
-                    mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
-                    mIvGongXI.setVisibility(View.GONE);
-                    mRleSelect.setVisibility(View.GONE);
-                }
+//                int type = mRubbishEntity.getType();
+//                if (type == 3 && mIvGongXI.getVisibility() == View.VISIBLE) {
+//                    mRlRoleJuQing.setVisibility(View.GONE);
+//                    mTvContent.setVisibility(View.GONE);
+//                    mTvJuQing.setVisibility(View.GONE);
+//                    mIvGongXI.setVisibility(View.GONE);
+//                    mRleSelect.setVisibility(View.GONE);
+//                } else if (type == 2 && mIvGongXI.getVisibility() == View.VISIBLE) {
+//                    mRlRoleJuQing.setVisibility(View.GONE);
+//                    mTvContent.setVisibility(View.GONE);
+//                    mTvJuQing.setVisibility(View.GONE);
+//                    mIvGongXI.setVisibility(View.GONE);
+//                    mRleSelect.setVisibility(View.GONE);
+//                } else if (type == 4 && mIvGongXI.getVisibility() == View.VISIBLE) {
+//                    mRlRoleJuQing.setVisibility(View.GONE);
+//                    mTvContent.setVisibility(View.GONE);
+//                    mTvJuQing.setVisibility(View.GONE);
+//                    mIvGongXI.setVisibility(View.GONE);
+//                    mRleSelect.setVisibility(View.GONE);
+//                }
+                mRlRoleJuQing.setVisibility(View.GONE);
+                mTvContent.setVisibility(View.GONE);
+                mTvJuQing.setVisibility(View.GONE);
+                mIvGongXI.setVisibility(View.GONE);
+                mRleSelect.setVisibility(View.GONE);
             }
         });
         mTvLeft.setOnClickListener(new View.OnClickListener() {
@@ -160,17 +211,16 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
                         mTvContent.setVisibility(View.GONE);
                         mIvGongXI.setVisibility(View.GONE);
                         mRleSelect.setVisibility(View.GONE);
-                        mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
                         break;
                     case 2:
-                        showToast("放入成功");
                         mRlRoleJuQing.setVisibility(View.GONE);
                         mIvGongXI.setVisibility(View.GONE);
                         mTvContent.setVisibility(View.GONE);
                         mTvJuQing.setVisibility(View.GONE);
                         mRleSelect.setVisibility(View.GONE);
-                        mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
-                        mPresenter.loadHouseSave(new RubblishBody(PreferenceUtils.getUUid(), "", mRubbishEntity.getId()));
+//                        mPresenter.loadHouseSave(new RubblishBody(PreferenceUtils.getUUid(), "", mRubbishEntity.getId()));
+                        Intent i6 = new Intent(HouseHisActivity.this, StorageActivity.class);
+                        startActivity(i6);
                         break;
                     case 3:
 
@@ -189,7 +239,6 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
                         mTvJuQing.setVisibility(View.GONE);
                         mTvContent.setVisibility(View.GONE);
                         mRleSelect.setVisibility(View.GONE);
-                        mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
                         Intent i = new Intent(HouseHisActivity.this, MapEventNewActivity.class);
                         i.putExtra("id", mRubbishEntity.getScriptId());
                         i.putExtra("type", mRubbishEntity.getId());
@@ -197,6 +246,7 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
                         break;
                     case 2:
                     case 3:
+                    case 4:
                         showToast("功能未开放~");
 //                        mRlRoleJuQing.setVisibility(View.GONE);
 //                        mIvGongXI.setVisibility(View.GONE);
@@ -318,96 +368,90 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         mRlRoleJuQing.setVisibility(View.GONE);
         mTvContent.setVisibility(View.GONE);
         mTvJuQing.setVisibility(View.GONE);
-        mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
         mIvGongXI.setVisibility(View.GONE);
         mRleSelect.setVisibility(View.GONE);
+        mTvContent.setText("");
+        mTvCnanle.setVisibility(View.GONE);
+        mTvCnanle.setText("");
+        mTvChuWu.setText("");
+        mTvChuWu.setVisibility(View.GONE);
         mRubbishEntity = entity;
         if (entity != null && entity.getType() != 0) {
             mRlRoleJuQing.setVisibility(View.VISIBLE);
-            io.reactivex.Observable.create(new ObservableOnSubscribe<Integer>() {
-                @Override
-                public void subscribe(ObservableEmitter<Integer> e) throws Exception {
-                    Thread.sleep(200);
-                    e.onNext(1);
-                    Thread.sleep(200);
-                    e.onNext(2);
-                    e.onComplete();
-                }
-            }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<Integer>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(Integer integer) {
-                            if (integer == 1) {
-                                mIvCover.setImageResource(R.drawable.bg_garbage_background_2);
-                            } else if (integer == 2) {
-                                int type = entity.getType();
-                                if (type == 1) {//剧情
-                                    int w = getResources().getDimensionPixelSize(R.dimen.x456);
-                                    int h = getResources().getDimensionPixelSize(R.dimen.y608);
-                                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIvCover.getLayoutParams();
-                                    layoutParams.width = w;
-                                    layoutParams.height = h;
-                                    mIvCover.setLayoutParams(layoutParams);
-                                    Glide.with(HouseHisActivity.this)
-                                            .load(ApiService.URL_QINIU + entity.getImage())
-                                            .error(R.drawable.shape_transparent_background)
-                                            .placeholder(R.drawable.shape_transparent_background)
-                                            .into(mIvCover);
-                                } else if (type == 2) {
-                                    int w = getResources().getDimensionPixelSize(R.dimen.x360);
-                                    int h = getResources().getDimensionPixelSize(R.dimen.y360);
-                                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIvCover.getLayoutParams();
-                                    layoutParams.width = w;
-                                    layoutParams.height = h;
-                                    mIvCover.setLayoutParams(layoutParams);
-                                    Glide.with(HouseHisActivity.this)
-                                            .load(ApiService.URL_QINIU + entity.getImage())
-                                            .error(R.drawable.shape_transparent_background)
-                                            .placeholder(R.drawable.shape_transparent_background)
-                                            .into(mIvCover);
-                                } else if (type == 3) {
-                                    mIvCover.setImageResource(R.drawable.bg_garbage_background_3);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            mIvGongXI.setVisibility(View.VISIBLE);
-                            int type = entity.getType();
-                            if (type == 1) {//剧情
-                                mRleSelect.setVisibility(View.VISIBLE);
-                                mTvJuQing.setText(entity.getName());
-                                mTvJuQing.setVisibility(View.VISIBLE);
-                                mTvLeft.setText("之后再看");
-                                mTvRight.setText("观看剧情");
-                            } else if (type == 2) {
-                                mRleSelect.setVisibility(View.VISIBLE);
-                                mTvJuQing.setText(entity.getName());
-                                mTvJuQing.setVisibility(View.VISIBLE);
-                                mTvLeft.setText("放入储物箱");
-                                mTvRight.setText("立即使用");
-                            } else if (type == 3) {
-                                mRleSelect.setVisibility(View.GONE);
-                                mTvJuQing.setText("(点击任意区域关闭)");
-                                mTvContent.setText(entity.getName());
-                                mTvContent.setVisibility(View.VISIBLE);
-                                mTvJuQing.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    });
-
+            mTvLeft.setVisibility(View.VISIBLE);
+            mIvGongXI.setVisibility(View.VISIBLE);
+            int type = entity.getType();
+            if (type == 1) {//剧情
+                int w = getResources().getDimensionPixelSize(R.dimen.x456);
+                int h = getResources().getDimensionPixelSize(R.dimen.y608);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIvCover.getLayoutParams();
+                layoutParams.width = w;
+                layoutParams.height = h;
+                mIvCover.setLayoutParams(layoutParams);
+                Glide.with(HouseHisActivity.this)
+                        .load(ApiService.URL_QINIU + entity.getImage())
+                        .error(R.drawable.shape_transparent_background)
+                        .placeholder(R.drawable.shape_transparent_background)
+                        .into(mIvCover);
+                mRleSelect.setVisibility(View.VISIBLE);
+                mTvJuQing.setText(entity.getName());
+                mTvJuQing.setVisibility(View.VISIBLE);
+                mTvLeft.setVisibility(View.GONE);
+                mTvRight.setText("观看剧情");
+                mTvChuWu.setVisibility(View.VISIBLE);
+                mTvCnanle.setVisibility(View.VISIBLE);
+                mTvChuWu.setText("(已放入储物箱)");
+                mTvCnanle.setText("点击任意区域关闭");
+            } else if (type == 2) {
+                int w = getResources().getDimensionPixelSize(R.dimen.x360);
+                int h = getResources().getDimensionPixelSize(R.dimen.y360);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIvCover.getLayoutParams();
+                layoutParams.width = w;
+                layoutParams.height = h;
+                mIvCover.setLayoutParams(layoutParams);
+                Glide.with(HouseHisActivity.this)
+                        .load(ApiService.URL_QINIU + entity.getImage())
+                        .error(R.drawable.shape_transparent_background)
+                        .placeholder(R.drawable.shape_transparent_background)
+                        .into(mIvCover);
+                mRleSelect.setVisibility(View.VISIBLE);
+                mTvJuQing.setText(entity.getName());
+                mTvJuQing.setVisibility(View.VISIBLE);
+                mTvChuWu.setVisibility(View.VISIBLE);
+                mTvCnanle.setVisibility(View.VISIBLE);
+                mTvChuWu.setText("(已放入储物箱)");
+                mTvCnanle.setText("点击任意区域关闭");
+                mTvRight.setText("立即使用");
+                mTvLeft.setVisibility(View.VISIBLE);
+                mTvLeft.setText("查看储物箱");
+                mPresenter.loadHouseSave(new RubblishBody(PreferenceUtils.getUUid(), "", mRubbishEntity.getId()));
+            } else if (type == 3) {
+                mIvCover.setImageResource(R.drawable.bg_garbage_background_3);
+                mRleSelect.setVisibility(View.GONE);
+                mTvJuQing.setText("(点击任意区域关闭)");
+                mTvContent.setText(entity.getName());
+                mTvContent.setVisibility(View.VISIBLE);
+                mTvJuQing.setVisibility(View.VISIBLE);
+            } else if (type == 4) {
+                int w = getResources().getDimensionPixelSize(R.dimen.x360);
+                int h = getResources().getDimensionPixelSize(R.dimen.y360);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIvCover.getLayoutParams();
+                layoutParams.width = w;
+                layoutParams.height = h;
+                mIvCover.setLayoutParams(layoutParams);
+                Glide.with(HouseHisActivity.this)
+                        .load(ApiService.URL_QINIU + entity.getImage())
+                        .error(R.drawable.shape_transparent_background)
+                        .placeholder(R.drawable.shape_transparent_background)
+                        .into(mIvCover);
+                mRleSelect.setVisibility(View.GONE);
+                mTvJuQing.setText(entity.getName());
+                mTvJuQing.setVisibility(View.VISIBLE);
+                mPresenter.loadHouseSave(new RubblishBody(PreferenceUtils.getUUid(), "", mRubbishEntity.getId()));
+                mTvChuWu.setVisibility(View.VISIBLE);
+                mTvCnanle.setVisibility(View.GONE);
+                mTvChuWu.setText("(已放入储物箱)");
+            }
         }
     }
 
@@ -416,7 +460,7 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
      */
     @Override
     public void onLoadHouseSave() {
-        showToast("放入成功");
+
     }
 
     private void resolvErrorList(ArrayList<HouseDbEntity> errorList, final String type) {
@@ -486,6 +530,11 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
             switch (view.getId()) {
                 case R.id.btn_back:
                     finish();
+                    break;
+                case R.id.iv_message:
+                    Intent i1 = new Intent(HouseHisActivity.this, CommentsListActivity.class);
+                    i1.putExtra("uuid", id);
+                    startActivity(i1);
                     break;
             }
         }

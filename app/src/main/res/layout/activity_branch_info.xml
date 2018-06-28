@@ -10,201 +10,223 @@
             type="com.moemoe.lalala.view.activity.BranchInfoActivity.Presenter" />
     </data>
 
-    <ScrollView
+    <RelativeLayout
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/transparent"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        tools:context="com.moemoe.lalala.view.activity.BranchInfoActivity">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/status_bar_height"
-            android:background="@drawable/bg_home_plot_branch_background_cover"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_home_plot_topbackground">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/x20"
-                    android:src="@drawable/ic_home_title_mystory_branch" />
-
-                <ImageView
-                    android:id="@+id/branch_back_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="@dimen/status_bar_height"
-                    android:background="@drawable/role_back_btn"
-                    android:onClick="@{presenter.onClick}" />
-            </RelativeLayout>
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            tools:context="com.moemoe.lalala.view.activity.BranchInfoActivity">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/y96"
-                android:layout_marginEnd="@dimen/x120"
-                android:layout_marginStart="@dimen/x120"
-                android:layout_marginTop="@dimen/y24"
-                android:background="@drawable/bg_home_plot_detail_titel_branch"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/status_bar_height"
+                android:background="@drawable/bg_home_plot_branch_background_cover"
                 android:orientation="vertical">
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_home_plot_topbackground">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/x20"
+                        android:src="@drawable/ic_home_title_mystory_branch" />
+
+                    <ImageView
+                        android:id="@+id/branch_back_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="@dimen/status_bar_height"
+                        android:background="@drawable/role_back_btn"
+                        android:onClick="@{presenter.onClick}" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/y96"
+                    android:layout_marginEnd="@dimen/x120"
+                    android:layout_marginStart="@dimen/x120"
+                    android:layout_marginTop="@dimen/y24"
+                    android:background="@drawable/bg_home_plot_detail_titel_branch"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/branch_info_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/y10"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/x40"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/branch_info_authorby"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/x20" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/branch_info_photo"
+                    android:layout_width="@dimen/x405"
+                    android:layout_height="@dimen/y540"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/y24">
+
+                    <ImageView
+                        android:id="@+id/branch_info_bg"
+                        android:layout_width="@dimen/x405"
+                        android:layout_height="@dimen/y540" />
+
+                    <TextView
+                        android:id="@+id/branch_info_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginBottom="@dimen/y24"
+                        android:layout_marginEnd="@dimen/x24"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/x56" />
+                </RelativeLayout>
+
                 <TextView
-                    android:id="@+id/branch_info_title"
+                    android:id="@+id/tv_huashi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/y56"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/y24"
+                    android:background="@drawable/black_round_bg_branch"
+                    android:gravity="center"
+                    android:paddingEnd="@dimen/x44"
+                    android:paddingStart="@dimen/x44"
+                    android:text="画师：橙子"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x30" />
+
+                <TextView
+                    android:id="@+id/branch_info_possess_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/y10"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/x40"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/branch_info_authorby"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/x20" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/branch_info_photo"
-                android:layout_width="@dimen/x405"
-                android:layout_height="@dimen/y540"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/y24">
+                    android:layout_marginTop="@dimen/y36"
+                    android:textColor="@color/gray_929292"
+                    android:textSize="@dimen/x30" />
 
                 <ImageView
-                    android:id="@+id/branch_info_bg"
-                    android:layout_width="@dimen/x405"
-                    android:layout_height="@dimen/y540" />
-
-                <TextView
-                    android:id="@+id/branch_info_name"
+                    android:id="@+id/branch_info_recall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="@dimen/y24"
-                    android:layout_marginEnd="@dimen/x24"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/x56" />
-            </RelativeLayout>
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/y16"
+                    android:onClick="@{presenter.onClick}"
+                    android:src="@drawable/branch_info_recall_selector" />
 
-            <TextView
-                android:id="@+id/tv_huashi"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/y56"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/y24"
-                android:background="@drawable/black_round_bg_branch"
-                android:gravity="center"
-                android:paddingEnd="@dimen/x44"
-                android:paddingStart="@dimen/x44"
-                android:text="画师：橙子"
-                android:textColor="@color/white"
-                android:textSize="@dimen/x30" />
+                <LinearLayout
+                    android:id="@+id/ll_branch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/y68"
+                    android:layout_marginTop="@dimen/y32"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
-            <TextView
-                android:id="@+id/branch_info_possess_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/y36"
-                android:textColor="@color/gray_929292"
-                android:textSize="@dimen/x30" />
+                    <RelativeLayout
+                        android:id="@+id/item_branch_info_bg_frist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/iv_plot_memory_frist"
+                            android:layout_width="@dimen/x164"
+                            android:layout_height="@dimen/y164"
+                            android:layout_marginTop="@dimen/y24"
+                            android:background="@drawable/ic_home_plot_memory_none" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_home_plot_tape" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/item_branch_info_bg_two"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/x36"
+                        android:layout_marginStart="@dimen/x36">
+
+                        <ImageView
+                            android:id="@+id/iv_plot_memory_two"
+                            android:layout_width="@dimen/x164"
+                            android:layout_height="@dimen/y164"
+                            android:layout_marginTop="@dimen/y24"
+                            android:background="@drawable/ic_home_plot_memory_none" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_home_plot_tape" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+
+                        android:id="@+id/item_branch_info_bg_three"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/iv_plot_memory_three"
+                            android:layout_width="@dimen/x164"
+                            android:layout_height="@dimen/y164"
+                            android:layout_marginTop="@dimen/y24"
+                            android:background="@drawable/ic_home_plot_memory_none" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_home_plot_tape" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <RelativeLayout
+            android:id="@+id/rl_cover_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/alpha_80"
+            android:visibility="gone">
 
             <ImageView
-                android:id="@+id/branch_info_recall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/y16"
-                android:onClick="@{presenter.onClick}"
-                android:src="@drawable/branch_info_recall_selector" />
+                android:id="@+id/iv_cover_info"
+                android:layout_width="@dimen/x558"
+                android:layout_height="@dimen/y992"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/y68"
-                android:layout_marginTop="@dimen/y32"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:id="@+id/item_branch_info_bg_frist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/iv_plot_memory_frist"
-                        android:layout_width="@dimen/x164"
-                        android:layout_height="@dimen/y164"
-                        android:layout_marginTop="@dimen/y24"
-                        android:background="@drawable/ic_home_plot_memory_none" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_home_plot_tape" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/item_branch_info_bg_two"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/x36"
-                    android:layout_marginStart="@dimen/x36">
-
-                    <ImageView
-                        android:id="@+id/iv_plot_memory_two"
-                        android:layout_width="@dimen/x164"
-                        android:layout_height="@dimen/y164"
-                        android:layout_marginTop="@dimen/y24"
-                        android:background="@drawable/ic_home_plot_memory_none" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_home_plot_tape" />
-                </RelativeLayout>
-
-                <RelativeLayout
-
-                    android:id="@+id/item_branch_info_bg_three"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/iv_plot_memory_three"
-                        android:layout_width="@dimen/x164"
-                        android:layout_height="@dimen/y164"
-                        android:layout_marginTop="@dimen/y24"
-                        android:background="@drawable/ic_home_plot_memory_none" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_home_plot_tape" />
-                </RelativeLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-
+    </RelativeLayout>
 </layout>

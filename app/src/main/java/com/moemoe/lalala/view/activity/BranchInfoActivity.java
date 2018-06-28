@@ -39,6 +39,7 @@ public class BranchInfoActivity extends BaseActivity implements BranchInfoContra
     @Inject
     BranchInfoPresenter mPresenter;
     private BranchStoryAllEntity entity;
+    private ArrayList<String> detailImage;
 
     @Override
     protected void initComponent() {
@@ -70,7 +71,64 @@ public class BranchInfoActivity extends BaseActivity implements BranchInfoContra
 
     @Override
     protected void initListeners() {
-
+        binding.rlCoverInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.rlCoverInfo.setVisibility(View.GONE);
+            }
+        });
+        binding.ivPlotMemoryFrist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (detailImage != null && detailImage.size() > 0) {
+                    binding.ivCoverInfo.setImageResource(R.drawable.shape_gray_e8e8e8_background);
+                    binding.ivCoverInfo.setVisibility(View.VISIBLE);
+                    binding.rlCoverInfo.setVisibility(View.VISIBLE);
+                    int size = detailImage.size();
+                    Glide.with(BranchInfoActivity.this)
+                            .load(ApiService.URL_QINIU + detailImage.get(0))
+                            .error(R.drawable.shape_gray_e8e8e8_background)
+                            .placeholder(R.drawable.shape_gray_e8e8e8_background)
+                            .into(binding.ivCoverInfo);
+                }
+            }
+        });
+        binding.ivPlotMemoryTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (detailImage != null && detailImage.size() > 0) {
+                    binding.ivCoverInfo.setImageResource(R.drawable.shape_gray_e8e8e8_background);
+                    binding.ivCoverInfo.setVisibility(View.VISIBLE);
+                    binding.rlCoverInfo.setVisibility(View.VISIBLE);
+                    int size = detailImage.size();
+                    if (size == 2) {
+                        Glide.with(BranchInfoActivity.this)
+                                .load(ApiService.URL_QINIU + detailImage.get(1))
+                                .error(R.drawable.shape_gray_e8e8e8_background)
+                                .placeholder(R.drawable.shape_gray_e8e8e8_background)
+                                .into(binding.ivCoverInfo);
+                    }
+                }
+            }
+        });
+        binding.ivPlotMemoryThree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (detailImage != null && detailImage.size() > 0) {
+                    binding.ivCoverInfo.setImageResource(R.drawable.shape_gray_e8e8e8_background);
+                    binding.rlCoverInfo.setVisibility(View.VISIBLE);
+                    binding.ivCoverInfo.setVisibility(View.VISIBLE);
+                    int size = detailImage.size();
+                    if (size == 3) {
+                        Glide.with(BranchInfoActivity.this)
+                                .load(ApiService.URL_QINIU + detailImage.get(2))
+                                .error(R.drawable.shape_gray_e8e8e8_background)
+                                .placeholder(R.drawable.shape_gray_e8e8e8_background)
+                                .into(binding.ivCoverInfo);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -117,13 +175,15 @@ public class BranchInfoActivity extends BaseActivity implements BranchInfoContra
             }
         }
 
-        ArrayList<String> detailImage = entity.getDetailImage();
+        detailImage = entity.getDetailImage();
         if (isCompound) {
+            binding.llBranch.setVisibility(View.VISIBLE);
             binding.ivPlotMemoryFrist.setImageResource(R.drawable.ic_home_plot_memory_none);
             binding.ivPlotMemoryThree.setImageResource(R.drawable.ic_home_plot_memory_none);
             binding.ivPlotMemoryTwo.setImageResource(R.drawable.ic_home_plot_memory_none);
         } else {
             if (detailImage != null && detailImage.size() > 0) {
+                binding.llBranch.setVisibility(View.VISIBLE);
                 int size = detailImage.size();
                 int wi = (int) getResources().getDimension(R.dimen.x164);
                 int he = (int) getResources().getDimension(R.dimen.y164);
@@ -168,6 +228,8 @@ public class BranchInfoActivity extends BaseActivity implements BranchInfoContra
                             .placeholder(R.drawable.shape_gray_e8e8e8_background)
                             .into(binding.ivPlotMemoryTwo);
                 }
+            } else {
+                binding.llBranch.setVisibility(View.GONE);
             }
         }
     }

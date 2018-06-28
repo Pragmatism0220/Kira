@@ -9,12 +9,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -138,6 +141,9 @@ import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
+import static android.view.View.DRAWING_CACHE_QUALITY_AUTO;
+import static android.view.View.DRAWING_CACHE_QUALITY_HIGH;
+import static android.view.View.DRAWING_CACHE_QUALITY_LOW;
 import static com.moemoe.lalala.utils.StartActivityConstant.REQUEST_CODE_CREATE_DOC;
 
 /**
@@ -593,11 +599,12 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                                 if (entity.getType().equals("story")) {
                                     String extra = entity.getExtra();
                                     boolean isForce = entity.isForce();
-                                    JsonObject jsonObject = new Gson().fromJson(extra, JsonObject.class);
-                                    //TODO 触摸器图片处理
-                                    String icon = jsonObject.get("icon").getAsString();
-                                    String eventId = jsonObject.get("iconId").getAsString();
-                                    mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getType(),entity, mapWidget.getLayerById(1));
+                                    if (!TextUtils.isEmpty(extra)) {
+                                        JsonObject jsonObject = new Gson().fromJson(extra, JsonObject.class);
+                                        String icon = jsonObject.get("icon").getAsString();
+                                        String eventId = jsonObject.get("iconId").getAsString();
+                                        mPresenter.addEventMark(eventId, icon, mContainer, MapActivity.this, mapWidget, entity.getType(), entity, mapWidget.getLayerById(1));
+                                    }
                                     if (isForce) {//false
                                         Intent i = new Intent(MapActivity.this, MapEventNewActivity.class);
                                         i.putExtra("id", entity.getScriptId());
@@ -631,19 +638,21 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
             @Override
             public void onNext(JuQingTriggerEntity entity) {
-                File file = new File(StorageUtils.getMapRootPath() + entity.getFileName());
-                String md5 = entity.getMd5();
-                if (md5.length() < 32) {
-                    int n = 32 - md5.length();
-                    for (int i = 0; i < n; i++) {
-                        md5 = "0" + md5;
+                if (!TextUtils.isEmpty(entity.getExtra())) {
+                    File file = new File(StorageUtils.getMapRootPath() + entity.getFileName());
+                    String md5 = entity.getMd5();
+                    if (md5.length() < 32) {
+                        int n = 32 - md5.length();
+                        for (int i = 0; i < n; i++) {
+                            md5 = "0" + md5;
+                        }
                     }
-                }
-                if (entity.getDownloadState() == 3 || !md5.equals(StringUtils.getFileMD5(file))) {
-                    FileUtil.deleteFile(StorageUtils.getMapRootPath() + entity.getFileName());
-                    errorList.add(entity);
-                } else {
-                    res.add(entity);
+                    if (entity.getDownloadState() == 3 || !md5.equals(StringUtils.getFileMD5(file))) {
+                        FileUtil.deleteFile(StorageUtils.getMapRootPath() + entity.getFileName());
+                        errorList.add(entity);
+                    } else {
+                        res.add(entity);
+                    }
                 }
             }
 
@@ -1720,7 +1729,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         }
     }
 
-
     public void clickSelect() {
         if (MoeMoeApplication.getInstance().isMenu()) {
             MoeMoeApplication.getInstance().GoneMenu();
@@ -1991,6 +1999,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                         }
                     }
                 });
+
             }
 
         }

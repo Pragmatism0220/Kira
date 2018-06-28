@@ -208,10 +208,12 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         mRlClubInform.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NoticeActivity.startActivity(FeedV3Activity.this, 0);
+                if (NetworkUtils.checkNetworkAndShowError(FeedV3Activity.this) && DialogUtils.checkLoginAndShowDlg(FeedV3Activity.this)) {
+                    NoticeActivity.startActivity(FeedV3Activity.this, 0);
 //                Intent intent = new Intent(FeedV3Activity.this, ShoppingActivity.class);
 //                Intent intent = new Intent(FeedV3Activity.this, DormitoryActivity.class);
 //                startActivity(intent);
+                }
             }
         });
 
@@ -220,7 +222,11 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         mFragmentTransaction.add(R.id.fl_container, mainV3Fragment);
         mFragmentTransaction.add(R.id.fl_container, feedFollowV4Fragment);
         mFragmentTransaction.add(R.id.fl_container, clubListFragment);
-        mFragmentTransaction.show(mainV3Fragment).hide(feedFollowV4Fragment).hide(clubListFragment);
+        mFragmentTransaction.show(mainV3Fragment).
+
+                hide(feedFollowV4Fragment).
+
+                hide(clubListFragment);
         mFragmentTransaction.commit();
         mIvClubSquare.setSelected(true);
         mTvClubSquare.setTextColor(ContextCompat.getColor(FeedV3Activity.this, R.color.main_cyan));
@@ -232,16 +238,20 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         mTvClubInform.setTextColor(ContextCompat.getColor(FeedV3Activity.this, R.color.gray_d7d7d7));
         mainV3Fragment.onSmoothScrollBy();
         //获取标题栏的高度
-        mTitle.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
+        mTitle.getViewTreeObserver().
+
+                addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
 
 //        MoeMoeApplication.getInstance().activities.add(FeedV3Activity.this);
-                titleHeight = mTitle.getHeight();
-            }
-        });
+                        titleHeight = mTitle.getHeight();
+                    }
+                });
         oldAlpha = mTitle.getAlpha();
-        EventBus.getDefault().register(this);
+        EventBus.getDefault().
+
+                register(this);
 //        if (MoeMoeApplication.getInstance().isWindow()) {
 //            MoeMoeApplication.getInstance().activities.add(FeedV3Activity.this);
 //            MoeMoeApplication.getInstance().initWindowManager(this, getWindowManager());

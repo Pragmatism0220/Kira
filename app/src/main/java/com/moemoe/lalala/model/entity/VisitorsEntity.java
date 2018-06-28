@@ -18,6 +18,15 @@ public class VisitorsEntity {
     private String titleTime;
     private String rightTime;
     private int  count;//访客总数
+    private String visitorName;
+
+    public void setVisitorName(String visitorName) {
+        this.visitorName = visitorName;
+    }
+
+    public String getVisitorName() {
+        return visitorName;
+    }
 
     public int getCount() {
         return count;

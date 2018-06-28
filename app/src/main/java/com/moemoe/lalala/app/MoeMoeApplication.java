@@ -15,6 +15,7 @@ import android.support.multidex.BuildConfig;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -62,6 +63,7 @@ import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
 import com.moemoe.lalala.view.widget.netamenu.MenuItem;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
+import com.shuyu.gsyvideoplayer.video.NormalGSYVideoPlayer;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -204,9 +206,9 @@ public class MoeMoeApplication extends Application {
     @SuppressLint({"NewApi", "ClickableViewAccessibility"})
     public void initWindowManager(final Context context, final WindowManager mWindowManager) {
         if (Build.VERSION.SDK_INT >= 23) {
-            if (!Settings.canDrawOverlays(this)) {
-                return;
-            }
+//            if (!Settings.canDrawOverlays(this)) {
+//                return;
+//            }
         }
         if (!isWindow) {
             return;
@@ -528,20 +530,19 @@ public class MoeMoeApplication extends Application {
                 return false;
             }
         });
-        if (imageView != null) {
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (dialog != null && dialog.getVisibility() == View.VISIBLE) {
-                        dialog.setVisibility(View.GONE);
-                        return;
-                    }
-                    if (!isMove) {
-                        windowManagerOnclick(functionalX, functionalY, imageView.getMeasuredWidth(), imageView.getMeasuredHeight());
-                    }
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dialog != null && dialog.getVisibility() == View.VISIBLE) {
+                    dialog.setVisibility(View.GONE);
+                    return;
                 }
-            });
-        }
+                if (!isMove) {
+                    windowManagerOnclick(functionalX, functionalY, imageView.getMeasuredWidth(), imageView.getMeasuredHeight());
+                }
+            }
+        });
         mPersonal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

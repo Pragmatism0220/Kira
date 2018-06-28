@@ -127,7 +127,6 @@ public class PullAndLoadView extends FrameLayout {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                Log.e("---onScrolled----", dy + "");
                 scrollY += dy;
                 if (scrollY < 0) {
                     scrollY = 0;

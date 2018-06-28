@@ -159,7 +159,7 @@ public class MapLayout extends FrameLayout {
             public void onNoDoubleClick(View view) {
                 if (type.equals("2")) {
                     if (entity.isTimerIsSleep()) {
-                        ToastUtils.showShortToast(getContext(), "睡觉中~~~");
+                        ToastUtils.showShortToast(getContext(), "睡觉中~明天六点才会醒来哟~");
                     } else {
                         onHouseClick(view, schame, type, entity.getId(), isJump);
                         isJump = !isJump;
@@ -198,7 +198,7 @@ public class MapLayout extends FrameLayout {
                 float likeY = (float) (y - getContext().getResources().getDimension(R.dimen.y80));
                 houseView.setMapX(likeX);
                 houseView.setMapY(likeY);
-                houseView.setTextSize(getContext().getResources().getDimension(R.dimen.x10));
+                houseView.setTextSize(getContext().getResources().getDimension(R.dimen.x8)); 
                 houseView.setGravity(Gravity.CENTER_HORIZONTAL);
                 houseView.setPadding(0, (int) getContext().getResources().getDimension(R.dimen.y30), 0, 0);
                 addView(houseView);
@@ -230,6 +230,7 @@ public class MapLayout extends FrameLayout {
                     }.start();
                 }
                 houseView.setOnClickListener(new NoDoubleClickListener(700) {
+
                     @Override
                     public void onNoDoubleClick(View view) {
                         if (isHisHouse) {
@@ -258,7 +259,7 @@ public class MapLayout extends FrameLayout {
                         }
                     }
                 });
-                
+
                 if (entity.isTimerIsSleep()) {
                     houseView.setVisibility(GONE);
                     final HouseView sleepView = new HouseView(getContext());
@@ -275,7 +276,7 @@ public class MapLayout extends FrameLayout {
                     sleepParams.width = (int) getContext().getResources().getDimension(R.dimen.x132);
                     sleepParams.height = (int) getContext().getResources().getDimension(R.dimen.y132);
                     sleepView.setLayoutParams(sleepParams);
-                }else {
+                } else {
                     houseView.setVisibility(VISIBLE);
                 }
 
@@ -716,21 +717,21 @@ public class MapLayout extends FrameLayout {
     public void setImageDrawable(Drawable drawable) {
         touchImageView.setImageDrawable(drawable);
 
-        new CountDownTimer(5000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-            }
-
-            @Override
-            public void onFinish() {
-                for (int i = 0; i < mChildView.size(); i++) {
-                    HouseImage houseImage = mapImage.get(mChildView.get(i));
-                    if (houseImage != null && houseImage.getId().equals(mChildView.get(i))) {
-                        goAnimator(houseImage.getW(), houseImage.getH(), getChildAt(i + 1), getChildAt(i + 2), getChildAt(i + 3), houseImage.isSleep(), houseImage.getId());
-                    }
-                }
-            }
-        }.start();
+//        new CountDownTimer(5000, 1000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                for (int i = 0; i < mChildView.size(); i++) {
+//                    HouseImage houseImage = mapImage.get(mChildView.get(i));
+//                    if (houseImage != null && houseImage.getId().equals(mChildView.get(i))) {
+//                        goAnimator(houseImage.getW(), houseImage.getH(), getChildAt(i + 1), getChildAt(i + 2), getChildAt(i + 3), houseImage.isSleep(), houseImage.getId());
+//                    }
+//                }
+//            }
+//        }.start();
     }
 
     public void setMapUrl(String name) {

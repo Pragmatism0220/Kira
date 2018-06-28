@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/shape_gray_d7d7d7_background_y24" android:state_enabled="false"></item>
-    <item android:drawable="@drawable/shape_main_background_y24"></item>
+    <item android:drawable="@drawable/shape_gray_d7d7d7_background_y24" android:state_enabled="false"/>
+    <item android:drawable="@drawable/shape_main_background_y24"/>
 
 </selector>

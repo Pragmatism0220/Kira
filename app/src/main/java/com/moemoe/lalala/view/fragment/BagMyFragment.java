@@ -106,7 +106,7 @@ public class BagMyFragment extends BaseFragment implements BagMyContract.View {
         mListDocs.setVisibility(View.VISIBLE);
         mLLComment.setVisibility(View.GONE);
         mLlShow.setVisibility(View.GONE);
-        mAdapter = new BagMyAdapter(userId, type,sign);
+        mAdapter = new BagMyAdapter(userId, type, sign);
         mListDocs.getRecyclerView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
         mListDocs.getRecyclerView().setAdapter(mAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());

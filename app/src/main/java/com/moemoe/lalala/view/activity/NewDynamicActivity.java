@@ -48,6 +48,7 @@ public class NewDynamicActivity extends BaseAppCompatActivity implements IUnRead
     private TabFragmentPagerAdapter mAdapter;
     private NewFollowMainFragment followMainFragment;
     private FeedFriendFragment friendFragment;
+    private NewFollowMainFragment followFragment;
 
     @Override
     protected int getLayoutId() {
@@ -67,18 +68,23 @@ public class NewDynamicActivity extends BaseAppCompatActivity implements IUnRead
 
         List<String> titles = new ArrayList<>();
         titles.add("发现");
-        titles.add("好友");
+//        titles.add("好友");
+        titles.add("我的");
         List<BaseFragment> fragmentList = new ArrayList<>();
         followMainFragment = NewFollowMainFragment.newInstance("ground");
         fragmentList.add(followMainFragment);
         friendFragment = FeedFriendFragment.newInstance();
-        fragmentList.add(friendFragment);
+        followFragment = NewFollowMainFragment.newInstance("my", PreferenceUtils.getUUid(), "house");
+//        fragmentList.add(friendFragment);
+        fragmentList.add(followFragment);
+
         mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragmentList, titles);
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setViewPager(mViewPager);
 
         mViewPager.setCurrentItem(1);
     }
+
 
     @Override
     protected void initToolbar(Bundle savedInstanceState) {
@@ -126,7 +132,7 @@ public class NewDynamicActivity extends BaseAppCompatActivity implements IUnRead
                 if (mViewPager.getCurrentItem() == 0) {
                     followMainFragment.setSmoothScrollToPosition();
                 } else if (mViewPager.getCurrentItem() == 1) {
-                    friendFragment.setSmoothScrollToPosition();
+                    followFragment.setSmoothScrollToPosition();
                 }
             }
         });
@@ -143,7 +149,8 @@ public class NewDynamicActivity extends BaseAppCompatActivity implements IUnRead
         if (mViewPager.getCurrentItem() == 0) {
             followMainFragment.likeDynamic(id, isLike, position);
         } else if (mViewPager.getCurrentItem() == 1) {
-            friendFragment.likeDynamic(id, isLike, position);
+//            friendFragment.likeDynamic(id, isLike, position);
+            followFragment.likeDynamic(id, isLike, position);
         }
     }
 

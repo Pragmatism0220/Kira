@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.moemoe.lalala.view.activity.IntelligenceActivity.Presenter" />
+
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/rl_intelligence"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:background="@color/alpha_80"
+        tools:context="com.moemoe.lalala.view.activity.IntelligenceActivity">
+
+
+        <ImageView
+            android:id="@+id/iv_cover_intelligence"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="@{presenter.onClick}"
+            android:scaleType="centerCrop" />
+
+    </RelativeLayout>
+</layout>

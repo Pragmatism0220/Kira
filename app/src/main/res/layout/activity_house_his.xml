@@ -35,6 +35,16 @@
             android:onClick="@{presenter.onClick}"
             android:src="@drawable/role_back_btn" />
 
+        <ImageView
+            android:id="@+id/iv_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/top_view"
+            android:layout_marginEnd="@dimen/x8"
+            android:onClick="@{presenter.onClick}"
+            android:src="@drawable/btn_house_message" />
+
         <include layout="@layout/dialog_role_house_garbage" />
     </RelativeLayout>
 

@@ -30,6 +30,5 @@
     <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
         android:id="@+id/rv_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </com.moemoe.lalala.view.widget.recycler.PullAndLoadView>
+        android:layout_height="wrap_content"/>
 </LinearLayout>

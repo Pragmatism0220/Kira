@@ -45,22 +45,21 @@
                 android:background="@drawable/ic_home_roles_choice_title" />
 
             <ImageView
+                android:id="@+id/iv_intelligence"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/x24"
-                android:layout_marginBottom="@dimen/y42"
-                android:background="@drawable/role_dialog_btn"
                 android:layout_alignParentBottom="true"
-                />
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="@dimen/y42"
+                android:layout_marginEnd="@dimen/x24"
+                android:background="@drawable/role_dialog_btn" />
 
             <ImageView
                 android:id="@+id/role_image"
                 android:layout_width="@dimen/x390"
                 android:layout_height="@dimen/y520"
                 android:layout_alignParentEnd="true"
-                android:layout_below="@+id/role_name_bg"
-                android:src="@drawable/btn_classmate_mei_uniform_1" />
+                android:layout_below="@+id/role_name_bg" />
 
 
             <TextView
