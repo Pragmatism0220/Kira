@@ -512,6 +512,13 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                             }
                         }
                     }
+                    if (isCheck) {
+                        if (entity != null) {
+                            if (!entity.isUserHadTool()) {
+                                showToast("功能未开放");
+                            }
+                        }
+                    }
 //                    //道具的使用
 //                    if (!isUserHadTool) {
 //                        showToast("未拥有");

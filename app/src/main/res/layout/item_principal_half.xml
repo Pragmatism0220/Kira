@@ -41,10 +41,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/y20"
-                    android:layout_marginStart="@dimen/x4"
+                    android:layout_marginStart="@dimen/x10"
                     android:paddingStart="@dimen/x30"
                     android:rotation="-15"
-                    android:text="asdasdasdasd"
+                    android:text="sdasd"
                     android:textColor="@color/black"
                     android:textSize="@dimen/x26" />
 

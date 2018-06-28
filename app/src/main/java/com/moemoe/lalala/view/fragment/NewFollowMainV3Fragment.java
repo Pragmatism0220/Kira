@@ -274,7 +274,7 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
             }
             banner.setImages(bannerEntities)
                     .setImageLoader(new BannerImageLoader())
-                    .setDelayTime(2000)
+                    .setDelayTime(4000)
                     .setIndicatorGravity(BannerConfig.CENTER)
                     .start();
             banner.setOnBannerListener(new OnBannerListener() {

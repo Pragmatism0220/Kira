@@ -63,6 +63,8 @@ public class PrincipalListAdapter extends RecyclerView.Adapter<PrincipalListAdap
         holder.mTitleText.setText(data.getName());
         holder.mNumberText.setText(data.getSortId());
 
+
+        holder.mExtraLayout.removeAllViews();
         if (data.getImages() != null && data.getImages().size() > 0) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.mBackImage.getLayoutParams();
             params.height = (int) mContext.getResources().getDimension(R.dimen.y190);
@@ -76,6 +78,7 @@ public class PrincipalListAdapter extends RecyclerView.Adapter<PrincipalListAdap
                 holder.mExtraLayout.addView(image);
             }
         }
+
 
         if (mOnItemListener != null) {
             holder.mBackImage.setOnClickListener(new View.OnClickListener() {

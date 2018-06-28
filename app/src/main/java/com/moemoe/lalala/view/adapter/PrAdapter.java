@@ -19,7 +19,7 @@ import com.moemoe.lalala.model.api.ApiService;
 import java.util.List;
 
 /**
- * Created by Administrator on 2018/5/24.
+ * Created by zhangyan on 2018/5/24.
  */
 
 public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -43,15 +43,24 @@ public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (infos.get(position).isFullCollect()) {
-            //未收集
-            return HALF_VIEW;
-        } else if (!infos.get(position).isFullCollect()) {
-            //全收集
-            return ALL_VIEW;
-        } else if (infos.get(position).isLock()) {
-            //未解锁
+//        if (infos.get(position).isFullCollect() == true) {//是否全收集，true：全收集 ,
+//            //未收集
+//            return HALF_VIEW;
+//        } else if (infos.get(position).isFullCollect()) {
+//            //全收集
+//            return ALL_VIEW;
+//        } else if (infos.get(position).isLock()) {// 是否解锁，true：未解锁 ,
+//            //未解锁
+//            return NO_VIEW;
+//        }
+        if (infos.get(position).isLock() == true) {
             return NO_VIEW;
+        } else if (infos.get(position).isLock() == false) {
+            if (infos.get(position).isFullCollect() == true) {
+                return ALL_VIEW;
+            } else if (infos.get(position).isFullCollect() == false) {
+                return HALF_VIEW;
+            }
         }
         return super.getItemViewType(position);
     }

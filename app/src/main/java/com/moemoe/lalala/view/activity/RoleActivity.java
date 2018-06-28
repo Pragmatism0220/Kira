@@ -188,7 +188,16 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
                     if (entities.get(position).getUserLikeRoleDefine() < entities.get(position).getUserLikeRoleDefineFull()) {
                         binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
-                        params.width = 240 - (240 * entities.get(position).getUserLikeRoleDefine() / entities.get(position).getUserLikeRoleDefineFull());
+                        int num = 240 - (240 * entities.get(position).getUserLikeRoleDefine() / entities.get(position).getUserLikeRoleDefineFull());
+                        if (num > 200) {
+                            binding.roleHeartNumSmall.setVisibility(View.GONE);
+                            binding.fl.setBackgroundResource(R.color.black);
+                        } else {
+                            binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
+                            binding.fl.setBackgroundResource(R.drawable.shape_role_bg);
+                            params.width = num;
+                        }
+
                     }
                     binding.roleHeartNumSmall.setLayoutParams(params);
                     if (entities.get(position).getUserLikeRoleDefine() >= entities.get(position).getUserLikeRoleDefineFull()) {
@@ -203,8 +212,8 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     }
                     binding.roleNameText.setText(entities.get(position).getName());
                     Glide.with(RoleActivity.this).load(ApiService.URL_QINIU + entities.get(position).getShowHeadIcon()).into(binding.roleImage);
-                    roleId = entities.get(position).getId();
-                    isPut = entities.get(position).getIsPutInHouse();
+//                    roleId = entities.get(position).getId();
+//                    isPut = entities.get(position).getIsPutInHouse();
 
                     //拿到集合中放入宅屋的个数
                     int count = 0;
@@ -295,26 +304,28 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     finish();
                     break;
                 case R.id.put_house_btn:
-                    if (roleId != null) {
-                        if (!isPut) {
+                    if (info.get(mPosition).getId() != null) {
+//                        if (!isPut) {
+                        if (!info.get(mPosition).getIsPutInHouse()) {
                             if (mAdapter.getList().get(mPosition).getCount() > mAdapter.getList().get(mPosition).getMaxPutInHouseNum()) {
                                 showToast("最多可以设置4个角色为同桌");
                             }
-                            mPresenter.putInHouse(roleId);
+//                            mPresenter.putInHouse(roleId);
+                            mPresenter.putInHouse(info.get(mPosition).getId());
                         } else {
-                            mPresenter.removeOutHouse(roleId);
+                            mPresenter.removeOutHouse(info.get(mPosition).getId());
                         }
                     }
                     break;
                 case R.id.set_deskmake_btn:
                     if (roleId != null) {
-                        mPresenter.setDeskMate(roleId);
+                        mPresenter.setDeskMate(info.get(mPosition).getId());
                     }
                     break;
                 case R.id.check_cloth_btn:
                     if (roleId != null) {
                         Intent intent = new Intent(RoleActivity.this, ClothingActivity.class);
-                        intent.putExtra("roleId", roleId);
+                        intent.putExtra("roleId", info.get(mPosition).getId());
                         startActivity(intent);
                     } else {
                         showToast("请选择相对应角色");
