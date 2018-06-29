@@ -3,7 +3,7 @@
     android:id="@+id/main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/transparent"
     android:orientation="vertical">
 
     <FrameLayout
@@ -35,20 +35,21 @@
             android:src="@drawable/btn_home"
             android:visibility="visible" />
 
+        <ImageView
+            android:id="@+id/iv_personal"
+            android:layout_width="@dimen/x70"
+            android:layout_height="@dimen/y70"
+            android:layout_marginStart="@dimen/x26"
+            android:src="@drawable/bg_default_circle" />
+
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/y26"
+            android:layout_height="@dimen/y70"
+            android:layout_marginStart="@dimen/y24"
             android:layout_weight="1"
-            android:background="@drawable/shape_transparent_background"
+            android:background="@drawable/shape_tool_bar"
             android:orientation="horizontal">
 
-
-            <ImageView
-                android:id="@+id/iv_personal"
-                android:layout_width="@dimen/x70"
-                android:layout_height="@dimen/y70"
-                android:src="@drawable/bg_default_circle" />
 
             <TextView
                 android:id="@+id/tv_search"
@@ -59,16 +60,16 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="搜索你感兴趣的"
-                android:textColor="@color/gray_929292"
+                android:textColor="@color/white"
                 android:textSize="@dimen/x30" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/y24"
+                android:layout_marginEnd="@dimen/y20"
                 android:src="@drawable/btn_trends_search_white"
-                android:visibility="gone" />
+                android:visibility="visible" />
         </LinearLayout>
 
         <ImageView

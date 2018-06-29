@@ -81,6 +81,7 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
     private TextView mTvContent;
     private TextView mTvChuWu;
     private TextView mTvCnanle;
+    private TextView mTvUserName;
 
     @Override
     protected void initComponent() {
@@ -108,6 +109,7 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         mTvContent = findViewById(R.id.tv_content_gongxi);
         mTvChuWu = findViewById(R.id.tv_chuwu);
         mTvCnanle = findViewById(R.id.tv_canle);
+        mTvUserName = findViewById(R.id.tv_user_name);
 
         binding.map.setIsHis(true);
         mPresenter.loadHouseObjects(false, id);
@@ -375,6 +377,8 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         mTvCnanle.setText("");
         mTvChuWu.setText("");
         mTvChuWu.setVisibility(View.GONE);
+        mTvUserName.setVisibility(View.GONE);
+        mTvUserName.setText("");
         mRubbishEntity = entity;
         if (entity != null && entity.getType() != 0) {
             mRlRoleJuQing.setVisibility(View.VISIBLE);
@@ -432,6 +436,8 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
                 mTvContent.setText(entity.getName());
                 mTvContent.setVisibility(View.VISIBLE);
                 mTvJuQing.setVisibility(View.VISIBLE);
+                mTvUserName.setVisibility(View.VISIBLE);
+                mTvUserName.setText(entity.getName());
             } else if (type == 4) {
                 int w = getResources().getDimensionPixelSize(R.dimen.x360);
                 int h = getResources().getDimensionPixelSize(R.dimen.y360);

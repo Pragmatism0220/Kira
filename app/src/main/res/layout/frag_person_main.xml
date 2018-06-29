@@ -577,8 +577,8 @@
             android:background="@drawable/bg_normal_white_btn"
             android:gravity="center"
             android:text="查看全部"
-            android:visibility="gone"
             android:textColor="@color/gray_d7d7d7"
-            android:textSize="@dimen/x30" />
+            android:textSize="@dimen/x30"
+            android:visibility="gone" />
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

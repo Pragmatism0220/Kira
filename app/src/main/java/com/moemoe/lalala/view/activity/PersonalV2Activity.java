@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -140,15 +141,15 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
     @BindView(R.id.tv_content)
     TextView mTvSignature;
     @BindView(R.id.attention_btn)
-    Button mAttention;
+    TextView mAttention;
     @BindView(R.id.chat_btn)
-    Button mChat;
+    TextView mChat;
     @BindView(R.id.house_btn)
-    Button mHouse;
-    @BindView(R.id.bottom_bar)
-    RelativeLayout mBottomBar;
+    ImageView mHouse;
     @BindView(R.id.tab)
     RelativeLayout mTab;
+    @BindView(R.id.ll_person_root)
+    LinearLayout mLlPersonRoot;
 
 
     @Inject
@@ -242,9 +243,9 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
          */
 
         if (PreferenceUtils.getUUid().equals(mUserId)) {
-            mBottomBar.setVisibility(View.GONE);
+            mLlPersonRoot.setVisibility(View.GONE);
         } else {
-            mBottomBar.setVisibility(View.VISIBLE);
+            mLlPersonRoot.setVisibility(View.VISIBLE);
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mTab.getLayoutParams();
             layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y80));
             mTab.setLayoutParams(layoutParams);
@@ -665,13 +666,6 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
         shapeDrawable2.getPaint().setStyle(Paint.Style.FILL);
         shapeDrawable2.getPaint().setColor(StringUtils.readColorStr(info.getLevelColor(), ContextCompat.getColor(this, R.color.main_cyan)));
         mTvLevel.setBackgroundDrawable(shapeDrawable2);
-        if ("F".equals(info.getSex())) {
-            mHouse.setText("他的宅屋");
-        } else if ("M".equals(info.getSex())) {
-            mHouse.setText("她的宅屋");
-        } else {
-            mHouse.setText("Ta的宅屋");
-        }
 
     }
 
