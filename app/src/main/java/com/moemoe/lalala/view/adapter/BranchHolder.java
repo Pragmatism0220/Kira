@@ -27,7 +27,7 @@ public class BranchHolder extends ClubChildHolder {
         int w = (int) context.getResources().getDimension(R.dimen.x210);
         int h = (int) context.getResources().getDimension(R.dimen.y280);
         Glide.with(context)
-                .load(StringUtils.getUrl(context, entity.getCoverImage(), w, h, false, true))
+                .load(ApiService.URL_QINIU + entity.getCoverImage())
                 .error(R.drawable.shape_gray_e8e8e8_background)
                 .placeholder(R.drawable.shape_gray_e8e8e8_background)
                 .into((ImageView) $(R.id.item_branch_bg));

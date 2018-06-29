@@ -12,14 +12,15 @@ import com.moemoe.lalala.view.widget.adapter.BaseRecyclerViewAdapter;
 
 public class BranchFragmentListAdapter extends BaseRecyclerViewAdapter<BranchStoryAllEntity, BranchHolder> {
     private boolean isSelect;
-    public BranchFragmentListAdapter(Context context,boolean type) {
+
+    public BranchFragmentListAdapter(Context context, boolean type) {
         super(R.layout.item_branch);
-        this.isSelect=type;
+        this.isSelect = type;
     }
 
     @Override
     protected void convert(BranchHolder helper, BranchStoryAllEntity item, int position) {
-        helper.createItem(item, position,isSelect);
+        helper.createItem(item, position, isSelect);
     }
 
     @Override
