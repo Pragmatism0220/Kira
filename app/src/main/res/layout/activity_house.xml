@@ -169,7 +169,8 @@
             android:layout_below="@+id/iv_alarm"
             android:layout_marginEnd="@dimen/x8"
             android:onClick="@{presenter.onClick}"
-            android:src="@drawable/btn_house_trends" />
+            android:src="@drawable/btn_house_trends"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_message"
@@ -328,6 +329,16 @@
                 android:layout_centerInParent="true" />
         </RelativeLayout>
 
+        <ImageView
+            android:id="@+id/iv_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_tool_bar"
+            android:layout_marginStart="@dimen/x16"
+            android:layout_marginTop="@dimen/y16"
+            android:onClick="@{presenter.onClick}"
+            android:src="@drawable/btn_house_share"
+            android:visibility="visible" />
 
     </RelativeLayout>
 

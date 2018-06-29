@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.style.TtsSpan;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,6 +28,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloadListener;
+import com.liulishuo.filedownloader.FileDownloader;
+import com.moemoe.lalala.BuildConfig;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.AppSetting;
 import com.moemoe.lalala.app.MoeMoeApplication;
@@ -37,17 +42,23 @@ import com.moemoe.lalala.event.HouseLikeEvent;
 import com.moemoe.lalala.galgame.FileManager;
 import com.moemoe.lalala.galgame.SoundManager;
 import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
+import com.moemoe.lalala.model.entity.DocDetailEntity;
 import com.moemoe.lalala.model.entity.HouseDbEntity;
 import com.moemoe.lalala.model.entity.HouseLikeEntity;
 import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
+import com.moemoe.lalala.model.entity.REPORT;
 import com.moemoe.lalala.model.entity.RubbishEntity;
 import com.moemoe.lalala.model.entity.RubblishBody;
 import com.moemoe.lalala.model.entity.SaveVisitorEntity;
+import com.moemoe.lalala.model.entity.ShareArticleEntity;
+import com.moemoe.lalala.model.entity.UserTopEntity;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.presenter.DormitoryContract;
 import com.moemoe.lalala.presenter.DormitoryPresenter;
 import com.moemoe.lalala.utils.AlertDialogUtil;
+import com.moemoe.lalala.utils.BitmapUtils;
 import com.moemoe.lalala.utils.DialogUtils;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.FileUtil;
@@ -56,25 +67,32 @@ import com.moemoe.lalala.utils.MapUtil;
 import com.moemoe.lalala.utils.NetworkUtils;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
+import com.moemoe.lalala.utils.ShareUtils;
 import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.widget.map.MapLayout;
 import com.moemoe.lalala.view.widget.map.TouchImageView;
+import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
+import com.moemoe.lalala.view.widget.netamenu.MenuItem;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.reactivestreams.Subscription;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
@@ -95,6 +113,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import static android.view.View.DRAWING_CACHE_QUALITY_AUTO;
 import static android.view.View.DRAWING_CACHE_QUALITY_HIGH;
 import static android.view.View.DRAWING_CACHE_QUALITY_LOW;
+import static com.moemoe.lalala.utils.StartActivityConstant.REQ_DELETE_TAG;
 
 public class HouseActivity extends BaseActivity implements DormitoryContract.View {
 
@@ -126,6 +145,9 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     private TextView mTvChuWu;
     private TextView mTvCnanle;
     private int count;
+    private BottomMenuFragment bottomMenuFragment;
+    private String saveBitmap;
+    private Bitmap bitmap;
 
     @Override
     protected void initComponent() {
@@ -163,6 +185,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         initMap();
         SoundManager.init(this);
         FileManager.init(this);
+        initPopupMenus();
         EventBus.getDefault().register(this);
     }
 
@@ -445,9 +468,12 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
             }
             count = entities.get(0).getCount();
             binding.visitorCount.setText(entities.get(0).getCount() + "");
+            binding.tvHouseName.setText(PreferenceUtils.getAuthorInfo().getUserName() + "的宅屋");
+            binding.tvHouseVivit.setText("访客数量:" + count);
         } else {
             binding.visitorInfo.setVisibility(View.GONE);
         }
+
     }
 
     /**
@@ -642,20 +668,22 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mDramaAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mVisitorInfoAnimator = ObjectAnimator.ofFloat(binding.visitorInfo, "translationX", -binding.visitorInfo.getWidth(), 0).setDuration(300);
         mVisitorInfoAnimator.setInterpolator(new OvershootInterpolator());
-        ObjectAnimator mIvSleepAnimator = ObjectAnimator.ofFloat(binding.ivSleep, "translationX", getResources().getDisplayMetrics().widthPixels, 0).setDuration(300);
+        ObjectAnimator mIvSleepAnimator = ObjectAnimator.ofFloat(binding.ivSleep, "translationX", binding.ivSleep.getWidth() + getResources().getDimension(R.dimen.y60), 0).setDuration(300);
         mIvSleepAnimator.setInterpolator(new OvershootInterpolator());
-        ObjectAnimator mIvTrandsAnimator = ObjectAnimator.ofFloat(binding.ivTrends, "translationX", getResources().getDisplayMetrics().widthPixels, 0).setDuration(300);
+        ObjectAnimator mIvTrandsAnimator = ObjectAnimator.ofFloat(binding.ivTrends, "translationX", binding.ivTrends.getWidth() + getResources().getDimension(R.dimen.y60), 0).setDuration(300);
         mIvTrandsAnimator.setInterpolator(new OvershootInterpolator());
-        ObjectAnimator mIvAlarmsAnimator = ObjectAnimator.ofFloat(binding.ivAlarm, "translationX", getResources().getDisplayMetrics().widthPixels, 0).setDuration(300);
+        ObjectAnimator mIvAlarmsAnimator = ObjectAnimator.ofFloat(binding.ivAlarm, "translationX", binding.ivAlarm.getWidth() + getResources().getDimension(R.dimen.y60), 0).setDuration(300);
         mIvAlarmsAnimator.setInterpolator(new OvershootInterpolator());
-        ObjectAnimator mIvMesssgeAnimator = ObjectAnimator.ofFloat(binding.ivMessage, "translationX", getResources().getDisplayMetrics().widthPixels, 0).setDuration(300);
+        ObjectAnimator mIvMesssgeAnimator = ObjectAnimator.ofFloat(binding.ivMessage, "translationX", binding.ivMessage.getWidth() + getResources().getDimension(R.dimen.y60), 0).setDuration(300);
+        mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvShareAnimator = ObjectAnimator.ofFloat(binding.ivShare, "translationX", -binding.ivShare.getWidth(), 0).setDuration(300);
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(mRoleAnimator);
         set.play(mStorageAnimator).with(mDramaAnimator);
         set.play(mVisitorInfoAnimator).with(mIvSleepAnimator);
         set.play(mIvTrandsAnimator).with(mIvAlarmsAnimator);
-        set.play(mIvMesssgeAnimator);
+        set.play(mIvMesssgeAnimator).with(mIvShareAnimator);
         set.start();
     }
 
@@ -670,20 +698,22 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mDramaAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mVisitorInfoAnimator = ObjectAnimator.ofFloat(binding.visitorInfo, "translationX", 0, -binding.visitorInfo.getWidth()).setDuration(300);
         mVisitorInfoAnimator.setInterpolator(new OvershootInterpolator());
-        ObjectAnimator mIvSleepAnimator = ObjectAnimator.ofFloat(binding.ivSleep, "translationX", 0, getResources().getDisplayMetrics().widthPixels).setDuration(300);
+        ObjectAnimator mIvSleepAnimator = ObjectAnimator.ofFloat(binding.ivSleep, "translationX", 0, binding.ivSleep.getWidth() + getResources().getDimension(R.dimen.y60)).setDuration(300);
         mIvSleepAnimator.setInterpolator(new OvershootInterpolator());
-        ObjectAnimator mIvTrandsAnimator = ObjectAnimator.ofFloat(binding.ivTrends, "translationX", 0, getResources().getDisplayMetrics().widthPixels).setDuration(300);
+        ObjectAnimator mIvTrandsAnimator = ObjectAnimator.ofFloat(binding.ivTrends, "translationX", 0, binding.ivTrends.getWidth() + getResources().getDimension(R.dimen.y60)).setDuration(300);
         mIvTrandsAnimator.setInterpolator(new OvershootInterpolator());
-        ObjectAnimator mIvAlarmsAnimator = ObjectAnimator.ofFloat(binding.ivAlarm, "translationX", 0, getResources().getDisplayMetrics().widthPixels).setDuration(300);
+        ObjectAnimator mIvAlarmsAnimator = ObjectAnimator.ofFloat(binding.ivAlarm, "translationX", 0, binding.ivAlarm.getWidth() + getResources().getDimension(R.dimen.y60)).setDuration(300);
         mIvAlarmsAnimator.setInterpolator(new OvershootInterpolator());
-        ObjectAnimator mIvMesssgeAnimator = ObjectAnimator.ofFloat(binding.ivMessage, "translationX", 0, getResources().getDisplayMetrics().widthPixels).setDuration(300);
+        ObjectAnimator mIvMesssgeAnimator = ObjectAnimator.ofFloat(binding.ivMessage, "translationX", 0, binding.ivMessage.getWidth() + getResources().getDimension(R.dimen.y60)).setDuration(300);
+        mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvShareAnimator = ObjectAnimator.ofFloat(binding.ivShare, "translationX", 0, -getResources().getDimension(R.dimen.y60) - binding.dormitoryDrama.getWidth()).setDuration(300);
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(mRoleAnimator);
         set.play(mStorageAnimator).with(mDramaAnimator);
         set.play(mVisitorInfoAnimator).with(mIvSleepAnimator);
         set.play(mIvTrandsAnimator).with(mIvAlarmsAnimator);
-        set.play(mIvMesssgeAnimator);
+        set.play(mIvMesssgeAnimator).with(mIvShareAnimator);
         set.start();
     }
 
@@ -757,6 +787,29 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                     i1.putExtra("uuid", PreferenceUtils.getUUid());
                     startActivity(i1);
                     break;
+                case R.id.iv_share:
+                    if (bottomMenuFragment != null) {
+                        createDialog("生成图片中...");
+                        binding.ivHouseQrCode.setVisibility(View.VISIBLE);
+                        binding.tvHouseName.setVisibility(View.VISIBLE);
+                        binding.tvHouseVivit.setVisibility(View.VISIBLE);
+                        bitmap = getBitmap(binding.flShare);
+                        saveBitmap = StorageUtils.saveBitmap(HouseActivity.this, bitmap);
+                        if (!TextUtils.isEmpty(saveBitmap) && bottomMenuFragment != null) {
+                            finalizeDialog();
+                            binding.ivHouseQrCode.setVisibility(View.INVISIBLE);
+                            binding.tvHouseName.setVisibility(View.INVISIBLE);
+                            binding.tvHouseVivit.setVisibility(View.INVISIBLE);
+                            bottomMenuFragment.show(getSupportFragmentManager(), "house");
+                        } else {
+                            finalizeDialog();
+                            binding.ivHouseQrCode.setVisibility(View.INVISIBLE);
+                            binding.tvHouseName.setVisibility(View.INVISIBLE);
+                            binding.tvHouseVivit.setVisibility(View.INVISIBLE);
+                            showToast("图片生成失败，请重新生成~");
+                        }
+                    }
+                    break;
             }
         }
     }
@@ -785,7 +838,6 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     }
 
     public Bitmap getBitmap(View view) {
-        
 
 
         Bitmap bitmap = null;
@@ -821,7 +873,6 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         canvas.restoreToCount(restoreCount);
         canvas.setBitmap(null);
 
-
         return bitmap;
     }
 
@@ -839,4 +890,90 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
             }
         }
     }
+
+
+    /**
+     * 分享
+     */
+    private void initPopupMenus() {
+        bottomMenuFragment = new BottomMenuFragment();
+        ArrayList<com.moemoe.lalala.view.widget.netamenu.MenuItem> items = new ArrayList<>();
+
+        MenuItem item = new MenuItem(1, "QQ", R.drawable.btn_doc_option_send_qq);
+        items.add(item);
+
+        item = new MenuItem(2, "QQ空间", R.drawable.btn_doc_option_send_qzone);
+        items.add(item);
+
+        item = new MenuItem(3, "微信", R.drawable.btn_doc_option_send_wechat);
+        items.add(item);
+
+        item = new MenuItem(4, "微信朋友圈", R.drawable.btn_doc_option_send_pengyouquan);
+        items.add(item);
+
+        item = new MenuItem(5, "微博", R.drawable.btn_doc_option_send_weibo);
+        items.add(item);
+
+        bottomMenuFragment.setShowTop(false);
+        bottomMenuFragment.setMenuItems(items);
+        bottomMenuFragment.setMenuType(BottomMenuFragment.TYPE_HORIZONTAL);
+        bottomMenuFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
+            @Override
+            public void OnMenuItemClick(final int itemId) {
+                // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+                // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+                // text是分享文本，所有平台都需要这个字段
+                // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+
+                switch (itemId) {
+                    case 1:
+                        ShareUtils.shareQQBimtp(HouseActivity.this, "", "", "", saveBitmap, platformActionListener);
+                        break;
+                    case 2:
+                        ShareUtils.shareQQzoneBitmap(HouseActivity.this, "", "", "", saveBitmap, platformActionListener);
+                        break;
+                    case 3:
+                        ShareUtils.shareWechatBitmap(HouseActivity.this, "", "", "", bitmap, platformActionListener);
+                        break;
+                    case 4:
+                        ShareUtils.sharepyqBitmap(HouseActivity.this, "", "", "", bitmap, platformActionListener);
+                        break;
+                    case 5:
+                        ShareUtils.shareWeiboBitMap(HouseActivity.this, "", "", "", bitmap, platformActionListener);
+                        break;
+
+                }
+
+            }
+        });
+    }
+
+    /**
+     * 分享回调
+     */
+    PlatformActionListener platformActionListener = new PlatformActionListener() {
+        @Override
+        public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+            Log.e("kid", "分享成功");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
+
+        @Override
+        public void onError(Platform platform, int i, Throwable throwable) {
+            Log.e("kid", "分享失败");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
+
+        @Override
+        public void onCancel(Platform platform, int i) {
+            Log.e("kid", "分享取消");
+            if (bottomMenuFragment != null) {
+                bottomMenuFragment.dismiss();
+            }
+        }
+    };
 }

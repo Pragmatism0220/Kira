@@ -1,12 +1,16 @@
 package com.moemoe.lalala.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.text.TextUtils;
 
 import com.orhanobut.logger.Logger;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * 文件夹工具
@@ -181,6 +185,14 @@ public class StorageUtils {
         }
     }
 
+    public static String getHouseFileName(String filename) {
+        if (!TextUtils.isEmpty(filename)) {
+            return new File(sDirHouse, filename).getAbsolutePath();
+        } else {
+            return null;
+        }
+    }
+
     public static String getThumbByFileName(String filename) {
         if (!TextUtils.isEmpty(filename)) {
             if (filename.toLowerCase().contains(".gif")) {
@@ -341,4 +353,32 @@ public class StorageUtils {
     public static String imgDir(String name) {
         return sDirGalleryImage + name;
     }
+
+    /**
+     * 保存bitmap到本地
+     *
+     * @param context
+     * @param mBitmap
+     * @return
+     */
+    public static String saveBitmap(Context context, Bitmap mBitmap) {
+        File filePic;
+        try {
+            filePic = new File(sDirHouse +"house.jpg");
+            if (!filePic.exists()) {
+                filePic.getParentFile().mkdirs();
+                filePic.createNewFile();
+            }
+            FileOutputStream fos = new FileOutputStream(filePic);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return filePic.getAbsolutePath();
+    }
+
 }
