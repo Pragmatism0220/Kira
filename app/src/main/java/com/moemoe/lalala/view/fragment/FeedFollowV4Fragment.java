@@ -297,14 +297,14 @@ public class FeedFollowV4Fragment extends BaseFragment implements Luntan2Contrac
         mListDocs.setComplete();
         mListDocs.setLoadMoreEnabled(true);
         if (isPull) {
-            int docPosition = PreferenceUtils.getDocPosition(getContext());
-            if (responses != null && responses.size() > 0) {
-                int position = responses.get(0).getPosition();
-                EventBus.getDefault().post(new DocEvent(docPosition - position));
-                PreferenceUtils.setDocPosition(getContext(), position);
-            } else {
-                EventBus.getDefault().post(new DocEvent(0));
-            }
+//            int docPosition = PreferenceUtils.getDocPosition(getContext());
+//            if (responses != null && responses.size() > 0) {
+//                int position = responses.get(0).getPosition();
+//                EventBus.getDefault().post(new DocEvent(docPosition - position));
+//                PreferenceUtils.setDocPosition(getContext(), position);
+//            } else {
+//                EventBus.getDefault().post(new DocEvent(0));
+//            }
 
             mAdapter.setList(responses);
         } else {

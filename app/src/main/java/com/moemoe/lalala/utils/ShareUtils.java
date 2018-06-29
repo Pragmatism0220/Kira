@@ -44,6 +44,7 @@ public class ShareUtils {
         sp.setTitle(title);
         sp.setTitleUrl(shareurl); // 标题的超链接
         sp.setText(text);
+        sp.setSite(context.getResources().getString(R.string.app_name));
         sp.setImagePath(imageUrl);
         qq.setPlatformActionListener(listener);
         qq.share(sp);
@@ -84,14 +85,13 @@ public class ShareUtils {
     //新浪微博
     public static void shareWeibo(Context context, String title, String shareurl, String text, String imageUrl, PlatformActionListener listener) {
         Platform sina = ShareSDK.getPlatform(SinaWeibo.NAME);
-
-
         sina.SSOSetting(true);
         SinaWeibo.ShareParams sp = new SinaWeibo.ShareParams();
         sp.setTitle(title);
         sp.setTitleUrl(shareurl); // 标题的超链接
         sp.setSiteUrl(shareurl);
         sp.setText(text);
+        sp.setSite(context.getResources().getString(R.string.app_name));
         sp.setImageUrl(imageUrl);
         sina.setPlatformActionListener(listener);
         sina.share(sp);
@@ -106,6 +106,7 @@ public class ShareUtils {
         sp.setTitleUrl(shareurl); // 标题的超链接
         sp.setSiteUrl(shareurl);
         sp.setText(text);
+        sp.setSite(context.getResources().getString(R.string.app_name));
         sp.setImageData(imageUrl);
         sina.setPlatformActionListener(listener);
         sina.share(sp);
