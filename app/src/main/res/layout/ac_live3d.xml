@@ -169,6 +169,30 @@
                     android:src="@drawable/btn_companion_select_ichigo" />
 
                 <ImageView
+                    android:id="@+id/iv_live_fuzi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/x16"
+                    android:layout_marginTop="@dimen/y8"
+                    android:src="@drawable/btn_companion_select_fuzi" />
+
+                <ImageView
+                    android:id="@+id/iv_live_misaka"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/x16"
+                    android:layout_marginTop="@dimen/y8"
+                    android:src="@drawable/btn_companion_select_misaka" />
+
+                <ImageView
+                    android:id="@+id/iv_live_rem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/x16"
+                    android:layout_marginTop="@dimen/y8"
+                    android:src="@drawable/btn_companion_select_rem" />
+
+                <ImageView
                     android:id="@+id/iv_live_sari2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -221,6 +245,8 @@
                     android:layout_marginTop="@dimen/y8"
                     android:src="@drawable/btn_companion_select_mei"
                     android:visibility="gone" />
+
+
             </LinearLayout>
         </HorizontalScrollView>
 

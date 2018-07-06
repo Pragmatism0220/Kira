@@ -11,9 +11,11 @@ import java.util.ArrayList;
 public interface NewVisitorsContract {
     interface Presenter extends BasePresenter {
         void getNewVisitorsInfo(int size, int start);
+        void getHisVisitorsInfo(int size,int start,String hostUserId);
     }
 
     interface View extends BaseView {
         void getNewVisitorsInfoSuccess(ArrayList<VisitorsEntity> entities, boolean isPull);
+        void getHiiVisitorsInfoSccess(ArrayList<VisitorsEntity> entities,boolean isPull);
     }
 }

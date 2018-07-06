@@ -96,10 +96,10 @@ public class NewVisitorAdapter extends BaseRecyclerViewAdapter<VisitorsEntity, N
                 .bitmapTransform(new CropCircleTransformation(mContext))
                 .into(helper.mImage);
 
-        if ("F".equals(item.getVisitorSex())) {
+        if ("M".equals(item.getVisitorSex())) {
             //女性
             helper.mSex.setImageResource(R.drawable.ic_user_girl);
-        } else if ("M".equals(item.getVisitorSex())) {
+        } else if ("F".equals(item.getVisitorSex())) {
             //男性
             helper.mSex.setImageResource(R.drawable.ic_user_boy);
         }
@@ -135,7 +135,6 @@ public class NewVisitorAdapter extends BaseRecyclerViewAdapter<VisitorsEntity, N
                 if (!TextUtils.isEmpty(item.getVisitorId())) {
                     ViewUtils.toPersonal(mContext, item.getVisitorId());
                 }
-
             }
         });
 

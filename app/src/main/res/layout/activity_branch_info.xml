@@ -116,7 +116,6 @@
                     android:gravity="center"
                     android:paddingEnd="@dimen/x44"
                     android:paddingStart="@dimen/x44"
-                    android:text="画师：橙子"
                     android:textColor="@color/white"
                     android:textSize="@dimen/x30" />
 

@@ -1,6 +1,7 @@
 package com.moemoe.lalala.view.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -51,7 +52,6 @@ import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.wechat.friends.Wechat;
 
 /**
- *
  * Created by yi on 2016/12/1.
  */
 
@@ -192,13 +192,13 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginContrac
         mTvLogin.setEnabled(!TextUtils.isEmpty(mAccount) && !TextUtils.isEmpty(mPassword));
     }
 
-    @OnClick({R.id.tv_login,R.id.tv_register,R.id.tv_forget_password,R.id.tv_go_to_main,R.id.tv_country_code,R.id.iv_login_qq,R.id.iv_login_wechat,R.id.iv_login_weibo})
-    public void onClick(View v){
-        switch (v.getId()){
+    @OnClick({R.id.tv_login, R.id.tv_register, R.id.tv_forget_password, R.id.tv_go_to_main, R.id.tv_country_code, R.id.iv_login_qq, R.id.iv_login_wechat, R.id.iv_login_weibo})
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.tv_login:
                 if (NetworkUtils.isNetworkAvailable(LoginActivity.this)) {
                     doLogin();
-                }else {
+                } else {
                     showToast(R.string.msg_connection);
                 }
                 break;
@@ -220,45 +220,44 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginContrac
                 break;
             case R.id.iv_login_qq:
                 createDialog(getResources().getString(R.string.msg_on_login));
-                mPresenter.loginThird(cn.sharesdk.tencent.qq.QQ.NAME,PushManager.getInstance().getClientid(this) + "@and");
+                mPresenter.loginThird(cn.sharesdk.tencent.qq.QQ.NAME, PushManager.getInstance().getClientid(this) + "@and");
                 break;
             case R.id.iv_login_wechat:
                 createDialog(getResources().getString(R.string.msg_on_login));
-                mPresenter.loginThird(Wechat.NAME,PushManager.getInstance().getClientid(this) + "@and");
+                mPresenter.loginThird(Wechat.NAME, PushManager.getInstance().getClientid(this) + "@and");
                 break;
             case R.id.iv_login_weibo:
                 createDialog(getResources().getString(R.string.msg_on_login));
-                mPresenter.loginThird(SinaWeibo.NAME,PushManager.getInstance().getClientid(this) + "@and");
+                mPresenter.loginThird(SinaWeibo.NAME, PushManager.getInstance().getClientid(this) + "@and");
                 break;
         }
     }
 
-    private void doLogin(){
+    private void doLogin() {
         mTvPasswordFormat.setVisibility(View.GONE);
         mAccount = "+" + mCountryCode + mEdtAccount.getText().toString();
         mPassword = mEdtPassword.getText().toString();
         if (!StringUtils.isEmailFormated(mAccount) && !PhoneUtil.isPhoneFormated(mEdtAccount.getText().toString(), mCountryCode)) {
-            showToast( R.string.msg_login_username_form_error);
+            showToast(R.string.msg_login_username_form_error);
         } else if (!StringUtils.isLegalPassword(mPassword)) {
             showToast(R.string.msg_login_password_form_error);
             // 密码格式错误
-            mEdtPassword.setText("");	// 清空密码
+            mEdtPassword.setText("");    // 清空密码
             mPassword = "";
         } else {
             // 密码，邮箱 初步格式检查正确,调用网络线程开始登陆
             SoftKeyboardUtils.dismissSoftKeyboard(LoginActivity.this);
-            if(NetworkUtils.checkNetworkAndShowError(this)){
+            if (NetworkUtils.checkNetworkAndShowError(this)) {
                 createDialog(getResources().getString(R.string.msg_on_login));
-                LoginEntity bean = new LoginEntity(mAccount,EncoderUtils.MD5(mPassword), PushManager.getInstance().getClientid(this) + "@and");
+                LoginEntity bean = new LoginEntity(mAccount, EncoderUtils.MD5(mPassword), PushManager.getInstance().getClientid(this) + "@and");
                 mPresenter.login(bean);
             }
         }
     }
 
-    private void showPhoneCountryDialog(){
+    private void showPhoneCountryDialog() {
         PhoneRegisterActivity.PhoneCountryDialogFragment dialogFragment = new PhoneRegisterActivity.PhoneCountryDialogFragment();
-        dialogFragment.setOnCountryCodeSelectListener(new PhoneRegisterActivity.CountryCodeSelectListener()
-        {
+        dialogFragment.setOnCountryCodeSelectListener(new PhoneRegisterActivity.CountryCodeSelectListener() {
             @Override
             public void onItemSelected(CountryCode countryCode) {
                 mCountryCode = countryCode.getCode();
@@ -266,10 +265,10 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginContrac
                 mTvCountry.setText(code);
             }
         });
-        dialogFragment.show(getSupportFragmentManager(), TAG +" CountryCode");
+        dialogFragment.show(getSupportFragmentManager(), TAG + " CountryCode");
     }
 
-    private void initPhoneCountry(){
+    private void initPhoneCountry() {
         mCountryCode = PhoneUtil.getLocalCountryCode(this);
         String code = "+" + mCountryCode;
         mTvCountry.setText(code);
@@ -290,9 +289,9 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginContrac
         authorInfo.setToken(entity.getToken());
         authorInfo.setUserId(entity.getUserId());
         authorInfo.setPicPath(entity.getPicPath());
-        if(!entity.getHeadPath().startsWith("http")){
+        if (!entity.getHeadPath().startsWith("http")) {
             authorInfo.setHeadPath(ApiService.URL_QINIU + entity.getHeadPath());
-        }else {
+        } else {
             authorInfo.setHeadPath(entity.getHeadPath());
         }
         authorInfo.setCoin(entity.getCoin());
@@ -304,19 +303,19 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginContrac
         authorInfo.setPlatform("neta");
         authorInfo.setDeskMateEntities(entity.getDeskMateList());
         authorInfo.setShield(entity.isShield());
-        if(!TextUtils.isEmpty(entity.getVipTime())){
+        if (!TextUtils.isEmpty(entity.getVipTime())) {
             try {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                 Date date = format.parse(entity.getVipTime());
-                if(date.before(now)){
+                if (date.before(now)) {
                     authorInfo.setVipTime("");
-                }else {
+                } else {
                     authorInfo.setVipTime(entity.getVipTime());
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             authorInfo.setVipTime("");
         }
         authorInfo.setInviteNum(entity.getInviteNum());
@@ -325,10 +324,13 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginContrac
         showToast(R.string.msg_login_success);
         if (mShouldGoMain) {
             Intent i = new Intent(LoginActivity.this, MapActivity.class);
+//            Intent i = new Intent(LoginActivity.this, HouseActivity.class);
             startActivity(i);
         }
         EventBus.getDefault().post(new MateChangeEvent());
         setResult(RESPONSE_LOGIN_SUCCESS);
+        Intent i = new Intent(LoginActivity.this, HouseActivity.class);
+        startActivity(i);
         finish();
     }
 
@@ -336,8 +338,8 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginContrac
     public void onLoginThirdSuccess(String id) {
         finalizeDialog();
         showToast(R.string.msg_login_success);
-        if (mShouldGoMain){
-            Intent i = new Intent(LoginActivity.this,MapActivity.class);
+        if (mShouldGoMain) {
+            Intent i = new Intent(LoginActivity.this, MapActivity.class);
             startActivity(i);
         }
         EventBus.getDefault().post(new MateChangeEvent());
@@ -351,14 +353,14 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginContrac
     }
 
     @Override
-    public void onFailure(int code,String msg) {
+    public void onFailure(int code, String msg) {
         finalizeDialog();
-        ErrorCodeUtils.showErrorMsgByCode(LoginActivity.this,code,msg);
+        ErrorCodeUtils.showErrorMsgByCode(LoginActivity.this, code, msg);
     }
 
     @Override
     protected void onDestroy() {
-        if(mPresenter != null) mPresenter.release();
+        if (mPresenter != null) mPresenter.release();
         super.onDestroy();
     }
 }

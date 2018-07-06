@@ -24,7 +24,6 @@
             android:layout_marginTop="@dimen/y20"
             android:lineSpacingExtra="@dimen/y18"
             android:textColor="@color/dark_gray"
-            android:textSize="@dimen/x30"
-            android:text=""/>
+            android:textSize="@dimen/x30" />
     </LinearLayout>
 </FrameLayout>

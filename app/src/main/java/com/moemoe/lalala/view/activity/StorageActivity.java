@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
@@ -27,11 +28,14 @@ import com.moemoe.lalala.model.entity.OrderEntity;
 import com.moemoe.lalala.model.entity.PayReqEntity;
 import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.model.entity.PropInfoEntity;
+import com.moemoe.lalala.model.entity.PropUseEntity;
 import com.moemoe.lalala.presenter.StorageContract;
 import com.moemoe.lalala.presenter.StoragePresenter;
 import com.moemoe.lalala.utils.AlertDialogUtil;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.IpAdressUtils;
+import com.moemoe.lalala.utils.PreferenceUtils;
+import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.view.adapter.TabPageAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.fragment.FurnitureFragment;
@@ -75,10 +79,11 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     //家具套装
     private AllFurnitureInfo furnitureInfo;
     //道具
-    private PropInfoEntity mPropInfoEntity;
+    private PropInfoEntity entity;
+    private PropInfoEntity prop;
     private BottomMenuFragment bottomFragment;
     private OrderEntity entit;
-    private PropInfoEntity entity;
+
     private boolean isCheck = true;
 
 
@@ -94,7 +99,24 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
         EventBus.getDefault().register(this);
         initViewPager();
         initPayMenu();
+        initGuide();
     }
+
+    private void initGuide() {
+        if (PreferenceUtils.isActivityFirstLaunch(this, "storage")) {
+            Intent intent = new Intent(this, MengXinActivity.class);
+            intent.putExtra("type", "storage");
+            ArrayList<String> res = new ArrayList<>();
+            res.add("items1.jpg");
+            res.add("items2.jpg");
+            res.add("items3.jpg");
+            res.add("items4.jpg");
+            intent.putExtra("gui", res);
+            startActivity(intent);
+
+        }
+    }
+
 
     private void initViewPager() {
         mPropFragment = new PropFragment();
@@ -126,8 +148,6 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
             Glide.with(this).load(ApiService.URL_QINIU + entity.getImage()).into(binding.storageImage);
             binding.storageCommodityNum.setText("X" + entity.getToolCount());
             binding.storageCommodityInfo.setText(entity.getDescribe());
-
-
         }
     }
 
@@ -140,30 +160,9 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
             binding.storageCommodityInfo.setText(entity.getDescribe());
             binding.storageCommodityNum.setText(entity.getToolCount() + "");
 
-            if (!entity.isUserHadTool() && entity.getToolCount() == 0) {
-                binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
-                binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_use_null_normal);
-            } else {
-                binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.storage_buy_btn_bg);
-                binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_use_btn_bg);
+            if (entity.getToolCount() == 0) {
+//                binding.storageCommodityUseBtn
             }
-
-            if (entity.getProductId() != null) {
-                binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.storage_buy_btn_bg);
-                binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_use_null_normal);
-            } else {
-                binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
-                binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_use_null_normal);
-            }
-
-            //拥有
-            if (entity.getToolCount() != 0) {
-                binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.storage_buy_btn_bg);
-            } else {
-                binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
-                binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_use_null_normal);
-            }
-
         }
     }
 
@@ -178,6 +177,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     @Override
     public void furnitureUseSuccess(int position) {
         EventBus.getDefault().post(new FurnitureEvent(position, furnitureInfo.getType()));
+        binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_null_normal);
     }
 
     /**
@@ -186,6 +186,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     @Override
     public void suitUseSuccess(int position) {
         EventBus.getDefault().post(new FurnitureEvent(position, furnitureInfo.getType()));
+        binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_null_normal);
     }
 
     /**
@@ -265,6 +266,22 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                 });
             }
         }
+    }
+
+    @Override
+    public void propUseSuccess(PropUseEntity entity) {
+        if (entity.getToolUseMessage() != null) {
+            showToast(entity.getToolUseMessage());
+
+            if (!TextUtils.isEmpty(entity.getToolUseMessage()) && entity.getToolUseMessage().indexOf("成功") != -1 && prop.getToolCount() > 0) {
+//                int toolCount = prop.getToolCount();
+//                toolCount--;
+//                prop.setCount(toolCount);
+                mPropFragment.setLists();
+            }
+        }
+
+
     }
 
     @Override
@@ -516,6 +533,10 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                         if (entity != null) {
                             if (!entity.isUserHadTool()) {
                                 showToast("功能未开放");
+                            } else {
+                                if (entity.getId() != null) {
+                                    mPresenter.PropUse(entity.getId());
+                                }
                             }
                         }
                     }
@@ -542,46 +563,64 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                 binding.storageCommodityName.setText(event.getSuitTypeName());
                 Glide.with(this).load(ApiService.URL_QINIU + event.getSuitTypeDetailIcon()).into(binding.storageImage);
                 binding.storageCommodityInfo.setText(event.getSuitTypeDescribe());
-
-                if (!event.isUserSuitFurnitureHad()) {//未拥有
-                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_use_null_normal);
-                    binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.storage_buy_btn_bg);
-                } else {
-                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_put_btn_bg);
-                    binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
-                }
-
-                if (!event.isSuitPutInHouse() && event.isUserSuitFurnitureHad()) {//没有放入宅屋  false
-                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_use_null_normal);
-                    binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
-                } else {
-                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_null_normal);
-                    binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
-                }
-
+                /**
+                 * 套装判断是否可以被购买
+                 * !=null 可以被购买
+                 */
                 if (event.getFurnitureSuitProductId() != null) {
-                    binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.storage_buy_btn_bg);
-                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_null_normal);
+                    binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy_normal);
+                } else if (event.getFurnitureSuitProductId() == null) { //未null不可以被购买
+                    binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
                 }
-
+                /**
+                 * 套装判断是否已经已拥有   已经拥有不可以够买  可以被放置
+                 */
+                //拥有不可以被购买
+                if (event.isUserSuitFurnitureHad() == true) {
+                    binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
+                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_normal);
+                    if (event.isSuitPutInHouse() == true) {//判断套装是否已经被放置在宅屋中  也不可以被再次放置  也不可以再次被购买
+                        binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
+                        binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_null_normal);
+                    } else {//如果拥有 但是没有被放置在宅屋中不可以被购买  但是可以被放置
+                        binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_normal);
+                        binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
+                    }
+                } else if (event.isUserSuitFurnitureHad() == false) {//未拥有
+                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_null_normal);
+                    //是否可以被购买
+                    if (event.getFurnitureSuitProductId() != null) {
+                        binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy_normal);
+                    } else if (event.getFurnitureSuitProductId() == null) { //未null不可以被购买
+                        binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
+                    }
+                }
             } else {
                 binding.storageCommodityName.setText(event.getName());
                 Glide.with(this).load(ApiService.URL_QINIU + event.getDetailIcon()).into(binding.storageImage);
                 binding.storageCommodityInfo.setText(event.getDescribe());
-
-                if (!event.isUserFurnitureHad()) {
-                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_use_null_normal);
-                } else {
-                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_put_btn_bg);
-                }
-                if (!event.isSuitPutInHouse()) {
+                /**
+                 * 家具判断是否已经已拥有   已经拥有不可以够买  可以被放置
+                 */
+                //拥有  不可以被购买
+                if (event.isUserFurnitureHad() == true) {
+                    binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
+                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_normal);
+                    if (event.isPutInHouse() == true) {//判断套装是否已经被放置在宅屋中  也不可以被再次放置  也不可以再次被购买
+                        binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
+                        binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_null_normal);
+                    } else {//如果拥有 但是没有被放置在宅屋中不可以被购买  但是可以被放置
+                        binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_normal);
+                        binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
+                    }
+                } else if (event.isUserFurnitureHad() == false) {//未拥有
                     binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_null_normal);
-                } else {
-                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_put_btn_bg);
-                }
-                if (event.getFurnitureProductId() != null) {
-                    binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.storage_buy_btn_bg);
-                    binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_putin_null_normal);
+                    //家具是否可以被购买
+                    if (event.getFurnitureProductId() != null) {
+                        binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy_normal);
+                    } else if (event.getFurnitureProductId() == null) { //未null不可以被购买
+                        binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
+                    }
                 }
             }
         }
@@ -590,6 +629,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void propInfo(PropInfoEntity propEvent) {
         if (propEvent != null) {
+            prop = propEvent;
             if (!propEvent.isUserHadTool() && propEvent.getToolCount() == 0) {
                 binding.storageCommodityBuyBtn.setBackgroundResource(R.drawable.btn_home_items_buy__null_normal);
                 binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.btn_home_items_use_null_normal);

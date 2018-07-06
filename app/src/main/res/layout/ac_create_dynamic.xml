@@ -80,7 +80,9 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/x36"
-            android:src="@drawable/btn_add_hongbao" />
+            android:src="@drawable/btn_add_hongbao"
+            android:visibility="gone"
+            />
 
         <TextView
             android:id="@+id/tv_content_count"
@@ -90,7 +92,9 @@
             android:layout_marginStart="@dimen/x16"
             android:textSize="@dimen/x24"
             android:layout_toEndOf="@+id/iv_add_hongbao"
-            android:textColor="@color/gray_929292"/>
+            android:textColor="@color/gray_929292"
+            android:visibility="gone"
+            />
 
         <ImageView
             android:id="@+id/iv_add_img"

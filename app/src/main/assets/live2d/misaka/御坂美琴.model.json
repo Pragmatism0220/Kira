@@ -1,0 +1,85 @@
+﻿{
+  "type": "Live2D Model Setting",
+	"name": "御坂美琴",
+	"model": "御坂美琴.moc",
+	"textures": [
+		"御坂美琴.2048/texture_00.png"
+	],
+  "motions": {
+    "idle": [
+      {
+        "file": "motions/idle.mtn",
+        "sound": "sound/idle.mp3"
+      }
+    ],
+    "tap_head": [
+      {
+        "file": "motions/tap_m_head.mtn",
+        "sound": "sound/tap_m_head.mp3",
+        "fade_in": 0,
+        "fade_out": 0
+      },
+      {
+        "file": "motions/tap_head.mtn",
+        "sound": "sound/tap_head.mp3",
+        "fade_in": 0,
+        "fade_out": 0
+      }
+    ],
+    "tap_op": [
+      {
+        "file": "motions/tap_m_op.mtn",
+        "sound": "sound/tap_m_op.mp3",
+        "fade_in": 0,
+        "fade_out": 0
+      },
+      {
+        "file": "motions/tap_op.mtn",
+        "sound": "sound/tap_op.mp3",
+        "fade_in": 0,
+        "fade_out": 0
+      }
+    ],
+    "tap_face": [
+      {
+        "file": "motions/tap_face.mtn",
+        "sound": "sound/tap_face.mp3",
+        "fade_in": 0,
+        "fade_out": 0
+      },
+      {
+        "file": "motions/tap_m_face.mtn",
+        "sound": "sound/tap_m_face.mp3",
+        "fade_in": 0,
+        "fade_out": 0
+      }
+    ],
+    "tap_hand": [
+      {
+        "file": "motions/tap_hand.mtn",
+        "sound": "sound/tap_hand.mp3",
+        "fade_in": 0,
+        "fade_out": 0
+      }
+    ]
+  },
+  "hit_areas": [
+    {
+      "name": "head",
+      "id": "D_REF.HEAD"
+    },
+    {
+      "name": "op",
+      "id": "D_REF.OP"
+    },
+    {
+      "name": "face",
+      "id": "D_REF.FACE"
+    },
+    {
+      "name": "hand",
+      "id": "D_REF.HAND"
+    }
+  ],
+  "physics": "physics.json"
+}

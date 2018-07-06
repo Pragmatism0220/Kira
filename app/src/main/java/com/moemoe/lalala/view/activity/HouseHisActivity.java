@@ -5,9 +5,12 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,6 +26,7 @@ import com.moemoe.lalala.model.entity.HouseDbEntity;
 import com.moemoe.lalala.model.entity.HouseLikeEntity;
 import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
+import com.moemoe.lalala.model.entity.PowerEntity;
 import com.moemoe.lalala.model.entity.RubbishEntity;
 import com.moemoe.lalala.model.entity.RubblishBody;
 import com.moemoe.lalala.model.entity.SaveVisitorEntity;
@@ -55,6 +59,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import jp.wasabeef.glide.transformations.CropTransformation;
 
 public class HouseHisActivity extends BaseActivity implements DormitoryContract.View {
@@ -82,6 +87,7 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
     private TextView mTvChuWu;
     private TextView mTvCnanle;
     private TextView mTvUserName;
+    private int count;
 
     @Override
     protected void initComponent() {
@@ -98,6 +104,7 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
                 .netComponent(MoeMoeApplication.getInstance().getNetComponent())
                 .build()
                 .inject(this);
+        mPresenter.loadPower();
 
         mRlRoleJuQing = findViewById(R.id.rl_role_juqing);
         mIvCover = findViewById(R.id.iv_cover_next);
@@ -137,17 +144,26 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
 
         ObjectAnimator mIvMesssgeAnimator = ObjectAnimator.ofFloat(binding.ivMessage, "translationX", getResources().getDisplayMetrics().widthPixels, 0).setDuration(300);
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvPowerAnimator = ObjectAnimator.ofFloat(binding.power, "translationX", -binding.power.getWidth(), 0).setDuration(300);
+        mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mVisitorAnimator = ObjectAnimator.ofFloat(binding.visitorInfo, "translationX", -binding.visitorInfo.getWidth(), 0).setDuration(300);
+        mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
-
-        set.play(mIvMesssgeAnimator);
+        set.play(mIvMesssgeAnimator).with(mIvPowerAnimator);
+        set.play(mVisitorAnimator);
         set.start();
     }
 
     private void imgOut() {
         ObjectAnimator mIvMesssgeAnimator = ObjectAnimator.ofFloat(binding.ivMessage, "translationX", 0, getResources().getDisplayMetrics().widthPixels).setDuration(300);
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvPowerAnimator = ObjectAnimator.ofFloat(binding.power, "translationX", 0, -getResources().getDimension(R.dimen.y60) - binding.power.getWidth()).setDuration(300);
+        mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mVisitorAnimator = ObjectAnimator.ofFloat(binding.visitorInfo, "translationX", 0, -getResources().getDimension(R.dimen.y60) - binding.visitorInfo.getWidth()).setDuration(300);
+        mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
-        set.play(mIvMesssgeAnimator);
+        set.play(mIvMesssgeAnimator).with(mIvPowerAnimator);
+        set.play(mVisitorAnimator);
         set.start();
     }
 
@@ -264,6 +280,7 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
 
     @Override
     protected void initData() {
+        mPresenter.getHiVisitorsInfo(id);
 
     }
 
@@ -459,6 +476,7 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
                 mTvChuWu.setText("(已放入储物箱)");
             }
         }
+        mPresenter.loadPower();
     }
 
     /**
@@ -467,6 +485,85 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
     @Override
     public void onLoadHouseSave() {
 
+    }
+
+    @Override
+    public void onLoadPowerSuccess(PowerEntity entity) {
+        if (entity != null) {
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
+            binding.roleHeartNum.setText(entity.getHealthPoint() + "/" + entity.getMaxHealthPoint());
+            if (entity.getHealthPoint() < entity.getMaxHealthPoint()) {
+                binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
+                int num = 240 - (240 * entity.getHealthPoint() / entity.getMaxHealthPoint());
+                if (num > 220) {
+                    binding.roleHeartNumSmall.setVisibility(View.GONE);
+                    binding.fl.setBackgroundResource(R.drawable.shape_role_bg_two);
+                } else {
+                    binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
+                    binding.fl.setBackgroundResource(R.drawable.shape_power_bg);
+                    params.width = num;
+                }
+            }
+        }
+
+
+    }
+
+    /**
+     * 他人宅屋访客记录
+     *
+     * @param entities
+     */
+    @Override
+    public void getHisVisitorsInfo(ArrayList<VisitorsEntity> entities) {
+        binding.llLikeUserRoot.removeAllViews();
+        if (entities != null && entities.size() > 0) {
+            binding.visitorInfo.setVisibility(View.VISIBLE);
+            int trueSize = (int) getResources().getDimension(R.dimen.y48);
+            int imgSize = (int) getResources().getDimension(R.dimen.y44);
+            int startMargin = (int) -getResources().getDimension(R.dimen.y10);
+            int showSize = 4;
+            if (entities.size() < showSize) {
+                showSize = entities.size();
+            }
+            if (showSize == 4) {
+                ImageView iv = new ImageView(this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(trueSize, trueSize);
+                lp.leftMargin = startMargin;
+                iv.setLayoutParams(lp);
+                iv.setImageResource(R.drawable.btn_feed_like_more);
+                binding.llLikeUserRoot.addView(iv);
+            }
+            for (int i = showSize - 1; i >= 0; i--) {
+                final VisitorsEntity userEntity = entities.get(i);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(trueSize, trueSize);
+                if (i != 0) {
+                    lp.leftMargin = startMargin;
+                }
+                View likeUser = LayoutInflater.from(this).inflate(R.layout.item_white_border_img, null);
+                likeUser.setLayoutParams(lp);
+                ImageView img = likeUser.findViewById(R.id.iv_img);
+                Glide.with(this)
+                        .load(StringUtils.getUrl(this, userEntity.getVisitorImage(), imgSize, imgSize, false, true))
+                        .error(R.drawable.bg_default_circle)
+                        .placeholder(R.drawable.bg_default_circle)
+                        .bitmapTransform(new CropCircleTransformation(this))
+                        .into(img);
+//                img.setOnClickListener(new NoDoubleClickListener() {
+//                    @Override
+//                    public void onNoDoubleClick(View v) {
+//                        ViewUtils.toPersonal(HouseActivity.this, userEntity.getVisitorId());
+//                    }
+//                });
+                binding.llLikeUserRoot.addView(likeUser);
+            }
+            count = entities.get(0).getCount();
+            binding.visitorCount.setText(entities.get(0).getCount() + "");
+            binding.tvHouseName.setText(PreferenceUtils.getAuthorInfo().getUserName() + "的宅屋");
+            binding.tvHouseVivit.setText("访客数量:" + count);
+        } else {
+            binding.visitorInfo.setVisibility(View.GONE);
+        }
     }
 
     private void resolvErrorList(ArrayList<HouseDbEntity> errorList, final String type) {
@@ -542,6 +639,10 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
                     i1.putExtra("uuid", id);
                     startActivity(i1);
                     break;
+                case R.id.visitor_info:
+                    Intent i2 = new Intent(HouseHisActivity.this, NewVisitorActivity.class);
+                    i2.putExtra("uuid", id);
+                    startActivity(i2);
             }
         }
     }

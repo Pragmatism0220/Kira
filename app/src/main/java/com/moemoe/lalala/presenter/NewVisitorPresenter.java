@@ -45,6 +45,24 @@ public class NewVisitorPresenter implements NewVisitorsContract.Presenter {
                 });
     }
 
+    @Override
+    public void getHisVisitorsInfo(int size, final int start, String hostUserId) {
+        apiService.loadHisVisitor(size, start, hostUserId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<ArrayList<VisitorsEntity>>() {
+                    @Override
+                    public void onSuccess(ArrayList<VisitorsEntity> entities) {
+                        if (view != null) view.getHiiVisitorsInfoSccess(entities, start == 0);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
 
     @Override
     public void release() {

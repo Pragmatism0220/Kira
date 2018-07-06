@@ -1,0 +1,78 @@
+﻿{
+  "version": "Sample 1.0.0",
+  "model": "斧子_睡.moc",
+  "textures": [
+    "斧子_睡.2048/texture_00.png"
+  ],
+  "motions": {
+    "idle": [
+      {
+        "file": "motions/idle.mtn",
+        "fade_in": 0,
+        "fade_out": 0
+      }
+    ],
+    "tap_head": [
+      {
+        "file": "motions/tap_m_head.mtn",
+        "fade_in": 200,
+        "fade_out": 0
+      },
+      {
+        "file": "motions/tap_head.mtn",
+        "fade_in": 200,
+        "fade_out": 0
+      }
+    ],
+    "tap_op": [
+      {
+        "file": "motions/tap_m_op.mtn",
+        "fade_in": 200,
+        "fade_out": 0
+      },
+      {
+        "file": "motions/tap_op.mtn",
+        "fade_in": 200,
+        "fade_out": 0
+      }
+    ],
+    "tap_face": [
+      {
+        "file": "motions/tap_face.mtn",
+        "fade_in": 200,
+        "fade_out": 0
+      },
+      {
+        "file": "motions/tap_m_face.mtn",
+        "fade_in": 200,
+        "fade_out": 0
+      }
+    ],
+    "tap_hand": [
+      {
+        "file": "motions/tap_hand.mtn",
+        "fade_in": 200,
+        "fade_out": 0
+      }
+    ]
+  },
+  "hit_areas": [
+    {
+      "name": "head",
+      "id": "D_REF.HEAD"
+    },
+    {
+      "name": "op",
+      "id": "D_REF.OP"
+    },
+    {
+      "name": "face",
+      "id": "D_REF.FACE"
+    },
+    {
+      "name": "hand",
+      "id": "D_REF.HAND"
+    }
+  ],
+  "physics": "physics.json"
+}

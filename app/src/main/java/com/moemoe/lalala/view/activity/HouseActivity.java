@@ -10,6 +10,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.NinePatch;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -48,6 +49,7 @@ import com.moemoe.lalala.model.entity.HouseDbEntity;
 import com.moemoe.lalala.model.entity.HouseLikeEntity;
 import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
+import com.moemoe.lalala.model.entity.PowerEntity;
 import com.moemoe.lalala.model.entity.REPORT;
 import com.moemoe.lalala.model.entity.RubbishEntity;
 import com.moemoe.lalala.model.entity.RubblishBody;
@@ -122,6 +124,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     private ActivityHouseBinding binding;
     static private Activity instance;
     private String mSchema;
+    public int nowpower;
 
     @Inject
     DormitoryPresenter mPresenter;
@@ -188,7 +191,29 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         SoundManager.init(this);
         FileManager.init(this);
         initPopupMenus();
+        mPresenter.loadPower();
         EventBus.getDefault().register(this);
+        if (PreferenceUtils.isActivityFirstLaunch(this, "house")) {
+            Intent intent = new Intent(this, MengXinActivity.class);
+            intent.putExtra("type", "house");
+            ArrayList<String> res = new ArrayList<>();
+            res.add("home1.jpg");
+            res.add("home2.jpg");
+            res.add("home3.jpg");
+            res.add("home4.jpg");
+            res.add("home5.jpg");
+            res.add("home6.jpg");
+            res.add("home7.jpg");
+            res.add("home8.jpg");
+            res.add("home9.jpg");
+            res.add("home10.jpg");
+            res.add("home11.jpg");
+            res.add("home12.jpg");
+            res.add("home13.jpg");
+            res.add("home14.jpg");
+            intent.putExtra("gui", res);
+            startActivity(intent);
+        }
     }
 
     public void initMap() {
@@ -474,8 +499,11 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
             binding.tvHouseVivit.setText("访客数量:" + count);
         } else {
             binding.visitorInfo.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            layoutParams.setMargins(0, 0, 0, 40);
+            binding.power.setLayoutParams(layoutParams);
         }
-
     }
 
     /**
@@ -486,6 +514,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         if (type == 3) {
 
         } else {
+
         }
     }
 
@@ -535,6 +564,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                 mTvCnanle.setVisibility(View.VISIBLE);
                 mTvChuWu.setText("(已放入储物箱)");
                 mTvCnanle.setText("点击任意区域关闭");
+
             } else if (type == 2) {
                 int w = getResources().getDimensionPixelSize(R.dimen.x360);
                 int h = getResources().getDimensionPixelSize(R.dimen.y360);
@@ -587,8 +617,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                 mTvCnanle.setVisibility(View.GONE);
                 mTvChuWu.setText("(已放入储物箱)");
             }
-
         }
+        mPresenter.loadPower();
     }
 
     /**
@@ -596,6 +626,41 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
      */
     @Override
     public void onLoadHouseSave() {
+
+    }
+
+    /**
+     * 获取体力值成功
+     *
+     * @param entity
+     */
+    @Override
+    public void onLoadPowerSuccess(PowerEntity entity) {
+        if (entity != null) {
+            nowpower = entity.getHealthPoint();
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
+            binding.roleHeartNum.setText(entity.getHealthPoint() + "/" + entity.getMaxHealthPoint());
+            if (entity.getHealthPoint() < entity.getMaxHealthPoint()) {
+                binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
+                int num = 240 - (240 * entity.getHealthPoint() / entity.getMaxHealthPoint());
+                if (num > 220) {
+                    binding.roleHeartNumSmall.setVisibility(View.GONE);
+                    binding.fl.setBackgroundResource(R.drawable.shape_role_bg_two);
+                } else {
+//                    if (num < 10) {
+//                        binding.roleHeartNumSmall.setVisibility(View.GONE);
+//                        binding.fl.setBackgroundResource(R.drawable.shape_role_bg_two);
+//                    }
+                    binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
+                    binding.fl.setBackgroundResource(R.drawable.shape_power_bg);
+                    params.width = num;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void getHisVisitorsInfo(ArrayList<VisitorsEntity> entities) {
 
     }
 
@@ -684,12 +749,16 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvShareAnimator = ObjectAnimator.ofFloat(binding.ivShare, "translationX", -binding.ivShare.getWidth(), 0).setDuration(300);
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvPowerAnimator = ObjectAnimator.ofFloat(binding.power, "translationX", -binding.power.getWidth(), 0).setDuration(300);
+        mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(mRoleAnimator);
         set.play(mStorageAnimator).with(mDramaAnimator);
         set.play(mVisitorInfoAnimator).with(mIvSleepAnimator);
         set.play(mIvTrandsAnimator).with(mIvAlarmsAnimator);
         set.play(mIvMesssgeAnimator).with(mIvShareAnimator);
+        set.play(mIvPowerAnimator);
         set.start();
     }
 
@@ -714,12 +783,15 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvShareAnimator = ObjectAnimator.ofFloat(binding.ivShare, "translationX", 0, -getResources().getDimension(R.dimen.y60) - binding.dormitoryDrama.getWidth()).setDuration(300);
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvPowerAnimator = ObjectAnimator.ofFloat(binding.power, "translationX", 0, -getResources().getDimension(R.dimen.y60) - binding.power.getWidth()).setDuration(300);
+        mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(mRoleAnimator);
         set.play(mStorageAnimator).with(mDramaAnimator);
         set.play(mVisitorInfoAnimator).with(mIvSleepAnimator);
         set.play(mIvTrandsAnimator).with(mIvAlarmsAnimator);
         set.play(mIvMesssgeAnimator).with(mIvShareAnimator);
+        set.play(mIvPowerAnimator);
         set.start();
     }
 
@@ -752,7 +824,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                     break;
                 case R.id.visitor_info:
                     Intent i7 = new Intent(HouseActivity.this, NewVisitorActivity.class);
-//                    Intent i7 = new Intent(HouseActivity.this, VisitorsActivity.class);
+//                    i7.putExtra(UUID, PreferenceUtils.getUUid());
                     startActivity(i7);
                     break;
                 case R.id.dormitory_storage:
@@ -818,6 +890,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                     break;
             }
         }
+
     }
 
     /**

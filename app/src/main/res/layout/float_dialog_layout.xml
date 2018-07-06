@@ -17,8 +17,10 @@
         android:ellipsize="none"
         android:maxLines="5"
         android:textColor="@color/white"
-        android:textSize="@dimen/x24"
-        android:textStyle="bold" />
+        android:textSize="@dimen/x30"
+        android:textStyle="bold"
+        android:layout_centerInParent="true"
+        />
 
     <LinearLayout
         android:id="@+id/rl_select"

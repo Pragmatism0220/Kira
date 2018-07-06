@@ -7,6 +7,7 @@ import com.moemoe.lalala.model.entity.CreateOrderEntity;
 import com.moemoe.lalala.model.entity.OrderEntity;
 import com.moemoe.lalala.model.entity.PayReqEntity;
 import com.moemoe.lalala.model.entity.PayResEntity;
+import com.moemoe.lalala.model.entity.PropUseEntity;
 
 import javax.inject.Inject;
 
@@ -56,6 +57,25 @@ public class StoragePresenter implements StorageContract.Presenter {
                     @Override
                     public void onSuccess() {
                         if (view != null) view.suitUseSuccess(position);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+
+    @Override
+    public void PropUse(String propID) {
+        apiService.propUse(propID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<PropUseEntity>() {
+                    @Override
+                    public void onSuccess(PropUseEntity entity) {
+                        if (view != null) view.propUseSuccess(entity);
                     }
 
                     @Override

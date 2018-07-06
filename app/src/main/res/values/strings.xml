@@ -75,7 +75,7 @@
     <string name="label_later">以后再说</string>
     <string name="label_update">更新</string>
     <string name="label_error_storage">请检查你的存储卡是否正常</string>
-    <string name="label_about_neta">关于neta</string>
+    <string name="label_about_neta">关于kira</string>
     <string name="label_hint_new_password">新密码</string>
     <string name="label_hint_again_password">确认密码</string>
     <string name="label_show_password">显示密码</string>

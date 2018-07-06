@@ -30,6 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/x36"
                 android:layout_marginStart="@dimen/x20"
                 android:src="@drawable/ic_home_title_mystory_main" />
 

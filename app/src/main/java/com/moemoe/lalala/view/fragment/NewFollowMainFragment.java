@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import com.moemoe.lalala.model.entity.DepartmentEntity;
 import com.moemoe.lalala.model.entity.DepartmentGroupEntity;
 import com.moemoe.lalala.model.entity.DiscoverEntity;
 import com.moemoe.lalala.model.entity.DocResponse;
+import com.moemoe.lalala.model.entity.Image;
 import com.moemoe.lalala.model.entity.NewDynamicEntity;
 import com.moemoe.lalala.model.entity.ShowFolderEntity;
 import com.moemoe.lalala.model.entity.SimpleUserEntity;
@@ -42,6 +44,7 @@ import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.activity.CreateDynamicActivity;
 import com.moemoe.lalala.view.activity.DynamicActivity;
+import com.moemoe.lalala.view.activity.NewDynamicActivity;
 import com.moemoe.lalala.view.adapter.DiscoverHolder;
 import com.moemoe.lalala.view.adapter.FeedAdapter;
 import com.moemoe.lalala.view.adapter.FeedHolder;
@@ -54,6 +57,7 @@ import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -69,6 +73,8 @@ public class NewFollowMainFragment extends BaseFragment implements FeedContract.
     PullAndLoadView mListDocs;
     @BindView(R.id.iv_to_wen)
     ImageView mIvCreateDynamic;
+    @BindView(R.id.iv_trends)
+    ImageView mTrends;
 
     @Inject
     FeedPresenter mPresenter;
@@ -83,6 +89,7 @@ public class NewFollowMainFragment extends BaseFragment implements FeedContract.
     private boolean isLoading = false;
     private String type;
     private String uuidType;
+    private boolean mIsSelf;
 
     public static NewFollowMainFragment newInstance(String type) {
         NewFollowMainFragment fragment = new NewFollowMainFragment();
@@ -126,6 +133,7 @@ public class NewFollowMainFragment extends BaseFragment implements FeedContract.
         type = getArguments().getString("type");
         final String userId = getArguments().getString("id");
         uuidType = getArguments().getString("uuidType");
+        mIsSelf = userId.equals(PreferenceUtils.getUUid());
         mListDocs.getSwipeRefreshLayout().setColorSchemeResources(R.color.main_light_cyan, R.color.main_cyan);
         mListDocs.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.bg_f6f6f6));
         mListDocs.setLoadMoreEnabled(true);
@@ -198,6 +206,26 @@ public class NewFollowMainFragment extends BaseFragment implements FeedContract.
                 }
             });
         }
+
+        //TODO  DFASF
+        if (mIsSelf) {
+            mTrends.setVisibility(View.VISIBLE);
+            mTrends.setImageResource(R.drawable.btn_feed_create_dynamic);
+            mTrends.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                Intent intent = new Intent(getContext(), NewDynamicActivity.class);
+//                startActivity(intent);
+                    Intent i4 = new Intent(getContext(), CreateDynamicActivity.class);
+                    i4.putExtra("default_tag", "广场");
+                    startActivity(i4);
+                }
+            });
+        } else {
+            mTrends.setVisibility(View.GONE);
+        }
+
+
         minIdx = PreferenceUtils.getDiscoverMinIdx(getContext(), type);
         maxIdx = PreferenceUtils.getDiscoverMaxIdx(getContext(), type);
         mPresenter.loadDiscoverList(type, minIdx, maxIdx, true);

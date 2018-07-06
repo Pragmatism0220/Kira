@@ -19,6 +19,8 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
  */
 
 public class BagVisitorHolder extends ClickableViewHolder {
+
+
     public BagVisitorHolder(View itemView) {
         super(itemView);
     }

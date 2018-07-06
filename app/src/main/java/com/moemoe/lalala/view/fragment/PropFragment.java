@@ -40,7 +40,7 @@ public class PropFragment extends BaseFragment implements PropContract.View {
 
     //筛选为false的数据
     private List<PropInfoEntity> newLists;
-
+    int mPosition;
     @Inject
     PropPresenter mPresenter;
 
@@ -87,17 +87,21 @@ public class PropFragment extends BaseFragment implements PropContract.View {
         mAdapter.setOnItemClickListener(new PropAdapter.RoleItemClickListener() {
             @Override
             public void onClick(View v, int position, int which) {
+                mPosition = position;
                 PropInfoEntity propInfoEntity = mAdapter.getData().get(position);
                 EventBus.getDefault().post(propInfoEntity);
                 callBack.getResult(propInfoEntity, position);
                 for (int i = 0; i < propInfoEntities.size(); i++) {
-                    propInfoEntities.get(i).setSelected(i == which);
+                    propInfoEntities.get(i).setSelected(propInfoEntity.getId().equals(propInfoEntities.get(i).getId()));
                 }
-
                 mAdapter.notifyDataSetChanged();
             }
         });
+    }
 
+    public void setLists() {
+        mAdapter.getList().get(mPosition).setToolCount(mAdapter.getList().get(mPosition).getToolCount() - 1);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

@@ -1464,6 +1464,7 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private void createLabel() {
         mTags.clear();
         mTags.addAll(mDocBean.getTags());
+
         mLabelHolder.mDvLabel.setDocLabelAdapter(mLabelHolder.docLabelAdapter);
         mLabelHolder.docLabelAdapter.setData(mTags, true);
         mLabelHolder.mDvLabel.setItemClickListener(new DocLabelView.LabelItemClickListener() {
@@ -2244,7 +2245,7 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
         }
     }
-
+    //TODO 详情页帖子
     public void plusSuccess(boolean isLike, int position) {
         DocTagEntity tagBean = mTags.get(position);
         mTags.remove(position);

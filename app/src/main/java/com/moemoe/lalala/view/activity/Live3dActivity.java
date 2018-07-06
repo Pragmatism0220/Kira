@@ -82,6 +82,12 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
     ImageView mIvMei;
     @BindView(R.id.iv_live_ichigo)
     ImageView mIvIchiGo;
+    @BindView(R.id.iv_live_fuzi)
+    ImageView mFuzi;
+    @BindView(R.id.iv_live_misaka)
+    ImageView mMisaka;
+    @BindView(R.id.iv_live_rem)
+    ImageView mRem;
     @BindView(R.id.iv_play)
     ImageView mIvPlay;
     @BindView(R.id.iv_next)
@@ -133,6 +139,9 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
         mIvSari.setAlpha(0.3f);
         mIvMei.setAlpha(0.3f);
         mIvIchiGo.setAlpha(0.3f);
+        mFuzi.setAlpha(0.3f);
+        mMisaka.setAlpha(0.3f);
+        mRem.setAlpha(0.3f);
 //        }
         mTvMusicName.setSelected(true);
         // mPlayer = Player.getInstance(this);
@@ -231,7 +240,9 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
         FileManager.release();
     }
 
-    @OnClick({R.id.rl_root_1, R.id.rl_alarm_root, R.id.iv_live_len, R.id.iv_live_mei, R.id.iv_live_sari, R.id.iv_live_ichigo, R.id.tv_text_1, R.id.tv_text_2, R.id.tv_text_3})
+    @OnClick({R.id.rl_root_1, R.id.rl_alarm_root, R.id.iv_live_len, R.id.iv_live_mei, R.id.iv_live_sari, R.id.iv_live_ichigo,
+            R.id.iv_live_fuzi, R.id.iv_live_misaka, R.id.iv_live_rem,
+            R.id.tv_text_1, R.id.tv_text_2, R.id.tv_text_3})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_root_1:
@@ -259,6 +270,12 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                     mAlarmClock.setRoleName("沙利尔");
                 } else if ("ichigo".equals("莓")) {
                     mAlarmClock.setRoleName("莓");
+                } else if ("diary_fuzi".equals("斧子")) {
+                    mAlarmClock.setRoleName("斧子");
+                } else if ("misaka".equals("御坂美琴")) {
+                    mAlarmClock.setRoleName("御坂美琴");
+                } else if ("rem".equals("蕾姆")) {
+                    mAlarmClock.setRoleName("蕾姆");
                 }
                 mAlarmClock.setRoleId(mCurRole);
                 mAlarmClock.setRingName("按时休息");
@@ -303,6 +320,9 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                                 mIvSari.setAlpha(0.3f);
                                 mIvIchiGo.setAlpha(0.3f);
                                 mIvMei.setAlpha(0.3f);
+                                mFuzi.setAlpha(0.3f);
+                                mMisaka.setAlpha(0.3f);
+                                mRem.setAlpha(0.3f);
                             }
                         } else {
                             showToast(entity.getWhyCannotSleepWithYou());
@@ -327,6 +347,9 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                                 mIvSari.setAlpha(0.3f);
                                 mIvMei.setAlpha(1.0f);
                                 mIvIchiGo.setAlpha(0.3f);
+                                mFuzi.setAlpha(0.3f);
+                                mMisaka.setAlpha(0.3f);
+                                mRem.setAlpha(0.3f);
                             }
                         } else {
                             showToast(entity.getWhyCannotSleepWithYou());
@@ -351,6 +374,9 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                                 mIvSari.setAlpha(1.0f);
                                 mIvMei.setAlpha(0.3f);
                                 mIvIchiGo.setAlpha(0.3f);
+                                mFuzi.setAlpha(0.3f);
+                                mMisaka.setAlpha(0.3f);
+                                mRem.setAlpha(0.3f);
                             }
                         } else {
                             showToast(entity.getWhyCannotSleepWithYou());
@@ -375,12 +401,98 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                                 mIvSari.setAlpha(0.3f);
                                 mIvMei.setAlpha(0.3f);
                                 mIvIchiGo.setAlpha(1.0f);
+                                mFuzi.setAlpha(0.3f);
+                                mMisaka.setAlpha(0.3f);
+                                mRem.setAlpha(0.3f);
                             }
                         } else {
                             showToast(entity.getWhyCannotSleepWithYou());
                         }
                     }
                 }
+                break;
+            case R.id.iv_live_fuzi:
+                if (mSleepEntites != null && mSleepEntites.size() > 0) {
+                    HouseSleepEntity entity = null;
+                    for (HouseSleepEntity entity1 : mSleepEntites) {
+                        if ("fuzi".equals(entity1.getRoleOfId())) {
+                            entity = entity1;
+                        }
+                    }
+                    if (entity != null) {
+                        if (entity.isCompanion()) {
+                            if (!"fuzi".equals(mCurRole)) {
+                                mCurRole = "fuzi";
+                                live2DMgr.changeModel(Live2DDefine.MODEL_FUZI);
+                                mIvLen.setAlpha(0.3f);
+                                mIvSari.setAlpha(0.3f);
+                                mIvMei.setAlpha(0.3f);
+                                mIvIchiGo.setAlpha(0.3f);
+                                mFuzi.setAlpha(1.0f);
+                                mMisaka.setAlpha(0.3f);
+                                mRem.setAlpha(0.3f);
+                            }
+                        } else {
+                            showToast(entity.getWhyCannotSleepWithYou());
+                        }
+                    }
+                }
+                break;
+            case R.id.iv_live_misaka:
+                if (mSleepEntites != null && mSleepEntites.size() > 0) {
+                    HouseSleepEntity entity = null;
+                    for (HouseSleepEntity entity1 : mSleepEntites) {
+                        if ("misaka".equals(entity1.getRoleOfId())) {
+                            entity = entity1;
+                        }
+                    }
+                    if (entity != null) {
+                        if (entity.isCompanion()) {
+                            if (!"misaka".equals(mCurRole)) {
+                                mCurRole = "misaka";
+                                live2DMgr.changeModel(Live2DDefine.MODEL_MISAKA);
+                                mIvLen.setAlpha(0.3f);
+                                mIvSari.setAlpha(0.3f);
+                                mIvMei.setAlpha(0.3f);
+                                mIvIchiGo.setAlpha(0.3f);
+                                mFuzi.setAlpha(0.3f);
+                                mMisaka.setAlpha(1.0f);
+                                mRem.setAlpha(0.3f);
+                            }
+                        } else {
+                            showToast(entity.getWhyCannotSleepWithYou());
+                        }
+                    }
+                }
+                break;
+            case R.id.iv_live_rem:
+//                if (mSleepEntites != null && mSleepEntites.size() > 0) {
+//                    HouseSleepEntity entity = null;
+//                    for (HouseSleepEntity entity1 : mSleepEntites) {
+//                        if ("rem".equals(entity1.getRoleOfId())) {
+//                            entity = entity1;
+//                        }
+//                    }
+//                    if (entity != null) {
+//                        if (entity.isCompanion()) {
+//                            if (!"rem".equals(mCurRole)) {
+//                                mCurRole = "rem";
+//                                live2DMgr.changeModel(Live2DDefine.MODEL_MISAKA);
+//                                mIvLen.setAlpha(0.3f);
+//                                mIvSari.setAlpha(0.3f);
+//                                mIvMei.setAlpha(0.3f);
+//                                mIvIchiGo.setAlpha(0.3f);
+//                                mFuzi.setAlpha(0.3f);
+//                                mMisaka.setAlpha(0.0f);
+//                                mRem.setAlpha(1.0f);
+//                            }
+//                        } else {
+////                            showToast(entity.getWhyCannotSleepWithYou());
+//                            showToast("正在制作中");
+//                        }
+//                    }
+//                }
+                showToast("正在制作中");
                 break;
             case R.id.tv_text_1:
             case R.id.tv_text_2:

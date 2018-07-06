@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
@@ -13,14 +15,17 @@ import com.moemoe.lalala.di.modules.OldDocModule;
 import com.moemoe.lalala.model.entity.BannerEntity;
 import com.moemoe.lalala.model.entity.DocResponse;
 import com.moemoe.lalala.model.entity.DocTagEntity;
+import com.moemoe.lalala.model.entity.Image;
 import com.moemoe.lalala.model.entity.SimpleUserEntity;
 import com.moemoe.lalala.model.entity.TagLikeEntity;
 import com.moemoe.lalala.model.entity.TagSendEntity;
 import com.moemoe.lalala.presenter.OldDocContract;
 import com.moemoe.lalala.presenter.OldDocPresenter;
 import com.moemoe.lalala.utils.MenuVItemDecoration;
+import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.view.activity.NewDocDetailActivity;
+import com.moemoe.lalala.view.activity.NewDynamicActivity;
 import com.moemoe.lalala.view.activity.PersonalV2Activity;
 import com.moemoe.lalala.view.adapter.OldDocAdapter;
 import com.moemoe.lalala.view.widget.adapter.BaseRecyclerViewAdapter;
@@ -34,11 +39,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 
 /**
- *
  * Created by yi on 2017/9/4.
  */
 
-public class OldDocFragment extends BaseFragment implements OldDocContract.View{
+public class OldDocFragment extends BaseFragment implements OldDocContract.View {
 
     @BindView(R.id.list)
     PullAndLoadView mListDocs;
@@ -48,10 +52,10 @@ public class OldDocFragment extends BaseFragment implements OldDocContract.View{
     private OldDocAdapter mAdapter;
     private boolean isLoading = false;
 
-    public static OldDocFragment newInstance(String userId){
+    public static OldDocFragment newInstance(String userId) {
         OldDocFragment fragment = new OldDocFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("id",userId);
+        bundle.putString("id", userId);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -72,17 +76,17 @@ public class OldDocFragment extends BaseFragment implements OldDocContract.View{
         mListDocs.getSwipeRefreshLayout().setColorSchemeResources(R.color.main_light_cyan, R.color.main_cyan);
         mListDocs.setLoadMoreEnabled(false);
         mListDocs.setLayoutManager(new LinearLayoutManager(getContext()));
-        mListDocs.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.bg_f6f6f6));
-        mAdapter= new OldDocAdapter();
+        mListDocs.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.bg_f6f6f6));
+        mAdapter = new OldDocAdapter();
         mListDocs.getRecyclerView().addItemDecoration(new MenuVItemDecoration((int) getResources().getDimension(R.dimen.y24)));
         mListDocs.getRecyclerView().setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 DocResponse docResponse = mAdapter.getItem(position);
-                Intent i = new Intent(getContext(),NewDocDetailActivity.class);
-                i.putExtra("title","个人中心");
-                i.putExtra("uuid",docResponse.getId());
+                Intent i = new Intent(getContext(), NewDocDetailActivity.class);
+                i.putExtra("title", "个人中心");
+                i.putExtra("uuid", docResponse.getId());
                 startActivity(i);
             }
 
@@ -95,17 +99,17 @@ public class OldDocFragment extends BaseFragment implements OldDocContract.View{
             @Override
             public void onLoadMore() {
                 isLoading = true;
-                if(mAdapter.getList().size() == 0){
-                    mPresenter.loadOldDocList(userId,0);
-                }else {
-                    mPresenter.loadOldDocList(userId,mAdapter.getItem(mAdapter.getList().size() - 1).getTimestamp());
+                if (mAdapter.getList().size() == 0) {
+                    mPresenter.loadOldDocList(userId, 0);
+                } else {
+                    mPresenter.loadOldDocList(userId, mAdapter.getItem(mAdapter.getList().size() - 1).getTimestamp());
                 }
             }
 
             @Override
             public void onRefresh() {
                 isLoading = true;
-                mPresenter.loadOldDocList(userId,0);
+                mPresenter.loadOldDocList(userId, 0);
             }
 
             @Override
@@ -118,7 +122,8 @@ public class OldDocFragment extends BaseFragment implements OldDocContract.View{
                 return false;
             }
         });
-        mPresenter.loadOldDocList(userId,0);
+        mPresenter.loadOldDocList(userId, 0);
+
     }
 
     @Override
@@ -127,8 +132,8 @@ public class OldDocFragment extends BaseFragment implements OldDocContract.View{
         mListDocs.setComplete();
     }
 
-    public void release(){
-        if(mPresenter != null) mPresenter.release();
+    public void release() {
+        if (mPresenter != null) mPresenter.release();
         super.release();
     }
 
@@ -137,9 +142,9 @@ public class OldDocFragment extends BaseFragment implements OldDocContract.View{
         isLoading = false;
         mListDocs.setComplete();
         mListDocs.setLoadMoreEnabled(true);
-        if(isPull){
+        if (isPull) {
             mAdapter.setList(list);
-        }else {
+        } else {
             mAdapter.addList(list);
         }
     }
@@ -189,6 +194,7 @@ public class OldDocFragment extends BaseFragment implements OldDocContract.View{
     public void onBannerLoadSuccess(ArrayList<BannerEntity> bannerEntities) {
 
     }
+
     /**
      * 社区详情-广场-item点赞
      *
@@ -199,6 +205,7 @@ public class OldDocFragment extends BaseFragment implements OldDocContract.View{
     public void likeDoc(String id, boolean isLike, int position) {
         mPresenter.loadDocLike(id, isLike, position);
     }
+
     /**
      * 添加标签
      *
@@ -207,17 +214,19 @@ public class OldDocFragment extends BaseFragment implements OldDocContract.View{
     public void createLabel(TagSendEntity entity, int position) {
         mPresenter.createLabel(entity, position);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     }
+
     public void likeTag(boolean isLike, int position, TagLikeEntity entity, int parentPosition) {
         mPresenter.likeTag(isLike, position, entity, parentPosition);
     }
 
     @Override
     public void onPlusLabel(int position, boolean isLike, int parentPosition) {
-        ((PersonalV2Activity)getContext()).finalizeDialog();
+        ((PersonalV2Activity) getContext()).finalizeDialog();
         DocResponse docResponse = mAdapter.getList().get(parentPosition);
         if (docResponse.getTags() != null && docResponse.getTags().size() > 0) {
             DocTagEntity tagEntity = docResponse.getTags().get(position);

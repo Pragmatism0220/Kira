@@ -1569,12 +1569,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/MainColorTranslucentTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".view.activity.AlarmEditActivity"
+        <activity
+            android:name=".view.activity.AlarmEditActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:screenOrientation="portrait"
             android:theme="@style/MainColorTranslucentTheme"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".view.activity.HouseGuideActivity"></activity>
     </application>
 
 </manifest>

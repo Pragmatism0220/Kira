@@ -121,7 +121,7 @@ public class SanGuoActivity extends BaseAppCompatActivity implements GameContrac
         mPresenter.getPriceInfo();
         mPresenter.loadTicketsNum();
         mPresenter.loadFuHuoNum(PreferenceUtils.getUUid());
-        mPresenter.hasRole(PreferenceUtils.getUUid(), "dantou", "fuzi");
+        mPresenter.hasRole(PreferenceUtils.getUUid(), "dantou", "diary_fuzi");
         selectRole.add(29);
         selectRole.add(2);
         selectRole.add(15);

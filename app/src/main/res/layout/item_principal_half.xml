@@ -22,7 +22,7 @@
                 android:id="@+id/half_item_photo"
                 android:layout_width="@dimen/x300"
                 android:layout_height="@dimen/y400"
-                android:src="@drawable/test_image" />
+               />
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -32,15 +32,15 @@
                 <ImageView
                     android:id="@+id/half_item_bottom_image"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/y118"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/ic_home_plot_paper_unfinish" />
 
                 <TextView
                     android:id="@+id/half_item_bottom_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="@dimen/y20"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="@dimen/y30"
                     android:layout_marginStart="@dimen/x10"
                     android:paddingStart="@dimen/x30"
                     android:rotation="-15"
@@ -82,6 +82,8 @@
         android:layout_marginTop="@dimen/y4"
         android:text="参与人数：2222"
         android:textColor="@color/white"
-        android:textSize="@dimen/x20" />
+        android:textSize="@dimen/x20"
+        android:visibility="gone"
+        />
 
 </LinearLayout>

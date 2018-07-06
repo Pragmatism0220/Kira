@@ -17,8 +17,11 @@ import com.moemoe.lalala.model.entity.NewStoryInfoEventEntity;
 import com.moemoe.lalala.presenter.NewDormitioryContract;
 import com.moemoe.lalala.presenter.NewDormitoryPresenter;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
+import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.base.BaseActivity;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -45,7 +48,26 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
                 .netComponent(MoeMoeApplication.getInstance().getNetComponent())
                 .build()
                 .inject(this);
+        initGuide();
     }
+
+    private void initGuide() {
+        if (PreferenceUtils.isActivityFirstLaunch(this, "drama")) {
+            Intent intent = new Intent(this, MengXinActivity.class);
+            intent.putExtra("type", "drama");
+            ArrayList<String> res = new ArrayList<>();
+            res.add("plot1.jpg");
+            res.add("plot2.jpg");
+            res.add("plot3.jpg");
+            res.add("plot4.jpg");
+            res.add("plot5.jpg");
+            res.add("plot6.jpg");
+            res.add("plot7.jpg");
+            intent.putExtra("gui", res);
+            startActivity(intent);
+        }
+    }
+
 
     @Override
     protected void initViews(Bundle savedInstanceState) {

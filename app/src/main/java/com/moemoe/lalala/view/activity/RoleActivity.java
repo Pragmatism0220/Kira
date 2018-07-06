@@ -2,11 +2,8 @@ package com.moemoe.lalala.view.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -21,6 +18,7 @@ import com.moemoe.lalala.model.entity.RoleInfoEntity;
 import com.moemoe.lalala.presenter.RoleContract;
 import com.moemoe.lalala.presenter.RolePresenter;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
+import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.view.adapter.RoleAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
@@ -29,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import static android.graphics.Color.BLACK;
 
 
 /**
@@ -43,13 +39,12 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
     private RoleAdapter mAdapter;
     private ActivityRoleBinding binding;
     List<RoleInfoEntity> info = new ArrayList<>();
-    private String roleId;
-    private boolean isPut;
+
     @Inject
     RolePresenter mPresenter;
 
     int mPosition;
-    private boolean isPitch;
+
 
     @Override
     protected void initComponent() {
@@ -63,6 +58,24 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
         mPresenter.getRoleInfo();
         mPresenter.getStoryInfo();
         initView();
+        initGuide();
+    }
+
+    private void initGuide() {
+        if (PreferenceUtils.isActivityFirstLaunch(this, "role")) {
+            Intent intent = new Intent(this, MengXinActivity.class);
+            intent.putExtra("type", "role");
+            ArrayList<String> res = new ArrayList<>();
+            res.add("roles1.jpg");
+            res.add("roles2.jpg");
+            res.add("roles3.jpg");
+            res.add("roles4.jpg");
+            res.add("roles5.jpg");
+            res.add("roles6.jpg");
+            res.add("roles7.jpg");
+            intent.putExtra("gui", res);
+            startActivity(intent);
+        }
     }
 
     private void initView() {
@@ -78,6 +91,14 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
             binding.roleListRv.addItemDecoration(new SpacesItemDecoration(20, 16, 0));
             binding.roleListRv.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
+
+            if (entities.get(0).getRoleType().equals("official")) {
+                binding.roleGuanfang.setText("官方角色");
+            } else if (entities.get(0).getRoleType().equals("cameo")) {
+                binding.roleGuanfang.setText("客串角色");
+            }else {
+                binding.roleGuanfang.setText("联动");
+            }
 
 
             //未拥有角色取消放入宅屋点击事件
@@ -104,34 +125,45 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                 binding.putHouseBtn.setBackgroundResource(R.drawable.ic_role_move_house_bg);
             }
 
-            if ("厌烦".equals(entities.get(0).getUserLikeRoleDefineTxt())) {
+            if (entities.get(0).getUserLikeRoleDefine() < 20) {
                 binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_1);
-            } else if ("普通".equals(entities.get(0).getUserLikeRoleDefineTxt())) {
+            } else if (entities.get(0).getUserLikeRoleDefine() < 40) {
                 binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_2);
-            } else if ("友好".equals(entities.get(0).getUserLikeRoleDefineTxt())) {
+            } else if (entities.get(0).getUserLikeRoleDefine() < 80) {
                 binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_3);
-            } else if ("信任".equals(entities.get(0).getUserLikeRoleDefineTxt())) {
+            } else if (entities.get(0).getUserLikeRoleDefine() < 160) {
                 binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_4);
-            } else if ("爱".equals(entities.get(0).getUserLikeRoleDefineTxt())) {
+            } else if (entities.get(0).getUserLikeRoleDefine() < 320) {
                 binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_5);
-            } else if ("真爱".equals(entities.get(0).getUserLikeRoleDefineTxt())) {
+            } else if (entities.get(0).getUserLikeRoleDefine() >= 320) {
                 binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_6);
             }
-            /**
-             * 好感度计时器
-             */
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
 
+
+            binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine() + "/" + entities.get(0).getUserLikeRoleDefineFull());
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.roleHeartNumSmall.getLayoutParams();
             if (entities.get(0).getUserLikeRoleDefine() < entities.get(0).getUserLikeRoleDefineFull()) {
                 binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
-                int favorability = 240 - (240 * entities.get(0).getUserLikeRoleDefine() / entities.get(0).getUserLikeRoleDefineFull());
-                params.width = favorability;
-            } else if (entities.get(0).getUserLikeRoleDefine() >= entities.get(0).getUserLikeRoleDefineFull()) {
-                binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefineFull() + "");
+                int num = 240 - (240 * entities.get(0).getUserLikeRoleDefine() / entities.get(0).getUserLikeRoleDefineFull());
+                if (num > 200) {
+                    binding.roleHeartNumSmall.setVisibility(View.GONE);
+                    binding.fl.setBackgroundResource(R.drawable.shape_role_bg_two);
+                } else {
+                    binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
+                    binding.fl.setBackgroundResource(R.drawable.shape_role_bg);
+                    params.width = num;
+                }
+            }
+            binding.roleHeartNumSmall.setLayoutParams(params);
+            if (entities.get(0).getUserLikeRoleDefine() >= 320) {
+                binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine() + "");
+                binding.fl.setBackgroundResource(R.drawable.shape_role_bg);
+            } else if (entities.get(0).getUserLikeRoleDefine() == 0) {
+                binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine() + "");
+            } else {
+                binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine() + "/" + entities.get(0).getUserLikeRoleDefineFull());
             }
 
-            binding.roleHeartNumSmall.setLayoutParams(params);
-            binding.roleHeartNum.setText(entities.get(0).getUserLikeRoleDefine() + "/" + entities.get(0).getUserLikeRoleDefineFull());
             if (entities.get(0).getRoleNumber() != null) {
                 binding.roleNum.setVisibility(View.VISIBLE);
                 binding.roleNum.setText(String.format("编号%s", entities.get(0).getRoleNumber()));
@@ -153,41 +185,28 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                 @Override
                 public void onClick(View v, int position, int which) {
                     mPosition = position;
-                    //未拥有角色取消放入宅屋点击事件
-//                    if (!entities.get(position).getIsUserHadRole()) {
-//                        binding.roleHeartTitle.setVisibility(View.GONE);
-//                        binding.fl.setVisibility(View.GONE);
-//                        binding.roleDiaryBtn.setVisibility(View.GONE);
-//                        binding.putHouseBtn.setVisibility(View.GONE);
-//                        binding.setDeskmakeBtn.setVisibility(View.GONE);
-//                        binding.checkClothBtn.setVisibility(View.GONE);
-//                    } else if (entities.get(position).getIsUserHadRole()) {
-//                        binding.roleHeartTitle.setVisibility(View.VISIBLE);
-//                        binding.fl.setVisibility(View.VISIBLE);
-//                        binding.roleDiaryBtn.setVisibility(View.VISIBLE);
-//                        binding.putHouseBtn.setVisibility(View.VISIBLE);
-//                        binding.setDeskmakeBtn.setVisibility(View.VISIBLE);
-//                        binding.checkClothBtn.setVisibility(View.VISIBLE);
-//                    }
 
 
-                    if ("厌烦".equals(entities.get(position).getUserLikeRoleDefineTxt())) {
-                        binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_1);
-                    } else if ("普通".equals(entities.get(position).getUserLikeRoleDefineTxt())) {
-                        binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_2);
-                    } else if ("友好".equals(entities.get(position).getUserLikeRoleDefineTxt())) {
-                        binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_3);
-                    } else if ("信任".equals(entities.get(position).getUserLikeRoleDefineTxt())) {
-                        binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_4);
-                    } else if ("爱".equals(entities.get(position).getUserLikeRoleDefineTxt())) {
-                        binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_5);
-                    } else if ("真爱".equals(entities.get(position).getUserLikeRoleDefineTxt())) {
-                        binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_6);
-                    } else {
-                        binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_2);
+                    if (entities.get(position).getRoleType().equals("official")) {
+                        binding.roleGuanfang.setText("官方角色");
+                    } else if (entities.get(position).getRoleType().equals("cameo")) {
+                        binding.roleGuanfang.setText("客串角色");
+                    }else {
+                        binding.roleGuanfang.setText("联动");
                     }
-
-
+                    if (entities.get(position).getUserLikeRoleDefine() < 20) {
+                        binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_1);
+                    } else if (entities.get(position).getUserLikeRoleDefine() < 40) {
+                        binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_2);
+                    } else if (entities.get(position).getUserLikeRoleDefine() < 80) {
+                        binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_3);
+                    } else if (entities.get(position).getUserLikeRoleDefine() < 160) {
+                        binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_4);
+                    } else if (entities.get(position).getUserLikeRoleDefine() < 320) {
+                        binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_5);
+                    } else if (entities.get(position).getUserLikeRoleDefine() >= 320) {
+                        binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_6);
+                    }
                     binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefine() + "/" + entities.get(position).getUserLikeRoleDefineFull());
                     /**
                      * 好感度比例计算
@@ -198,18 +217,25 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                         int num = 240 - (240 * entities.get(position).getUserLikeRoleDefine() / entities.get(position).getUserLikeRoleDefineFull());
                         if (num > 200) {
                             binding.roleHeartNumSmall.setVisibility(View.GONE);
-                            binding.fl.setBackgroundResource(R.color.black);
+                            binding.fl.setBackgroundResource(R.drawable.shape_role_bg_two);
                         } else {
                             binding.roleHeartNumSmall.setVisibility(View.VISIBLE);
                             binding.fl.setBackgroundResource(R.drawable.shape_role_bg);
                             params.width = num;
                         }
-
                     }
                     binding.roleHeartNumSmall.setLayoutParams(params);
-                    if (entities.get(position).getUserLikeRoleDefine() >= entities.get(position).getUserLikeRoleDefineFull()) {
+
+                    if (entities.get(position).getUserLikeRoleDefine() >= 320) {
                         binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefine() + "");
+                        binding.fl.setBackgroundResource(R.drawable.shape_role_bg);
+                    } else if (entities.get(position).getUserLikeRoleDefine() == 0) {
+                        binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefine() + "");
+
+                    } else {
+                        binding.roleHeartNum.setText(entities.get(position).getUserLikeRoleDefine() + "/" + entities.get(position).getUserLikeRoleDefineFull());
                     }
+
 
                     if (entities.get(position).getRoleNumber() != null) {
                         binding.roleNum.setVisibility(View.VISIBLE);
@@ -275,7 +301,6 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
     @Override
     protected void initViews(Bundle savedInstanceState) {
 
-
     }
 
     @Override
@@ -308,6 +333,9 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                 } else if (entity.getName().equals("蕾姆") || entity.getId().equals("fe141680-62e6-49ee-94d1-71e993d007d5")) {
                     intent.putExtra("id", "fe141680-62e6-49ee-94d1-71e993d007d5");
                     intent.putExtra("name", "蕾姆");
+                } else if (entity.getName().equals("御坂美琴") || entity.getId().equals("cebd3879-fbbb-49df-ad8c-b55a2b244850")) {
+                    intent.putExtra("id", "cebd3879-fbbb-49df-ad8c-b55a2b244850");
+                    intent.putExtra("name", "御坂美琴");
                 }
                 startActivity(intent);
             }
@@ -358,7 +386,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     }
                     break;
                 case R.id.set_deskmake_btn:
-                    if (roleId != null && mAdapter.getList().get(mPosition).getIsUserHadRole()) {
+                    if (info.get(mPosition).getId() != null && mAdapter.getList().get(mPosition).getIsUserHadRole()) {
                         mPresenter.setDeskMate(info.get(mPosition).getId());
                     } else {
                         showToast("未拥有该角色~");
@@ -366,7 +394,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     break;
                 case R.id.check_cloth_btn:
                     if (mAdapter.getList().get(mPosition).getIsUserHadRole()) {
-                        if (roleId != null) {
+                        if (info.get(mPosition).getId() != null) {
                             Intent intent = new Intent(RoleActivity.this, ClothingActivity.class);
                             intent.putExtra("roleId", info.get(mPosition).getId());
                             startActivity(intent);
@@ -378,9 +406,15 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                     }
                     break;
                 case R.id.role_diary_btn:
-//                    Intent diary = new Intent(RoleActivity.this, DiaryActivity.class);
-//                    startActivity(diary);
-                    showToast("暂未开放");
+                    if (mAdapter.getList().get(mPosition).getIsUserHadRole()) {
+                        if (info.get(mPosition).getId() != null) {
+                            Intent diary = new Intent(RoleActivity.this, DiaryActivity.class);
+                            diary.putExtra("roleId", info.get(mPosition).getId());
+                            startActivity(diary);
+                        }
+                    } else {
+                        showToast("未拥有该角色~");
+                    }
                     break;
                 default:
                     break;

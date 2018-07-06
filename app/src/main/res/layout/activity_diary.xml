@@ -14,25 +14,27 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/status_bar_height"
-        android:background="@drawable/ic_diary_top_bg"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.moemoe.lalala.view.activity.DiaryActivity">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_diray_background"
+            >
 
             <FrameLayout
                 android:id="@+id/fl"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/y660"
+                >
 
                 <RelativeLayout
                     android:id="@+id/diary_top_bg"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/y976">
+                    android:layout_height="match_parent">
 
                     <ImageButton
                         android:id="@+id/diary_btn"
@@ -51,23 +53,43 @@
                         android:layout_marginEnd="@dimen/x24"
                         android:layout_marginTop="@dimen/y48"
                         android:background="@drawable/diary_share_btn"
-                        android:onClick="@{presenter.onClick}" />
-
+                        android:onClick="@{presenter.onClick}"
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/diary_image"
-                        android:layout_width="@dimen/x456"
-                        android:layout_height="@dimen/y608"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/diary_image_center" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|end"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/diary_role_view_len" />
+
+                    <ImageView
+                        android:id="@+id/diary_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginBottom="@dimen/y12"
+                        android:layout_marginEnd="@dimen/x12"
+                        android:background="@drawable/ic_home_roles_emotion_1" />
+
+                    <ImageView
+                        android:id="@+id/diary_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="@dimen/x20"
+                        android:layout_marginTop="@dimen/y220"
+                        android:background="@drawable/diary_name_len" />
 
                     <RelativeLayout
                         android:id="@+id/diary_favorability"
                         android:layout_width="@dimen/x320"
                         android:layout_height="@dimen/y52"
-                        android:layout_below="@+id/diary_image"
-                        android:layout_marginStart="@dimen/x40"
-                        android:layout_marginTop="@dimen/y34"
+                        android:layout_below="@+id/diary_name"
+                        android:layout_marginStart="@dimen/x20"
+                        android:layout_marginTop="@dimen/y32"
                         android:background="@drawable/diary_white_bg">
 
                         <ImageView
@@ -85,18 +107,18 @@
                             android:layout_marginStart="@dimen/x6"
                             android:layout_toEndOf="@+id/favorability_icon"
                             android:text="好感度"
-                            android:textColor="@color/pink_d85d86" />
+                            android:textColor="@color/pink_fb7ba2" />
 
                         <TextView
                             android:id="@+id/favorability_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
+                            android:layout_marginEnd="@dimen/x20"
                             android:layout_marginStart="@dimen/x6"
                             android:layout_toEndOf="@+id/favorability_title"
                             android:text="213/520"
-                            android:textColor="@color/pink_d85d86" />
-
+                            android:textColor="@color/pink_fb7ba2" />
 
                     </RelativeLayout>
 
@@ -104,10 +126,9 @@
                         android:id="@+id/diary_number_of_day"
                         android:layout_width="@dimen/x320"
                         android:layout_height="@dimen/y52"
-                        android:layout_below="@+id/diary_image"
-                        android:layout_marginStart="@dimen/x28"
-                        android:layout_marginTop="@dimen/y34"
-                        android:layout_toEndOf="@+id/diary_favorability"
+                        android:layout_below="@+id/diary_favorability"
+                        android:layout_marginStart="@dimen/x20"
+                        android:layout_marginTop="@dimen/y16"
                         android:background="@drawable/diary_white_bg">
 
                         <TextView
@@ -125,67 +146,27 @@
                             android:layout_marginStart="@dimen/x6"
                             android:layout_toEndOf="@+id/number_of_day_icon"
                             android:text="相识天数"
-                            android:textColor="@color/pink_d85d86" />
+                            android:textColor="@color/pink_fb7ba2" />
 
                         <TextView
                             android:id="@+id/number_of_day_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
+                            android:layout_marginEnd="@dimen/x20"
                             android:layout_marginStart="@dimen/x10"
                             android:layout_toEndOf="@+id/number_of_day_title"
                             android:text="421天"
-                            android:textColor="@color/pink_d85d86" />
-
+                            android:textColor="@color/pink_fb7ba2" />
                     </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/have_cloth"
-                        android:layout_width="@dimen/x320"
-                        android:layout_height="@dimen/y52"
-                        android:layout_alignParentStart="true"
-                        android:layout_below="@+id/diary_favorability"
-                        android:layout_marginStart="@dimen/x40"
-                        android:layout_marginTop="@dimen/y14"
-                        android:background="@drawable/diary_white_bg">
-
-                        <ImageView
-                            android:id="@+id/have_cloth_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/x20"
-                            android:background="@drawable/ic_home_roles_diary_clothes" />
-
-                        <TextView
-                            android:id="@+id/have_cloth_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:layout_marginStart="@dimen/x6"
-                            android:layout_toEndOf="@+id/have_cloth_icon"
-                            android:text="拥有服装"
-                            android:textColor="@color/pink_d85d86" />
-
-                        <TextView
-                            android:id="@+id/have_cloth_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:layout_marginStart="@dimen/x10"
-                            android:layout_toEndOf="@+id/have_cloth_title"
-                            android:text="3/10"
-                            android:textColor="@color/pink_d85d86" />
-                    </RelativeLayout>
-
 
                     <RelativeLayout
                         android:id="@+id/diary_recall"
                         android:layout_width="@dimen/x320"
                         android:layout_height="@dimen/y52"
                         android:layout_below="@+id/diary_number_of_day"
-                        android:layout_marginStart="@dimen/x28"
-                        android:layout_marginTop="@dimen/y14"
-                        android:layout_toEndOf="@+id/diary_favorability"
+                        android:layout_marginStart="@dimen/x20"
+                        android:layout_marginTop="@dimen/y16"
                         android:background="@drawable/diary_white_bg">
 
                         <TextView
@@ -203,22 +184,61 @@
                             android:layout_marginStart="@dimen/x6"
                             android:layout_toEndOf="@+id/recall_icon"
                             android:text="剧情回忆"
-                            android:textColor="@color/pink_d85d86" />
+                            android:textColor="@color/pink_fb7ba2" />
 
                         <TextView
                             android:id="@+id/recall_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
+                            android:layout_marginEnd="@dimen/x20"
                             android:layout_marginStart="@dimen/x10"
                             android:layout_toEndOf="@+id/recall_title"
                             android:text="23/25"
-                            android:textColor="@color/pink_d85d86" />
-
+                            android:textColor="@color/pink_fb7ba2" />
                     </RelativeLayout>
 
+                    <RelativeLayout
+                        android:id="@+id/have_cloth"
+                        android:layout_width="@dimen/x320"
+                        android:layout_height="@dimen/y52"
+                        android:layout_below="@+id/diary_recall"
+                        android:layout_marginStart="@dimen/x20"
+                        android:layout_marginTop="@dimen/y16"
+                        android:background="@drawable/diary_white_bg">
+
+                        <ImageView
+                            android:id="@+id/have_cloth_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/x20"
+                            android:background="@drawable/ic_home_roles_diary_clothes" />
+
+                        <TextView
+                            android:id="@+id/have_cloth_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_marginStart="@dimen/x6"
+                            android:layout_toEndOf="@+id/have_cloth_icon"
+                            android:text="拥有服装"
+                            android:textColor="@color/pink_fb7ba2" />
+
+                        <TextView
+                            android:id="@+id/have_cloth_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_marginStart="@dimen/x10"
+                            android:layout_toEndOf="@+id/have_cloth_title"
+                            android:text="3/10"
+                            android:textColor="@color/pink_fb7ba2" />
+                    </RelativeLayout>
 
                 </RelativeLayout>
+
+
+
 
                 <RelativeLayout
                     android:id="@+id/diary_dialog"
@@ -228,7 +248,7 @@
                     android:layout_marginEnd="@dimen/x24"
                     android:layout_marginTop="@dimen/y150"
                     android:background="@drawable/bg_classmate_talkbg_top_right"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/title"
@@ -252,50 +272,59 @@
                         android:text="过去30天内分享满20次"
                         android:textColor="@color/white" />
 
-                    <TextView
-                        android:id="@+id/title_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/title_share_name"
-                        android:layout_centerInParent="true"
-                        android:layout_marginStart="@dimen/x40"
-                        android:layout_marginTop="@dimen/y20"
-                        android:text="已完成：13/30"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/x30"
-                        android:textStyle="bold" />
                 </RelativeLayout>
-
-
             </FrameLayout>
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:id="@+id/bottom_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y1070"
                 android:layout_below="@+id/fl"
-                android:background="@drawable/bg_home_roles_diary_txtback">
+               >
+
+                <ImageView
+                    android:id="@+id/bottom_bg_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/y1070"
+                    android:background="@drawable/bg_home_roles_diary_txtback"
+                    />
 
                 <TextView
-                    android:id="@+id/diary_name"
+                    android:id="@+id/title1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/y60"
+                    android:layout_centerHorizontal="true"
                     android:text="双树的日记本"
-                    android:textColor="@color/pink_d85d86"
                     android:textSize="@dimen/x50"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/pink_fb7ba2"
+                    />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/diary_rv"
+                    android:layout_below="@+id/title1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/diary_name"
-                    android:layout_marginTop="@dimen/y56">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/y48"
+                    android:layout_marginEnd="@dimen/x90"
+                    android:layout_marginStart="@dimen/x90"
+                    android:layout_marginBottom="@dimen/y56"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"></android.support.v7.widget.RecyclerView>
 
-
-                </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:id="@+id/title_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/diary_rv"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="53dp"
+                    android:text="已完成：13/30"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x30"
+                    android:textStyle="bold" />
             </RelativeLayout>
+
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>

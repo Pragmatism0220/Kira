@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/x36"
+                android:layout_marginEnd="@dimen/x20"
                 android:layout_marginTop="@dimen/y24"
                 android:background="@drawable/ic_home_roles_choice_title" />
 
@@ -94,7 +94,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/role_guanfang"
                 android:layout_marginStart="@dimen/x48"
-                android:lineSpacingMultiplier="0.5"
                 android:text="美藤双树"
                 android:textColor="@color/white"
                 android:textSize="@dimen/x70"

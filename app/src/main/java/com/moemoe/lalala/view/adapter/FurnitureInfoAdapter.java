@@ -14,6 +14,7 @@ import com.moemoe.lalala.R;
 import com.moemoe.lalala.event.StorageDefaultDataEvent;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
+import com.moemoe.lalala.model.entity.PropInfoEntity;
 import com.moemoe.lalala.view.activity.StorageActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -53,6 +54,10 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
     public void unRegister() {
         EventBus.getDefault().unregister(this);
         StorageActivity.sIsRegist = false;
+    }
+
+    public List<AllFurnitureInfo> getData() {
+        return infos;
     }
 
 
@@ -112,13 +117,11 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
 
         if (data.getType().equals("套装")) {
             holder.mFName.setText(data.getSuitTypeName());
-//            Glide.with(mContext).load(ApiService.URL_QINIU + data.getSuitTypeDetailIcon()).into(holder.mFphoto);
             Glide.with(mContext).load(ApiService.URL_QINIU + data.getSuitTypeDetailIcon()).
                     bitmapTransform(new RoundedCornersTransformation(mContext, 12, 0)).crossFade(1000)
                     .into(holder.mFphoto);
         } else {
             holder.mFName.setText(data.getName());
-//            Glide.with(mContext).load(ApiService.URL_QINIU + data.getDetailIcon()).into(holder.mFphoto);
             Glide.with(mContext).load(ApiService.URL_QINIU + data.getDetailIcon()).
                     bitmapTransform(new RoundedCornersTransformation(mContext, 12, 0)).crossFade(1000)
                     .into(holder.mFphoto);

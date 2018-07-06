@@ -36,8 +36,12 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
     private RoleItemClickListener listener;
     private View mDefaultData;
 
-    private int mSelectedPos = -1;//保存当前选中的position 重点！
+    private int mSelectedPos = -1;//保存当前选中的position
 
+
+    public int getSelectedPos() {
+        return mSelectedPos;
+    }
 
     public PropAdapter(Context mContext, List<PropInfoEntity> infos) {
         this.mContext = mContext;
@@ -45,7 +49,7 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
         EventBus.getDefault().register(this);
     }
 
-    public void unregister(){
+    public void unregister() {
         EventBus.getDefault().unregister(this);
     }
 
@@ -63,7 +67,6 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
     @Override
     public void onBindViewHolder(final PropViewHolder holder, final int position) {
         final PropInfoEntity data = infos.get(position);
-
         if (data.isUserHadTool()) {
             Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).
                     bitmapTransform(new RoundedCornersTransformation(mContext, 12, 0)).crossFade(1000).
@@ -108,10 +111,6 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
 
     public List<PropInfoEntity> getData() {
         return infos;
-    }
-
-    public int getSelectedPos() {
-        return mSelectedPos;
     }
 
     @Override

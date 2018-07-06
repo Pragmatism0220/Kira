@@ -125,7 +125,7 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
             mTitle.add(key);
             map.put(key, allFurnitures.get(key));
         }
-        if (map != null ) {
+        if (map != null)    {
             for (int i = 0; i < mTitle.size(); i++) {
                 fragmentList.add(FurnitureInfoFragment.newInstance(map.get(mTitle.get(i))));
             }
@@ -137,9 +137,6 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
             mFurnitureViewPager.setAdapter(mAdapter);
             mTab.setViewPager(mFurnitureViewPager);
         }
-
-
-
     }
 
     /**
@@ -153,6 +150,7 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
             }
         }
     }
+
 
     /**
      * 家具显示全部
@@ -170,10 +168,24 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
     public void onEvent(FurnitureSelectEvent event) {
         if (event != null && mAllListData != null && mAllListData.size() > 0) {
             for (AllFurnitureInfo mAlldata : mAllListData) {
-                if (event.getId().equals(mAlldata.getId())) {
-                    mAlldata.setSelected(true);
+//
+//                if (event.getId().equals(mAlldata.getId())) {
+//                    mAlldata.setSelected(true);
+//                } else {
+//                    mAlldata.setSelected(false);
+//                }
+                if (mAlldata.getType().equals("套装")) {
+                    if (event.getId().equals(mAlldata.getSuitTypeId())) {
+                        mAlldata.setSelected(true);
+                    } else {
+                        mAlldata.setSelected(false);
+                    }
                 } else {
-                    mAlldata.setSelected(false);
+                    if (event.getId().equals(mAlldata.getId())) {
+                        mAlldata.setSelected(true);
+                    } else {
+                        mAlldata.setSelected(false);
+                    }
                 }
             }
             if (fragmentList != null && fragmentList.size() > 0) {

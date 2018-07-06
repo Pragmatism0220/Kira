@@ -13,6 +13,15 @@ public class PropInfoEntity {
     private int toolCount;//拥有道具个数
     private String describe;//道具信息描述
     private String productId;//商品ID
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 
     public String getProductId() {
         return productId;

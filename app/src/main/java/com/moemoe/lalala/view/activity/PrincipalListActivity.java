@@ -102,7 +102,7 @@ public class PrincipalListActivity extends BaseActivity implements PrincipalList
             @Override
             public void onItemClick(View view, int position) {
                 scriptId = infos.get(position).getScriptId();
-                if (scriptId == null) {
+                if (scriptId == null || infos.get(position).isLock()) {
                     showToast("该剧情暂未解锁哦");
                 } else {
                     //TODO 剧情Json脚本

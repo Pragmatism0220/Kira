@@ -148,6 +148,8 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
     ImageView mHouse;
     @BindView(R.id.tab)
     RelativeLayout mTab;
+    @BindView(R.id.vip_time)
+    TextView mVipTime;
     @BindView(R.id.ll_person_root)
     LinearLayout mLlPersonRoot;
 
@@ -233,10 +235,13 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
         if (mIsSelf) {
             // subscribeEvent();
             mIvMsg.setVisibility(View.VISIBLE);
-//            mIvOption.setVisibility(View.VISIBLE);
+            mIvOption.setVisibility(View.VISIBLE);
+            mVipTime.setVisibility(View.VISIBLE);
+
         } else {
             mIvMsg.setVisibility(View.GONE);
-//            mIvOption.setVisibility(View.GONE);
+            mIvOption.setVisibility(View.GONE);
+            mVipTime.setVisibility(View.GONE);
         }
         /**
          *
@@ -408,9 +413,14 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
                 break;
             case R.id.student_card_item:
                 if (mInfo != null) {
-                    Intent intent1 = new Intent(this, NewEditAccountActivity.class);
-                    intent1.putExtra("info", mInfo);
-                    startActivityForResult(intent1, NewEditAccountActivity.REQ_EDIT);
+                    if (mIsSelf) {
+                        Intent intent1 = new Intent(this, NewEditAccountActivity.class);
+                        intent1.putExtra("info", mInfo);
+                        startActivityForResult(intent1, NewEditAccountActivity.REQ_EDIT);
+                    } else {
+                        return;
+                    }
+
                 }
                 break;
             case R.id.iv_edit:
@@ -448,11 +458,11 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
                 }
                 break;
             case R.id.iv_option:
-//                if (mInfo != null) {
-//                    Intent i = new Intent(this, NewEditAccountActivity.class);
-//                    i.putExtra("info", mInfo);
-//                    startActivityForResult(i, NewEditAccountActivity.REQ_EDIT);
-//                }
+                if (mInfo != null) {
+                    Intent i = new Intent(this, NewEditAccountActivity.class);
+                    i.putExtra("info", mInfo);
+                    startActivityForResult(i, NewEditAccountActivity.REQ_EDIT);
+                }
 //                Intent i = new Intent(this, NewSettingActivity.class);
 //                i.putExtra("useId", mUserId);
 //                startActivity(i);
@@ -467,7 +477,6 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
                 /**
                  * 聊天
                  */
-
                 if (DialogUtils.checkLoginAndShowDlg(PersonalV2Activity.this)) {
                     if (!TextUtils.isEmpty(PreferenceUtils.getAuthorInfo().getRcToken()) && !TextUtils.isEmpty(mInfo.getRcTargetId())) {
                         RongIM.getInstance().startPrivateChat(PersonalV2Activity.this, mInfo.getRcTargetId(), mInfo.getUserName());
@@ -568,6 +577,12 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
         } else {
             mIvGender.setVisibility(View.GONE);
         }
+        if (!TextUtils.isEmpty(info.getVipTime())){
+            mVipTime.setText("会员到期日:" + info.getVipTime());
+        }else {
+            mVipTime.setVisibility(View.GONE);
+        }
+
         mFanNum.setText(String.valueOf(info.getFollowers()));
         mDocNum.setText(String.valueOf(info.getFollowCount()));
         mCoinNum.setText(String.valueOf(info.getCoin()));
@@ -618,14 +633,19 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
 
                     @Override
                     public void onNext(Integer i) {
-                        huiZhangImgs[i].setVisibility(View.INVISIBLE);
-                        huiZhangImgs[i].setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(getApplicationContext(), BadgeActivity.class);
-                                startActivity(intent);
-                            }
-                        });
+                        if (mIsSelf) {
+                            huiZhangImgs[i].setVisibility(View.INVISIBLE);
+                            huiZhangImgs[i].setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(getApplicationContext(), BadgeActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+                        } else {
+                            return;
+                        }
+
                     }
                 });
         ArrayList<BadgeEntity> badgeList = info.getBadgeList();

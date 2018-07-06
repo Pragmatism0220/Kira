@@ -10,6 +10,7 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Looper;
 import android.provider.Settings;
 import android.support.multidex.BuildConfig;
 import android.support.multidex.MultiDex;
@@ -25,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -649,7 +651,6 @@ public class MoeMoeApplication extends Application {
                             return;
                         }
                     }
-
                     if (temp.contains("http://s.moemoe.la/game/devil/index.html")) {
                         AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
                         temp += "?user_id=" + authorInfo.getUserId() + "&full_screen";
@@ -685,18 +686,19 @@ public class MoeMoeApplication extends Application {
                     IntentUtils.toActivityFromUri(context, uri, v);
 
                 } else {
-                    mTvContent.setText(entity.getContent());
+                    mTvContent.setText(entity.getContent() + "");
+                    Log.i("MoeMoeApplication", "setDialogView: " + entity.getContent());
                 }
                 if (entity.getDialogType() != null && entity.getDialogType().equals("dialog_option")) {
                     mRlSelect.setVisibility(View.VISIBLE);
                     for (int i = 0; i < entity.getOptions().size(); i++) {
                         if (i == 0) {
-                            mIvLeft.setText(entity.getOptions().get(i).getOption());
+                            mIvLeft.setText(entity.getOptions().get(i).getOption()+"");
                         } else {
                             if (entity.getOptions().get(i) == null) {
                                 mIvCansl.setVisibility(View.GONE);
                             } else {
-                                mIvCansl.setText(entity.getOptions().get(i).getOption());
+                                mIvCansl.setText(entity.getOptions().get(i).getOption()+"");
                             }
                         }
                     }

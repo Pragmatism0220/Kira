@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/x36"
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/y48"
+    >
 
-</android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/item_diary_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/pink_fb7ba2"
+            android:textSize="@dimen/x30"
+            />
+
+        <TextView
+            android:id="@+id/item_diary_weather"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/item_diary_time"
+            android:layout_marginStart="@dimen/x16"
+            android:textColor="@color/pink_fb7ba2"
+            android:textSize="@dimen/x30"
+            />
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/item_diary_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y16"
+        android:textColor="@color/pink_fb7ba2"
+        android:textSize="@dimen/x40" />
+
+</LinearLayout>

@@ -1199,4 +1199,17 @@ public interface ApiService {
 
     @POST("v2/kira/house/user/tool/save")
     Observable<ApiResult> loadHouseSave(@Body RubblishBody req);
+
+    @POST("v2/kira/house/user/tool/use/{toolId}")
+    Observable<ApiResult<PropUseEntity>> propUse(@Path("toolId") String toolId);
+
+    @GET("v2/kira/house/userStat")
+    Observable<ApiResult<PowerEntity>> power();
+
+    @GET("v2/kira/house/visitor/otherhouse/page/{size}/{start}/{hostUserId}")
+    Observable<ApiResult<ArrayList<VisitorsEntity>>> loadHisVisitor(@Path("size") int size, @Path("start") int start, @Path("hostUserId") String hostUserId);
+
+    @GET("v2/kira/house/user/role/diary/{roleId}")
+    Observable<ApiResult<DiaryEntity>> loadDiary(@Path("roleId") String roleId);
+
 }

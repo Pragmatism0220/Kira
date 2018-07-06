@@ -26,11 +26,12 @@
 
             <ImageView
                 android:id="@+id/storage_title"
-                android:layout_width="@dimen/x320"
-                android:layout_height="@dimen/y142"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="@dimen/x36"
                 android:layout_marginTop="@dimen/y44"
+                android:layout_marginEnd="@dimen/x36"
                 android:background="@drawable/ic_home_items_title" />
 
             <ImageView

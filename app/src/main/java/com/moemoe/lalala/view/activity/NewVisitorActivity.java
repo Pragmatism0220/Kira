@@ -1,8 +1,10 @@
 package com.moemoe.lalala.view.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +19,7 @@ import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.presenter.NewVisitorPresenter;
 import com.moemoe.lalala.presenter.NewVisitorsContract;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
+import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.adapter.NewVisitorAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
@@ -39,6 +42,7 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
     private boolean isLoading = false;
     private NewVisitorAdapter mAdapter;
     private ArrayList<VisitorsEntity> info;
+    private String uuid;
 
     private PullAndLoadView mRv;
 
@@ -64,7 +68,7 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
         mAdapter = new NewVisitorAdapter();
         mRv.getRecyclerView().setAdapter(mAdapter);
         mRv.setLoadMoreEnabled(false);
-
+        uuid = getIntent().getStringExtra(UUID);
     }
 
 
@@ -94,13 +98,22 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
             @Override
             public void onLoadMore() {
                 isLoading = true;
-                mPresenter.getNewVisitorsInfo(10, mAdapter.getItemCount());
+                if (uuid == null) {
+                    mPresenter.getNewVisitorsInfo(10, 0);
+                } else {
+                    mPresenter.getHisVisitorsInfo(10, 0, uuid);
+                }
+
             }
 
             @Override
             public void onRefresh() {
                 isLoading = true;
-                mPresenter.getNewVisitorsInfo(10, mAdapter.getItemCount());
+                if (uuid == null) {
+                    mPresenter.getNewVisitorsInfo(10, 0);
+                } else {
+                    mPresenter.getHisVisitorsInfo(10, 0, uuid);
+                }
             }
 
             @Override
@@ -116,11 +129,7 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-//                if (!TextUtils.isEmpty(entities.get(position).getVisitorId())) {
-//                    Intent intent = new Intent(getApplicationContext(), HouseHisActivity.class);
-//                    intent.putExtra("id", entities.get(position).getVisitorId());
-//                    startActivity(intent);
-//                }
+
             }
 
             @Override
@@ -133,7 +142,11 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
 
     @Override
     protected void initData() {
-        mPresenter.getNewVisitorsInfo(10, 0);
+        if (uuid == null) {
+            mPresenter.getNewVisitorsInfo(10, 0);
+        } else {
+            mPresenter.getHisVisitorsInfo(10, 0, uuid);
+        }
     }
 
 
@@ -150,8 +163,20 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
         } else {
             mAdapter.addList(entities);
         }
+    }
 
-
+    @Override
+    public void getHiiVisitorsInfoSccess(ArrayList<VisitorsEntity> entities, boolean isPull) {
+        info = new ArrayList<>();
+        info.clear();
+        info.addAll(entities);
+        isLoading = false;
+        mRv.setComplete();
+        if (isPull) {
+            mAdapter.setList(entities);
+        } else {
+            mAdapter.addList(entities);
+        }
     }
 
     public class Presenter {

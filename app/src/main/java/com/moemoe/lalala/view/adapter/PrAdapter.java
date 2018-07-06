@@ -53,12 +53,12 @@ public class PrAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //            //未解锁
 //            return NO_VIEW;
 //        }
-        if (infos.get(position).isLock() == true) {
+        if (infos.get(position).isLock()) {
             return NO_VIEW;
-        } else if (infos.get(position).isLock() == false) {
-            if (infos.get(position).isFullCollect() == true) {
+        } else if (!infos.get(position).isLock()) {
+            if (infos.get(position).isFullCollect()) {
                 return ALL_VIEW;
-            } else if (infos.get(position).isFullCollect() == false) {
+            } else if (!infos.get(position).isFullCollect()) {
                 return HALF_VIEW;
             }
         }

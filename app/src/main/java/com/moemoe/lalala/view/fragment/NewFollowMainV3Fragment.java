@@ -17,6 +17,7 @@ import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
@@ -228,7 +229,7 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
     }
 
     public void onSmoothScrollBy() {
-        if (mListDocs!=null){
+        if (mListDocs != null) {
             mListDocs.getRecyclerView().smoothScrollToPosition(0);
         }
     }
@@ -416,6 +417,13 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
         }
     }
 
+    /**
+     * 标签点击成功
+     *
+     * @param position
+     * @param isLike
+     * @param parentPosition
+     */
     @Override
     public void onPlusLabel(int position, boolean isLike, int parentPosition) {
         if (getContext() instanceof FeedV3Activity) {
@@ -425,6 +433,7 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
         if (docResponse.getTags() != null && docResponse.getTags().size() > 0) {
             DocTagEntity tagEntity = docResponse.getTags().get(position);
             docResponse.getTags().remove(position);
+
             tagEntity.setLiked(isLike);
             if (isLike) {
                 tagEntity.setLikes(tagEntity.getLikes() + 1);

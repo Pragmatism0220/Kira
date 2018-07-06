@@ -256,7 +256,16 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
 //            MoeMoeApplication.getInstance().activities.add(FeedV3Activity.this);
 //            MoeMoeApplication.getInstance().initWindowManager(this, getWindowManager());
 //        }
+//        initToHouse();
     }
+
+    private void initToHouse() {
+        if (NetworkUtils.checkNetworkAndShowError(FeedV3Activity.this) && DialogUtils.checkLoginAndShowDlg(FeedV3Activity.this)) {
+            startActivity(new Intent(FeedV3Activity.this, HouseActivity.class));
+            finish();
+        }
+    }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {

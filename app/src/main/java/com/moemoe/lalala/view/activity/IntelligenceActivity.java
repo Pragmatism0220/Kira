@@ -35,6 +35,8 @@ public class IntelligenceActivity extends BaseActivity {
             binding.ivCoverIntelligence.setImageResource(R.drawable.bg_inform_ichigo);
         } else if (name.equals("蕾姆") || id.equals("fe141680-62e6-49ee-94d1-71e993d007d5")) {
             binding.ivCoverIntelligence.setImageResource(R.drawable.bg_inform_rem);
+        } else if (name.equals("御坂美琴") || name.equals("cebd3879-fbbb-49df-ad8c-b55a2b244850")) {
+            binding.ivCoverIntelligence.setImageResource(R.drawable.bg_inform_misaka);
         } else {
             finish();
         }

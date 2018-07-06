@@ -4,27 +4,40 @@
     android:layout_height="match_parent">
 
 
-       <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
-           android:id="@+id/list"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           >
-           <ImageView
-               android:id="@+id/iv_to_wen"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_gravity="bottom|end"
-               android:layout_marginBottom="@dimen/y24"
-               android:layout_marginEnd="@dimen/x24"
-               android:background="@drawable/btn_mydoc"
-               android:visibility="gone" />
-       </com.moemoe.lalala.view.widget.recycler.PullAndLoadView>
+    <com.moemoe.lalala.view.widget.recycler.PullAndLoadView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-       <ViewStub
-           android:id="@+id/stub_login"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:layout="@layout/item_not_login" />
+        <ImageView
+            android:id="@+id/iv_to_wen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/y24"
+            android:layout_marginEnd="@dimen/x24"
+            android:background="@drawable/btn_mydoc"
+            android:visibility="gone" />
+
+
+    </com.moemoe.lalala.view.widget.recycler.PullAndLoadView>
+
+    <ViewStub
+        android:id="@+id/stub_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/item_not_login" />
+
+    <ImageView
+        android:id="@+id/iv_trends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/y24"
+        android:layout_marginEnd="@dimen/x24"
+        android:src="@drawable/btn_feed_create_dynamic"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

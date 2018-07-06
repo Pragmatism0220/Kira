@@ -239,10 +239,11 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/power"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/dormitory_storage"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/power_view"
@@ -260,23 +261,24 @@
                 android:background="@drawable/shape_power_bg">
 
                 <TextView
-                    android:id="@+id/power_num"
+                    android:id="@+id/role_heart_num_small"
+                    android:layout_width="@dimen/x10"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center"
+                    android:layout_marginEnd="@dimen/x4"
+                    android:background="@drawable/role_heart_small_bg_one"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/role_heart_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:text="1/20"
                     android:textColor="@color/white" />
 
             </FrameLayout>
 
-            <TextView
-                android:id="@+id/power_num_small"
-                android:layout_width="@dimen/x10"
-                android:layout_height="@dimen/y52"
-                android:layout_alignParentBottom="true"
-                android:layout_alignStart="@+id/fl"
-                android:layout_gravity="end"
-                android:background="@drawable/role_heart_small_bg_one"
-                android:visibility="gone" />
 
         </RelativeLayout>
 

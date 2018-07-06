@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
@@ -289,7 +290,25 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             intent.putExtra("uuid", userId);
             startActivity(intent1);
         }
+        if (PreferenceUtils.isActivityFirstLaunch(this, "mapActivity")) {
+            Intent i = new Intent(this, MengXinActivity.class);
+            i.putExtra("type", "mapActivity");
+            ArrayList<String> res = new ArrayList<>();
+            res.add("map1.jpg");
+            res.add("map2.jpg");
+            res.add("map3.jpg");
+            res.add("map4.jpg");
+            res.add("map5.jpg");
+            res.add("map6.jpg");
+            res.add("map7.jpg");
+            res.add("map8.jpg");
+            res.add("map9.jpg");
+            res.add("map10.jpg");
+            i.putExtra("gui", res);
+            startActivity(i);
+        }
     }
+
 
     private void refreshMap() {
         mPresenter.loadMapAllUser();
@@ -1025,30 +1044,13 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                     builder.show();
                 }
             }
-
-//            Intent i = new Intent(this, MengXinActivity.class);
-//            i.putExtra("type", "map");
-//            ArrayList<String> res = new ArrayList<>();
-//            res.add("1.jpg");
-//            res.add("2.jpg");
-//            res.add("3.jpg");
-//            res.add("4.jpg");
-//            res.add("5.jpg");
-//            res.add("6.jpg");
-//            res.add("7.jpg");
-//            res.add("8.jpg");
-//            res.add("9.jpg");
-//            res.add("10.jpg");
-//            res.add("11.jpg");
-//            res.add("12.jpg");
-//            i.putExtra("gui", res);
-//            startActivity(i);
         } else {
             if (!TextUtils.isEmpty(mSchema)) {
                 IntentUtils.toActivityFromUri(this, Uri.parse(mSchema), null);
             } else {
                 // Intent i3 = new Intent(MapActivity.this,WallBlockActivity.class);
-                Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
+//                Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
+                Intent i3 = new Intent(MapActivity.this, HouseActivity.class);
                 startActivity(i3);
             }
         }

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
@@ -122,7 +123,6 @@ public class OldDocHolder extends ClickableViewHolder {
         });
 
         //user top
-
         if (entity.getCreateUser() != null && entity.getCreateUser().isVip()) {
             setVisible(R.id.iv_vip, true);
         } else {
@@ -240,6 +240,8 @@ public class OldDocHolder extends ClickableViewHolder {
         } else {
             setVisible(R.id.ll_img_root, false);
         }
+
+
         //label
         if (docLabel != null && entity.getTags() != null) {
             docLabel.setDocLabelAdapter(docLabelAdapter);
@@ -261,6 +263,9 @@ public class OldDocHolder extends ClickableViewHolder {
                                 final DocTagEntity tagBean = entity.getTags().get(position);
                                 TagLikeEntity bean = new TagLikeEntity(entity.getId(), tagBean.getId());
                                 ((BaseAppCompatActivity) context).createDialog();
+                                /**
+                                 * 标签点击
+                                 */
                                 if (context instanceof FeedV3Activity) {
                                     ((FeedV3Activity) context).likeTag(tagBean.isLiked(), position, bean, paposition);
                                 } else if (context instanceof WenQuanActivity) {

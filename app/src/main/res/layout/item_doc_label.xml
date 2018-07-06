@@ -12,7 +12,6 @@
         android:layout_marginStart="@dimen/x12"
         android:layout_marginEnd="@dimen/x8"
         android:layout_gravity="center_vertical"
-        android:text=""
         android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="@dimen/x20"
@@ -47,7 +46,6 @@
         android:layout_marginEnd="@dimen/x12"
         android:layout_gravity="center_vertical"
         android:textStyle="bold"
-        android:text=""
         android:textColor="#000000"
         android:textSize="@dimen/x20" />
 </LinearLayout>

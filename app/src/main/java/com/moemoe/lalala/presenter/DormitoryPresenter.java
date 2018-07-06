@@ -24,6 +24,7 @@ import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
 import com.moemoe.lalala.model.entity.MapMarkEntity;
 import com.moemoe.lalala.model.entity.NearUserEntity;
+import com.moemoe.lalala.model.entity.PowerEntity;
 import com.moemoe.lalala.model.entity.RubbishEntity;
 import com.moemoe.lalala.model.entity.RubblishBody;
 import com.moemoe.lalala.model.entity.SaveVisitorEntity;
@@ -108,6 +109,24 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
         }
     }
 
+    @Override
+    public void loadPower() {
+        apiService.power()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<PowerEntity>() {
+                    @Override
+                    public void onSuccess(PowerEntity entity) {
+                        if (view != null) view.onLoadPowerSuccess(entity);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
 
     @Override
     public void loadRoleLikeCollect(String roleId) {
@@ -144,6 +163,25 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                     }
                 });
     }
+
+    @Override
+    public void getHiVisitorsInfo(String userId) {
+        apiService.loadHisVisitor(ApiService.LENGHT, 0, userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<ArrayList<VisitorsEntity>>() {
+                    @Override
+                    public void onSuccess(ArrayList<VisitorsEntity> entities) {
+                        if (view!=null) view.getHisVisitorsInfo(entities);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view!=null)view.onFailure(code, msg);
+                    }
+                });
+    }
+
 
     @Override
     public void saveVisitor(SaveVisitorEntity request) {
@@ -200,6 +238,7 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                            }
                 );
     }
+
 
     @Override
     public void addMapMark(Context context, MapMarkContainer container, MapLayout map, String type) {
