@@ -13,6 +13,7 @@ import com.moemoe.lalala.model.entity.BranchStoryAllEntity;
 import com.moemoe.lalala.presenter.BranchContract;
 import com.moemoe.lalala.presenter.BranchPresenter;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
+import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.adapter.TabFragmentPagerAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
@@ -47,6 +48,8 @@ public class BranchActivity extends BaseActivity implements BranchContract.View 
     private boolean isSelect;
     private ArrayList<BranchStoryAllEntity> branchStoryAllEntity;
     private int position;
+    private HashMap<String, ArrayList<BranchStoryAllEntity>> maoList;
+    private Set<String> setName;
 
     @Override
     protected void initComponent() {
@@ -74,13 +77,42 @@ public class BranchActivity extends BaseActivity implements BranchContract.View 
     @Override
     protected void initToolbar(Bundle savedInstanceState) {
         if (!isSelect) {
+            binding.branchBottom.setVisibility(View.VISIBLE);
+            binding.tvBranch.setText("N(" + branchN + ")" +
+                    "R(" + branchR + ")" +
+                    "SR(" + branchSR + ")");
             mPresenter.loadBranchStoryAll(true, 0);
+        } else {
+            binding.branchBottom.setVisibility(View.GONE);
         }
     }
 
     @Override
     protected void initListeners() {
-
+        binding.checkBoxBtn.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                int currentItem = binding.branchViewpager.getCurrentItem();
+                ArrayList<String> mTitles = new ArrayList<>();
+                mTitles.add("全部");
+                mTitles.addAll(setName);
+                List<BaseFragment> fragmentList = new ArrayList<>();
+                for (String key : mTitles) {
+                    branchFragment = BranchFragment.newInstance(BranchActivity.this, maoList.get(key));
+                    branchFragment.setSelect(isSelect, position, key);
+                    branchFragment.setCheckSelect(binding.checkBoxBtn.isChecked());
+                    fragmentList.add(branchFragment);
+                }
+                if (mAdapter == null) {
+                    mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragmentList, mTitles);
+                } else {
+                    mAdapter.setFragments(getSupportFragmentManager(), fragmentList, mTitles);
+                }
+                binding.branchViewpager.setAdapter(mAdapter);
+                binding.branchTabLayout.setViewPager(binding.branchViewpager);
+                binding.branchViewpager.setCurrentItem(currentItem);
+            }
+        });
     }
 
     @Override
@@ -117,11 +149,11 @@ public class BranchActivity extends BaseActivity implements BranchContract.View 
      * @param entities
      */
     private void setAdapterData(ArrayList<BranchStoryAllEntity> entities) {
-        Set<String> setName = new HashSet<>();
+        setName = new HashSet<>();
         for (BranchStoryAllEntity allEntity : entities) {
             setName.add(allEntity.getRoleName());
         }
-        HashMap<String, ArrayList<BranchStoryAllEntity>> maoList = new HashMap<>();
+        maoList = new HashMap<>();
         maoList.put("全部", entities);
         for (String name : setName) {
             ArrayList<BranchStoryAllEntity> newAllEntity = new ArrayList<>();
@@ -138,7 +170,6 @@ public class BranchActivity extends BaseActivity implements BranchContract.View 
         List<BaseFragment> fragmentList = new ArrayList<>();
         for (String key : mTitles) {
             branchFragment = BranchFragment.newInstance(this, maoList.get(key));
-            branchFragment.setBranch(branchN, branchR, branchSR);
             branchFragment.setSelect(isSelect, position, key);
             fragmentList.add(branchFragment);
         }

@@ -1,5 +1,6 @@
 package com.moemoe.lalala.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -57,6 +58,7 @@ public class DepartmentV3Activity extends BaseAppCompatActivity implements Depar
     ImageView mIvMenu;
     @BindView(R.id.ll_comment_pannel)
     View mLlcomment;
+    
 
     private TabFragmentPagerAdapter mAdapter;
 
@@ -142,13 +144,21 @@ public class DepartmentV3Activity extends BaseAppCompatActivity implements Depar
     }
     @Override
     protected void initToolbar(Bundle savedInstanceState) {
-        mIvMenu.setVisibility(View.GONE);
-        mIvMenu.setImageResource(R.drawable.btn_follow_department);
+        mIvMenu.setVisibility(View.VISIBLE);
+        mIvMenu.setImageResource(R.drawable.btn_trends_search);
         mIvMenu.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if (DialogUtils.checkLoginAndShowDlg(DepartmentV3Activity.this) && mIsFollow != -1) {
-                    mPresenter.followDepartment(roomId, mIsFollow == 0);
+//                if (DialogUtils.checkLoginAndShowDlg(DepartmentV3Activity.this) && mIsFollow != -1) {
+//                    mPresenter.followDepartment(roomId, mIsFollow == 0);
+//                }
+
+
+                if (DialogUtils.checkLoginAndShowDlg(DepartmentV3Activity.this)) {
+                    clickEvent("地图-搜索");
+                    Intent i6 = new Intent(DepartmentV3Activity.this, AllSearchActivity.class);
+                    i6.putExtra("type", "all");
+                    startActivity(i6);
                 }
             }
         });

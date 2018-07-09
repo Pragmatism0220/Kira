@@ -69,5 +69,4 @@ public class ClubChildHolder extends ClickableViewHolder {
             }
         });
     }
-
 }

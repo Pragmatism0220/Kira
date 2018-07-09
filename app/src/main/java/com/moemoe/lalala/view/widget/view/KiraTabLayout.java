@@ -63,7 +63,6 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
     private float mTextUnSelectPaddingTop;
     private Drawable mTextSelectBackground;
     private Drawable mTextUnSelectBackground;
-    private int select;
 
     @IntDef(flag = true, value = {
             STYLE_NORMAL,
@@ -333,7 +332,6 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        select = position;
         this.mCurrentTab = position;
         this.mCurrentPositionOffset = positionOffset;
         scrollToCurrentTab();
@@ -342,7 +340,6 @@ public class KiraTabLayout extends HorizontalScrollView implements ViewPager.OnP
 
     @Override
     public void onPageSelected(int position) {
-        select = position;
         updateTabSelection(position);
     }
 

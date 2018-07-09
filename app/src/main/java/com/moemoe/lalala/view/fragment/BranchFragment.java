@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.model.entity.BranchStoryAllEntity;
+import com.moemoe.lalala.utils.ToastUtils;
 import com.moemoe.lalala.view.activity.BranchActivity;
 import com.moemoe.lalala.view.activity.BranchInfoActivity;
 import com.moemoe.lalala.view.adapter.BranchFragmentListAdapter;
@@ -42,22 +43,14 @@ public class BranchFragment extends BaseFragment {
 
     @BindView(R.id.branch_recycle_view)
     RecyclerView mRecycleView;
-    @BindView(R.id.check_box_btn)
-    CheckBox mCheckBox;
-    @BindView(R.id.tv_branch)
-    TextView mBranch;
-    @BindView(R.id.branch_bottom)
-    RelativeLayout mBranchBottom;
 
     private BranchFragmentListAdapter mAdapter;
     private ArrayList<BranchStoryAllEntity> mlists;
-    private String branchN;
-    private String branchR;
-    private String branchSR;
     private boolean isSelect;
     private Context mContext;
     private int postion;
     private String key;
+    private boolean isCheckSelect;
 
     @SuppressLint("ValidFragment")
     public BranchFragment(Context context, ArrayList<BranchStoryAllEntity> entities) {
@@ -69,16 +62,15 @@ public class BranchFragment extends BaseFragment {
         return new BranchFragment(context, entities);
     }
 
-    public void setBranch(String N, String R, String SR) {
-        this.branchN = N;
-        this.branchR = R;
-        this.branchSR = SR;
-    }
 
     public void setSelect(boolean isSelect, int position, String key) {
         this.isSelect = isSelect;
         this.postion = position;
         this.key = key;
+    }
+
+    public void setCheckSelect(boolean isCheckSelect) {
+        this.isCheckSelect = isCheckSelect;
     }
 
     @Override
@@ -93,10 +85,8 @@ public class BranchFragment extends BaseFragment {
         mRecycleView.addItemDecoration(new SpacesItemDecoration(12, 12, 0));
         mRecycleView.setAdapter(mAdapter);
         if (isSelect) {
-            mBranchBottom.setVisibility(View.GONE);
             branchOrCompound(mlists);
         } else {
-            mBranchBottom.setVisibility(View.VISIBLE);
             branchOrCompound(mlists);
         }
 
@@ -111,6 +101,11 @@ public class BranchFragment extends BaseFragment {
                     ((BranchActivity) mContext).setResult(RESULT_OK, intent);
                     ((BranchActivity) mContext).finish();
                 } else {
+                    BranchStoryAllEntity entity = mAdapter.getItem(position);
+                    if (entity.getLevel() == 1) {
+                        ToastUtils.showShortToast(mContext, "还未拥有该卡片~");
+                        return;
+                    }
                     Intent intent = new Intent(getContext(), BranchInfoActivity.class);
                     intent.putExtra("entity", (Serializable) mAdapter.getItem(position));
                     intent.putExtra("id", mAdapter.getItem(position).getId());
@@ -130,12 +125,6 @@ public class BranchFragment extends BaseFragment {
         ArrayList<BranchStoryAllEntity> objects = new ArrayList<>();
         objects.addAll((List) entities.clone());
         if (objects != null) {
-            Iterator<BranchStoryAllEntity> iterator = objects.iterator();
-            while (iterator.hasNext()) {
-                if (iterator.next().getUserBranchLevelCount() == 0) {
-                    iterator.remove();
-                }
-            }
             if (isSelect && key.equals("全部")) {
                 if (objects == null || objects.size() == 0) {
                     Intent intent = new Intent();
@@ -144,30 +133,26 @@ public class BranchFragment extends BaseFragment {
                     ((BranchActivity) mContext).finish();
                 }
             }
+            if (isSelect) {
+                Iterator<BranchStoryAllEntity> iterator = objects.iterator();
+                while (iterator.hasNext()) {
+                    if (iterator.next().getUserBranchLevelCount() == 0) {
+                        iterator.remove();
+                    }
+                }
+            } else {
+                if (isCheckSelect) {
+                    Iterator<BranchStoryAllEntity> iterator = objects.iterator();
+                    while (iterator.hasNext()) {
+                        if (iterator.next().getUserBranchLevelCount() == 0) {
+                            iterator.remove();
+                        }
+                    }
+                }
+            }
             mAdapter.setList(objects);
         }
 
-        mCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mCheckBox.isChecked()) {
-                    mAdapter.setList(entities);
-                } else {
-                    ArrayList<BranchStoryAllEntity> objects1 = new ArrayList<>();
-                    objects1.addAll(entities);
-                    for (int i = 0; i < objects1.size(); i++) {
-                        if (objects1.get(i).getUserBranchLevelCount() == 0) {
-                            objects1.remove(objects1.get(i));
-                            i--;
-                        }
-                    }
-                    mAdapter.setList(objects1);
-                }
-            }
-        });
-        mBranch.setText("N(" + branchN + ")" +
-                " R(" + branchR + ") " +
-                " SR(" + branchSR + ")");
     }
 
     @Override

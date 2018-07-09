@@ -13,7 +13,6 @@
         android:paddingStart="@dimen/x34"
         android:paddingEnd="@dimen/x34"
         android:paddingBottom="@dimen/y15"
-        android:background="@drawable/shape_branch_info_tab"
         android:maxLines="1"/>
 
     <TextView

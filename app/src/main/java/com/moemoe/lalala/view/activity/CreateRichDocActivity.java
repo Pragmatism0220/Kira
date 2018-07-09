@@ -41,7 +41,6 @@ import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.utils.tag.TagControl;
-import com.moemoe.lalala.view.fragment.DepartmentFragment;
 import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
 import com.moemoe.lalala.view.widget.netamenu.MenuItem;
 import com.moemoe.lalala.view.widget.richtext.NetaRichEditor;
@@ -312,7 +311,7 @@ public class CreateRichDocActivity extends BaseAppCompatActivity implements Crea
     protected void onPause() {
         super.onPause();
         pauseTime();
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -324,7 +323,7 @@ public class CreateRichDocActivity extends BaseAppCompatActivity implements Crea
     protected void onResume() {
         super.onResume();
         startTime();
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -890,7 +889,7 @@ public class CreateRichDocActivity extends BaseAppCompatActivity implements Crea
                 return;
             }
             final AlertDialogUtil dialogUtil = AlertDialogUtil.getInstance();
-            
+
             dialogUtil.createPromptNormalDialog(this, "是否分享到动态");
             dialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
                 @Override

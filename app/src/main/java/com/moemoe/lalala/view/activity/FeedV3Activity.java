@@ -163,6 +163,8 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
                     mTvClubFollow.setTextColor(ContextCompat.getColor(FeedV3Activity.this, R.color.gray_d7d7d7));
                     mIvClubInform.setSelected(false);
                     mTvClubInform.setTextColor(ContextCompat.getColor(FeedV3Activity.this, R.color.gray_d7d7d7));
+                }
+                if (mainV3Fragment.isVisible()) {
                     mainV3Fragment.onSmoothScrollBy();
                 }
             }
@@ -201,6 +203,8 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
                     mTvClubFollow.setTextColor(ContextCompat.getColor(FeedV3Activity.this, R.color.main_cyan));
                     mIvClubInform.setSelected(false);
                     mTvClubInform.setTextColor(ContextCompat.getColor(FeedV3Activity.this, R.color.gray_d7d7d7));
+                }
+                if (feedFollowV4Fragment.isVisible()) {
                     feedFollowV4Fragment.onSmoothScrollBy();
                 }
             }

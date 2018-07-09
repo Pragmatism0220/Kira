@@ -22,7 +22,7 @@
             android:layout_height="@dimen/status_bar_height"
             android:background="@color/alpha_20" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/bg_home_plot_branch_background_cover"
@@ -39,7 +39,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/x36"
                     android:layout_marginStart="@dimen/x20"
                     android:src="@drawable/ic_home_title_mystory_branch" />
 
@@ -58,10 +57,11 @@
                 android:id="@+id/branch_tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y104"
+                android:layout_below="@+id/tool_bar"
                 android:paddingEnd="@dimen/x12"
                 android:paddingStart="@dimen/x12"
                 app:kira_tl_indicator_color="@color/transparent"
-                app:kira_tl_indicator_style="BLOCK"
+                app:kira_tl_indicator_style="NORMAL"
                 app:kira_tl_tab_layout="@layout/tag_branch"
                 app:kira_tl_tab_padding="@dimen/x12"
                 app:kira_tl_textSelectBackground="@drawable/ic_home_plot_branch_tag_pink"
@@ -73,9 +73,49 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/branch_viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_below="@+id/branch_tab_layout" />
 
-        </LinearLayout>
+            <RelativeLayout
+                android:id="@+id/branch_bottom"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y100"
+                android:layout_alignParentBottom="true"
+                android:background="@color/alpha_60">
+
+                <TextView
+                    android:id="@+id/tv_branch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="15dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x30" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/x10"
+                    android:layout_toStartOf="@+id/check_box_btn"
+                    android:src="@drawable/ic_show_unowned" />
+
+                <CheckBox
+                    android:id="@+id/check_box_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/x40"
+                    android:background="@drawable/checkbox_selector"
+                    android:button="@null"
+                    android:checked="false" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
     </LinearLayout>
 
 </layout>

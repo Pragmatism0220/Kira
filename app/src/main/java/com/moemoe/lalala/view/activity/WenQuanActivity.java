@@ -61,6 +61,8 @@ public class WenQuanActivity extends BaseAppCompatActivity implements OldDocCont
     PullAndLoadView mListDocs;
     @BindView(R.id.iv_send_post)
     ImageView mIvSend;
+    @BindView(R.id.iv_menu_list)
+    ImageView mIvMenuList;
 
     @Inject
     OldDocPresenter mPresenter;
@@ -126,6 +128,19 @@ public class WenQuanActivity extends BaseAppCompatActivity implements OldDocCont
 
     @Override
     protected void initToolbar(Bundle savedInstanceState) {
+        mIvMenuList.setVisibility(View.VISIBLE);
+        mIvMenuList.setImageResource(R.drawable.btn_trends_search);
+        mIvMenuList.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (DialogUtils.checkLoginAndShowDlg(WenQuanActivity.this)) {
+                    clickEvent("地图-搜索");
+                    Intent i6 = new Intent(WenQuanActivity.this, AllSearchActivity.class);
+                    i6.putExtra("type", "all");
+                    startActivity(i6);
+                }
+            }
+        });
     }
 
     public void likeTag(boolean isLike, int position, TagLikeEntity entity, int parentPosition) {

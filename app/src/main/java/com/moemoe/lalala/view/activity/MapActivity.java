@@ -89,6 +89,7 @@ import com.moemoe.lalala.utils.MapUtil;
 import com.moemoe.lalala.utils.NetworkUtils;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
+import com.moemoe.lalala.utils.SideCharacterUtils;
 import com.moemoe.lalala.utils.SplashUtils;
 import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.StringUtils;
@@ -1990,11 +1991,13 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                     public void onComplete() {
                         GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao().insertOrReplaceInTx(res);
                         int i = MoeMoeApplication.getInstance().goGreenDao(MapActivity.this);
+//                        SideCharacterUtils.getInstance().goGreenDao();
                         if (i == 5) {
                             if (MoeMoeApplication.getInstance().isWindow()) {
                                 MoeMoeApplication.getInstance().activities.add(MapActivity.this);
                                 MoeMoeApplication.getInstance().initWindowManager(MapActivity.this, getWindowManager());
                             }
+//                            SideCharacterUtils.getInstance().initSideCharacter(MapActivity.this);
                         }
                         if (errorList.size() > 0) {
                             resolvErrorListDeskmate(errorList, "HousUser");
