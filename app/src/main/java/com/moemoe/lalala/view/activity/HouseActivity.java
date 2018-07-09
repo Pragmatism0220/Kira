@@ -88,6 +88,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Observable;
 import java.util.concurrent.TimeUnit;
 
@@ -453,6 +455,14 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     public void getVisitorsInfoSuccess(ArrayList<VisitorsEntity> entities) {
         binding.llLikeUserRoot.removeAllViews();
         if (entities != null && entities.size() > 0) {
+
+            for (int i = 0; i < entities.size() - 1; i++) {
+                for (int j = entities.size() - 1; j > i; j--) {
+                    if (entities.get(j).getVisitorId().equals(entities.get(i).getVisitorId())) {
+                        entities.remove(j);
+                    }
+                }
+            }
             binding.visitorInfo.setVisibility(View.VISIBLE);
             int trueSize = (int) getResources().getDimension(R.dimen.y48);
             int imgSize = (int) getResources().getDimension(R.dimen.y44);
@@ -485,19 +495,15 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                         .placeholder(R.drawable.bg_default_circle)
                         .bitmapTransform(new CropCircleTransformation(this))
                         .into(img);
-//                img.setOnClickListener(new NoDoubleClickListener() {
-//                    @Override
-//                    public void onNoDoubleClick(View v) {
-//                        ViewUtils.toPersonal(HouseActivity.this, userEntity.getVisitorId());
-//                    }
-//                });
                 binding.llLikeUserRoot.addView(likeUser);
             }
             count = entities.get(0).getCount();
             binding.visitorCount.setText(entities.get(0).getCount() + "");
             binding.tvHouseName.setText(PreferenceUtils.getAuthorInfo().getUserName() + "的宅屋");
             binding.tvHouseVivit.setText("访客数量:" + count);
-        } else {
+        } else
+
+        {
             binding.visitorInfo.setVisibility(View.GONE);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -741,6 +747,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mVisitorInfoAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvSleepAnimator = ObjectAnimator.ofFloat(binding.ivSleep, "translationX", binding.ivSleep.getWidth() + getResources().getDimension(R.dimen.y60), 0).setDuration(300);
         mIvSleepAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvBagAnimator = ObjectAnimator.ofFloat(binding.ivBag, "translationX", binding.ivBag.getWidth() + getResources().getDimension(R.dimen.y60), 0).setDuration(300);
+        mIvBagAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvTrandsAnimator = ObjectAnimator.ofFloat(binding.ivTrends, "translationX", binding.ivTrends.getWidth() + getResources().getDimension(R.dimen.y60), 0).setDuration(300);
         mIvTrandsAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvAlarmsAnimator = ObjectAnimator.ofFloat(binding.ivAlarm, "translationX", binding.ivAlarm.getWidth() + getResources().getDimension(R.dimen.y60), 0).setDuration(300);
@@ -758,7 +766,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         set.play(mVisitorInfoAnimator).with(mIvSleepAnimator);
         set.play(mIvTrandsAnimator).with(mIvAlarmsAnimator);
         set.play(mIvMesssgeAnimator).with(mIvShareAnimator);
-        set.play(mIvPowerAnimator);
+        set.play(mIvPowerAnimator).with(mIvBagAnimator);
         set.start();
     }
 
@@ -775,6 +783,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mVisitorInfoAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvSleepAnimator = ObjectAnimator.ofFloat(binding.ivSleep, "translationX", 0, binding.ivSleep.getWidth() + getResources().getDimension(R.dimen.y60)).setDuration(300);
         mIvSleepAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvBagAnimator = ObjectAnimator.ofFloat(binding.ivBag, "translationX", 0, binding.ivBag.getWidth() + getResources().getDimension(R.dimen.y60)).setDuration(300);
+        mIvBagAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvTrandsAnimator = ObjectAnimator.ofFloat(binding.ivTrends, "translationX", 0, binding.ivTrends.getWidth() + getResources().getDimension(R.dimen.y60)).setDuration(300);
         mIvTrandsAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvAlarmsAnimator = ObjectAnimator.ofFloat(binding.ivAlarm, "translationX", 0, binding.ivAlarm.getWidth() + getResources().getDimension(R.dimen.y60)).setDuration(300);
@@ -791,7 +801,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         set.play(mVisitorInfoAnimator).with(mIvSleepAnimator);
         set.play(mIvTrandsAnimator).with(mIvAlarmsAnimator);
         set.play(mIvMesssgeAnimator).with(mIvShareAnimator);
-        set.play(mIvPowerAnimator);
+        set.play(mIvPowerAnimator).with(mIvBagAnimator);
         set.start();
     }
 
@@ -864,6 +874,16 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                     Intent i1 = new Intent(HouseActivity.this, CommentsListActivity.class);
                     i1.putExtra("uuid", PreferenceUtils.getUUid());
                     startActivity(i1);
+                    break;
+                case R.id.iv_bag:
+                    if (PreferenceUtils.getAuthorInfo().isOpenBag()) {
+                        Intent intent2 = new Intent(HouseActivity.this, NewBagV5Activity.class);
+                        intent2.putExtra("uuid", PreferenceUtils.getUUid());
+                        startActivity(intent2);
+                    } else {
+                        Intent intent2 = new Intent(HouseActivity.this, BagOpenActivity.class);
+                        startActivity(intent2);
+                    }
                     break;
                 case R.id.iv_share:
                     if (bottomMenuFragment != null) {

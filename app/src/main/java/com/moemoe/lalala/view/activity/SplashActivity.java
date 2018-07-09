@@ -84,8 +84,8 @@ public class SplashActivity extends AppCompatActivity implements EasyPermissions
             Manifest.permission.GET_ACCOUNTS,
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.CAMERA,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+//            Manifest.permission.ACCESS_FINE_LOCATION,
+//            Manifest.permission.ACCESS_COARSE_LOCATION
     };
 
     @Override

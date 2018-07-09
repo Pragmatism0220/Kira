@@ -140,12 +140,24 @@
                 android:src="@drawable/btn_map" />
         </LinearLayout>
 
+
+        <ImageView
+            android:id="@+id/iv_bag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/ll_tool_bar"
+            android:layout_marginEnd="@dimen/x8"
+            android:layout_marginTop="@dimen/y8"
+            android:onClick="@{presenter.onClick}"
+            android:src="@drawable/bg_role_bag" />
+
         <ImageView
             android:id="@+id/iv_sleep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_below="@+id/ll_tool_bar"
+            android:layout_below="@+id/iv_bag"
             android:layout_marginEnd="@dimen/x8"
             android:layout_marginTop="@dimen/y8"
             android:onClick="@{presenter.onClick}"

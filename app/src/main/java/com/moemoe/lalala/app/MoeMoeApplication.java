@@ -693,12 +693,12 @@ public class MoeMoeApplication extends Application {
                     mRlSelect.setVisibility(View.VISIBLE);
                     for (int i = 0; i < entity.getOptions().size(); i++) {
                         if (i == 0) {
-                            mIvLeft.setText(entity.getOptions().get(i).getOption()+"");
+                            mIvLeft.setText(entity.getOptions().get(i).getOption() + "");
                         } else {
                             if (entity.getOptions().get(i) == null) {
                                 mIvCansl.setVisibility(View.GONE);
                             } else {
-                                mIvCansl.setText(entity.getOptions().get(i).getOption()+"");
+                                mIvCansl.setText(entity.getOptions().get(i).getOption() + "");
                             }
                         }
                     }

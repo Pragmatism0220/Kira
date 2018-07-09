@@ -1,5 +1,6 @@
 package com.moemoe.lalala.view.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -67,14 +68,16 @@ public class NewBagV5Activity extends BaseAppCompatActivity {
         feedBagFragment = FeedBagFragment.newInstance();
         fragmentList.add(feedBagFragment);
         fragmentList.add(NewMyBagV5Fragment.newInstance(extra, true));
-
         List<String> titles = new ArrayList<>();
         titles.add(getString(R.string.label_find));
         titles.add(getString(R.string.label_mine));
 
-        
+
         mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragmentList, titles);
         mViewPager.setAdapter(mAdapter);
+//        if (type != null) {
+//            mViewPager.setCurrentItem(t);
+//        }
         mPageIndicator.setViewPager(mViewPager);
     }
 

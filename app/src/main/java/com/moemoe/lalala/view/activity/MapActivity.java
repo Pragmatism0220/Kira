@@ -315,7 +315,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         mPresenter.loadMapAllUser();
         mPresenter.loadMapBirthdayUser();
         mPresenter.loadMapTopUser();
-        mPresenter.addMapMark(this, mContainer, mapWidget, "nearUser");
+//        mPresenter.addMapMark(this, mContainer, mapWidget, "nearUser");
         if (PreferenceUtils.isLogin() && !AppSetting.isLoadDone) {
             mPresenter.findMyDoneJuQing();
         } else {
@@ -341,7 +341,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         mPresenter.addMapMark(this, mContainer, mapWidget, "allUser");
         mPresenter.addMapMark(this, mContainer, mapWidget, "birthdayUser");
         mPresenter.addMapMark(this, mContainer, mapWidget, "followUser");
-        mPresenter.addMapMark(this, mContainer, mapWidget, "nearUser");
+//        mPresenter.addMapMark(this, mContainer, mapWidget, "nearUser");
         MapToolTipUtils.getInstance().updateMap(mapWidget);
         MapToolTipUtils.getInstance().updateList(mContainer.getContainer());
     }
@@ -783,8 +783,8 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                         clickEvent("生日派对区域");
                     } else if (objectTouchEvent.getLayerId() == 4) {
                         clickEvent("我的好友区域");
-                    } else if (objectTouchEvent.getLayerId() == 5) {
-                        clickEvent("附近的人");
+//                    } else if (objectTouchEvent.getLayerId() == 5) {
+//                        clickEvent("附近的人");
                     } else if (objectTouchEvent.getLayerId() == 6) {
                         clickEvent("最佳形象区域");
                     } else if (objectTouchEvent.getLayerId() == 1) {
@@ -1391,51 +1391,51 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
     @Override
     public void onLoadMapNearUser(NearUserEntity resList) {
-        final ArrayList<MapDbEntity> res = new ArrayList<>();
-        final ArrayList<MapDbEntity> errorList = new ArrayList<>();
-
-        Gson gson = new Gson();
-        String posStr = gson.toJson(resList.getPositionList());
-        PreferenceUtils.setNearPosition(this, posStr);
-        MapUtil.checkAndDownload(this, true, MapDbEntity.toDb(resList.getUsers(), "nearUser"), "nearUser", new Observer<MapDbEntity>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                initDisposable = d;
-            }
-
-            @Override
-            public void onNext(@NonNull MapDbEntity mapDbEntity) {
-                File file = new File(StorageUtils.getMapRootPath() + mapDbEntity.getFileName());
-                String md5 = mapDbEntity.getMd5();
-                if (md5.length() < 32) {
-                    int n = 32 - md5.length();
-                    for (int i = 0; i < n; i++) {
-                        md5 = "0" + md5;
-                    }
-                }
-                if (mapDbEntity.getDownloadState() == 3 || !md5.equals(StringUtils.getFileMD5(file))) {
-                    FileUtil.deleteFile(StorageUtils.getMapRootPath() + mapDbEntity.getFileName());
-                    errorList.add(mapDbEntity);
-                } else {
-                    res.add(mapDbEntity);
-                }
-
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-                GreenDaoManager.getInstance().getSession().getMapDbEntityDao().insertOrReplaceInTx(res);
-                mPresenter.addMapMark(MapActivity.this, mContainer, mapWidget, "nearUser");
-                if (errorList.size() > 0) {
-                    resolvErrorList(errorList, "nearUser");
-                }
-            }
-        });
+//        final ArrayList<MapDbEntity> res = new ArrayList<>();
+//        final ArrayList<MapDbEntity> errorList = new ArrayList<>();
+//
+//        Gson gson = new Gson();
+//        String posStr = gson.toJson(resList.getPositionList());
+//        PreferenceUtils.setNearPosition(this, posStr);
+//        MapUtil.checkAndDownload(this, true, MapDbEntity.toDb(resList.getUsers(), "nearUser"), "nearUser", new Observer<MapDbEntity>() {
+//            @Override
+//            public void onSubscribe(@NonNull Disposable d) {
+//                initDisposable = d;
+//            }
+//
+//            @Override
+//            public void onNext(@NonNull MapDbEntity mapDbEntity) {
+//                File file = new File(StorageUtils.getMapRootPath() + mapDbEntity.getFileName());
+//                String md5 = mapDbEntity.getMd5();
+//                if (md5.length() < 32) {
+//                    int n = 32 - md5.length();
+//                    for (int i = 0; i < n; i++) {
+//                        md5 = "0" + md5;
+//                    }
+//                }
+//                if (mapDbEntity.getDownloadState() == 3 || !md5.equals(StringUtils.getFileMD5(file))) {
+//                    FileUtil.deleteFile(StorageUtils.getMapRootPath() + mapDbEntity.getFileName());
+//                    errorList.add(mapDbEntity);
+//                } else {
+//                    res.add(mapDbEntity);
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onError(@NonNull Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//                GreenDaoManager.getInstance().getSession().getMapDbEntityDao().insertOrReplaceInTx(res);
+//                mPresenter.addMapMark(MapActivity.this, mContainer, mapWidget, "nearUser");
+//                if (errorList.size() > 0) {
+//                    resolvErrorList(errorList, "nearUser");
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -1490,8 +1490,8 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                         mPresenter.addMapMark(MapActivity.this, mContainer, mapWidget, "birthdayUser");
                     } else if ("followUser".equals(type)) {
                         mPresenter.addMapMark(MapActivity.this, mContainer, mapWidget, "followUser");
-                    } else if ("nearUser".equals(type)) {
-                        mPresenter.addMapMark(MapActivity.this, mContainer, mapWidget, "nearUser");
+//                    } else if ("nearUser".equals(type)) {
+//                        mPresenter.addMapMark(MapActivity.this, mContainer, mapWidget, "nearUser");
                     } else if ("topUser".equals(type)) {
                         mPresenter.addMapMark(MapActivity.this, mContainer, mapWidget, "topUser");
                     }
@@ -2059,7 +2059,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             mPresenter.saveUserLocation(entity);
             AppSetting.LAT = entity.lat;
             AppSetting.LON = entity.lon;
-            mPresenter.loadMapNearUser(entity.lat, entity.lon);
+//            mPresenter.loadMapNearUser(entity.lat, entity.lon);
         }
     }
 
