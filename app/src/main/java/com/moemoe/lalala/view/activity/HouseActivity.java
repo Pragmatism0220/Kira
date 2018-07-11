@@ -160,6 +160,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     @Override
     protected void initComponent() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_house);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_house);
         binding.setPresenter(new Presenter());
         mRlRoleRoot = findViewById(R.id.rl_role_root);
         mTvRoleNum = findViewById(R.id.tv_role_num);
@@ -297,8 +298,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                 mTvJuQing.setVisibility(View.GONE);
                 mIvGongXI.setVisibility(View.GONE);
                 mRleSelect.setVisibility(View.GONE);
-                if (mRubbishEntity.getName().contains("三个垃圾")) {
-                    onResumeNew();
+                if (mRubbishEntity.getName().equals("你又扔了三个垃圾进去")) {
+                    onResume();
                 }
             }
         });
