@@ -160,7 +160,6 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     @Override
     protected void initComponent() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_house);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_house);
         binding.setPresenter(new Presenter());
         mRlRoleRoot = findViewById(R.id.rl_role_root);
         mTvRoleNum = findViewById(R.id.tv_role_num);
@@ -293,14 +292,14 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mRlRoleJuQing.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
+                if (mRubbishEntity.getName().equals("你又扔了3个垃圾进去")) {
+                    onResume();
+                }
                 mRlRoleJuQing.setVisibility(View.GONE);
                 mTvContent.setVisibility(View.GONE);
                 mTvJuQing.setVisibility(View.GONE);
                 mIvGongXI.setVisibility(View.GONE);
                 mRleSelect.setVisibility(View.GONE);
-                if (mRubbishEntity.getName().equals("你又扔了三个垃圾进去")) {
-                    onResume();
-                }
             }
         });
         mTvLeft.setOnClickListener(new NoDoubleClickListener() {
