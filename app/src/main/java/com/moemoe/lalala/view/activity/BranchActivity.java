@@ -92,25 +92,27 @@ public class BranchActivity extends BaseActivity implements BranchContract.View 
         binding.checkBoxBtn.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                int currentItem = binding.branchViewpager.getCurrentItem();
-                ArrayList<String> mTitles = new ArrayList<>();
-                mTitles.add("全部");
-                mTitles.addAll(setName);
-                List<BaseFragment> fragmentList = new ArrayList<>();
-                for (String key : mTitles) {
-                    branchFragment = BranchFragment.newInstance(BranchActivity.this, maoList.get(key));
-                    branchFragment.setSelect(isSelect, position, key);
-                    branchFragment.setCheckSelect(binding.checkBoxBtn.isChecked());
-                    fragmentList.add(branchFragment);
+                if (maoList != null && maoList.size() > 0) {
+                    int currentItem = binding.branchViewpager.getCurrentItem();
+                    ArrayList<String> mTitles = new ArrayList<>();
+                    mTitles.add("全部");
+                    mTitles.addAll(setName);
+                    List<BaseFragment> fragmentList = new ArrayList<>();
+                    for (String key : mTitles) {
+                        branchFragment = BranchFragment.newInstance(BranchActivity.this, maoList.get(key));
+                        branchFragment.setSelect(isSelect, position, key);
+                        branchFragment.setCheckSelect(binding.checkBoxBtn.isChecked());
+                        fragmentList.add(branchFragment);
+                    }
+                    if (mAdapter == null) {
+                        mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragmentList, mTitles);
+                    } else {
+                        mAdapter.setFragments(getSupportFragmentManager(), fragmentList, mTitles);
+                    }
+                    binding.branchViewpager.setAdapter(mAdapter);
+                    binding.branchTabLayout.setViewPager(binding.branchViewpager);
+                    binding.branchViewpager.setCurrentItem(currentItem);
                 }
-                if (mAdapter == null) {
-                    mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragmentList, mTitles);
-                } else {
-                    mAdapter.setFragments(getSupportFragmentManager(), fragmentList, mTitles);
-                }
-                binding.branchViewpager.setAdapter(mAdapter);
-                binding.branchTabLayout.setViewPager(binding.branchViewpager);
-                binding.branchViewpager.setCurrentItem(currentItem);
             }
         });
     }
