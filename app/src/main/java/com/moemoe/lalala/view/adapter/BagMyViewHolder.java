@@ -145,7 +145,8 @@ public class BagMyViewHolder extends ClickableViewHolder {
                             .into(ivCover);
 
                     TextView tvExtraContent = v.findViewById(R.id.tv_extra_content);
-                    tvExtraContent.setText("阅读 " + item.getPlayNum() + " · " + StringUtils.timeFormat(item.getTime()));
+//                    tvExtraContent.setText("阅读 " + item.getPlayNum() + " · " + StringUtils.timeFormat(item.getTime()));
+                    tvExtraContent.setText(StringUtils.timeFormat(item.getTime()));
                 } else {
                     w = (DensityUtil.getScreenWidth(context) - getResources().getDimensionPixelSize(R.dimen.x84)) / 3;
                     h = getResources().getDimensionPixelSize(R.dimen.y290);
@@ -272,7 +273,7 @@ public class BagMyViewHolder extends ClickableViewHolder {
             }
         } else {
             llRoot.setVisibility(View.GONE);
-            if ("taren".equals(sign)){
+            if ("taren".equals(sign)) {
                 tvMore.setVisibility(View.GONE);
                 return;
             }

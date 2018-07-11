@@ -15,9 +15,11 @@ import com.moemoe.lalala.di.components.DaggerBranchInfoComponent;
 import com.moemoe.lalala.di.modules.BranchInfoModule;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.BranchStoryAllEntity;
+import com.moemoe.lalala.model.entity.Image;
 import com.moemoe.lalala.presenter.BranchInfoContract;
 import com.moemoe.lalala.presenter.BranchInfoPresenter;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
+import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.base.BranchInfoBean;
@@ -77,54 +79,87 @@ public class BranchInfoActivity extends BaseActivity implements BranchInfoContra
                 binding.rlCoverInfo.setVisibility(View.GONE);
             }
         });
-        binding.ivPlotMemoryFrist.setOnClickListener(new View.OnClickListener() {
+        binding.ivPlotMemoryFrist.setOnClickListener(new NoDoubleClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onNoDoubleClick(View v) {
                 if (detailImage != null && detailImage.size() > 0) {
-                    binding.ivCoverInfo.setImageResource(R.drawable.shape_gray_e8e8e8_background);
-                    binding.ivCoverInfo.setVisibility(View.VISIBLE);
-                    binding.rlCoverInfo.setVisibility(View.VISIBLE);
-                    int size = detailImage.size();
-                    Glide.with(BranchInfoActivity.this)
-                            .load(ApiService.URL_QINIU + detailImage.get(0))
-                            .error(R.drawable.shape_gray_e8e8e8_background)
-                            .placeholder(R.drawable.shape_gray_e8e8e8_background)
-                            .into(binding.ivCoverInfo);
+//                    binding.ivCoverInfo.setImageResource(R.drawable.shape_gray_e8e8e8_background);
+//                    binding.ivCoverInfo.setVisibility(View.VISIBLE);
+//                    binding.rlCoverInfo.setVisibility(View.VISIBLE);
+//                    int size = detailImage.size();
+//                    Glide.with(BranchInfoActivity.this)
+//                            .load(ApiService.URL_QINIU + detailImage.get(0))
+//                            .error(R.drawable.shape_gray_e8e8e8_background)
+//                            .placeholder(R.drawable.shape_gray_e8e8e8_background)
+//                            .into(binding.ivCoverInfo);
+                    ArrayList<Image> images = new ArrayList<>();
+                    for (String imag :
+                            detailImage) {
+                        Image image = new Image();
+                        image.setPath(imag);
+                        images.add(image);
+                    }
+                    Intent intent = new Intent(BranchInfoActivity.this, ImageBigSelectActivity.class);
+                    intent.putExtra(ImageBigSelectActivity.EXTRA_KEY_FILEBEAN, images);
+                    intent.putExtra(ImageBigSelectActivity.EXTRAS_KEY_FIRST_PHTOT_INDEX, 0);
+                    startActivity(intent);
                 }
             }
         });
-        binding.ivPlotMemoryTwo.setOnClickListener(new View.OnClickListener() {
+        binding.ivPlotMemoryTwo.setOnClickListener(new NoDoubleClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onNoDoubleClick(View v) {
                 if (detailImage != null && detailImage.size() > 0) {
-                    binding.ivCoverInfo.setImageResource(R.drawable.shape_gray_e8e8e8_background);
-                    binding.ivCoverInfo.setVisibility(View.VISIBLE);
-                    binding.rlCoverInfo.setVisibility(View.VISIBLE);
+//                    binding.ivCoverInfo.setImageResource(R.drawable.shape_gray_e8e8e8_background);
+//                    binding.ivCoverInfo.setVisibility(View.VISIBLE);
+//                    binding.rlCoverInfo.setVisibility(View.VISIBLE);
                     int size = detailImage.size();
-                    if (size == 2) {
-                        Glide.with(BranchInfoActivity.this)
-                                .load(ApiService.URL_QINIU + detailImage.get(1))
-                                .error(R.drawable.shape_gray_e8e8e8_background)
-                                .placeholder(R.drawable.shape_gray_e8e8e8_background)
-                                .into(binding.ivCoverInfo);
+                    if (size >= 2) {
+//                        Glide.with(BranchInfoActivity.this)
+//                                .load(ApiService.URL_QINIU + detailImage.get(1))
+//                                .error(R.drawable.shape_gray_e8e8e8_background)
+//                                .placeholder(R.drawable.shape_gray_e8e8e8_background)
+//                                .into(binding.ivCoverInfo);
+                        ArrayList<Image> images = new ArrayList<>();
+                        for (String imag :
+                                detailImage) {
+                            Image image = new Image();
+                            image.setPath(imag);
+                            images.add(image);
+                        }
+                        Intent intent = new Intent(BranchInfoActivity.this, ImageBigSelectActivity.class);
+                        intent.putExtra(ImageBigSelectActivity.EXTRA_KEY_FILEBEAN, images);
+                        intent.putExtra(ImageBigSelectActivity.EXTRAS_KEY_FIRST_PHTOT_INDEX, 1);
+                        startActivity(intent);
                     }
                 }
             }
         });
-        binding.ivPlotMemoryThree.setOnClickListener(new View.OnClickListener() {
+        binding.ivPlotMemoryThree.setOnClickListener(new NoDoubleClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onNoDoubleClick(View v) {
                 if (detailImage != null && detailImage.size() > 0) {
-                    binding.ivCoverInfo.setImageResource(R.drawable.shape_gray_e8e8e8_background);
-                    binding.rlCoverInfo.setVisibility(View.VISIBLE);
-                    binding.ivCoverInfo.setVisibility(View.VISIBLE);
+//                    binding.ivCoverInfo.setImageResource(R.drawable.shape_gray_e8e8e8_background);
+//                    binding.rlCoverInfo.setVisibility(View.VISIBLE);
+//                    binding.ivCoverInfo.setVisibility(View.VISIBLE);
                     int size = detailImage.size();
                     if (size == 3) {
-                        Glide.with(BranchInfoActivity.this)
-                                .load(ApiService.URL_QINIU + detailImage.get(2))
-                                .error(R.drawable.shape_gray_e8e8e8_background)
-                                .placeholder(R.drawable.shape_gray_e8e8e8_background)
-                                .into(binding.ivCoverInfo);
+                        ArrayList<Image> images = new ArrayList<>();
+                        for (String imag :
+                                detailImage) {
+                            Image image = new Image();
+                            image.setPath(imag);
+                            images.add(image);
+                        }
+//                        Glide.with(BranchInfoActivity.this)
+//                                .load(ApiService.URL_QINIU + detailImage.get(2))
+//                                .error(R.drawable.shape_gray_e8e8e8_background)
+//                                .placeholder(R.drawable.shape_gray_e8e8e8_background)
+//                                .into(binding.ivCoverInfo);
+                        Intent intent = new Intent(BranchInfoActivity.this, ImageBigSelectActivity.class);
+                        intent.putExtra(ImageBigSelectActivity.EXTRA_KEY_FILEBEAN, images);
+                        intent.putExtra(ImageBigSelectActivity.EXTRAS_KEY_FIRST_PHTOT_INDEX, 2);
+                        startActivity(intent);
                     }
                 }
             }
@@ -194,7 +229,9 @@ public class BranchInfoActivity extends BaseActivity implements BranchInfoContra
                             .placeholder(R.drawable.shape_gray_e8e8e8_background)
                             .into(binding.ivPlotMemoryFrist);
                     binding.ivPlotMemoryTwo.setVisibility(View.GONE);
+                    binding.ivPlotMemoryTwoTape.setVisibility(View.GONE);
                     binding.ivPlotMemoryThree.setVisibility(View.GONE);
+                    binding.ivPlotMemoryThreeTape.setVisibility(View.GONE);
                 } else if (size == 2) {
                     Glide.with(this)
                             .load(StringUtils.getUrl(this, detailImage.get(0), wi, he, false, true))
@@ -208,6 +245,7 @@ public class BranchInfoActivity extends BaseActivity implements BranchInfoContra
                             .placeholder(R.drawable.shape_gray_e8e8e8_background)
                             .into(binding.ivPlotMemoryTwo);
                     binding.ivPlotMemoryThree.setVisibility(View.GONE);
+                    binding.ivPlotMemoryThreeTape.setVisibility(View.GONE);
 
                 } else if (size == 3) {
                     Glide.with(this)
@@ -220,13 +258,13 @@ public class BranchInfoActivity extends BaseActivity implements BranchInfoContra
                             .load(StringUtils.getUrl(this, detailImage.get(1), wi, he, false, true))
                             .error(R.drawable.shape_gray_e8e8e8_background)
                             .placeholder(R.drawable.shape_gray_e8e8e8_background)
-                            .into(binding.ivPlotMemoryThree);
+                            .into(binding.ivPlotMemoryTwo);
 
                     Glide.with(this)
                             .load(StringUtils.getUrl(this, detailImage.get(2), wi, he, false, true))
                             .error(R.drawable.shape_gray_e8e8e8_background)
                             .placeholder(R.drawable.shape_gray_e8e8e8_background)
-                            .into(binding.ivPlotMemoryTwo);
+                            .into(binding.ivPlotMemoryThree);
                 }
             } else {
                 binding.llBranch.setVisibility(View.GONE);

@@ -352,15 +352,22 @@ public class FeedFollowV4Fragment extends BaseFragment implements Luntan2Contrac
     }
 
     @Override
-    public void onCreateLabel(String s, String name, int position) {
+    public void onCreateLabel(String s, String name, int parentPosition) {
         if (getContext() instanceof FeedV3Activity) {
             ((FeedV3Activity) getContext()).finalizeDialog();
         }
-        DocTagEntity docTagEntity = new DocTagEntity();
-        docTagEntity.setId(s);
-        docTagEntity.setName(name);
-        mAdapter.getList().get(position).getTags().add(mAdapter.getList().get(position).getTags().size(), docTagEntity);
-        mAdapter.notifyItemChanged(position);
+        DocTagEntity tag = new DocTagEntity();
+        tag.setLiked(true);
+        tag.setId(s);
+        tag.setLikes(1);
+        tag.setName(name);
+        mAdapter.getList().get(parentPosition).getTags().add(tag);
+        if (mAdapter.getHeaderLayoutCount() != 0) {
+            mAdapter.notifyItemChanged(parentPosition + 1);
+        } else {
+            mAdapter.notifyItemChanged(parentPosition);
+        }
+
     }
 
     @Override
@@ -421,8 +428,8 @@ public class FeedFollowV4Fragment extends BaseFragment implements Luntan2Contrac
      *
      * @param entity
      */
-    public void createLabel(TagSendEntity entity, int position) {
-        mPresenter.createLabel(entity, position);
+    public void createLabel(TagSendEntity entity, int pposition) {
+        mPresenter.createLabel( entity, pposition);
     }
 
     @Override

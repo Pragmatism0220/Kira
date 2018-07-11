@@ -10,17 +10,15 @@ import com.moemoe.lalala.view.widget.adapter.BaseRecyclerViewAdapter;
 
 public class ClubChildAdapter extends BaseRecyclerViewAdapter<OfficialTag, ClubChildHolder> {
     private String type;
+
     public ClubChildAdapter(String type) {
         super(R.layout.item_club);
-        this.type=type;
-    }
-    public ClubChildAdapter() {
-        super(R.layout.item_club);
+        this.type = type;
     }
 
     @Override
     protected void convert(ClubChildHolder helper, final OfficialTag item, int position) {
-            helper.createItem(item, position,type);
+        helper.createItem(item, position, type);
     }
 
     @Override

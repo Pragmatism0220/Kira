@@ -1712,7 +1712,7 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 holder.mRlPinLun.setVisibility(View.VISIBLE);
                 holder.mViewSep.setVisibility(View.VISIBLE);
             }
-        }else {
+        } else {
             holder.mRlPinLun.setVisibility(View.VISIBLE);
             holder.mViewSep.setVisibility(View.VISIBLE);
         }
@@ -2245,6 +2245,7 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
         }
     }
+
     //TODO 详情页帖子
     public void plusSuccess(boolean isLike, int position) {
         DocTagEntity tagBean = mTags.get(position);

@@ -1091,7 +1091,8 @@ public class SearchAllHolder extends ClickableViewHolder {
                 .into(ivCover);
 
         TextView tvExtraContent = $(R.id.tv_extra_content);
-        tvExtraContent.setText("阅读 " + entity.getComments() + " · " + StringUtils.timeFormat(entity.getCreateTime()));
+//        tvExtraContent.setText("阅读 " + entity.getComments() + " · " + StringUtils.timeFormat(entity.getCreateTime()));
+        tvExtraContent.setText(StringUtils.timeFormat(entity.getCreateTime()));
         tvTitle.setText(entity.getDesc());
 
         int size = getResources().getDimensionPixelSize(R.dimen.y32);

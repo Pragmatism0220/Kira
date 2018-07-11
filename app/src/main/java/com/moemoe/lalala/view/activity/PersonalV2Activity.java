@@ -34,6 +34,7 @@ import com.moemoe.lalala.di.components.DaggerPersonalComponent;
 import com.moemoe.lalala.di.modules.PersonalModule;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.BadgeEntity;
+import com.moemoe.lalala.model.entity.FolderType;
 import com.moemoe.lalala.model.entity.Image;
 import com.moemoe.lalala.model.entity.SaveVisitorEntity;
 import com.moemoe.lalala.model.entity.TabEntity;
@@ -320,7 +321,9 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
             items.add(item);
             item = new MenuItem(3, getString(R.string.label_doc_history));
             items.add(item);
-            item = new MenuItem(5, "收藏动态");
+//            item = new MenuItem(5, "收藏动态");
+//            items.add(item);
+            item = new MenuItem(5, "收藏帖子");
             items.add(item);
             item = new MenuItem(6, "我的邀请");
             items.add(item);
@@ -360,8 +363,10 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
                     }
                 }
                 if (itemId == 5) {
-                    Intent i = new Intent(PersonalV2Activity.this, PersonalFavoriteDynamicActivity.class);
-                    startActivity(i);
+//                    Intent i = new Intent(PersonalV2Activity.this, PersonalFavoriteDynamicActivity.class);
+//                    startActivity(i);
+                    NewFolderWenZhangActivity.startActivity(PersonalV2Activity.this, mUserId, FolderType.WZ.toString(), "collection", false);
+
                 }
                 if (itemId == 6) {
                     Intent i = new Intent(PersonalV2Activity.this, InviteActivity.class);
@@ -577,9 +582,9 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
         } else {
             mIvGender.setVisibility(View.GONE);
         }
-        if (!TextUtils.isEmpty(info.getVipTime())){
+        if (!TextUtils.isEmpty(info.getVipTime())) {
             mVipTime.setText("会员到期日:" + info.getVipTime());
-        }else {
+        } else {
             mVipTime.setVisibility(View.GONE);
         }
 
@@ -610,8 +615,8 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
 
             mFollowRoot.setVisibility(View.GONE);
             mFollow.setSelected(info.isFollowing());
-            mAttention.setSelected(info.isFollowing());
             mFollow.setText(info.isFollowing() ? getString(R.string.label_followed) : getString(R.string.label_follow));
+            mAttention.setText(info.isFollowing() ? getString(R.string.label_followed) : getString(R.string.label_follow));
         }
         final ImageView[] huiZhangImgs = new ImageView[]{mIvHuizhang3, mIvHuizhang2, mIvHuizhang1};
         Observable.range(0, 3)
@@ -699,8 +704,8 @@ public class PersonalV2Activity extends BaseAppCompatActivity implements Persona
     public void onFollowSuccess(boolean isFollow) {
         mFollow.setSelected(isFollow);
         mFollow.setText(isFollow ? getString(R.string.label_followed) : getString(R.string.label_follow));
-
         mAttention.setText(isFollow ? getString(R.string.label_followed) : getString(R.string.label_follow));
+        showToast(isFollow ? "关注成功" : "取消关注");
     }
 
     private boolean isChanged = false;

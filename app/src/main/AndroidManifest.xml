@@ -1575,7 +1575,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MainColorTranslucentTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".view.activity.HouseGuideActivity"></activity>
     </application>
 
 </manifest>

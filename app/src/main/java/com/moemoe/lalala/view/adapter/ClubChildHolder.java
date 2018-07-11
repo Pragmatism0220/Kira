@@ -40,7 +40,7 @@ public class ClubChildHolder extends ClickableViewHolder {
         }
         setVisible(R.id.tv_num, false);
         llRoot.setLayoutManager(new GridLayoutManager(context, 3));
-        llRoot.addItemDecoration(new FolderDecoration());
+//        llRoot.addItemDecoration(new FolderDecoration());
         llRoot.setBackgroundColor(Color.WHITE);
         adapter = new CommunityItemAdapter();
         llRoot.setAdapter(adapter);

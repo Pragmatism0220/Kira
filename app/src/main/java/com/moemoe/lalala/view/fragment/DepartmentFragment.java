@@ -288,7 +288,7 @@ public class DepartmentFragment extends BaseFragment implements DepartContract.V
         if (entities.size() > 0) {
             if (groupView == null) {
                 groupView = LayoutInflater.from(getContext()).inflate(R.layout.item_department_group, null);
-                mListAdapter.addHeaderView(groupView);
+//                mListAdapter.addHeaderView(groupView);
             }
             final DepartmentGroupEntity entity = entities.get(0);
             ImageView cover = groupView.findViewById(R.id.iv_group_img);

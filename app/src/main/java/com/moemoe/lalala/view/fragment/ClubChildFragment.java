@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.model.entity.OfficialTag;
+import com.moemoe.lalala.model.entity.UserFollowTagEntity;
 import com.moemoe.lalala.view.adapter.ClubChildAdapter;
 
 import java.util.ArrayList;
@@ -65,4 +66,5 @@ public class ClubChildFragment extends BaseFragment {
             }
         }
     }
+
 }

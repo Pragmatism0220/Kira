@@ -246,13 +246,17 @@ public class WenQuanActivity extends BaseAppCompatActivity implements OldDocCont
     public void onCreateLabel(String s, String name, int position) {
         showToast("添加成功");
         finalizeDialog();
-        DocTagEntity docTagEntity = new DocTagEntity();
-        docTagEntity.setId(s);
-        docTagEntity.setName(name);
-        int size = mListAdapter.getList().get(position).getTags().size();
-        size = size == 0 ? 0 : size;
-        mListAdapter.getList().get(position).getTags().add(size, docTagEntity);
-        mListAdapter.notifyItemChanged(position);
+        DocTagEntity tag = new DocTagEntity();
+        tag.setLiked(true);
+        tag.setId(s);
+        tag.setLikes(1);
+        tag.setName(name);
+        mListAdapter.getList().get(position).getTags().add(tag);
+        if (mListAdapter.getHeaderLayoutCount() != 0) {
+            mListAdapter.notifyItemChanged(position + 1);
+        } else {
+            mListAdapter.notifyItemChanged(position);
+        }
     }
 
     @Override

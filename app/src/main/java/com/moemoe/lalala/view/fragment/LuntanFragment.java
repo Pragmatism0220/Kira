@@ -294,23 +294,34 @@ public class LuntanFragment extends BaseFragment implements Luntan2Contract.View
     }
 
     @Override
-    public void onCreateLabel(String s, String name, int position) {
+    public void onCreateLabel(String s, String name, int parentPosition) {
         if (getContext() instanceof DepartmentV3Activity) {
             ((DepartmentV3Activity) getContext()).showToast("添加成功");
             ((DepartmentV3Activity) getContext()).finalizeDialog();
         }
-        DocTagEntity docTagEntity = new DocTagEntity();
-        docTagEntity.setId(s);
-        docTagEntity.setName(name);
-        int size = mAdapter.getList().get(position).getTags().size();
-        size = size == 0 ? 0 : size;
-        mAdapter.getList().get(position).getTags().add(size, docTagEntity);
-        mAdapter.notifyItemChanged(position + 1);
+//        DocTagEntity docTagEntity = new DocTagEntity();
+//        docTagEntity.setId(s);
+//        docTagEntity.setName(name);
+//        int size = mAdapter.getList().get(parentPosition).getTags().size();
+//        size = size == 0 ? 0 : size;
+//        mAdapter.getList().get(parentPosition).getTags().add(size, docTagEntity);
+//        mAdapter.notifyItemChanged(parentPosition + 1);
+        DocTagEntity tag = new DocTagEntity();
+        tag.setLiked(true);
+        tag.setId(s);
+        tag.setLikes(1);
+        tag.setName(name);
+        mAdapter.getList().get(parentPosition).getTags().add(tag);
+        if (mAdapter.getHeaderLayoutCount() != 0) {
+            mAdapter.notifyItemChanged(parentPosition + 1);
+        } else {
+            mAdapter.notifyItemChanged(parentPosition);
+        }
     }
 
     @Override
     public void onPlusLabel(int position, boolean isLike, int parentPosition) {
-        
+
     }
 
     /**

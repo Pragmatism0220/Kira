@@ -78,7 +78,7 @@ public class OldDocHolder extends ClickableViewHolder {
     public OldDocHolder(View itemView) {
         super(itemView);
         docLabel = $(R.id.dv_doc_label_root);
-        docLabelAdapter = new NewDocLabelAdapter(itemView.getContext(), true);
+        docLabelAdapter = new NewDocLabelAdapter(itemView.getContext(), false);
     }
 
     public void createItem(final DocResponse entity, final int paposition) {
@@ -129,26 +129,35 @@ public class OldDocHolder extends ClickableViewHolder {
             setVisible(R.id.iv_vip, false);
         }
         int size = (int) itemView.getContext().getResources().getDimension(R.dimen.x80);
-        Glide.with(itemView.getContext())
-                .load(StringUtils.getUrl(itemView.getContext(), entity.getCreateUser().getHeadPath(), size, size, false, true))
-                .error(R.drawable.bg_default_circle)
-                .placeholder(R.drawable.bg_default_circle)
-                .bitmapTransform(new CropCircleTransformation(itemView.getContext()))
-                .into((ImageView) $(R.id.iv_avatar));
+        if (entity.getCreateUser() != null) {
+            Glide.with(itemView.getContext())
+                    .load(StringUtils.getUrl(itemView.getContext(), entity.getCreateUser().getHeadPath(), size, size, false, true))
+                    .error(R.drawable.bg_default_circle)
+                    .placeholder(R.drawable.bg_default_circle)
+                    .bitmapTransform(new CropCircleTransformation(itemView.getContext()))
+                    .into((ImageView) $(R.id.iv_avatar));
+        }
         $(R.id.iv_avatar).setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                ViewUtils.toPersonal(itemView.getContext(), entity.getCreateUser().getUserId());
+                if (entity.getCreateUser() != null) {
+                    ViewUtils.toPersonal(itemView.getContext(), entity.getCreateUser().getUserId());
+                }
             }
         });
-        setText(R.id.tv_name, entity.getCreateUser().getUserName());
-        setImageResource(R.id.iv_sex, entity.getCreateUser().getSex().equalsIgnoreCase("M") ? R.drawable.ic_user_girl : R.drawable.ic_user_boy);
+        if (entity.getCreateUser() != null) {
+            setText(R.id.tv_name, entity.getCreateUser().getUserName());
+            setImageResource(R.id.iv_sex, entity.getCreateUser().getSex().equalsIgnoreCase("M") ? R.drawable.ic_user_girl : R.drawable.ic_user_boy);
+        }
         LevelSpan levelSpan = new LevelSpan(ContextCompat.getColor(itemView.getContext(), R.color.white), itemView.getContext().getResources().getDimension(R.dimen.x12));
-        final String content = "LV" + entity.getCreateUser().getLevel();
-        String colorStr = "LV";
-        SpannableStringBuilder style = new SpannableStringBuilder(content);
-        style.setSpan(levelSpan, content.indexOf(colorStr), content.indexOf(colorStr) + colorStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        setText(R.id.tv_level, style);
+        String content = null;
+        if (entity.getCreateUser() != null) {
+            content = "LV" + entity.getCreateUser().getLevel();
+            String colorStr = "LV";
+            SpannableStringBuilder style = new SpannableStringBuilder(content);
+            style.setSpan(levelSpan, content.indexOf(colorStr), content.indexOf(colorStr) + colorStr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            setText(R.id.tv_level, style);
+        }
         float radius2 = itemView.getContext().getResources().getDimension(R.dimen.y4);
         float[] outerR2 = new float[]{radius2, radius2, radius2, radius2, radius2, radius2, radius2, radius2};
         RoundRectShape roundRectShape2 = new RoundRectShape(outerR2, null, null);
@@ -156,11 +165,11 @@ public class OldDocHolder extends ClickableViewHolder {
         ShapeDrawable shapeDrawable2 = new ShapeDrawable();
         shapeDrawable2.setShape(roundRectShape2);
         shapeDrawable2.getPaint().setStyle(Paint.Style.FILL);
-        shapeDrawable2.getPaint().setColor(StringUtils.readColorStr(entity.getCreateUser().getLevelColor(), ContextCompat.getColor(itemView.getContext(), R.color.main_cyan)));
+        shapeDrawable2.getPaint().setColor(StringUtils.readColorStr(entity.getCreateUser() != null ? entity.getCreateUser().getLevelColor() : "", ContextCompat.getColor(itemView.getContext(), R.color.main_cyan)));
         $(R.id.tv_level).setBackgroundDrawable(shapeDrawable2);
         View[] huizhang = {$(R.id.fl_huizhang_1)};
         TextView[] huizhangT = {$(R.id.tv_huizhang_1)};
-        if (entity.getCreateUser().getBadge() != null) {
+        if (entity.getCreateUser() != null && entity.getCreateUser().getBadge() != null) {
             ArrayList<BadgeEntity> badgeEntities = new ArrayList<>();
             badgeEntities.add(entity.getCreateUser().getBadge());
             ViewUtils.badge(itemView.getContext(), huizhang, huizhangT, badgeEntities);
@@ -172,7 +181,9 @@ public class OldDocHolder extends ClickableViewHolder {
         $(R.id.iv_more).setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                showMenu(entity.getCreateUser().getUserName(), entity.getContent(), entity.getId());
+                if (entity.getCreateUser() != null) {
+                    showMenu(entity.getCreateUser().getUserName(), entity.getContent(), entity.getId());
+                }
             }
         });
         //content
@@ -249,7 +260,7 @@ public class OldDocHolder extends ClickableViewHolder {
             if (entity.getTags().size() > 0) {
                 docLabel.setVisibility(View.VISIBLE);
             } else {
-                docLabel.setVisibility(View.GONE);
+                docLabel.setVisibility(View.VISIBLE);
             }
             docLabel.setItemClickListener(new DocLabelView.LabelItemClickListener() {
                 @Override

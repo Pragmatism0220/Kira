@@ -299,13 +299,17 @@ public class FeedFollowOther2Fragment extends BaseFragment implements FeedFollow
             ((CommunityV1Activity) getContext()).finalizeDialog();
         }
 
-        DocTagEntity docTagEntity = new DocTagEntity();
-        docTagEntity.setId(s);
-        docTagEntity.setName(name);
-        int size = mAdapter.getList().get(position).getTags().size();
-        size = size == 0 ? 0 : size;
-        mAdapter.getList().get(position).getTags().add(size, docTagEntity);
-        mAdapter.notifyItemChanged(position + 1);
+        DocTagEntity tag = new DocTagEntity();
+        tag.setLiked(true);
+        tag.setId(s);
+        tag.setLikes(1);
+        tag.setName(name);
+        mAdapter.getList().get(position).getTags().add(tag);
+        if (mAdapter.getHeaderLayoutCount() != 0) {
+            mAdapter.notifyItemChanged(position + 1);
+        } else {
+            mAdapter.notifyItemChanged(position);
+        }
     }
     @Override
     public void onPlusLabel(int position, boolean isLike, int parentPosition) {

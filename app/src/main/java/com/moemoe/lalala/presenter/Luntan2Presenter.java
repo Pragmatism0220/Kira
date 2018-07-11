@@ -127,14 +127,15 @@ public class Luntan2Presenter implements Luntan2Contract.Presenter {
     }
 
     @Override
-    public void createLabel(final TagSendEntity entity, final int position) {
+    public void createLabel( final TagSendEntity entity, final int pposition) {
         apiService.sendTag(entity)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetResultSubscriber<String>() {
                     @Override
                     public void onSuccess(String s) {
-                        if (view != null) view.onCreateLabel(s, entity.getTag(), position);
+                        if (view != null)
+                            view.onCreateLabel(s, entity.getTag(), pposition);
                     }
 
                     @Override
@@ -152,7 +153,7 @@ public class Luntan2Presenter implements Luntan2Contract.Presenter {
                 .subscribe(new NetSimpleResultSubscriber() {
                     @Override
                     public void onSuccess() {
-                        if (view != null) view.onPlusLabel(position, !isLike,parentPosition);
+                        if (view != null) view.onPlusLabel(position, !isLike, parentPosition);
                     }
 
                     @Override

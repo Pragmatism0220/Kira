@@ -25,6 +25,7 @@ import com.moemoe.lalala.model.entity.MapMarkContainer;
 import com.moemoe.lalala.model.entity.MapMarkEntity;
 import com.moemoe.lalala.model.entity.NearUserEntity;
 import com.moemoe.lalala.model.entity.PowerEntity;
+import com.moemoe.lalala.model.entity.PropUseEntity;
 import com.moemoe.lalala.model.entity.RubbishEntity;
 import com.moemoe.lalala.model.entity.RubblishBody;
 import com.moemoe.lalala.model.entity.SaveVisitorEntity;
@@ -127,6 +128,24 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                 });
     }
 
+    @Override
+    public void houseToolUse(String toolId) {
+        apiService.propUse(toolId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<PropUseEntity>() {
+                    @Override
+                    public void onSuccess(PropUseEntity entity) {
+                        if (view != null) view.onLoadHouseToolUse(entity);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
 
     @Override
     public void loadRoleLikeCollect(String roleId) {
@@ -172,12 +191,12 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                 .subscribe(new NetResultSubscriber<ArrayList<VisitorsEntity>>() {
                     @Override
                     public void onSuccess(ArrayList<VisitorsEntity> entities) {
-                        if (view!=null) view.getHisVisitorsInfo(entities);
+                        if (view != null) view.getHisVisitorsInfo(entities);
                     }
 
                     @Override
                     public void onFail(int code, String msg) {
-                        if (view!=null)view.onFailure(code, msg);
+                        if (view != null) view.onFailure(code, msg);
                     }
                 });
     }
@@ -214,6 +233,7 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                     }
 
                     @Override
+                    
                     public void onFail(int code, String msg) {
                         if (view != null) view.onFailure(code, msg);
                     }

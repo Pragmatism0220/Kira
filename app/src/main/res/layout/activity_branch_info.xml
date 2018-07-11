@@ -160,6 +160,7 @@
                             android:background="@drawable/ic_home_plot_memory_none" />
 
                         <ImageView
+                            android:id="@+id/iv_plot_memory_frist_Tape"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
@@ -182,6 +183,7 @@
                             android:background="@drawable/ic_home_plot_memory_none" />
 
                         <ImageView
+                            android:id="@+id/iv_plot_memory_two_Tape"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
@@ -190,7 +192,6 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-
                         android:id="@+id/item_branch_info_bg_three"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
@@ -203,6 +204,7 @@
                             android:background="@drawable/ic_home_plot_memory_none" />
 
                         <ImageView
+                            android:id="@+id/iv_plot_memory_three_Tape"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"

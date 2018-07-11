@@ -27,6 +27,7 @@ import com.moemoe.lalala.model.entity.HouseLikeEntity;
 import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
 import com.moemoe.lalala.model.entity.PowerEntity;
+import com.moemoe.lalala.model.entity.PropUseEntity;
 import com.moemoe.lalala.model.entity.RubbishEntity;
 import com.moemoe.lalala.model.entity.RubblishBody;
 import com.moemoe.lalala.model.entity.SaveVisitorEntity;
@@ -148,9 +149,11 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mVisitorAnimator = ObjectAnimator.ofFloat(binding.visitorInfo, "translationX", -binding.visitorInfo.getWidth(), 0).setDuration(300);
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mGoHomeAnimator = ObjectAnimator.ofFloat(binding.ivGoMyHouse, "translationX", -binding.ivGoMyHouse.getWidth(), 0).setDuration(300);
+        mGoHomeAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(mIvMesssgeAnimator).with(mIvPowerAnimator);
-        set.play(mVisitorAnimator);
+        set.play(mVisitorAnimator).with(mGoHomeAnimator);
         set.start();
     }
 
@@ -161,9 +164,11 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mVisitorAnimator = ObjectAnimator.ofFloat(binding.visitorInfo, "translationX", 0, -getResources().getDimension(R.dimen.y60) - binding.visitorInfo.getWidth()).setDuration(300);
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mGoHomeAnimator = ObjectAnimator.ofFloat(binding.ivGoMyHouse, "translationX", 0, -getResources().getDimension(R.dimen.y60) - binding.ivGoMyHouse.getWidth()).setDuration(300);
+        mGoHomeAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(mIvMesssgeAnimator).with(mIvPowerAnimator);
-        set.play(mVisitorAnimator);
+        set.play(mVisitorAnimator).with(mGoHomeAnimator);
         set.start();
     }
 
@@ -183,6 +188,11 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
     @Override
     protected void onResume() {
         super.onResume();
+        mRlRoleJuQing.setVisibility(View.GONE);
+        mTvContent.setVisibility(View.GONE);
+        mTvJuQing.setVisibility(View.GONE);
+        mIvGongXI.setVisibility(View.GONE);
+        mRleSelect.setVisibility(View.GONE);
     }
 
 
@@ -191,26 +201,6 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         mRlRoleJuQing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                int type = mRubbishEntity.getType();
-//                if (type == 3 && mIvGongXI.getVisibility() == View.VISIBLE) {
-//                    mRlRoleJuQing.setVisibility(View.GONE);
-//                    mTvContent.setVisibility(View.GONE);
-//                    mTvJuQing.setVisibility(View.GONE);
-//                    mIvGongXI.setVisibility(View.GONE);
-//                    mRleSelect.setVisibility(View.GONE);
-//                } else if (type == 2 && mIvGongXI.getVisibility() == View.VISIBLE) {
-//                    mRlRoleJuQing.setVisibility(View.GONE);
-//                    mTvContent.setVisibility(View.GONE);
-//                    mTvJuQing.setVisibility(View.GONE);
-//                    mIvGongXI.setVisibility(View.GONE);
-//                    mRleSelect.setVisibility(View.GONE);
-//                } else if (type == 4 && mIvGongXI.getVisibility() == View.VISIBLE) {
-//                    mRlRoleJuQing.setVisibility(View.GONE);
-//                    mTvContent.setVisibility(View.GONE);
-//                    mTvJuQing.setVisibility(View.GONE);
-//                    mIvGongXI.setVisibility(View.GONE);
-//                    mRleSelect.setVisibility(View.GONE);
-//                }
                 mRlRoleJuQing.setVisibility(View.GONE);
                 mTvContent.setVisibility(View.GONE);
                 mTvJuQing.setVisibility(View.GONE);
@@ -263,15 +253,11 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
                         startActivity(i);
                         break;
                     case 2:
+                        mPresenter.houseToolUse(mRubbishEntity.getId());
+                        break;
                     case 3:
+                        break;
                     case 4:
-                        showToast("功能未开放~");
-//                        mRlRoleJuQing.setVisibility(View.GONE);
-//                        mIvGongXI.setVisibility(View.GONE);
-//                        mTvContent.setVisibility(View.GONE);
-//                        mTvJuQing.setVisibility(View.GONE);
-//                        mRleSelect.setVisibility(View.GONE);
-//                        mIvCover.setImageResource(R.drawable.bg_garbage_background_1);
                         break;
                 }
             }
@@ -566,6 +552,16 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         }
     }
 
+    @Override
+    public void onLoadHouseToolUse(PropUseEntity entity) {
+        mRlRoleJuQing.setVisibility(View.GONE);
+        mIvGongXI.setVisibility(View.GONE);
+        mTvContent.setVisibility(View.GONE);
+        mTvJuQing.setVisibility(View.GONE);
+        mRleSelect.setVisibility(View.GONE);
+        showToast(entity.getToolUseMessage());
+    }
+
     private void resolvErrorList(ArrayList<HouseDbEntity> errorList, final String type) {
         final ArrayList<HouseDbEntity> errorListTmp = new ArrayList<>();
         final ArrayList<HouseDbEntity> res = new ArrayList<>();
@@ -643,6 +639,12 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
                     Intent i2 = new Intent(HouseHisActivity.this, NewVisitorActivity.class);
                     i2.putExtra("uuid", id);
                     startActivity(i2);
+                    break;
+                case R.id.iv_go_my_house:
+                    Intent i3 = new Intent(HouseHisActivity.this, HouseActivity.class);
+                    startActivity(i3);
+                    finish();
+                    break;
             }
         }
     }

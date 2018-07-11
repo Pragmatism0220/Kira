@@ -19,7 +19,7 @@ public interface Luntan2Contract {
         void joinAuthor(String id,String name);
         void loadFollowList(int index);
         void likeDoc(String id, boolean isLike, int position);
-        void createLabel(TagSendEntity entity,int position);
+        void createLabel(TagSendEntity entity,int pposition);
         void likeTag(boolean isLike,int position, TagLikeEntity entity,int parentPosition);
     }
 
@@ -29,7 +29,7 @@ public interface Luntan2Contract {
         void onLoadFollowListSuccess(ArrayList<DocResponse> responses,boolean isPull);
         void onJoinSuccess(String id,String name);
         void onLikeDocSuccess(boolean isLike, int position);
-        void onCreateLabel(String s,String name,int position);
+        void onCreateLabel(String s,String name,int pposition);
         void onPlusLabel(int position,boolean isLike,int parentPosition);
     }
 }

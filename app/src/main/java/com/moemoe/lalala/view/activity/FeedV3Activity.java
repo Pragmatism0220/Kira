@@ -142,10 +142,10 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         RongIM.getInstance().addUnReadMessageCountChangedObserver(this, conversationTypes);
         clickEvent("社团");
 //        fragmentList.add(FeedFollowV3Fragment.newInstance());
-        feedFollowV4Fragment = FeedFollowV4Fragment.newInstance("all", "全部", false);
-//        dynamicV3Fragment = FeedDynamicV3Fragment.newInstance();
         mainV3Fragment = NewFollowMainV3Fragment.newInstance("ground");
+//        dynamicV3Fragment = FeedDynamicV3Fragment.newInstance();
 //        fragmentList.add(FeedBagFragment.newInstance());
+        feedFollowV4Fragment = FeedFollowV4Fragment.newInstance("all", "全部", false);
 //        newCommunityFragment = NewCommunityFragment.newInstance();
         clubListFragment = ClubListFragment.newInstance();
         mRlClubSquare.setOnClickListener(new View.OnClickListener() {
@@ -243,33 +243,15 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         mainV3Fragment.onSmoothScrollBy();
         //获取标题栏的高度
         mTitle.getViewTreeObserver().
-
                 addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-
-//        MoeMoeApplication.getInstance().activities.add(FeedV3Activity.this);
                         titleHeight = mTitle.getHeight();
                     }
                 });
         oldAlpha = mTitle.getAlpha();
-        EventBus.getDefault().
-
-                register(this);
-//        if (MoeMoeApplication.getInstance().isWindow()) {
-//            MoeMoeApplication.getInstance().activities.add(FeedV3Activity.this);
-//            MoeMoeApplication.getInstance().initWindowManager(this, getWindowManager());
-//        }
-//        initToHouse();
+        EventBus.getDefault().register(this);
     }
-
-    private void initToHouse() {
-        if (NetworkUtils.checkNetworkAndShowError(FeedV3Activity.this) && DialogUtils.checkLoginAndShowDlg(FeedV3Activity.this)) {
-            startActivity(new Intent(FeedV3Activity.this, HouseActivity.class));
-            finish();
-        }
-    }
-
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -362,12 +344,12 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
      *
      * @param entity
      */
-    public void createLabel(TagSendEntity entity, int position) {
+    public void createLabel(TagSendEntity entity, int ppposition) {
         createDialog();
         if (!feedFollowV4Fragment.isHidden()) {
-            feedFollowV4Fragment.createLabel(entity, position);
+            feedFollowV4Fragment.createLabel(entity, ppposition);
         } else if (!mainV3Fragment.isHidden()) {
-            mainV3Fragment.createLabel(entity, position);
+            mainV3Fragment.createLabel(entity, ppposition);
         }
 
     }

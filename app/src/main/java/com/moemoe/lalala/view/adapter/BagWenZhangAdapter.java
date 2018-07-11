@@ -15,7 +15,8 @@ public class BagWenZhangAdapter extends BaseRecyclerViewAdapter<WenZhangFolderEn
     private boolean isSelect;
 
     public BagWenZhangAdapter() {
-        super(R.layout.item_folder_wenzhang);
+//        super(R.layout.item_folder_wenzhang);
+        super(R.layout.item_feed_type_1_v3);
         isSelect = false;
     }
 

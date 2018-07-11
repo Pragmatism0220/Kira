@@ -140,6 +140,15 @@
                 android:src="@drawable/btn_map" />
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/iv_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_tool_bar"
+            android:layout_marginStart="@dimen/x16"
+            android:layout_marginTop="@dimen/y16"
+            android:onClick="@{presenter.onClick}"
+            android:src="@drawable/btn_house_share" />
 
         <ImageView
             android:id="@+id/iv_bag"
@@ -342,16 +351,6 @@
                 android:layout_height="@dimen/y800"
                 android:layout_centerInParent="true" />
         </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/iv_share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ll_tool_bar"
-            android:layout_marginStart="@dimen/x16"
-            android:layout_marginTop="@dimen/y16"
-            android:onClick="@{presenter.onClick}"
-            android:src="@drawable/btn_house_share" />
 
     </RelativeLayout>
 

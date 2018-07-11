@@ -67,6 +67,16 @@
             android:src="@drawable/role_back_btn" />
 
         <ImageView
+            android:id="@+id/iv_go_my_house"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_back"
+            android:layout_marginStart="@dimen/x8"
+            android:layout_marginTop="@dimen/y24"
+            android:onClick="@{presenter.onClick}"
+            android:src="@drawable/btn_house_go_my" />
+
+        <ImageView
             android:id="@+id/iv_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -80,10 +90,10 @@
             android:id="@+id/power"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="@dimen/x20"
-            android:layout_marginBottom="@dimen/y20"
             android:layout_above="@+id/visitor_info"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="@dimen/y20"
+            android:layout_marginStart="@dimen/x20"
             android:visibility="visible">
 
             <ImageView

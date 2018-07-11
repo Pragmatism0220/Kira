@@ -125,11 +125,13 @@ public class FeedBagHolder extends ClickableViewHolder {
 
         TextView tvPlay = $(R.id.tv_play_num);
         if (entity.getType().equals(FolderType.MOVIE.toString()) || entity.getType().equals(FolderType.MUSIC.toString())) {
+            setVisible(R.id.tv_coin_new, true);
             if (entity.getCoin() == 0) {
-                setText(R.id.tv_coin, "免费");
+                setText(R.id.tv_coin_new, "免费");
             } else {
-                setText(R.id.tv_coin, entity.getCoin() + "节操");
+                setText(R.id.tv_coin_new, entity.getCoin() + "节操");
             }
+            setText(R.id.tv_coin, StringUtils.timeFormat(entity.getTime()));
             tvPlay.setText(String.valueOf(entity.getPlayNum()));
             if (entity.getType().equals(FolderType.MOVIE.toString())) {
                 setVisible(R.id.tv_danmu_num, true);
@@ -140,6 +142,7 @@ public class FeedBagHolder extends ClickableViewHolder {
                 setVisible(R.id.tv_danmu_num, false);
             }
         } else {
+            setVisible(R.id.tv_coin_new, false);
             setVisible(R.id.tv_danmu_num, false);
             setText(R.id.tv_coin, StringUtils.timeFormat(entity.getTime()));
             tvPlay.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);

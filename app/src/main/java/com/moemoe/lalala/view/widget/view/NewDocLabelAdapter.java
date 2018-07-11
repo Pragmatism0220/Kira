@@ -24,7 +24,6 @@ import com.moemoe.lalala.utils.StringUtils;
 import java.util.ArrayList;
 
 /**
- *
  * Created by Haru on 2015/12/24 0024.
  */
 public class NewDocLabelAdapter extends BaseAdapter {
@@ -35,20 +34,20 @@ public class NewDocLabelAdapter extends BaseAdapter {
     private boolean mIsNeedAdd;
     private boolean mNeedShow;
 
-    private int[] mBackGround = { R.drawable.shape_rect_label_cyan, R.drawable.shape_rect_label_yellow, R.drawable.shape_rect_label_orange, R.drawable.shape_rect_label_pink, R.drawable.shape_rect_border_green_y4, R.drawable.shape_rect_label_purple, R.drawable.shape_rect_label_tab_blue};
+    private int[] mBackGround = {R.drawable.shape_rect_label_cyan, R.drawable.shape_rect_label_yellow, R.drawable.shape_rect_label_orange, R.drawable.shape_rect_label_pink, R.drawable.shape_rect_border_green_y4, R.drawable.shape_rect_label_purple, R.drawable.shape_rect_label_tab_blue};
 
-    public NewDocLabelAdapter(Context context, boolean needShow){
+    public NewDocLabelAdapter(Context context, boolean needShow) {
         mContext = context;
         mNeedShow = needShow;
     }
 
-    public NewDocLabelAdapter(Context context, ArrayList<DocTagEntity> beans, boolean needAdd){
+    public NewDocLabelAdapter(Context context, ArrayList<DocTagEntity> beans, boolean needAdd) {
         mContext = context;
         mTags = beans;
         mIsNeedAdd = needAdd;
     }
 
-    public void setData(ArrayList<DocTagEntity> beans, boolean needAdd){
+    public void setData(ArrayList<DocTagEntity> beans, boolean needAdd) {
         mTags = beans;
         mIsNeedAdd = needAdd;
         notifyDataSetChanged();
@@ -56,23 +55,23 @@ public class NewDocLabelAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if(mTags != null){
-            if(mIsNeedAdd){
+        if (mTags != null) {
+            if (mIsNeedAdd) {
                 return mTags.size() + 1;
             }
             return mTags.size();
-        }else{
+        } else {
             return 0;
         }
     }
 
-    public ArrayList<DocTagEntity> getTags(){
+    public ArrayList<DocTagEntity> getTags() {
         return mTags;
     }
 
     @Override
     public DocTagEntity getItem(int i) {
-        if(i < mTags.size()){
+        if (i < mTags.size()) {
             return mTags.get(i);
         }
         return null;
@@ -90,7 +89,7 @@ public class NewDocLabelAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if(position < mTags.size()){
+        if (position < mTags.size()) {
             return TYPE_LABEL;
         }
         return TYPE_ADD;
@@ -100,9 +99,9 @@ public class NewDocLabelAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         ViewHolder holder;
         int type = getItemViewType(position);
-        if(convertView == null){
+        if (convertView == null) {
             if (type == TYPE_LABEL) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_doc_label, viewGroup,false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_doc_label, viewGroup, false);
                 holder = new ViewHolder();
                 holder.labelRoot = convertView.findViewById(R.id.ll_label_root);
                 holder.labelContent = convertView.findViewById(R.id.tv_item_label_content);
@@ -110,14 +109,14 @@ public class NewDocLabelAdapter extends BaseAdapter {
                 holder.labelEt = convertView.findViewById(R.id.et_item_label_add);
                 convertView.setTag(holder);
             } else if (type == TYPE_ADD) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_doc_label_add, viewGroup,false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_doc_label_add, viewGroup, false);
             }
         }
         if (type == TYPE_LABEL) {
             holder = (ViewHolder) convertView.getTag();
             final DocTagEntity b = getItem(position);
             String content = b.getName();
-            if(b.isEdit()){
+            if (b.isEdit()) {
                 holder.labelRoot.setBackgroundResource(R.drawable.btn_follow_label);
                 holder.labelContent.setVisibility(View.GONE);
                 holder.labelEt.setVisibility(View.VISIBLE);
@@ -159,35 +158,35 @@ public class NewDocLabelAdapter extends BaseAdapter {
                 holder.labelEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if(actionId == EditorInfo.IME_ACTION_DONE) {
-                            SoftKeyboardUtils.dismissSoftKeyboard((Activity)mContext);
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            SoftKeyboardUtils.dismissSoftKeyboard((Activity) mContext);
                         }
                         return false;
                     }
                 });
                 SoftKeyboardUtils.showSoftKeyboard(mContext, holder.labelEt);
-            }else {
+            } else {
                 holder.labelContent.setVisibility(View.VISIBLE);
                 holder.labelEt.setVisibility(View.GONE);
-                if(b.isLiked() || mNeedShow){
+                if (b.isLiked() || mNeedShow) {
                     int index = StringUtils.getHashOfString(content, mBackGround.length);
                     holder.labelRoot.setBackgroundResource(mBackGround[index]);
                     holder.labelContent.setTextColor(Color.WHITE);
                     holder.labelFollowNum.setTextColor(Color.WHITE);
-                }else{
+                } else {
                     holder.labelRoot.setBackgroundResource(R.drawable.btn_follow_label);
                     holder.labelContent.setTextColor(Color.BLACK);
                     holder.labelFollowNum.setTextColor(Color.BLACK);
                 }
             }
             holder.labelContent.setText(content);
-            holder.labelFollowNum.setText(StringUtils.getNumberInLengthLimit((int) b.getLikes(),2));
+            holder.labelFollowNum.setText(StringUtils.getNumberInLengthLimit((int) b.getLikes(), 2));
         }
 
         return convertView;
     }
 
-    class ViewHolder{
+    class ViewHolder {
         LinearLayout labelRoot;
         TextView labelContent;
         TextView labelFollowNum;

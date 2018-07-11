@@ -14,9 +14,18 @@ public class UserFollowTagEntity implements Parcelable {
     private String text;
     private String id;
     private int num;
-    private  boolean manager;
+    private boolean manager;
     private String url;
     private boolean select;
+    private String type;
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
 
     public boolean isManager() {
         return manager;
