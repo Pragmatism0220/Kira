@@ -340,7 +340,6 @@ public class SideCharacterUtils {
 //            RelativeLayout.LayoutParams lpFeedback = new RelativeLayout.LayoutParams(
 //                    RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 lpFeedback = new RelativeLayout.LayoutParams((int) getWidth(entilsRight.getW() / 2), (int) getHieght(entilsRight.getH() / 2));
-
             }
             lpFeedback.setMargins(0, 0, 0, 0);
             lpFeedback.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -351,6 +350,7 @@ public class SideCharacterUtils {
     }
 
     // 可拖动按钮的touch事件
+    @SuppressLint("ClickableViewAccessibility")
     private void setFloatDragViewTouch(final ImageView floatDragView) {
 
         floatDragView.setOnTouchListener(new View.OnTouchListener() {
@@ -371,18 +371,24 @@ public class SideCharacterUtils {
                         }
                         int dx = (int) event.getRawX() - relativeMoveX;
                         int dy = (int) event.getRawY() - relativeMoveY;
-                        final Drawable drawable;
-                        if (entilsDrag != null && !TextUtils.isEmpty(entilsDrag.getPath())) {
-                            drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entilsDrag.getFileName());
+                        int x = Math.abs((int) event.getRawX() - relativeMoveX);
+                        int y = Math.abs((int) event.getRawY() - relativeMoveY);
+                        if (x < 5 || y < 5) {
+                            //为移动  点击事件
+                        } else {
+                            final Drawable drawable;
+                            if (entilsDrag != null && !TextUtils.isEmpty(entilsDrag.getPath())) {
+                                drawable = Drawable.createFromPath(StorageUtils.getHouseRootPath() + entilsDrag.getFileName());
 //                            RelativeLayout.LayoutParams lpFeedback = new RelativeLayout.LayoutParams((int) getWidth(entilsDrag.getW() / 2), (int) getHieght(entilsDrag.getH() / 2));
 //                            v.setLayoutParams(lpFeedback);
-                        } else {
-                            drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_drop);
-                        }
-                        if (drawable != null) {
-                            mImageView.setImageDrawable(drawable);
-                        } else {
-                            FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entilsDrag.getFileName());
+                            } else {
+                                drawable = ContextCompat.getDrawable(context, R.drawable.btn_classmate_len_drop);
+                            }
+                            if (drawable != null) {
+                                mImageView.setImageDrawable(drawable);
+                            } else {
+                                FileUtil.deleteFile(StorageUtils.getHouseRootPath() + entilsDrag.getFileName());
+                            }
                         }
                         int left = v.getLeft() + dx;
                         int top = v.getTop() + dy;
@@ -417,7 +423,6 @@ public class SideCharacterUtils {
                         } else {
                             isIntercept = false;
                         }
-                        Log.e("-isIntercept-", isIntercept + "==");
                         // 每次移动都要设置其layout，不然由于父布局可能嵌套listview，
                         // 当父布局发生改变冲毁（如下拉刷新时）则移动的view会回到原来的位置
                         RelativeLayout.LayoutParams lpFeedback = null;

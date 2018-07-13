@@ -6,6 +6,8 @@ import android.text.TextUtils;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.view.activity.BaseAppCompatActivity;
+import com.moemoe.lalala.view.activity.FeedV3Activity;
+import com.moemoe.lalala.view.activity.HouseActivity;
 import com.moemoe.lalala.view.activity.MapActivity;
 import com.moemoe.lalala.view.activity.NewFileCommonActivity;
 import com.moemoe.lalala.view.activity.NewFileManHuaActivity;
@@ -81,8 +83,9 @@ public class ErrorCodeUtils {
                         } finally {
                             PreferenceUtils.clearAuthorInfo();
                             if (context instanceof MapActivity) {
-                                
-                            }else {
+                            } else if (context instanceof HouseActivity) {
+                            } else if (context instanceof FeedV3Activity) {
+                            } else {
                                 DialogUtils.checkLoginAndShowDlg(context);
                             }
                         }

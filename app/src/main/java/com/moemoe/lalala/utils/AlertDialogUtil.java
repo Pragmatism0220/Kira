@@ -1,5 +1,6 @@
 package com.moemoe.lalala.utils;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -292,10 +293,14 @@ public class AlertDialogUtil {
 
     public void createPromptNormalDialog(Context context, String content) {
         this.context = context;
+        Activity activity = (Activity) context;
+//        if (!activity.isDestroyed() && !activity.isFinishing()) {
         if (this.dialog != null && this.dialog.isShowing()) {
             this.dialog.dismiss();
             this.dialog = null;
         }
+//        }
+       
         View contentView = View.inflate(context, R.layout.dialog_normal_notice, null);
         this.dialog = new Dialog(context, R.style.NetaDialog);
         this.dialog.setContentView(contentView);

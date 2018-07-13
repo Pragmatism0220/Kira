@@ -962,10 +962,12 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         mIvRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickSelect();
-                //埋点统计：社团
-                Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
-                startActivity(i3);
+                if (DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+                    clickSelect();
+                    //埋点统计：社团
+                    Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
+                    startActivity(i3);
+                }
             }
         });
     }
@@ -1293,6 +1295,9 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             } else {
                 // Intent i3 = new Intent(MapActivity.this,WallBlockActivity.class);
 //                Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
+//                if (AlertDialogUtil.getInstance() != null && AlertDialogUtil.getInstance().isShow()) {
+//                    AlertDialogUtil.getInstance().dismissDialog();
+//                }
                 Intent i3 = new Intent(MapActivity.this, HouseActivity.class);
                 startActivity(i3);
             }
@@ -1894,8 +1899,10 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 //埋点统计：动态
 //                clickEvent("社团");
                 // Intent i3 = new Intent(MapActivity.this,WallBlockActivity.class);
-                Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
-                startActivity(i3);
+                if (DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+                    Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
+                    startActivity(i3);
+                }
                 break;
             case R.id.rl_map_search:
                 //埋点统计：搜索
@@ -2478,7 +2485,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void mapEevent(MapEevent event) {
         if (PreferenceUtils.isLogin()) {
-            AlertDialogUtil.getInstance().dismissDialog();
+//            AlertDialogUtil.getInstance().dismissDialog();
         }
     }
 }

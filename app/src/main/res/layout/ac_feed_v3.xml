@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <com.moemoe.lalala.view.widget.view.DisTochLinerlayout
+        android:id="@+id/ll_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -253,11 +254,6 @@
                 android:layout_marginTop="@dimen/y12"
                 android:src="@drawable/btn_club_post" />
         </RelativeLayout>
-    </LinearLayout>
+    </com.moemoe.lalala.view.widget.view.DisTochLinerlayout>
 
-
-    <ImageView
-        android:id="@+id/iv_side_character"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 </RelativeLayout>

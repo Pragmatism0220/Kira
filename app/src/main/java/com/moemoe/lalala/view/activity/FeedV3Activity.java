@@ -127,7 +127,8 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
     LinearLayout mTitle;
     @BindView(R.id.rl_ac_root)
     RelativeLayout mRlAcRoot;
-
+    @BindView(R.id.ll_root)
+    LinearLayout mLlRoot;
 
     private TabFragmentPagerAdapter mAdapter;
     private FeedDynamicV3Fragment dynamicV3Fragment;
@@ -264,9 +265,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         mFragmentTransaction.add(R.id.fl_container, feedFollowV4Fragment);
         mFragmentTransaction.add(R.id.fl_container, clubListFragment);
         mFragmentTransaction.show(mainV3Fragment).
-
                 hide(feedFollowV4Fragment).
-
                 hide(clubListFragment);
         mFragmentTransaction.commit();
         mIvClubSquare.setSelected(true);
@@ -290,24 +289,39 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         EventBus.getDefault().register(this);
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        if (MoeMoeApplication.getInstance().GoneDiaLog()) {
+    //    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+////        if (MoeMoeApplication.getInstance().GoneDiaLog()) {
+////            return true;
+////        }
+////        if (MoeMoeApplication.getInstance().isMenu()) {
+////            MoeMoeApplication.getInstance().GoneMenu();
+////            return true;
+////        }
+//        if (sidaMenu != null && sidaMenu.getVisibility() == View.VISIBLE) {
+//            sidaMenu.setVisibility(View.GONE);
 //            return true;
 //        }
-//        if (MoeMoeApplication.getInstance().isMenu()) {
-//            MoeMoeApplication.getInstance().GoneMenu();
+//        if (sideLine != null && sideLine.getVisibility() == View.VISIBLE) {
+//            sideLine.setVisibility(View.GONE);
 //            return true;
 //        }
-        if (sidaMenu != null && sidaMenu.getVisibility() == View.VISIBLE) {
-            sidaMenu.setVisibility(View.GONE);
-            return true;
-        }
-        if (sideLine != null && sideLine.getVisibility() == View.VISIBLE) {
-            sideLine.setVisibility(View.GONE);
-            return true;
-        }
-        return super.dispatchTouchEvent(ev);
+//        return super.dispatchTouchEvent(ev);
+//    }
+    public View getSideMenu() {
+        return sidaMenu;
+    }
+
+    public void getGoneSideMenu() {
+        sidaMenu.setVisibility(View.GONE);
+    }
+
+    public View getSideLine() {
+        return sideLine;
+    }
+
+    public void getGoneSideLine() {
+        sideLine.setVisibility(View.GONE);
     }
 
     @Override
@@ -335,6 +349,14 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         mIvLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (sidaMenu != null && sidaMenu.getVisibility() == View.VISIBLE) {
+                    sidaMenu.setVisibility(View.GONE);
+                    return;
+                }
+                if (sideLine != null && sideLine.getVisibility() == View.VISIBLE) {
+                    sideLine.setVisibility(View.GONE);
+                    return;
+                }
                 finish();
             }
         });
@@ -368,6 +390,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
             mainV3Fragment.likeTag(isLike, position, entity, parentPosition);
         }
     }
+
 
     /**
      * 动态-全部-item点赞
@@ -538,6 +561,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
                 }
             }
         });
+
     }
 
     /**
@@ -656,6 +680,9 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
     protected void onResume() {
         super.onResume();
         startTime();
+        if (!PreferenceUtils.isLogin()) {
+            finish();
+        }
         if (!RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED)) {
             if (!TextUtils.isEmpty(PreferenceUtils.getAuthorInfo().getRcToken())) {
                 RongIM.connect(PreferenceUtils.getAuthorInfo().getRcToken(), new RongIMClient.ConnectCallback() {

@@ -193,6 +193,9 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
 
     @Override
     protected void initComponent() {
+        if (!PreferenceUtils.isLogin()) {
+            finish();
+        }
         binding = DataBindingUtil.setContentView(this, R.layout.activity_house);
         binding.setPresenter(new Presenter());
         mRlRoleRoot = findViewById(R.id.rl_role_root);
@@ -633,6 +636,11 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     public void onFailure(int code, String msg) {
         ErrorCodeUtils.showErrorMsgByCode(HouseActivity.this, code, msg);
         if (!msg.equals("体力值不足")) {
+//            if (!this.isDestroyed() && !this.isFinishing()) {
+//                if (AlertDialogUtil.getInstance() != null && AlertDialogUtil.getInstance().isShow()) {
+//                    AlertDialogUtil.getInstance().dismissDialog();
+//                }
+//            }
             finish();
         }
     }

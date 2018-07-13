@@ -10,6 +10,7 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.moemoe.lalala.R;
@@ -230,13 +231,19 @@ public class DialogUtils {
      */
     public static boolean checkLoginAndShowDlg(final Context context) {
         boolean res = false;
+        Activity a = (Activity) context;
         if (PreferenceUtils.isLogin()) {
+//            if (alertDialogUtil.isShow()) {
+//                alertDialogUtil.dismissDialog();
+//            }
             res = true;
         } else {
             alertDialogUtil = AlertDialogUtil.getInstance();
-            if (alertDialogUtil.isShow()) {
-                alertDialogUtil.dismissDialog();
-            }
+//            if (!a.isDestroyed() && !a.isFinishing()) {
+//                if (alertDialogUtil.isShow()) {
+//                    alertDialogUtil.dismissDialog();
+//                }
+//            }
             alertDialogUtil.createPromptNormalDialog(context, context.getString(R.string.a_dlg_msg_need_login_first));
             alertDialogUtil.setButtonText(context.getString(R.string.a_dlg_go_2_login), context.getString(R.string.label_cancel), 0);
             alertDialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
@@ -255,9 +262,20 @@ public class DialogUtils {
             });
             alertDialogUtil.showDialog();
             res = false;
-
         }
         return res;
+    }
+
+    public boolean isValidContext(Context c) {
+
+        Activity a = (Activity) c;
+
+        if (a.isDestroyed() || a.isFinishing()) {
+            Log.i("YXH", "Activity is invalid." + " isDestoryed-->" + a.isDestroyed() + " isFinishing-->" + a.isFinishing());
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public void dismiss() {

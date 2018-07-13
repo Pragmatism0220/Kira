@@ -177,9 +177,8 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                
                 if (getContext() instanceof FeedV3Activity) {
-
                     clickEvent("社团-广场列表点击");
                 }
 
