@@ -357,7 +357,7 @@ public class SideCharacterUtils {
 
             @Override
             public boolean onTouch(final View v, MotionEvent event) {
-
+                goGreenDao();
                 int action = event.getAction();
                 switch (action) {
                     case MotionEvent.ACTION_DOWN:

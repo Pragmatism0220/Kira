@@ -2231,7 +2231,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 });
 
             }
-
         }
     }
 
