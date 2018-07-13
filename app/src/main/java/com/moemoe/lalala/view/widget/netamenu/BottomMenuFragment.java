@@ -87,7 +87,6 @@ public class BottomMenuFragment extends DialogFragment implements View.OnClickLi
         View view = inflater.inflate(R.layout.frag_bottom_menu, container, false);
 
         //view.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.menu_appear));//添加一个加载动画，这样的问题是没办法添加消失动画，有待进一步研究
-
         mLlShareRoot = (LinearLayout) view.findViewById(R.id.ll_share_root);
         mLlQQ = (LinearLayout) view.findViewById(R.id.ll_qq);
         mLlQQZone = (LinearLayout) view.findViewById(R.id.ll_qqZone);

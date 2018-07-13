@@ -4,6 +4,7 @@ package com.moemoe.lalala.view.activity;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
@@ -12,7 +13,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.NinePatch;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.text.style.TtsSpan;
 import android.util.Base64;
@@ -21,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -29,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -40,10 +45,14 @@ import com.moemoe.lalala.databinding.ActivityHouseBinding;
 import com.moemoe.lalala.di.components.DaggerHouseComponent;
 import com.moemoe.lalala.di.modules.HouseModule;
 import com.moemoe.lalala.event.HouseLikeEvent;
+import com.moemoe.lalala.event.StageLineEvent;
 import com.moemoe.lalala.galgame.FileManager;
 import com.moemoe.lalala.galgame.SoundManager;
+import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
+import com.moemoe.lalala.model.entity.AuthorInfo;
+import com.moemoe.lalala.model.entity.DeskmateEntils;
 import com.moemoe.lalala.model.entity.DocDetailEntity;
 import com.moemoe.lalala.model.entity.HouseDbEntity;
 import com.moemoe.lalala.model.entity.HouseLikeEntity;
@@ -56,6 +65,8 @@ import com.moemoe.lalala.model.entity.RubbishEntity;
 import com.moemoe.lalala.model.entity.RubblishBody;
 import com.moemoe.lalala.model.entity.SaveVisitorEntity;
 import com.moemoe.lalala.model.entity.ShareArticleEntity;
+import com.moemoe.lalala.model.entity.StageLineEntity;
+import com.moemoe.lalala.model.entity.StageLineOptionsEntity;
 import com.moemoe.lalala.model.entity.UserTopEntity;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.presenter.DormitoryContract;
@@ -66,11 +77,14 @@ import com.moemoe.lalala.utils.DialogUtils;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.GreenDaoManager;
+import com.moemoe.lalala.utils.IntentUtils;
 import com.moemoe.lalala.utils.MapUtil;
 import com.moemoe.lalala.utils.NetworkUtils;
+import com.moemoe.lalala.utils.NewUtils;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.ShareUtils;
+import com.moemoe.lalala.utils.SideCharacterUtils;
 import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
@@ -119,7 +133,9 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import static android.view.View.DRAWING_CACHE_QUALITY_AUTO;
 import static android.view.View.DRAWING_CACHE_QUALITY_HIGH;
 import static android.view.View.DRAWING_CACHE_QUALITY_LOW;
+import static com.moemoe.lalala.R.dimen.x428;
 import static com.moemoe.lalala.utils.StartActivityConstant.REQ_DELETE_TAG;
+import static com.moemoe.lalala.view.activity.BaseAppCompatActivity.UUID;
 
 public class HouseActivity extends BaseActivity implements DormitoryContract.View {
 
@@ -156,6 +172,24 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     private String saveBitmap;
     private Bitmap bitmap;
     private TextView mTvUserName;
+    private View sidaMenu;
+    private RelativeLayout sidaMenuViewById;
+    private RelativeLayout sidaMenuFrist;
+    private ImageView sidaMenuIvPersonal;
+    private ImageView sidaMenuIvBag;
+    private ImageView sidaMenuIvShopping;
+    private ImageView sidaMenuIvSignRoot;
+    private ImageView sidaMenuIvPhoneMenu;
+    private ImageView sidaMenuIvMsg;
+    private View sideLine;
+    private TextView sideLineContent;
+    private LinearLayout sideLineSelect;
+    private TextView sideLineTvLeft;
+    private TextView sideLineTvCansl;
+    private DeskmateEntils deskmateEntity;
+    private ImageView sidaCharacter;
+    private RelativeLayout sideLineFrist;
+    private StageLineEntity stageLineEntity;
 
     @Override
     protected void initComponent() {
@@ -224,17 +258,17 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mPresenter.addMapMark(HouseActivity.this, mContainer, binding.map, "house");
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (MoeMoeApplication.getInstance().GoneDiaLog()) {
-            return true;
-        }
-        if (MoeMoeApplication.getInstance().isMenu()) {
-            MoeMoeApplication.getInstance().GoneMenu();
-            return true;
-        }
-        return super.dispatchTouchEvent(ev);
-    }
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        if (MoeMoeApplication.getInstance().GoneDiaLog()) {
+//            return true;
+//        }
+//        if (MoeMoeApplication.getInstance().isMenu()) {
+//            MoeMoeApplication.getInstance().GoneMenu();
+//            return true;
+//        }
+//        return super.dispatchTouchEvent(ev);
+//    }
 
     @Override
     protected void onResume() {
@@ -246,7 +280,6 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         binding.ivHouseQrCode.setVisibility(View.INVISIBLE);
         binding.tvHouseName.setVisibility(View.INVISIBLE);
         binding.tvHouseVivit.setVisibility(View.INVISIBLE);
-        MoeMoeApplication.getInstance().VisibilityWindowMager(this);
         binding.map.clearAllView();
         binding.map.addTouchView(HouseActivity.this);
         mPresenter.getVisitorsInfo();
@@ -265,6 +298,10 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         binding.map.setOnImageClickLietener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (sidaMenu != null && sidaMenu.getVisibility() == View.VISIBLE) {
+                    sidaMenu.setVisibility(View.GONE);
+                    return;
+                }
                 if (mIsOut) {
                     imgIn();
                     mIsOut = false;
@@ -280,6 +317,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     protected void initToolbar(Bundle savedInstanceState) {
 
     }
+
 
     @Override
     protected void initListeners() {
@@ -356,6 +394,234 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                 }
             }
         });
+        sidaCharacter = SideCharacterUtils.addFloatDragView(this, binding.rlHouse, new SideCHaracterOnClick());
+        sidaMenu = LayoutInflater.from(this).inflate(R.layout.float_renwu_layout, null);
+        sidaMenu.setLayoutParams(new RelativeLayout.LayoutParams((int) getResources().getDimension(R.dimen.x428), (int) getResources().getDimension(R.dimen.y320)));
+        sidaMenuViewById = (RelativeLayout) sidaMenu.findViewById(R.id.rl_renwu);
+        sidaMenuFrist = (RelativeLayout) sidaMenu.findViewById(R.id.ll_frist);
+        sidaMenuIvPersonal = (ImageView) sidaMenu.findViewById(R.id.iv_personal);
+        sidaMenuIvBag = (ImageView) sidaMenu.findViewById(R.id.iv_bag);
+        sidaMenuIvShopping = (ImageView) sidaMenu.findViewById(R.id.iv_shopping);
+        sidaMenuIvSignRoot = (ImageView) sidaMenu.findViewById(R.id.iv_sign_root);
+        sidaMenuIvPhoneMenu = (ImageView) sidaMenu.findViewById(R.id.iv_phone_menu);
+        sidaMenuIvMsg = (ImageView) sidaMenu.findViewById(R.id.iv_msg);
+        sidaMenu.setVisibility(View.GONE);
+        binding.rlHouse.addView(sidaMenu);
+
+        sidaMenuIvPersonal.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (NetworkUtils.checkNetworkAndShowError(HouseActivity.this) && DialogUtils.checkLoginAndShowDlg(HouseActivity.this)) {
+                    //埋点统计：手机个人中心
+                    Intent i1 = new Intent(HouseActivity.this, PersonalV2Activity.class);
+                    i1.putExtra(UUID, PreferenceUtils.getUUid());
+                    startActivity(i1);
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvBag.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (NetworkUtils.checkNetworkAndShowError(HouseActivity.this) && DialogUtils.checkLoginAndShowDlg(HouseActivity.this)) {
+                    if (PreferenceUtils.getAuthorInfo().isOpenBag()) {
+                        Intent i4 = new Intent(HouseActivity.this, NewBagV5Activity.class);
+                        i4.putExtra("uuid", PreferenceUtils.getUUid());
+                        startActivity(i4);
+                    } else {
+                        Intent i4 = new Intent(HouseActivity.this, BagOpenActivity.class);
+                        startActivity(i4);
+                    }
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvShopping.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                Intent i7 = new Intent(HouseActivity.this, CoinShopActivity.class);
+                startActivity(i7);
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvSignRoot.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (DialogUtils.checkLoginAndShowDlg(HouseActivity.this)) {
+                    DailyTaskActivity.startActivity(HouseActivity.this);
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvPhoneMenu.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (NetworkUtils.checkNetworkAndShowError(HouseActivity.this) && DialogUtils.checkLoginAndShowDlg(HouseActivity.this)) {
+                    //埋点统计：通讯录
+                    startActivity(new Intent(HouseActivity.this, PhoneMenuV3Activity.class));
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvMsg.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (NetworkUtils.checkNetworkAndShowError(HouseActivity.this) && DialogUtils.checkLoginAndShowDlg(HouseActivity.this)) {
+                    //埋点统计：手机聊天
+                    NoticeActivity.startActivity(HouseActivity.this, 1);
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+
+
+        sideLine = LayoutInflater.from(this).inflate(R.layout.float_dialog_layout, null);
+        sideLine.setLayoutParams(new RelativeLayout.LayoutParams((int) getResources().getDimension(R.dimen.x428)
+                , (int) getResources().getDimension(R.dimen.y320)));
+        sideLineFrist = (RelativeLayout) sideLine.findViewById(R.id.rl_dialog);
+        sideLineContent = (TextView) sideLine.findViewById(R.id.tv_content);
+        sideLineSelect = (LinearLayout) sideLine.findViewById(R.id.rl_select);
+        sideLineTvLeft = (TextView) sideLine.findViewById(R.id.iv_left);
+        sideLineTvCansl = (TextView) sideLine.findViewById(R.id.iv_right);
+        sideLine.setVisibility(View.GONE);
+        binding.rlHouse.addView(sideLine);
+
+        sideLineTvLeft.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (sideLine != null && stageLineEntity != null) {
+                    stageLineEntity = getStageLineEntity(stageLineEntity, sideLineTvLeft.getText().toString());
+                    if (stageLineEntity == null) {
+                        sideLine.setVisibility(View.GONE);
+                    } else {
+                        setSidaLineData(stageLineEntity);
+                    }
+                }
+            }
+        });
+        sideLineTvCansl.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (sideLine != null && stageLineEntity != null) {
+                    stageLineEntity = getStageLineEntity(stageLineEntity, sideLineTvCansl.getText().toString());
+                    if (stageLineEntity == null) {
+                        sideLine.setVisibility(View.GONE);
+                    } else {
+                        setSidaLineData(stageLineEntity);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 扒边小人的点击事件
+     */
+    public class SideCHaracterOnClick extends NoDoubleClickListener {
+
+        @Override
+        public void onNoDoubleClick(View view) {
+
+            if (sideLine != null && sideLine.getVisibility() == View.VISIBLE) {
+                sideLine.setVisibility(View.GONE);
+                return;
+            }
+
+            if (sidaMenu != null && sidaMenu.getVisibility() == View.GONE) {
+                sidaMenu.setVisibility(View.VISIBLE);
+                Log.e("view.getLeft()--", view.getLeft() + "");
+                Log.e("view.getTop()--", view.getTop() + "");
+                Log.e("view.getRight()--", view.getRight() + "");
+                Log.e("view.getBottom()--", view.getBottom() + "");
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) sidaMenu.getLayoutParams();
+                if (view.getLeft() == 0) {//左方
+                    if (view.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() + getResources().getDimension(R.dimen.x24)),
+                                view.getTop() - (view.getHeight() / 2), 0, 0);
+                    } else {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() + getResources().getDimension(R.dimen.x24)),
+                                (int) (view.getTop() + (view.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)), 0, 0);
+                    }
+                } else if (view.getLeft() + view.getWidth() == getResources().getDisplayMetrics().widthPixels) {//右方
+                    if (view.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - sidaMenu.getWidth() + view.getWidth() - getResources().getDimension(R.dimen.x24)),
+                                view.getTop() - (view.getHeight() / 2), 0, 0);
+                    } else {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - (int) getResources().getDimension(R.dimen.x428) + view.getWidth() - getResources().getDimension(R.dimen.x24)),
+                                (int) (view.getTop() + (view.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)), 0, 0);
+                    }
+                } else if (view.getTop() == getResources().getDimension(R.dimen.status_bar_height)) {//上方
+                    if (view.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - sidaMenu.getWidth() + view.getWidth() - getResources().getDimension(R.dimen.x24)),
+                                view.getTop() + (view.getHeight() / 2), 0, 0);
+                    } else {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - getResources().getDimension(R.dimen.x24)),
+                                view.getTop() + (view.getHeight() / 2), 0, 0);
+                    }
+
+                } else if (view.getTop() + view.getHeight() == getResources().getDisplayMetrics().heightPixels) {//下方
+                    if (view.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - sidaMenu.getWidth() + view.getWidth() - getResources().getDimension(R.dimen.x24)),
+                                (view.getTop() + (int) getResources().getDimension(R.dimen.status_bar_height)) - (view.getHeight() / 2), 0, 0);
+                    } else {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - getResources().getDimension(R.dimen.x24)),
+                                (view.getTop() + (int) getResources().getDimension(R.dimen.status_bar_height)) - (view.getHeight() / 2), 0, 0);
+                    }
+                }
+                sidaMenu.setLayoutParams(params);
+            } else {
+                sidaMenu.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (sidaMenu != null && sidaMenu.getVisibility() == View.VISIBLE) {
+            sidaMenu.setVisibility(View.GONE);
+            return;
+        }
+        if (sideLine != null && sideLine.getVisibility() == View.VISIBLE) {
+            sideLine.setVisibility(View.GONE);
+            return;
+        }
+    }
+
+    public void GoneSidaMenu() {
+        sidaMenu.setVisibility(View.GONE);
     }
 
     @Override
@@ -738,14 +1004,6 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    protected void onPause() {
-        MoeMoeApplication.getInstance().GoneWindowMager(this);
-        MoeMoeApplication.getInstance().GoneDiaLog();
-        MoeMoeApplication.getInstance().GoneMenu();
-        super.onPause();
-    }
-
     private void imgIn() {
         ObjectAnimator phoneAnimator = ObjectAnimator.ofFloat(binding.llToolBar, "translationY", -binding.llToolBar.getHeight() - getResources().getDimension(R.dimen.y60), 0).setDuration(300);
         phoneAnimator.setInterpolator(new OvershootInterpolator());
@@ -1087,4 +1345,197 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
             }
         }
     };
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void stageLineEvent(StageLineEvent event) {
+        if (event != null && NewUtils.isActivityTop(HouseActivity.class, this)) {
+            goGreenDao();
+            String stageLine = PreferenceUtils.getStageLine(HouseActivity.this);
+            Gson gson = new Gson();
+            StageLineEntity entity = gson.fromJson(stageLine, StageLineEntity.class);
+            if (deskmateEntity.getId().equals(entity.getRoleId()) && stageLine != null) {
+                VisibleSidaLine();
+            }
+        }
+    }
+
+    public void VisibleSidaLine() {
+        if (sidaMenu != null && sidaMenu.getVisibility() == View.GONE) {
+            return;
+        }
+        if (sideLine.getVisibility() == View.GONE) {
+            sideLine.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) sideLine.getLayoutParams();
+            if (sidaCharacter.getLeft() == 0) {//左边
+                if (sidaCharacter.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_left);
+                    params.setMargins((int) (sidaCharacter.getLeft() + getResources().getDimension(R.dimen.x24)),
+                            sidaCharacter.getTop() - (sidaCharacter.getHeight() / 2),
+                            0, 0);
+                } else {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_left);
+                    params.setMargins((int) (sidaCharacter.getLeft() + getResources().getDimension(R.dimen.x24)),
+                            (int) (sidaCharacter.getTop() + (sidaCharacter.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)),
+                            0, 0);
+                }
+            } else if (sidaCharacter.getLeft() + sidaCharacter.getWidth() == getResources().getDisplayMetrics().widthPixels) {//右边
+                if (sidaCharacter.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_right);
+                    params.setMargins((int) (sidaCharacter.getLeft() - sidaMenu.getWidth() + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
+                            sidaCharacter.getTop() - (sidaCharacter.getHeight() / 2),
+                            0, 0);
+                } else {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_right);
+                    params.setMargins((int) (sidaCharacter.getLeft() - (int) getResources().getDimension(R.dimen.x428) + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
+                            (int) (sidaCharacter.getTop() + (sidaCharacter.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)),
+                            0, 0);
+
+                }
+            } else if (sidaCharacter.getTop() == getResources().getDimension(R.dimen.status_bar_height)) {//上方
+                if (sidaCharacter.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_right);
+                    params.setMargins((int) (sidaCharacter.getLeft() - sidaMenu.getWidth() + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
+                            sidaCharacter.getTop() + (sidaCharacter.getHeight() / 2),
+                            0, 0);
+                } else {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_left);
+                    params.setMargins((int) (sidaCharacter.getLeft() - getResources().getDimension(R.dimen.x24)),
+                            (int) (sidaCharacter.getTop() + (sidaCharacter.getHeight() / 2)),
+                            0, 0);
+
+                }
+            } else if (sidaCharacter.getTop() + sidaCharacter.getHeight() == getResources().getDisplayMetrics().heightPixels) {//下方
+                if (sidaCharacter.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_right);
+                    params.setMargins((int) (sidaCharacter.getLeft() - sidaMenu.getWidth() + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
+                            (sidaCharacter.getTop() + (int) getResources().getDimension(R.dimen.status_bar_height)) - (sidaCharacter.getHeight() / 2), 0, 0);
+                } else {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_left);
+                    params.setMargins((int) (sidaCharacter.getLeft() - getResources().getDimension(R.dimen.x24)),
+                            (sidaCharacter.getTop() + (int) getResources().getDimension(R.dimen.status_bar_height)) - (sidaCharacter.getHeight() / 2), 0, 0);
+                }
+            }
+
+            String stageLine = PreferenceUtils.getStageLine(this);
+            Gson gson = new Gson();
+            stageLineEntity = gson.fromJson(stageLine, StageLineEntity.class);
+            setSidaLineData(stageLineEntity);
+        } else {
+            // TODO: 2018/7/12  考虑正在执行台词又来一条台词的情况   后面那条进行存储  在次播放
+        }
+    }
+
+    public void setSidaLineData(StageLineEntity entity) {
+        if (sideLine != null) {
+            if (entity.getId() != null) {
+                if (!TextUtils.isEmpty(entity.getSchema())) {
+                    String temp = entity.getSchema();
+                    if (temp.contains("map_event_1.0") || temp.contains("game_1.0")) {
+                        if (!DialogUtils.checkLoginAndShowDlg(this)) {
+                            return;
+                        }
+                    }
+                    if (temp.contains("http://s.moemoe.la/game/devil/index.html")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?user_id=" + authorInfo.getUserId() + "&full_screen";
+                    }
+
+                    if (temp.contains("http://kiratetris.leanapp.cn/tab001/index.html")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?id=" + authorInfo.getUserId() + "&name=" + authorInfo.getUserName();
+                    }
+                    if (temp.contains("http://prize.moemoe.la:8000/mt")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?user_id=" + authorInfo.getUserId() + "&nickname=" + authorInfo.getUserName();
+                    }
+                    if (temp.contains("http://prize.moemoe.la:8000/netaopera/chap")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?pass=" + PreferenceUtils.getPassEvent(this) + "&user_id=" + authorInfo.getUserId();
+                    }
+                    if (temp.contains("http://neta.facehub.me/")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?open_id=" + authorInfo.getUserId() + "&nickname=" + authorInfo.getUserName() + "&pay_way=alipay,wx,qq" + "&full_screen";
+                    }
+                    if (temp.contains("fanxiao/final.html")) {
+                        temp += "?token=" + PreferenceUtils.getToken()
+                                + "&full_screen";
+                    }
+                    if (temp.contains("fanxiao/paihang.html")) {
+                        temp += "?token=" + PreferenceUtils.getToken();
+                    }
+                    if (temp.contains("game_1.0")) {
+                        temp += "&token=" + PreferenceUtils.getToken() + "&version=" + AppSetting.VERSION_CODE + "&userId=" + PreferenceUtils.getUUid() + "&channel=" + AppSetting.CHANNEL;
+                    }
+                    Uri uri = Uri.parse(temp);
+                    IntentUtils.toActivityFromUri(this, uri, sideLine);
+
+                } else {
+                    sideLineContent.setText(entity.getContent() + "");
+                }
+                if (entity.getDialogType() != null && entity.getDialogType().equals("dialog_option")) {
+                    sideLineSelect.setVisibility(View.VISIBLE);
+                    for (int i = 0; i < entity.getOptions().size(); i++) {
+                        if (i == 0) {
+                            sideLineTvLeft.setText(entity.getOptions().get(i).getOption() + "");
+                        } else {
+                            if (entity.getOptions().get(i) == null) {
+                                sideLineTvCansl.setVisibility(View.GONE);
+                            } else {
+                                sideLineTvCansl.setText(entity.getOptions().get(i).getOption() + "");
+                            }
+                        }
+                    }
+                } else {
+                    sideLineSelect.setVisibility(View.GONE);
+                }
+            } else {
+                sideLine.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    /**
+     * 解析台词层级
+     *
+     * @param mData
+     * @return
+     */
+    private StageLineEntity getStageLineEntity(StageLineEntity mData, String isSelect) {
+        List<StageLineOptionsEntity> options = mData.getOptions();
+        String LeftId = null;
+        for (int i = 0; i < options.size(); i++) {
+            if (options.get(i).getOption().equals(isSelect)) {
+                LeftId = options.get(i).getId();
+            }
+        }
+        List<StageLineEntity> children = mData.getChildren();
+        if (children == null) {
+            return null;
+        } else {
+            StageLineEntity stageLineEntity = new StageLineEntity();
+            for (int i = 0; i < children.size(); i++) {
+                if (children.get(i).getParentOptionId().equals(LeftId)) {
+                    stageLineEntity = children.get(i);
+                }
+            }
+            return stageLineEntity;
+        }
+    }
+
+    /**
+     * 数据压制
+     */
+    public int goGreenDao() {
+        ArrayList<DeskmateEntils> entilsDao = (ArrayList<DeskmateEntils>) GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao()
+                .queryBuilder()
+                .where(DeskmateEntilsDao.Properties.Type.eq("HousUser"))
+                .list();
+        if (entilsDao != null && entilsDao.size() > 0) {
+            for (DeskmateEntils entils : entilsDao) {
+                deskmateEntity = entils;
+            }
+        }
+        return entilsDao.size() > 0 ? entilsDao.size() : 0;
+    }
 }

@@ -18,6 +18,7 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.di.components.DaggerSettingComponent;
 import com.moemoe.lalala.di.modules.SettingModule;
 import com.moemoe.lalala.dialog.AlertDialog;
+import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
 import com.moemoe.lalala.model.entity.AppUpdateEntity;
 import com.moemoe.lalala.netamusic.player.AudioPlayer;
 import com.moemoe.lalala.presenter.SettingContract;
@@ -26,6 +27,7 @@ import com.moemoe.lalala.utils.AlertDialogUtil;
 import com.moemoe.lalala.utils.CommonLoadingTask;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.FileUtil;
+import com.moemoe.lalala.utils.GreenDaoManager;
 import com.moemoe.lalala.utils.JuQingUtil;
 import com.moemoe.lalala.utils.NetworkUtils;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
@@ -45,11 +47,10 @@ import cn.sharesdk.wechat.friends.Wechat;
 import io.rong.imkit.RongIM;
 
 /**
- *
  * Created by yi on 2016/12/1.
  */
 
-public class SettingActivity extends BaseAppCompatActivity implements View.OnClickListener,SettingContract.View{
+public class SettingActivity extends BaseAppCompatActivity implements View.OnClickListener, SettingContract.View {
 
     public static final int REQUEST_SETTING_LOGIN = 3000;
     public static final int REQUEST_SETTING_LOGOUT = 3100;
@@ -79,7 +80,7 @@ public class SettingActivity extends BaseAppCompatActivity implements View.OnCli
                 .inject(this);
         mTvTitle.setText(R.string.label_setting);
         mIsLogin = PreferenceUtils.isLogin();
-        if(mIsLogin){
+        if (mIsLogin) {
             ViewStub personViewStub = findViewById(R.id.stub_set_person);
             View personSettingView = personViewStub.inflate();
             initPersonSetting(personSettingView);
@@ -90,12 +91,12 @@ public class SettingActivity extends BaseAppCompatActivity implements View.OnCli
 
         TextView logTv = findViewById(R.id.set_log_out);
         logTv.setOnClickListener(this);
-        if(mIsLogin){
+        if (mIsLogin) {
             logTv.setText(R.string.label_log_out);
         } else {
             logTv.setText(R.string.label_login);
             logTv.setBackgroundResource(R.drawable.bg_setting_login);
-            logTv.setTextColor(ContextCompat.getColor(this,R.color.txt_white_can_disable));
+            logTv.setTextColor(ContextCompat.getColor(this, R.color.txt_white_can_disable));
         }
     }
 
@@ -106,61 +107,61 @@ public class SettingActivity extends BaseAppCompatActivity implements View.OnCli
 
     @Override
     protected void onDestroy() {
-        if(mPresenter != null)mPresenter.release();
+        if (mPresenter != null) mPresenter.release();
         super.onDestroy();
     }
 
-    private void initPersonSetting(View parent){
+    private void initPersonSetting(View parent) {
         initStyleView(parent, R.id.set_change_psw);
         initStyleView(parent, R.id.set_change_address);
         initStyleView(parent, R.id.set_black_list);
     }
 
-    private void initSyetemSetting(View parent){
+    private void initSyetemSetting(View parent) {
         initStyleView(parent, R.id.set_3g_pic);
         initStyleView(parent, R.id.set_version_update);
         initStyleView(parent, R.id.set_clear_cache);
         initStyleView(parent, R.id.set_about);
     }
 
-    private void initStyleView(View parent, int resId){
+    private void initStyleView(View parent, int resId) {
         View v = parent.findViewById(resId);
         v.setOnClickListener(this);
         TextView funNameTv = getFunNameTv(v);
         TextView funDetailTv = getFunDetailTv(v);
         ImageView funIndicateIv = getFunIndicateIv(v);
         int id = v.getId();
-        if(id == R.id.set_select_deskmate){
+        if (id == R.id.set_select_deskmate) {
             funNameTv.setText(R.string.label_select_deskmate);
-        } else if(id == R.id.set_change_psw){
+        } else if (id == R.id.set_change_psw) {
             funNameTv.setText(R.string.label_change_password);
-        } else if(id == R.id.set_3g_pic){
+        } else if (id == R.id.set_3g_pic) {
             funNameTv.setText(R.string.label_3g_pic);
             funIndicateIv.setImageResource(R.drawable.select_btn_3g);
             funIndicateIv.setSelected(AppSetting.IS_DOWNLOAD_LOW_IN_3G);
-        } else if(id == R.id.set_version_update){
+        } else if (id == R.id.set_version_update) {
             funNameTv.setText(R.string.label_version_update);
-        } else if(id == R.id.set_clear_cache){
+        } else if (id == R.id.set_clear_cache) {
             funNameTv.setText(R.string.label_clear_cache);
             initClearCacheDetailTv(funDetailTv);
-        } else if(id == R.id.set_about){
+        } else if (id == R.id.set_about) {
             funNameTv.setText(R.string.label_about);
-        } else if(id == R.id.set_change_address){
+        } else if (id == R.id.set_change_address) {
             funNameTv.setText(R.string.label_order_address);
-        }else if(id == R.id.set_black_list){
+        } else if (id == R.id.set_black_list) {
             funNameTv.setText(R.string.label_user_reject_list);
         }
     }
 
-    private TextView getFunNameTv(View v){
+    private TextView getFunNameTv(View v) {
         return (TextView) v.findViewById(R.id.tv_function_name);
     }
 
-    private TextView getFunDetailTv(View v){
+    private TextView getFunDetailTv(View v) {
         return (TextView) v.findViewById(R.id.tv_function_detail);
     }
 
-    private ImageView getFunIndicateIv(View v){
+    private ImageView getFunIndicateIv(View v) {
         return (ImageView) v.findViewById(R.id.iv_indicate_img);
     }
 
@@ -184,50 +185,50 @@ public class SettingActivity extends BaseAppCompatActivity implements View.OnCli
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if(id == R.id.set_select_deskmate){
+        if (id == R.id.set_select_deskmate) {
             selectActor();
-        } else if(id == R.id.set_change_psw){
+        } else if (id == R.id.set_change_psw) {
             Intent intent = new Intent(this, ChangePasswordActivity.class);
             intent.putExtra(PhoneStateCheckActivity.EXTRA_ACTION, PhoneStateCheckActivity.ACTION_CHAGE_PASSWORD);
             startActivity(intent);
-        } else if(id == R.id.set_3g_pic){
+        } else if (id == R.id.set_3g_pic) {
             ImageView funIndicateIv = getFunIndicateIv(SettingActivity.this.findViewById(R.id.set_3g_pic));
             funIndicateIv.setSelected(!funIndicateIv.isSelected());
             AppSetting.IS_DOWNLOAD_LOW_IN_3G = funIndicateIv.isSelected();
-            PreferenceUtils.setLowIn3G(SettingActivity.this,AppSetting.IS_DOWNLOAD_LOW_IN_3G);
-        }else if(id == R.id.set_version_update){
+            PreferenceUtils.setLowIn3G(SettingActivity.this, AppSetting.IS_DOWNLOAD_LOW_IN_3G);
+        } else if (id == R.id.set_version_update) {
             checkVersion();
-        } else if(id == R.id.set_clear_cache){
+        } else if (id == R.id.set_clear_cache) {
             clearCache();
-        } else if(id == R.id.set_about){
+        } else if (id == R.id.set_about) {
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
-        } else if(id == R.id.set_log_out){
-            if(mIsLogin){
+        } else if (id == R.id.set_log_out) {
+            if (mIsLogin) {
                 logout();
             } else {
                 Intent i = new Intent(this, LoginActivity.class);
-                i.putExtra(LoginActivity.EXTRA_KEY_SETTING,false);
+                i.putExtra(LoginActivity.EXTRA_KEY_SETTING, false);
                 startActivityForResult(i, REQUEST_SETTING_LOGIN);
             }
-        } else if(id == R.id.set_change_address){
+        } else if (id == R.id.set_change_address) {
             Intent i = new Intent(this, AddAddressActivity.class);
             startActivity(i);
-        }else if(id == R.id.set_black_list){
-            Intent i = new Intent(SettingActivity.this,UserRejectListActivity.class);
+        } else if (id == R.id.set_black_list) {
+            Intent i = new Intent(SettingActivity.this, UserRejectListActivity.class);
             startActivity(i);
         }
     }
 
-    private void checkVersion(){
-        if(NetworkUtils.isNetworkAvailable(this) && NetworkUtils.isWifi(this)){
+    private void checkVersion() {
+        if (NetworkUtils.isNetworkAvailable(this) && NetworkUtils.isWifi(this)) {
             mPresenter.checkVersion();
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_SETTING_LOGIN){
+        if (requestCode == REQUEST_SETTING_LOGIN) {
             finish();
         }
     }
@@ -235,24 +236,25 @@ public class SettingActivity extends BaseAppCompatActivity implements View.OnCli
     /**
      * 登出
      */
-    private void logout(){
+    private void logout() {
         mPresenter.logout();
     }
 
     /**
      * 选择同桌
      */
-    private void selectActor(){
+    private void selectActor() {
     }
+
     /**
      * 获取缓存总大小
      */
-    private void initClearCacheDetailTv(final TextView clearCacheTv){
+    private void initClearCacheDetailTv(final TextView clearCacheTv) {
         mHander.post(new Runnable() {
             @Override
             public void run() {
                 long size = FileUtil.getCacheSize(SettingActivity.this);
-                if(size == 0){
+                if (size == 0) {
                 } else {
                     clearCacheTv.setText(StringUtils.getFileSizeString(size));
                     clearCacheTv.setVisibility(View.VISIBLE);
@@ -264,7 +266,7 @@ public class SettingActivity extends BaseAppCompatActivity implements View.OnCli
     /**
      * 清理缓存
      */
-    private void clearCache(){
+    private void clearCache() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.a_dlg_title);
         builder.setMessage(R.string.a_dlg_clear_cache);
@@ -337,40 +339,40 @@ public class SettingActivity extends BaseAppCompatActivity implements View.OnCli
         try {
             AppSetting.isLoadDone = false;
             RongIM.getInstance().logout();
-            PreferenceUtils.setNormalMsgDotNum(this,0);
-            PreferenceUtils.setAtUserMsgDotNum(this,0);
-            PreferenceUtils.setNetaMsgDotNum(this,0);
-            PreferenceUtils.setSysMsgDotNum(this,0);
-            PreferenceUtils.setRCDotNum(this,0);
-            PreferenceUtils.setGroupDotNum(this,0);
-            PreferenceUtils.setJuQingDotNum(this,0);
-            PreferenceUtils.setMessageDot(this,"system",false);
-            PreferenceUtils.setMessageDot(this,"neta",false);
-            PreferenceUtils.setMessageDot(this,"at_user",false);
-            PreferenceUtils.setMessageDot(this,"normal",false);
-
+            PreferenceUtils.setNormalMsgDotNum(this, 0);
+            PreferenceUtils.setAtUserMsgDotNum(this, 0);
+            PreferenceUtils.setNetaMsgDotNum(this, 0);
+            PreferenceUtils.setSysMsgDotNum(this, 0);
+            PreferenceUtils.setRCDotNum(this, 0);
+            PreferenceUtils.setGroupDotNum(this, 0);
+            PreferenceUtils.setJuQingDotNum(this, 0);
+            PreferenceUtils.setMessageDot(this, "system", false);
+            PreferenceUtils.setMessageDot(this, "neta", false);
+            PreferenceUtils.setMessageDot(this, "at_user", false);
+            PreferenceUtils.setMessageDot(this, "normal", false);
+            GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao().deleteAll();
             AudioPlayer.get().clearList(true);
-            if(AudioPlayer.get().isPlaying()){
+            if (AudioPlayer.get().isPlaying()) {
                 AudioPlayer.get().stopPlayer();
             }
 
             JuQingUtil.clearJuQingDone();
-            if(isThirdParty(PreferenceUtils.getAuthorInfo().getPlatform())){
+            if (isThirdParty(PreferenceUtils.getAuthorInfo().getPlatform())) {
                 Platform p = ShareSDK.getPlatform(PreferenceUtils.getAuthorInfo().getPlatform());
-                if(p.isAuthValid()){
+                if (p.isAuthValid()) {
                     p.removeAccount(true);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             PreferenceUtils.clearAuthorInfo();
             setResult(REQUEST_SETTING_LOGOUT);
             finish();
         }
     }
 
-    public boolean isThirdParty(String platform){
+    public boolean isThirdParty(String platform) {
         return platform != null && (platform.equals(cn.sharesdk.tencent.qq.QQ.NAME) || platform.equals(Wechat.NAME) || platform.equals(SinaWeibo.NAME));
     }
 
@@ -390,7 +392,7 @@ public class SettingActivity extends BaseAppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void onFailure(int code,String msg) {
-        ErrorCodeUtils.showErrorMsgByCode(SettingActivity.this,code,msg);
+    public void onFailure(int code, String msg) {
+        ErrorCodeUtils.showErrorMsgByCode(SettingActivity.this, code, msg);
     }
 }

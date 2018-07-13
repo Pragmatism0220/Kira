@@ -2,11 +2,13 @@ package com.moemoe.lalala.view.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -19,18 +21,28 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.moemoe.lalala.R;
+import com.moemoe.lalala.app.AppSetting;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.event.ScrollMessage;
+import com.moemoe.lalala.event.StageLineEvent;
+import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
+import com.moemoe.lalala.model.entity.AuthorInfo;
+import com.moemoe.lalala.model.entity.DeskmateEntils;
 import com.moemoe.lalala.model.entity.ReceiverInfo;
 import com.moemoe.lalala.model.entity.StageLineEntity;
+import com.moemoe.lalala.model.entity.StageLineOptionsEntity;
 import com.moemoe.lalala.model.entity.TagLikeEntity;
 import com.moemoe.lalala.model.entity.TagSendEntity;
 import com.moemoe.lalala.utils.DialogUtils;
 import com.moemoe.lalala.utils.DocEvent;
+import com.moemoe.lalala.utils.GreenDaoManager;
+import com.moemoe.lalala.utils.IntentUtils;
 import com.moemoe.lalala.utils.MapEevent;
 import com.moemoe.lalala.utils.NetworkUtils;
+import com.moemoe.lalala.utils.NewUtils;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
+import com.moemoe.lalala.utils.SideCharacterUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.adapter.TabFragmentPagerAdapter;
@@ -40,11 +52,15 @@ import com.moemoe.lalala.view.fragment.FeedDynamicV3Fragment;
 import com.moemoe.lalala.view.fragment.FeedFollowV4Fragment;
 import com.moemoe.lalala.view.fragment.NewCommunityFragment;
 import com.moemoe.lalala.view.fragment.NewFollowMainV3Fragment;
+import com.moemoe.lalala.view.widget.camera.IFaceDetector;
 import com.moemoe.lalala.view.widget.map.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import io.rong.imkit.RongIM;
@@ -53,6 +69,7 @@ import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
+import static com.moemoe.lalala.R.dimen.x428;
 import static com.moemoe.lalala.utils.StartActivityConstant.REQUEST_CODE_CREATE_DOC;
 import static com.moemoe.lalala.utils.StartActivityConstant.REQ_LOGIN;
 import static com.moemoe.lalala.utils.StartActivityConstant.REQ_SELECT_TAG;
@@ -108,6 +125,8 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
     FrameLayout mFlContainer;
     @BindView(R.id.tool)
     LinearLayout mTitle;
+    @BindView(R.id.rl_ac_root)
+    RelativeLayout mRlAcRoot;
 
 
     private TabFragmentPagerAdapter mAdapter;
@@ -121,6 +140,24 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
     private final float maxScroll = 500f;//滚动多少像素会完全隐藏title，可以随意设置，不建议直接使用定值像素，可使用固定dp值转像素或者固定屏幕比例转像素
     private float oldAlpha;//获取当前的透明度
     private TextView title;
+    private View sidaMenu;
+    private ImageView sidaCharacter;
+    private RelativeLayout sidaMenuViewById;
+    private RelativeLayout sidaMenuFrist;
+    private ImageView sidaMenuIvPersonal;
+    private ImageView sidaMenuIvBag;
+    private ImageView sidaMenuIvShopping;
+    private ImageView sidaMenuIvSignRoot;
+    private ImageView sidaMenuIvPhoneMenu;
+    private ImageView sidaMenuIvMsg;
+    private View sideLine;
+    private RelativeLayout sideLineFrist;
+    private TextView sideLineContent;
+    private LinearLayout sideLineSelect;
+    private TextView sideLineTvLeft;
+    private TextView sideLineTvCansl;
+    private DeskmateEntils deskmateEntity;
+    private StageLineEntity stageLineEntity;
 
     @Override
     protected int getLayoutId() {
@@ -255,11 +292,19 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (MoeMoeApplication.getInstance().GoneDiaLog()) {
+//        if (MoeMoeApplication.getInstance().GoneDiaLog()) {
+//            return true;
+//        }
+//        if (MoeMoeApplication.getInstance().isMenu()) {
+//            MoeMoeApplication.getInstance().GoneMenu();
+//            return true;
+//        }
+        if (sidaMenu != null && sidaMenu.getVisibility() == View.VISIBLE) {
+            sidaMenu.setVisibility(View.GONE);
             return true;
         }
-        if (MoeMoeApplication.getInstance().isMenu()) {
-            MoeMoeApplication.getInstance().GoneMenu();
+        if (sideLine != null && sideLine.getVisibility() == View.VISIBLE) {
+            sideLine.setVisibility(View.GONE);
             return true;
         }
         return super.dispatchTouchEvent(ev);
@@ -372,15 +417,237 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
 
     @Override
     protected void initData() {
+        sidaCharacter = SideCharacterUtils.addFloatDragView(this, mRlAcRoot, new SideCHaracterOnClick());
 
+
+        sidaMenu = LayoutInflater.from(this).inflate(R.layout.float_renwu_layout, null);
+        sidaMenu.setLayoutParams(new RelativeLayout.LayoutParams((int) getResources().getDimension(R.dimen.x428)
+                , (int) getResources().getDimension(R.dimen.y320)));
+        sidaMenuViewById = (RelativeLayout) sidaMenu.findViewById(R.id.rl_renwu);
+        sidaMenuFrist = (RelativeLayout) sidaMenu.findViewById(R.id.ll_frist);
+        sidaMenuIvPersonal = (ImageView) sidaMenu.findViewById(R.id.iv_personal);
+        sidaMenuIvBag = (ImageView) sidaMenu.findViewById(R.id.iv_bag);
+        sidaMenuIvShopping = (ImageView) sidaMenu.findViewById(R.id.iv_shopping);
+        sidaMenuIvSignRoot = (ImageView) sidaMenu.findViewById(R.id.iv_sign_root);
+        sidaMenuIvPhoneMenu = (ImageView) sidaMenu.findViewById(R.id.iv_phone_menu);
+        sidaMenuIvMsg = (ImageView) sidaMenu.findViewById(R.id.iv_msg);
+        sidaMenu.setVisibility(View.GONE);
+        mRlAcRoot.addView(sidaMenu);
+
+        sidaMenuIvPersonal.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (NetworkUtils.checkNetworkAndShowError(FeedV3Activity.this) && DialogUtils.checkLoginAndShowDlg(FeedV3Activity.this)) {
+                    //埋点统计：手机个人中心
+                    Intent i1 = new Intent(FeedV3Activity.this, PersonalV2Activity.class);
+                    i1.putExtra(UUID, PreferenceUtils.getUUid());
+                    startActivity(i1);
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvBag.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (NetworkUtils.checkNetworkAndShowError(FeedV3Activity.this) && DialogUtils.checkLoginAndShowDlg(FeedV3Activity.this)) {
+                    if (PreferenceUtils.getAuthorInfo().isOpenBag()) {
+                        Intent i4 = new Intent(FeedV3Activity.this, NewBagV5Activity.class);
+                        i4.putExtra("uuid", PreferenceUtils.getUUid());
+                        startActivity(i4);
+                    } else {
+                        Intent i4 = new Intent(FeedV3Activity.this, BagOpenActivity.class);
+                        startActivity(i4);
+                    }
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvShopping.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                Intent i7 = new Intent(FeedV3Activity.this, CoinShopActivity.class);
+                startActivity(i7);
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvSignRoot.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (DialogUtils.checkLoginAndShowDlg(FeedV3Activity.this)) {
+                    DailyTaskActivity.startActivity(FeedV3Activity.this);
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvPhoneMenu.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (NetworkUtils.checkNetworkAndShowError(FeedV3Activity.this) && DialogUtils.checkLoginAndShowDlg(FeedV3Activity.this)) {
+                    //埋点统计：通讯录
+                    startActivity(new Intent(FeedV3Activity.this, PhoneMenuV3Activity.class));
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvMsg.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (NetworkUtils.checkNetworkAndShowError(FeedV3Activity.this) && DialogUtils.checkLoginAndShowDlg(FeedV3Activity.this)) {
+                    //埋点统计：手机聊天
+                    NoticeActivity.startActivity(FeedV3Activity.this, 1);
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+
+
+        sideLine = LayoutInflater.from(this).inflate(R.layout.float_dialog_layout, null);
+        sideLine.setLayoutParams(new RelativeLayout.LayoutParams((int) getResources().getDimension(R.dimen.x428)
+                , (int) getResources().getDimension(R.dimen.y320)));
+        sideLineFrist = (RelativeLayout) sideLine.findViewById(R.id.rl_dialog);
+        sideLineContent = (TextView) sideLine.findViewById(R.id.tv_content);
+        sideLineSelect = (LinearLayout) sideLine.findViewById(R.id.rl_select);
+        sideLineTvLeft = (TextView) sideLine.findViewById(R.id.iv_left);
+        sideLineTvCansl = (TextView) sideLine.findViewById(R.id.iv_right);
+        sideLine.setVisibility(View.GONE);
+        mRlAcRoot.addView(sideLine);
+
+        sideLineTvLeft.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (sideLine != null && stageLineEntity != null) {
+                    stageLineEntity = getStageLineEntity(stageLineEntity, sideLineTvLeft.getText().toString());
+                    if (stageLineEntity == null) {
+                        sideLine.setVisibility(View.GONE);
+                    } else {
+                        setSidaLineData(stageLineEntity);
+                    }
+                }
+            }
+        });
+        sideLineTvCansl.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (sideLine != null && stageLineEntity != null) {
+                    stageLineEntity = getStageLineEntity(stageLineEntity, sideLineTvCansl.getText().toString());
+                    if (stageLineEntity == null) {
+                        sideLine.setVisibility(View.GONE);
+                    } else {
+                        setSidaLineData(stageLineEntity);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 扒边小人的点击事件
+     */
+    public class SideCHaracterOnClick extends NoDoubleClickListener {
+
+        @Override
+        public void onNoDoubleClick(View view) {
+
+            if (sideLine != null && sideLine.getVisibility() == View.VISIBLE) {
+                sideLine.setVisibility(View.GONE);
+                return;
+            }
+
+            if (sidaMenu != null && sidaMenu.getVisibility() == View.GONE) {
+                sidaMenu.setVisibility(View.VISIBLE);
+                Log.e("view.getLeft()--", view.getLeft() + "");
+                Log.e("view.getTop()--", view.getTop() + "");
+                Log.e("view.getRight()--", view.getRight() + "");
+                Log.e("view.getBottom()--", view.getBottom() + "");
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) sidaMenu.getLayoutParams();
+                if (view.getLeft() == 0) {//左方
+                    if (view.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() + getResources().getDimension(R.dimen.x24)),
+                                view.getTop() - (view.getHeight() / 2), 0, 0);
+                    } else {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() + getResources().getDimension(R.dimen.x24)),
+                                (int) (view.getTop() + (view.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)), 0, 0);
+                    }
+                } else if (view.getLeft() + view.getWidth() == getResources().getDisplayMetrics().widthPixels) {//右方
+                    if (view.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
+                        sidaMenuViewById.setLayoutParams(new RelativeLayout.LayoutParams((int) getResources().getDimension(R.dimen.x428)
+                                , (int) getResources().getDimension(R.dimen.y320)));
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - sidaMenu.getWidth() + view.getWidth() - getResources().getDimension(R.dimen.x24)),
+                                view.getTop() - (view.getHeight() / 2), 0, 0);
+                    } else {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
+                        sidaMenuViewById.setLayoutParams(new RelativeLayout.LayoutParams((int) getResources().getDimension(R.dimen.x428)
+                                , (int) getResources().getDimension(R.dimen.y320)));
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - (int) getResources().getDimension(R.dimen.x428) + view.getWidth() - getResources().getDimension(R.dimen.x24)),
+                                (int) (view.getTop() + (view.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)), 0, 0);
+                    }
+                } else if (view.getTop() == getResources().getDimension(R.dimen.status_bar_height)) {//上方
+                    if (view.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - sidaMenu.getWidth() + view.getWidth() - getResources().getDimension(R.dimen.x24)),
+                                view.getTop() + (view.getHeight() / 2), 0, 0);
+                    } else {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - getResources().getDimension(R.dimen.x24)),
+                                view.getTop() + (view.getHeight() / 2), 0, 0);
+                    }
+
+                } else if (view.getTop() + view.getHeight() == getResources().getDisplayMetrics().heightPixels) {//下方
+                    if (view.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - sidaMenu.getWidth() + view.getWidth() - getResources().getDimension(R.dimen.x24)),
+                                (view.getTop() + (int) getResources().getDimension(R.dimen.status_bar_height)) - (view.getHeight() / 2), 0, 0);
+                    } else {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - getResources().getDimension(R.dimen.x24)),
+                                (view.getTop() + (int) getResources().getDimension(R.dimen.status_bar_height)) - (view.getHeight() / 2), 0, 0);
+                    }
+                }
+                sidaMenu.setLayoutParams(params);
+            } else {
+                sidaMenu.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MoeMoeApplication.getInstance().GoneWindowMager(this);
-        MoeMoeApplication.getInstance().GoneDiaLog();
-        MoeMoeApplication.getInstance().GoneMenu();
+        if (sidaMenu != null && sidaMenu.getVisibility() == View.VISIBLE) {
+            sidaMenu.setVisibility(View.GONE);
+            return;
+        }
+        if (sideLine != null && sideLine.getVisibility() == View.VISIBLE) {
+            sideLine.setVisibility(View.GONE);
+            return;
+        }
         pauseTime();
     }
 
@@ -388,7 +655,6 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
     @Override
     protected void onResume() {
         super.onResume();
-        MoeMoeApplication.getInstance().VisibilityWindowMager(this);
         startTime();
         if (!RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED)) {
             if (!TextUtils.isEmpty(PreferenceUtils.getAuthorInfo().getRcToken())) {
@@ -507,7 +773,6 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
 
     @Override
     protected void onDestroy() {
-        MoeMoeApplication.getInstance().activities.remove(FeedV3Activity.class.getName());
         EventBus.getDefault().post(new MapEevent());
         stayEvent("社团");
         EventBus.getDefault().unregister(this);
@@ -559,5 +824,198 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
                 mTvCLubDot.setVisibility(View.GONE);
             }
         }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void stageLineEvent(StageLineEvent event) {
+        if (event != null && NewUtils.isActivityTop(FeedV3Activity.class, this)) {
+            goGreenDao();
+            String stageLine = PreferenceUtils.getStageLine(FeedV3Activity.this);
+            Gson gson = new Gson();
+            StageLineEntity entity = gson.fromJson(stageLine, StageLineEntity.class);
+            if (deskmateEntity.getId().equals(entity.getRoleId()) && stageLine != null) {
+                VisibleSidaLine();
+            }
+        }
+    }
+
+    public void VisibleSidaLine() {
+        if (sidaMenu != null && sidaMenu.getVisibility() == View.GONE) {
+            return;
+        }
+        if (sideLine.getVisibility() == View.GONE) {
+            sideLine.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) sideLine.getLayoutParams();
+            if (sidaCharacter.getLeft() == 0) {//左边
+                if (sidaCharacter.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_left);
+                    params.setMargins((int) (sidaCharacter.getLeft() + getResources().getDimension(R.dimen.x24)),
+                            sidaCharacter.getTop() - (sidaCharacter.getHeight() / 2),
+                            0, 0);
+                } else {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_left);
+                    params.setMargins((int) (sidaCharacter.getLeft() + getResources().getDimension(R.dimen.x24)),
+                            (int) (sidaCharacter.getTop() + (sidaCharacter.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)),
+                            0, 0);
+                }
+            } else if (sidaCharacter.getLeft() + sidaCharacter.getWidth() == getResources().getDisplayMetrics().widthPixels) {//右边
+                if (sidaCharacter.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_right);
+                    params.setMargins((int) (sidaCharacter.getLeft() - sidaMenu.getWidth() + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
+                            sidaCharacter.getTop() - (sidaCharacter.getHeight() / 2),
+                            0, 0);
+                } else {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_right);
+                    params.setMargins((int) (sidaCharacter.getLeft() - (int) getResources().getDimension(R.dimen.x428) + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
+                            (int) (sidaCharacter.getTop() + (sidaCharacter.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)),
+                            0, 0);
+
+                }
+            } else if (sidaCharacter.getTop() == getResources().getDimension(R.dimen.status_bar_height)) {//上方
+                if (sidaCharacter.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_right);
+                    params.setMargins((int) (sidaCharacter.getLeft() - sidaMenu.getWidth() + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
+                            sidaCharacter.getTop() + (sidaCharacter.getHeight() / 2),
+                            0, 0);
+                } else {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_left);
+                    params.setMargins((int) (sidaCharacter.getLeft() - getResources().getDimension(R.dimen.x24)),
+                            (int) (sidaCharacter.getTop() + (sidaCharacter.getHeight() / 2)),
+                            0, 0);
+
+                }
+            } else if (sidaCharacter.getTop() + sidaCharacter.getHeight() == getResources().getDisplayMetrics().heightPixels) {//下方
+                if (sidaCharacter.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_right);
+                    params.setMargins((int) (sidaCharacter.getLeft() - sidaMenu.getWidth() + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
+                            (sidaCharacter.getTop() + (int) getResources().getDimension(R.dimen.status_bar_height)) - (sidaCharacter.getHeight() / 2), 0, 0);
+                } else {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_left);
+                    params.setMargins((int) (sidaCharacter.getLeft() - getResources().getDimension(R.dimen.x24)),
+                            (sidaCharacter.getTop() + (int) getResources().getDimension(R.dimen.status_bar_height)) - (sidaCharacter.getHeight() / 2), 0, 0);
+                }
+            }
+
+            String stageLine = PreferenceUtils.getStageLine(this);
+            Gson gson = new Gson();
+            stageLineEntity = gson.fromJson(stageLine, StageLineEntity.class);
+            setSidaLineData(stageLineEntity);
+        } else {
+            // TODO: 2018/7/12  考虑正在执行台词又来一条台词的情况   后面那条进行存储  在次播放
+        }
+    }
+
+    public void setSidaLineData(StageLineEntity entity) {
+        if (sideLine != null) {
+            if (entity.getId() != null) {
+                if (!TextUtils.isEmpty(entity.getSchema())) {
+                    String temp = entity.getSchema();
+                    if (temp.contains("map_event_1.0") || temp.contains("game_1.0")) {
+                        if (!DialogUtils.checkLoginAndShowDlg(this)) {
+                            return;
+                        }
+                    }
+                    if (temp.contains("http://s.moemoe.la/game/devil/index.html")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?user_id=" + authorInfo.getUserId() + "&full_screen";
+                    }
+
+                    if (temp.contains("http://kiratetris.leanapp.cn/tab001/index.html")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?id=" + authorInfo.getUserId() + "&name=" + authorInfo.getUserName();
+                    }
+                    if (temp.contains("http://prize.moemoe.la:8000/mt")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?user_id=" + authorInfo.getUserId() + "&nickname=" + authorInfo.getUserName();
+                    }
+                    if (temp.contains("http://prize.moemoe.la:8000/netaopera/chap")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?pass=" + PreferenceUtils.getPassEvent(this) + "&user_id=" + authorInfo.getUserId();
+                    }
+                    if (temp.contains("http://neta.facehub.me/")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?open_id=" + authorInfo.getUserId() + "&nickname=" + authorInfo.getUserName() + "&pay_way=alipay,wx,qq" + "&full_screen";
+                    }
+                    if (temp.contains("fanxiao/final.html")) {
+                        temp += "?token=" + PreferenceUtils.getToken()
+                                + "&full_screen";
+                    }
+                    if (temp.contains("fanxiao/paihang.html")) {
+                        temp += "?token=" + PreferenceUtils.getToken();
+                    }
+                    if (temp.contains("game_1.0")) {
+                        temp += "&token=" + PreferenceUtils.getToken() + "&version=" + AppSetting.VERSION_CODE + "&userId=" + PreferenceUtils.getUUid() + "&channel=" + AppSetting.CHANNEL;
+                    }
+                    Uri uri = Uri.parse(temp);
+                    IntentUtils.toActivityFromUri(this, uri, sideLine);
+
+                } else {
+                    sideLineContent.setText(entity.getContent() + "");
+                }
+                if (entity.getDialogType() != null && entity.getDialogType().equals("dialog_option")) {
+                    sideLineSelect.setVisibility(View.VISIBLE);
+                    for (int i = 0; i < entity.getOptions().size(); i++) {
+                        if (i == 0) {
+                            sideLineTvLeft.setText(entity.getOptions().get(i).getOption() + "");
+                        } else {
+                            if (entity.getOptions().get(i) == null) {
+                                sideLineTvCansl.setVisibility(View.GONE);
+                            } else {
+                                sideLineTvCansl.setText(entity.getOptions().get(i).getOption() + "");
+                            }
+                        }
+                    }
+                } else {
+                    sideLineSelect.setVisibility(View.GONE);
+                }
+            } else {
+                sideLine.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    /**
+     * 解析台词层级
+     *
+     * @param mData
+     * @return
+     */
+    private StageLineEntity getStageLineEntity(StageLineEntity mData, String isSelect) {
+        List<StageLineOptionsEntity> options = mData.getOptions();
+        String LeftId = null;
+        for (int i = 0; i < options.size(); i++) {
+            if (options.get(i).getOption().equals(isSelect)) {
+                LeftId = options.get(i).getId();
+            }
+        }
+        List<StageLineEntity> children = mData.getChildren();
+        if (children == null) {
+            return null;
+        } else {
+            StageLineEntity stageLineEntity = new StageLineEntity();
+            for (int i = 0; i < children.size(); i++) {
+                if (children.get(i).getParentOptionId().equals(LeftId)) {
+                    stageLineEntity = children.get(i);
+                }
+            }
+            return stageLineEntity;
+        }
+    }
+
+    /**
+     * 数据压制
+     */
+    public int goGreenDao() {
+        ArrayList<DeskmateEntils> entilsDao = (ArrayList<DeskmateEntils>) GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao()
+                .queryBuilder()
+                .where(DeskmateEntilsDao.Properties.Type.eq("HousUser"))
+                .list();
+        if (entilsDao != null && entilsDao.size() > 0) {
+            for (DeskmateEntils entils : entilsDao) {
+                deskmateEntity = entils;
+            }
+        }
+        return entilsDao.size() > 0 ? entilsDao.size() : 0;
     }
 }

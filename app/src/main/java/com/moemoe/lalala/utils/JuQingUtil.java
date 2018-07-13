@@ -358,7 +358,7 @@ public class JuQingUtil {
         JuQingDoneEntityDao dao = GreenDaoManager.getInstance().getSession().getJuQingDoneEntityDao();
         JuQingDoneEntity entity1 = dao.queryBuilder()
                 .where(JuQingDoneEntityDao.Properties.StoryId.eq(entity.getStory()))
-                .unique();
+                .unique(); // 返回唯一结果或者 null
         if (entity1 != null) {
             long cur = calendar.getTimeInMillis();
             long between = entity.getDay() * 24 * 60 * 60 * 1000 + entity.getHour() * 60 * 60 * 1000 + entity.getMinute() * 60 * 1000 + entity.getSecond() * 1000;

@@ -259,5 +259,4 @@
     <include layout="@layout/float_send_layout" />
 
     <!--<include layout="@layout/float_comprehensive_layout" />-->
-
 </RelativeLayout>

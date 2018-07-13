@@ -96,7 +96,7 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
                 .build()
                 .inject(this);
 
-        mIvCreateFolder.setVisibility(View.GONE);
+        mIvCreateFolder.setVisibility(View.VISIBLE);
         mIvCreateFolder.setImageResource(R.drawable.btn_feed_create_bag);
         fragment = new BottomMenuFragment();
         initMenu();
@@ -113,6 +113,7 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
         mAdapter = new FeedBagAdapter();
         mListDocs.getRecyclerView().setAdapter(mAdapter);
         mListDocs.setBackgroundColor(Color.WHITE);
+      
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -144,6 +145,7 @@ public class FeedBagFragment extends BaseFragment implements FeedBagContract.Vie
 
             }
         });
+       
         mListDocs.setPullCallback(new PullCallback() {
             @Override
             public void onLoadMore() {

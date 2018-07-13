@@ -1162,7 +1162,7 @@ public interface ApiService {
     Observable<ApiResult<ArrayList<NewStoryGroupInfoEntity>>> getNewStoryGroupInfo();
 
     @GET("v2/kira/story/v2/master/story/all/{groupId}")
-    Observable<ApiResult<ArrayList<com.moemoe.lalala.model.entity.NewStoryInfoEntity>>> getNewStoryListInfo(@Path("groupId") String groupId);
+    Observable<ApiResult<ArrayList<NewStoryInfoEntity>>> getNewStoryListInfo(@Path("groupId") String groupId);
 
     @GET("v2/kira/story/v2/remember/{scriptId}")
     Observable<ApiResult<NewStoryJsonInfoEntity>> playStory(@Path("scriptId") String scriptId);

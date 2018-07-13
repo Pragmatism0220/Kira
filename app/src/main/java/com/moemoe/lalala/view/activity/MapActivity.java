@@ -23,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ import com.moemoe.lalala.event.SearchAllTriggerEntity;
 import com.moemoe.lalala.event.StageLineEvent;
 import com.moemoe.lalala.event.SystemMessageEvent;
 import com.moemoe.lalala.greendao.gen.AlarmClockEntityDao;
+import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
 import com.moemoe.lalala.greendao.gen.JuQingTriggerEntityDao;
 import com.moemoe.lalala.model.entity.AlarmClockEntity;
 import com.moemoe.lalala.model.entity.AppUpdateEntity;
@@ -70,6 +72,7 @@ import com.moemoe.lalala.model.entity.NetaEvent;
 import com.moemoe.lalala.model.entity.NewJuQingTriggerEntity;
 import com.moemoe.lalala.model.entity.SplashEntity;
 import com.moemoe.lalala.model.entity.StageLineEntity;
+import com.moemoe.lalala.model.entity.StageLineOptionsEntity;
 import com.moemoe.lalala.model.entity.UserDeskmateEntity;
 import com.moemoe.lalala.model.entity.UserLocationEntity;
 import com.moemoe.lalala.presenter.MapContract;
@@ -87,6 +90,7 @@ import com.moemoe.lalala.utils.MapEevent;
 import com.moemoe.lalala.utils.MapToolTipUtils;
 import com.moemoe.lalala.utils.MapUtil;
 import com.moemoe.lalala.utils.NetworkUtils;
+import com.moemoe.lalala.utils.NewUtils;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.SideCharacterUtils;
@@ -224,6 +228,24 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     private Disposable resolvDisposable;
     private TencentLocationManager locationManager;
     private UserDeskmateEntity deskmateEntity;
+    private ImageView sidaCharacter;
+    private View sidaMenu;
+    private RelativeLayout sidaMenuViewById;
+    private RelativeLayout sidaMenuFrist;
+    private ImageView sidaMenuIvPersonal;
+    private ImageView sidaMenuIvBag;
+    private ImageView sidaMenuIvShopping;
+    private ImageView sidaMenuIvSignRoot;
+    private ImageView sidaMenuIvPhoneMenu;
+    private ImageView sidaMenuIvMsg;
+    private View sideLine;
+    private RelativeLayout sideLineFrist;
+    private TextView sideLineContent;
+    private TextView sideLineTvLeft;
+    private TextView sideLineTvCansl;
+    private LinearLayout sideLineSelect;
+    private DeskmateEntils deskmatesEntity;
+    private StageLineEntity stageLineEntity;
 
 
     @Override
@@ -279,9 +301,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         mPresenter.loadMapAllUser();
         mPresenter.loadMapBirthdayUser();
         mPresenter.loadMapTopUser();
-//        if (MoeMoeApplication.getInstance().isWindow()) {
-//            MoeMoeApplication.getInstance().initWindowManager(this, getWindowManager());
-//        }
 
         Uri uri = intent.getData();
         if (uri != null) {
@@ -349,9 +368,14 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     @Override
     protected void onPause() {
         super.onPause();
-        MoeMoeApplication.getInstance().GoneWindowMager(this);
-        MoeMoeApplication.getInstance().GoneMenu();
-        MoeMoeApplication.getInstance().GoneDiaLog();
+        if (sidaMenu != null && sidaMenu.getVisibility() == View.VISIBLE) {
+            sidaMenu.setVisibility(View.GONE);
+            return;
+        }
+        if (sideLine != null && sideLine.getVisibility() == View.VISIBLE) {
+            sideLine.setVisibility(View.GONE);
+            return;
+        }
         hideBtn();
         MapToolTipUtils.getInstance().stop();
     }
@@ -461,7 +485,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     protected void onResume() {
         super.onResume();
         refreshMap();
-        MoeMoeApplication.getInstance().VisibilityWindowMager(this);
         showBtn();
         MapToolTipUtils.getInstance().start();
         if (PreferenceUtils.getMessageDot(this, "neta") || PreferenceUtils.getMessageDot(this, "system") || PreferenceUtils.getMessageDot(this, "at_user") || PreferenceUtils.getMessageDot(this, "normal")) {//|| showDot){
@@ -589,6 +612,9 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 .subscribe(new Consumer<ArrayList<JuQingTriggerEntity>>() {
                     @Override
                     public void accept(ArrayList<JuQingTriggerEntity> id) throws Exception {
+                        if (id == null || id.size() == 0) {
+                            return;
+                        }
                         Layer layer = mapWidget.getLayerById(1);
                         // mContainerEvent = null;
                         if (layer != null) {
@@ -719,6 +745,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         mPresenter.checkStoryVersion();
     }
 
+
     @Override
     public void getEventSuccess(ArrayList<NetaEvent> events) {
         for (NetaEvent event : events) {
@@ -739,23 +766,21 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             @Override
             public void onTouch(MapWidget v, MapTouchedEvent event) {
                 List<ObjectTouchEvent> objectTouchEvents = event.getTouchedObjectEvents();
-                MoeMoeApplication.getInstance().GoneDiaLog();
                 if (objectTouchEvents.size() == 0) {
-                    if (!MoeMoeApplication.getInstance().isMenu()) {
-                        if (mIsOut) {
-                            imgIn();
-                            mIsOut = false;
-                        } else {
-                            imgOut();
-                            mIsOut = true;
-                        }
-                    } else {
-                        clickSelect();
-                    }
-                } else {
-                    if (MoeMoeApplication.getInstance().isMenu()) {
-                        clickSelect();
+                    if (sidaMenu != null && sidaMenu.getVisibility() == View.VISIBLE) {
+                        sidaMenu.setVisibility(View.GONE);
                         return;
+                    }
+                    if (sideLine != null && sideLine.getVisibility() == View.VISIBLE) {
+                        sideLine.setVisibility(View.GONE);
+                        return;
+                    }
+                    if (mIsOut) {
+                        imgIn();
+                        mIsOut = false;
+                    } else {
+                        imgOut();
+                        mIsOut = true;
                     }
                 }
                 if (objectTouchEvents.size() == 1) {
@@ -991,7 +1016,224 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
     @Override
     protected void initToolbar(Bundle savedInstanceState) {
+        sidaCharacter = SideCharacterUtils.addFloatDragView(this, mMainRoot, new SideCHaracterOnClick());
 
+
+        sidaMenu = LayoutInflater.from(this).inflate(R.layout.float_renwu_layout, null);
+        sidaMenu.setLayoutParams(new RelativeLayout.LayoutParams((int) getResources().getDimension(R.dimen.x428)
+                , (int) getResources().getDimension(R.dimen.y320)));
+        sidaMenuViewById = (RelativeLayout) sidaMenu.findViewById(R.id.rl_renwu);
+        sidaMenuFrist = (RelativeLayout) sidaMenu.findViewById(R.id.ll_frist);
+        sidaMenuIvPersonal = (ImageView) sidaMenu.findViewById(R.id.iv_personal);
+        sidaMenuIvBag = (ImageView) sidaMenu.findViewById(R.id.iv_bag);
+        sidaMenuIvShopping = (ImageView) sidaMenu.findViewById(R.id.iv_shopping);
+        sidaMenuIvSignRoot = (ImageView) sidaMenu.findViewById(R.id.iv_sign_root);
+        sidaMenuIvPhoneMenu = (ImageView) sidaMenu.findViewById(R.id.iv_phone_menu);
+        sidaMenuIvMsg = (ImageView) sidaMenu.findViewById(R.id.iv_msg);
+        sidaMenu.setVisibility(View.GONE);
+        mMainRoot.addView(sidaMenu);
+
+        sidaMenuIvPersonal.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+                    //埋点统计：手机个人中心
+                    Intent i1 = new Intent(MapActivity.this, PersonalV2Activity.class);
+                    i1.putExtra(UUID, PreferenceUtils.getUUid());
+                    startActivity(i1);
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvBag.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+                    if (PreferenceUtils.getAuthorInfo().isOpenBag()) {
+                        Intent i4 = new Intent(MapActivity.this, NewBagV5Activity.class);
+                        i4.putExtra("uuid", PreferenceUtils.getUUid());
+                        startActivity(i4);
+                    } else {
+                        Intent i4 = new Intent(MapActivity.this, BagOpenActivity.class);
+                        startActivity(i4);
+                    }
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvShopping.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                Intent i7 = new Intent(MapActivity.this, CoinShopActivity.class);
+                startActivity(i7);
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvSignRoot.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+                    DailyTaskActivity.startActivity(MapActivity.this);
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvPhoneMenu.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+                    //埋点统计：通讯录
+                    startActivity(new Intent(MapActivity.this, PhoneMenuV3Activity.class));
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+        sidaMenuIvMsg.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+                    //埋点统计：手机聊天
+                    NoticeActivity.startActivity(MapActivity.this, 1);
+                }
+                sidaMenu.setVisibility(View.GONE);
+            }
+        });
+
+
+        sideLine = LayoutInflater.from(this).inflate(R.layout.float_dialog_layout, null);
+        sideLine.setLayoutParams(new RelativeLayout.LayoutParams((int) getResources().getDimension(R.dimen.x428)
+                , (int) getResources().getDimension(R.dimen.y320)));
+        sideLineFrist = (RelativeLayout) sideLine.findViewById(R.id.rl_dialog);
+        sideLineContent = (TextView) sideLine.findViewById(R.id.tv_content);
+        sideLineSelect = (LinearLayout) sideLine.findViewById(R.id.rl_select);
+        sideLineTvLeft = (TextView) sideLine.findViewById(R.id.iv_left);
+        sideLineTvCansl = (TextView) sideLine.findViewById(R.id.iv_right);
+        sideLine.setVisibility(View.GONE);
+        mMainRoot.addView(sideLine);
+
+        sideLineTvLeft.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (sideLine != null && stageLineEntity != null) {
+                    stageLineEntity = getStageLineEntity(stageLineEntity, sideLineTvLeft.getText().toString());
+                    if (stageLineEntity == null) {
+                        sideLine.setVisibility(View.GONE);
+                    } else {
+                        setSidaLineData(stageLineEntity);
+                    }
+                }
+            }
+        });
+        sideLineTvCansl.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (sideLine != null && stageLineEntity != null) {
+                    stageLineEntity = getStageLineEntity(stageLineEntity, sideLineTvCansl.getText().toString());
+                    if (stageLineEntity == null) {
+                        sideLine.setVisibility(View.GONE);
+                    } else {
+                        setSidaLineData(stageLineEntity);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 扒边小人的点击事件
+     */
+    public class SideCHaracterOnClick extends NoDoubleClickListener {
+
+        @Override
+        public void onNoDoubleClick(View view) {
+
+            if (sideLine != null && sideLine.getVisibility() == View.VISIBLE) {
+                sideLine.setVisibility(View.GONE);
+                return;
+            }
+
+            if (sidaMenu != null && sidaMenu.getVisibility() == View.GONE) {
+                sidaMenu.setVisibility(View.VISIBLE);
+                Log.e("view.getLeft()--", view.getLeft() + "");
+                Log.e("view.getTop()--", view.getTop() + "");
+                Log.e("view.getRight()--", view.getRight() + "");
+                Log.e("view.getBottom()--", view.getBottom() + "");
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) sidaMenu.getLayoutParams();
+                if (view.getLeft() == 0) {//左方
+                    if (view.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() + getResources().getDimension(R.dimen.x24)),
+                                view.getTop() - (view.getHeight() / 2), 0, 0);
+                    } else {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() + getResources().getDimension(R.dimen.x24)),
+                                (int) (view.getTop() + (view.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)), 0, 0);
+                    }
+                } else if (view.getLeft() + view.getWidth() == getResources().getDisplayMetrics().widthPixels) {//右方
+                    if (view.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
+                        sidaMenuViewById.setLayoutParams(new RelativeLayout.LayoutParams((int) getResources().getDimension(R.dimen.x428)
+                                , (int) getResources().getDimension(R.dimen.y320)));
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - sidaMenu.getWidth() + view.getWidth() - getResources().getDimension(R.dimen.x24)),
+                                view.getTop() - (view.getHeight() / 2), 0, 0);
+                    } else {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
+                        sidaMenuViewById.setLayoutParams(new RelativeLayout.LayoutParams((int) getResources().getDimension(R.dimen.x428)
+                                , (int) getResources().getDimension(R.dimen.y320)));
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - (int) getResources().getDimension(R.dimen.x428) + view.getWidth() - getResources().getDimension(R.dimen.x24)),
+                                (int) (view.getTop() + (view.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)), 0, 0);
+                    }
+                } else if (view.getTop() == getResources().getDimension(R.dimen.status_bar_height)) {//上方
+                    if (view.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - sidaMenu.getWidth() + view.getWidth() - getResources().getDimension(R.dimen.x24)),
+                                view.getTop() + (view.getHeight() / 2), 0, 0);
+                    } else {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.y48), 0, 0);
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - getResources().getDimension(R.dimen.x24)),
+                                view.getTop() + (view.getHeight() / 2), 0, 0);
+                    }
+
+                } else if (view.getTop() + view.getHeight() == getResources().getDisplayMetrics().heightPixels) {//下方
+                    if (view.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - sidaMenu.getWidth() + view.getWidth() - getResources().getDimension(R.dimen.x24)),
+                                (view.getTop() + (int) getResources().getDimension(R.dimen.status_bar_height)) - (view.getHeight() / 2), 0, 0);
+                    } else {
+                        sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.y48));
+                        sidaMenuFrist.setLayoutParams(layoutParams);
+                        params.setMargins((int) (view.getLeft() - getResources().getDimension(R.dimen.x24)),
+                                (view.getTop() + (int) getResources().getDimension(R.dimen.status_bar_height)) - (view.getHeight() / 2), 0, 0);
+                    }
+                }
+                sidaMenu.setLayoutParams(params);
+            } else {
+                sidaMenu.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
@@ -1003,48 +1245,48 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         initMapListeners();
         if (PreferenceUtils.isActivityFirstLaunch(this, "map")) {
             PreferenceUtils.setActivityFirstLaunch(this, "map", false);
-            if (Build.VERSION.SDK_INT >= 23) {
-                if (!Settings.canDrawOverlays(this)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("提示");
-                    builder.setMessage("当前应用缺少开启悬浮框权限。请点击\"设置\"-\"权限\"-打开所需权限。");
-                    //拒绝，退出应用
-                    builder.setNegativeButton("取消",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-//                                    Toast.makeText(MapActivity.this, "“(´・ω・`)那个人好奇怪，不给权限还想找资源…”\n" +
-//                                            "\n" +
-//                                            "“就是说啊，也不知道怎么想的…눈_눈”", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                    builder.setPositiveButton("设置",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String sdk = android.os.Build.VERSION.SDK; // SDK号  
-
-                                    String model = android.os.Build.MODEL; // 手机型号  
-
-                                    String release = android.os.Build.VERSION.RELEASE; // android系统版本号  
-                                    String brand = Build.BRAND;//手机厂商  
-                                    if (TextUtils.equals(brand.toLowerCase(), "redmi") || TextUtils.equals(brand.toLowerCase(), "xiaomi")) {
-                                        gotoMiuiPermission();//小米  
-                                    } else if (TextUtils.equals(brand.toLowerCase(), "meizu")) {
-                                        gotoMeizuPermission();
-                                    } else if (TextUtils.equals(brand.toLowerCase(), "huawei") || TextUtils.equals(brand.toLowerCase(), "honor")) {
-                                        gotoHuaweiPermission();
-                                    } else {
-                                        startActivity(getAppDetailSettingIntent());
-                                    }
-//                                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"));
-//                                    startActivityForResult(intent, request_code);
-                                }
-                            });
-                    builder.setCancelable(false);
-                    builder.show();
-                }
-            }
+//            if (Build.VERSION.SDK_INT >= 23) {
+//                if (!Settings.canDrawOverlays(this)) {
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                    builder.setTitle("提示");
+//                    builder.setMessage("当前应用缺少开启悬浮框权限。请点击\"设置\"-\"权限\"-打开所需权限。");
+//                    //拒绝，退出应用
+//                    builder.setNegativeButton("取消",
+//                            new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+////                                    Toast.makeText(MapActivity.this, "“(´・ω・`)那个人好奇怪，不给权限还想找资源…”\n" +
+////                                            "\n" +
+////                                            "“就是说啊，也不知道怎么想的…눈_눈”", Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+//                    builder.setPositiveButton("设置",
+//                            new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    String sdk = android.os.Build.VERSION.SDK; // SDK号  
+//
+//                                    String model = android.os.Build.MODEL; // 手机型号  
+//
+//                                    String release = android.os.Build.VERSION.RELEASE; // android系统版本号  
+//                                    String brand = Build.BRAND;//手机厂商  
+//                                    if (TextUtils.equals(brand.toLowerCase(), "redmi") || TextUtils.equals(brand.toLowerCase(), "xiaomi")) {
+//                                        gotoMiuiPermission();//小米  
+//                                    } else if (TextUtils.equals(brand.toLowerCase(), "meizu")) {
+//                                        gotoMeizuPermission();
+//                                    } else if (TextUtils.equals(brand.toLowerCase(), "huawei") || TextUtils.equals(brand.toLowerCase(), "honor")) {
+//                                        gotoHuaweiPermission();
+//                                    } else {
+//                                        startActivity(getAppDetailSettingIntent());
+//                                    }
+////                                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"));
+////                                    startActivityForResult(intent, request_code);
+//                                }
+//                            });
+//                    builder.setCancelable(false);
+//                    builder.show();
+//                }
+//            }
         } else {
             if (!TextUtils.isEmpty(mSchema)) {
                 IntentUtils.toActivityFromUri(this, Uri.parse(mSchema), null);
@@ -1538,10 +1780,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao().insertOrReplaceInTx(res);
                 if (errorListTmp.size() > 0) {
                     resolvErrorListDeskmate(errorListTmp, type);
-                } else {
-                    if ("HousUser".equals(type)) {
-                        MoeMoeApplication.getInstance().goGreenDao(MapActivity.this);
-                    }
                 }
             }
         });
@@ -1733,9 +1971,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     }
 
     public void clickSelect() {
-        if (MoeMoeApplication.getInstance().isMenu()) {
-            MoeMoeApplication.getInstance().GoneMenu();
-        }
 //        if (mIvSelect.isSelected()) {
 //            ViewGroup.LayoutParams layoutParams = mLlComprehensive.getLayoutParams();
 //            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -1902,7 +2137,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
     @Override
     protected void onDestroy() {
-        MoeMoeApplication.getInstance().removeWindowMager();
         if (mPresenter != null) mPresenter.release();
         if (isGisterReciver) {
             unregisterReceiver(mReceiver);
@@ -1990,15 +2224,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                     @Override
                     public void onComplete() {
                         GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao().insertOrReplaceInTx(res);
-                        int i = MoeMoeApplication.getInstance().goGreenDao(MapActivity.this);
-//                        SideCharacterUtils.getInstance().goGreenDao();
-                        if (i == 5) {
-                            if (MoeMoeApplication.getInstance().isWindow()) {
-                                MoeMoeApplication.getInstance().activities.add(MapActivity.this);
-                                MoeMoeApplication.getInstance().initWindowManager(MapActivity.this, getWindowManager());
-                            }
-//                            SideCharacterUtils.getInstance().initSideCharacter(MapActivity.this);
-                        }
                         if (errorList.size() > 0) {
                             resolvErrorListDeskmate(errorList, "HousUser");
                         }
@@ -2043,15 +2268,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         }
     }
 
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        if (MoeMoeApplication.getInstance().isMenu()) {
-//            MoeMoeApplication.getInstance().GoneMenu();
-//            return true;
-//        }
-//        return super.dispatchTouchEvent(ev);
-//    }
-
     @Override
     public void onLocationChanged(TencentLocation tencentLocation, int error, String s) {
         if (TencentLocation.ERROR_OK == error) {
@@ -2070,49 +2286,194 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void stageLineEvent(StageLineEvent event) {
-        if (event != null) {
+        if (event != null && NewUtils.isActivityTop(MapActivity.class, this)) {
+            goGreenDao();
             String stageLine = PreferenceUtils.getStageLine(MapActivity.this);
             Gson gson = new Gson();
             StageLineEntity entity = gson.fromJson(stageLine, StageLineEntity.class);
-            if (deskmateEntity.getId().equals(entity.getRoleId())) {
-                mHandler.post(sRunnable);
+            if (deskmatesEntity.getId().equals(entity.getRoleId())) {
+                VisibleSidaLine();
             }
         }
     }
 
-    private final MyHandler mHandler = new MyHandler();
+    public void VisibleSidaLine() {
+        if (sidaMenu != null && sidaMenu.getVisibility() == View.GONE) {
+            return;
+        }
+        if (sideLine.getVisibility() == View.GONE) {
+            sideLine.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) sideLine.getLayoutParams();
+            if (sidaCharacter.getLeft() == 0) {//左边
+                if (sidaCharacter.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_left);
+                    params.setMargins((int) (sidaCharacter.getLeft() + getResources().getDimension(R.dimen.x24)),
+                            sidaCharacter.getTop() - (sidaCharacter.getHeight() / 2),
+                            0, 0);
+                } else {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_left);
+                    params.setMargins((int) (sidaCharacter.getLeft() + getResources().getDimension(R.dimen.x24)),
+                            (int) (sidaCharacter.getTop() + (sidaCharacter.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)),
+                            0, 0);
+                }
+            } else if (sidaCharacter.getLeft() + sidaCharacter.getWidth() == getResources().getDisplayMetrics().widthPixels) {//右边
+                if (sidaCharacter.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_right);
+                    params.setMargins((int) (sidaCharacter.getLeft() - sidaMenu.getWidth() + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
+                            sidaCharacter.getTop() - (sidaCharacter.getHeight() / 2),
+                            0, 0);
+                } else {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_right);
+                    params.setMargins((int) (sidaCharacter.getLeft() - (int) getResources().getDimension(R.dimen.x428) + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
+                            (int) (sidaCharacter.getTop() + (sidaCharacter.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)),
+                            0, 0);
 
-    /**
-     * 静态的匿名内部类不会持有外部类的引用
-     */
-    private final Runnable sRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (!MoeMoeApplication.getInstance().isMenu()) {
-                MoeMoeApplication.getInstance().goDialog(MapActivity.this);
+                }
+            } else if (sidaCharacter.getTop() == getResources().getDimension(R.dimen.status_bar_height)) {//上方
+                if (sidaCharacter.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_right);
+                    params.setMargins((int) (sidaCharacter.getLeft() - sidaMenu.getWidth() + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
+                            sidaCharacter.getTop() + (sidaCharacter.getHeight() / 2),
+                            0, 0);
+                } else {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_left);
+                    params.setMargins((int) (sidaCharacter.getLeft() - getResources().getDimension(R.dimen.x24)),
+                            (int) (sidaCharacter.getTop() + (sidaCharacter.getHeight() / 2)),
+                            0, 0);
+
+                }
+            } else if (sidaCharacter.getTop() + sidaCharacter.getHeight() == getResources().getDisplayMetrics().heightPixels) {//下方
+                if (sidaCharacter.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_right);
+                    params.setMargins((int) (sidaCharacter.getLeft() - sidaMenu.getWidth() + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
+                            (sidaCharacter.getTop() + (int) getResources().getDimension(R.dimen.status_bar_height)) - (sidaCharacter.getHeight() / 2), 0, 0);
+                } else {
+                    sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_left);
+                    params.setMargins((int) (sidaCharacter.getLeft() - getResources().getDimension(R.dimen.x24)),
+                            (sidaCharacter.getTop() + (int) getResources().getDimension(R.dimen.status_bar_height)) - (sidaCharacter.getHeight() / 2), 0, 0);
+                }
             }
-//            MoeMoeApplication.getInstance().goDialog(MapActivity.this);
-//            MoeMoeApplication.getInstance().VisibleDiaLog(MapActivity.this);
-            try {
-                Thread.sleep(20000);
-//                MoeMoeApplication.getInstance().GoneDiaLog();
-//                mHandler.handleMessage(message);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+            String stageLine = PreferenceUtils.getStageLine(this);
+            Gson gson = new Gson();
+            stageLineEntity = gson.fromJson(stageLine, StageLineEntity.class);
+            setSidaLineData(stageLineEntity);
+        } else {
+            // TODO: 2018/7/12  考虑正在执行台词又来一条台词的情况   后面那条进行存储  在次播放
+        }
+    }
+
+    public void setSidaLineData(StageLineEntity entity) {
+        if (sideLine != null) {
+            if (entity.getId() != null) {
+                if (!TextUtils.isEmpty(entity.getSchema())) {
+                    String temp = entity.getSchema();
+                    if (temp.contains("map_event_1.0") || temp.contains("game_1.0")) {
+                        if (!DialogUtils.checkLoginAndShowDlg(this)) {
+                            return;
+                        }
+                    }
+                    if (temp.contains("http://s.moemoe.la/game/devil/index.html")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?user_id=" + authorInfo.getUserId() + "&full_screen";
+                    }
+
+                    if (temp.contains("http://kiratetris.leanapp.cn/tab001/index.html")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?id=" + authorInfo.getUserId() + "&name=" + authorInfo.getUserName();
+                    }
+                    if (temp.contains("http://prize.moemoe.la:8000/mt")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?user_id=" + authorInfo.getUserId() + "&nickname=" + authorInfo.getUserName();
+                    }
+                    if (temp.contains("http://prize.moemoe.la:8000/netaopera/chap")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?pass=" + PreferenceUtils.getPassEvent(this) + "&user_id=" + authorInfo.getUserId();
+                    }
+                    if (temp.contains("http://neta.facehub.me/")) {
+                        AuthorInfo authorInfo = PreferenceUtils.getAuthorInfo();
+                        temp += "?open_id=" + authorInfo.getUserId() + "&nickname=" + authorInfo.getUserName() + "&pay_way=alipay,wx,qq" + "&full_screen";
+                    }
+                    if (temp.contains("fanxiao/final.html")) {
+                        temp += "?token=" + PreferenceUtils.getToken()
+                                + "&full_screen";
+                    }
+                    if (temp.contains("fanxiao/paihang.html")) {
+                        temp += "?token=" + PreferenceUtils.getToken();
+                    }
+                    if (temp.contains("game_1.0")) {
+                        temp += "&token=" + PreferenceUtils.getToken() + "&version=" + AppSetting.VERSION_CODE + "&userId=" + PreferenceUtils.getUUid() + "&channel=" + AppSetting.CHANNEL;
+                    }
+                    Uri uri = Uri.parse(temp);
+                    IntentUtils.toActivityFromUri(this, uri, sideLine);
+
+                } else {
+                    sideLineContent.setText(entity.getContent() + "");
+                }
+                if (entity.getDialogType() != null && entity.getDialogType().equals("dialog_option")) {
+                    sideLineSelect.setVisibility(View.VISIBLE);
+                    for (int i = 0; i < entity.getOptions().size(); i++) {
+                        if (i == 0) {
+                            sideLineTvLeft.setText(entity.getOptions().get(i).getOption() + "");
+                        } else {
+                            if (entity.getOptions().get(i) == null) {
+                                sideLineTvCansl.setVisibility(View.GONE);
+                            } else {
+                                sideLineTvCansl.setText(entity.getOptions().get(i).getOption() + "");
+                            }
+                        }
+                    }
+                } else {
+                    sideLineSelect.setVisibility(View.GONE);
+                }
+            } else {
+                sideLine.setVisibility(View.GONE);
             }
         }
-    };
+    }
 
     /**
-     * 声明一个静态的Handler内部类，并持有外部类的弱引用
+     * 解析台词层级
+     *
+     * @param mData
+     * @return
      */
-    private static class MyHandler extends Handler {
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            MoeMoeApplication.getInstance().GoneDiaLog();
+    private StageLineEntity getStageLineEntity(StageLineEntity mData, String isSelect) {
+        List<StageLineOptionsEntity> options = mData.getOptions();
+        String LeftId = null;
+        for (int i = 0; i < options.size(); i++) {
+            if (options.get(i).getOption().equals(isSelect)) {
+                LeftId = options.get(i).getId();
+            }
         }
+        List<StageLineEntity> children = mData.getChildren();
+        if (children == null) {
+            return null;
+        } else {
+            StageLineEntity stageLineEntity = new StageLineEntity();
+            for (int i = 0; i < children.size(); i++) {
+                if (children.get(i).getParentOptionId().equals(LeftId)) {
+                    stageLineEntity = children.get(i);
+                }
+            }
+            return stageLineEntity;
+        }
+    }
+
+    /**
+     * 数据压制
+     */
+    public int goGreenDao() {
+        ArrayList<DeskmateEntils> entilsDao = (ArrayList<DeskmateEntils>) GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao()
+                .queryBuilder()
+                .where(DeskmateEntilsDao.Properties.Type.eq("HousUser"))
+                .list();
+        if (entilsDao != null && entilsDao.size() > 0) {
+            for (DeskmateEntils entils : entilsDao) {
+                deskmatesEntity = entils;
+            }
+        }
+        return entilsDao.size() > 0 ? entilsDao.size() : 0;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

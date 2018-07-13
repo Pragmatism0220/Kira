@@ -674,8 +674,8 @@ public class NewDocDetailActivity extends BaseAppCompatActivity implements DocDe
 
 
                 // TODO: 2018/6/27 标签 
-                
-                
+
+
                 break;
             case R.id.fl_tag_root_2:
                 if (NetworkUtils.checkNetworkAndShowError(NewDocDetailActivity.this)) {
@@ -1468,7 +1468,7 @@ public class NewDocDetailActivity extends BaseAppCompatActivity implements DocDe
         mShareIcon = entity.getShare().getIcon();
         mDocTags = entity.getTags();
         tagId = entity.getTagId();
-        
+
         if (entity.getRtNum() > 0) {
             mTvForwardNum.setText(StringUtils.getNumberInLengthLimit(entity.getRtNum(), 4));
         } else {
