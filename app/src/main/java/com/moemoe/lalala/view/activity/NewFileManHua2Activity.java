@@ -23,6 +23,7 @@ import com.moemoe.lalala.di.modules.NewFileModule;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.CommonFileEntity;
 import com.moemoe.lalala.model.entity.FolderType;
+import com.moemoe.lalala.model.entity.Image;
 import com.moemoe.lalala.model.entity.ManHua2Entity;
 import com.moemoe.lalala.model.entity.NewFolderEntity;
 import com.moemoe.lalala.model.entity.ShowFolderEntity;
@@ -191,7 +192,7 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
         mListDocs.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState); 
+                super.onScrollStateChanged(recyclerView, newState);
             }
 
             @Override
@@ -402,7 +403,7 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
 
     @Override
     public void onLoadFileListSuccess(Object o, boolean isPull) {
-        ArrayList<CommonFileEntity> entities = (ArrayList<CommonFileEntity>) o;
+        final ArrayList<CommonFileEntity> entities = (ArrayList<CommonFileEntity>) o;
         isLoading = false;
         mListDocs.setComplete();
         if (isPull) {
@@ -441,10 +442,32 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
                         lp.topMargin = topMargin;
                         mBottomView.setLayoutParams(lp);
                         mAdapter.addFooterView(mBottomView);
+
                     }
                 }
             }
         }
+        mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                ArrayList<Image> images = new ArrayList<>();
+                for (int i = 0; i < entities.size(); i++) {
+                    Image image = new Image();
+                    String path = entities.get(position).getPath();
+                    image.setPath(path);
+                    images.add(image);
+                }
+                Intent intent = new Intent(NewFileManHua2Activity.this, ImageBigSelectActivity.class);
+                intent.putExtra(ImageBigSelectActivity.EXTRA_KEY_FILEBEAN, images);
+                intent.putExtra(ImageBigSelectActivity.EXTRAS_KEY_FIRST_PHTOT_INDEX,position);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        });
     }
 
     @Override

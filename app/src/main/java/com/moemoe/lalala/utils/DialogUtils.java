@@ -258,6 +258,7 @@ public class DialogUtils {
                     Intent i = new Intent(context, LoginActivity.class);
                     context.startActivity(i);
                     alertDialogUtil.dismissDialog();
+
                 }
             });
             alertDialogUtil.showDialog();

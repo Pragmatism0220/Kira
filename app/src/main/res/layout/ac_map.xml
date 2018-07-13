@@ -83,6 +83,16 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/map_seven"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/ll_tool_bar"
+        android:layout_marginTop="@dimen/y16"
+        android:layout_marginEnd="@dimen/x16"
+        android:src="@drawable/map_seven_btn" />
+
+    <ImageView
         android:id="@+id/iv_live2d"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

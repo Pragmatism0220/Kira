@@ -130,7 +130,9 @@
                 android:paddingLeft="@dimen/x16"
                 android:textColor="@color/black_1e1e1e"
                 android:textColorHint="@color/gray_929292"
-                android:textSize="@dimen/x30" />
+                android:textSize="@dimen/x30"
+                android:visibility="gone"
+                />
 
             <TextView
                 android:id="@+id/tv_send"

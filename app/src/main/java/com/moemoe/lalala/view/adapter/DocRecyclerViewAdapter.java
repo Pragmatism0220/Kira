@@ -1530,7 +1530,6 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         notifyItemChanged(mTagsPosition + 1);
     }
 
-
     private void getCoinContent() {
         if (!NetworkUtils.checkNetworkAndShowError(mContext)) {
             return;
@@ -1678,7 +1677,6 @@ public class DocRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         public void CancelOnClick() {
                             alertDialogUtil.dismissDialog();
                         }
-
                         @Override
                         public void ConfirmOnClick() {
                             if (DialogUtils.checkLoginAndShowDlg(mContext)) {

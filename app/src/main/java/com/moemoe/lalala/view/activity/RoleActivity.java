@@ -278,7 +278,6 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
     @Override
     public void setDeskMateSuccess() {
         showToast("操作成功");
-
     }
 
 
@@ -361,6 +360,12 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
             }
         }
     }
+
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        mPresenter.getRoleInfo();
+//    }
 
     public class Presenter {
         public void onClick(View v) {

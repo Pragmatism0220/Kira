@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ import com.moemoe.lalala.view.activity.HouseHisActivity;
 import com.moemoe.lalala.view.widget.adapter.BaseRecyclerViewAdapter;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -143,6 +145,10 @@ public class NewVisitorAdapter extends BaseRecyclerViewAdapter<VisitorsEntity, N
             public void onNoDoubleClick(View v) {
                 if (!TextUtils.isEmpty(item.getVisitorId()) && !item.getVisitorId().equals(PreferenceUtils.getUUid())) {
                     Intent intent = new Intent(mContext, HouseHisActivity.class);
+                    intent.putExtra("id", item.getVisitorId());
+                    mContext.startActivity(intent);
+                } else {
+                    Intent intent = new Intent(mContext, HouseActivity.class);
                     intent.putExtra("id", item.getVisitorId());
                     mContext.startActivity(intent);
                 }

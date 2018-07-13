@@ -271,6 +271,25 @@ public class MapPresenter implements MapContract.Presenter {
     }
 
     @Override
+    public void isMapComplete() {
+        apiService.iscomplete()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean aBoolean) {
+                        if (view!=null)view.isMapCompleteSuccess(aBoolean);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view!=null)view.onFailure(code, msg);
+                    }
+                });
+    }
+
+
+    @Override
     public void getTrigger() {
         apiService.getAllTrigger()
                 .subscribeOn(Schedulers.io())

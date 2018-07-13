@@ -8,13 +8,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityPrincipalListBinding;
 import com.moemoe.lalala.di.components.DaggerPrincipalListComponent;
 import com.moemoe.lalala.di.modules.PrincipalListModule;
+import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.entity.Image;
 import com.moemoe.lalala.model.entity.NewStoryJsonInfoEntity;
 import com.moemoe.lalala.model.entity.NewStoryInfoEntity;
+import com.moemoe.lalala.model.entity.OnImageInfoListener;
 import com.moemoe.lalala.model.entity.OnItemListener;
 import com.moemoe.lalala.presenter.NewPrincipalListPresenter;
 import com.moemoe.lalala.presenter.PrincipalListContract;
@@ -35,6 +39,7 @@ public class PrincipalListActivity extends BaseActivity implements PrincipalList
     private String groupId;
     private String groupName;
     private String scriptId;
+    private ArrayList<String> detailImage;
 
 
     @Inject
@@ -113,7 +118,58 @@ public class PrincipalListActivity extends BaseActivity implements PrincipalList
                     startActivity(intent);
                 }
             }
+
         });
+        //一张
+        mAdapter.setOnIamgeListener(new OnImageInfoListener() {
+            @Override
+            public void onImageListener(View view, int position) {
+                ArrayList<Image> images = new ArrayList<>();
+                for (String ima : infos.get(position).getImages()) {
+                    Image image = new Image();
+                    image.setPath(ima);
+                    images.add(image);
+                }
+                Intent intent = new Intent(PrincipalListActivity.this, ImageBigSelectActivity.class);
+                intent.putExtra(ImageBigSelectActivity.EXTRA_KEY_FILEBEAN, images);
+                intent.putExtra(ImageBigSelectActivity.EXTRAS_KEY_FIRST_PHTOT_INDEX, 0);
+                startActivity(intent);
+            }
+        });
+//        mAdapter.setOnIamgeListener(new OnImageInfoListener() {
+//            @Override
+//            public void onImageListener(View view, int position) {
+//                if (infos.get(position).getImages().size() > 2) {
+//                    ArrayList<Image> images = new ArrayList<>();
+//                    for (String ima : infos.get(position).getImages()) {
+//                        Image image = new Image();
+//                        image.setPath(ima);
+//                        images.add(image);
+//                    }
+//                    Intent intent = new Intent(PrincipalListActivity.this, ImageBigSelectActivity.class);
+//                    intent.putExtra(ImageBigSelectActivity.EXTRA_KEY_FILEBEAN, images);
+//                    intent.putExtra(ImageBigSelectActivity.EXTRAS_KEY_FIRST_PHTOT_INDEX, 1);
+//                    startActivity(intent);
+//                }
+//            }
+//        });
+//        mAdapter.setOnIamgeListener(new OnImageInfoListener() {
+//            @Override
+//            public void onImageListener(View view, int position) {
+//                if (infos.get(position).getImages().size() == 3) {
+//                    ArrayList<Image> images = new ArrayList<>();
+//                    for (String ima : infos.get(position).getImages()) {
+//                        Image image = new Image();
+//                        image.setPath(ima);
+//                        images.add(image);
+//                    }
+//                    Intent intent = new Intent(PrincipalListActivity.this, ImageBigSelectActivity.class);
+//                    intent.putExtra(ImageBigSelectActivity.EXTRA_KEY_FILEBEAN, images);
+//                    intent.putExtra(ImageBigSelectActivity.EXTRAS_KEY_FIRST_PHTOT_INDEX, 2);
+//                    startActivity(intent);
+//                }
+//            }
+//        });
 
     }
 

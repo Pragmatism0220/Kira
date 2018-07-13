@@ -208,6 +208,8 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     ImageView mIvPersonal;
     @BindView(R.id.tv_search)
     TextView mTvSearch;
+    @BindView(R.id.map_seven)
+    ImageView mMapSeven;
 
     @Inject
     MapPresenter mPresenter;
@@ -287,6 +289,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         }
         mPresenter.getEventList();
         mPresenter.loadMapPics();
+        mPresenter.isMapComplete();
         String mTime = dateFormat.format(new Date());
         mTvTime.setText(mTime);
         EventBus.getDefault().register(this);
@@ -326,6 +329,11 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             res.add("map10.jpg");
             i.putExtra("gui", res);
             startActivity(i);
+        }
+        if (PreferenceUtils.isLogin()) {
+            mMapSeven.setVisibility(View.VISIBLE);
+        } else {
+            mMapSeven.setVisibility(View.GONE);
         }
     }
 
@@ -595,6 +603,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         }
 
         mPresenter.loadHousUserDeskmate();
+        mPresenter.isMapComplete();
     }
 
     @Override
@@ -1295,9 +1304,6 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
             } else {
                 // Intent i3 = new Intent(MapActivity.this,WallBlockActivity.class);
 //                Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
-//                if (AlertDialogUtil.getInstance() != null && AlertDialogUtil.getInstance().isShow()) {
-//                    AlertDialogUtil.getInstance().dismissDialog();
-//                }
                 Intent i3 = new Intent(MapActivity.this, HouseActivity.class);
                 startActivity(i3);
             }
@@ -1826,7 +1832,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         ErrorCodeUtils.showErrorMsgByCode(MapActivity.this, code, msg);
     }
 
-    @OnClick({R.id.rl_main_list_root, R.id.tv_search, R.id.iv_create_dynamic, R.id.iv_create_wenzhang, R.id.iv_role, R.id.iv_live2d, R.id.rl_luntan_root, R.id.rl_map_search, R.id.rl_map_refresh, R.id.tv_show_live2d, R.id.iv_personal})
+    @OnClick({R.id.rl_main_list_root, R.id.tv_search, R.id.iv_create_dynamic, R.id.iv_create_wenzhang, R.id.iv_role, R.id.iv_live2d, R.id.rl_luntan_root, R.id.rl_map_search, R.id.rl_map_refresh, R.id.tv_show_live2d, R.id.iv_personal, R.id.map_seven})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_main_list_root:
@@ -1966,6 +1972,10 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                     startActivity(i1);
                 }
                 break;
+            case R.id.map_seven:
+                Intent intent1 = new Intent(MapActivity.this, SevenDayLoginActivity.class);
+                startActivity(intent1);
+                break;
             case R.id.tv_search:
                 if (DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
                     clickEvent("地图-搜索");
@@ -2062,6 +2072,8 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         mMapNewAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mToolBarAnimator = ObjectAnimator.ofFloat(mLlToolBar, "translationY", -mLlToolBar.getHeight() - getResources().getDimension(R.dimen.y60), 0).setDuration(300);
         mToolBarAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvSevenAnimator = ObjectAnimator.ofFloat(mMapSeven, "translationX", mMapSeven.getWidth() + getResources().getDimension(R.dimen.y60), 0).setDuration(300);
+        mIvSevenAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(luntanAnimator);
         set.play(luntanAnimator).with(roleAnimator);
@@ -2070,6 +2082,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         set.play(refreshAnimator).with(userImageAnimator);
         set.play(userImageAnimator).with(mMapNewAnimator);
         set.play(mMapNewAnimator).with(mToolBarAnimator);
+        set.play(mIvSevenAnimator);
         set.start();
     }
 
@@ -2090,6 +2103,9 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         mMapNewAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mToolBarAnimator = ObjectAnimator.ofFloat(mLlToolBar, "translationY", 0, -getResources().getDimension(R.dimen.y60) - mLlToolBar.getHeight()).setDuration(300);
         mToolBarAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvSevenAnimator = ObjectAnimator.ofFloat(mMapSeven, "translationX", 0, mMapSeven.getWidth() + getResources().getDimension(R.dimen.y60)).setDuration(300);
+        mIvSevenAnimator.setInterpolator(new OvershootInterpolator());
+
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(luntanAnimator);
         set.play(luntanAnimator).with(roleAnimator);
@@ -2098,6 +2114,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         set.play(refreshAnimator).with(userImageAnimator);
         set.play(userImageAnimator).with(mMapNewAnimator);
         set.play(mMapNewAnimator).with(mToolBarAnimator);
+        set.play(mIvSevenAnimator);
         set.start();
     }
 
@@ -2238,6 +2255,15 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 });
 
             }
+        }
+    }
+
+    @Override
+    public void isMapCompleteSuccess(boolean isComplete) {
+        if (isComplete == true) {
+            mMapSeven.setVisibility(View.GONE);
+        } else {
+            mMapSeven.setVisibility(View.VISIBLE);
         }
     }
 

@@ -16,6 +16,7 @@
             android:scaleType="fitXY" />
 
         <FrameLayout
+            android:id="@+id/frameLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/x20">
@@ -37,13 +38,13 @@
                 android:textSize="17sp" />
         </FrameLayout>
 
+
         <TextView
             android:id="@+id/text_plot_detail_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerInParent="true"
-            android:layout_marginStart="@dimen/x112"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/frameLayout"
             android:text="[意外的惊喜]"
             android:textColor="@color/black"
             android:textSize="@dimen/x30"
@@ -57,6 +58,7 @@
             android:layout_centerInParent="true"
             android:layout_marginEnd="@dimen/x48"
             android:src="@drawable/selector_plot_play" />
+
     </RelativeLayout>
 
     <LinearLayout
@@ -65,6 +67,84 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/x14"
         android:layout_marginTop="@dimen/y110"
-        android:orientation="horizontal" />
+        android:orientation="horizontal"
+        android:visibility="visible"
+        >
+        <RelativeLayout
+            android:id="@+id/cg_item_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/x10"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:id="@+id/image_ext_icon_image_one"
+                android:layout_width="@dimen/x110"
+                android:layout_height="@dimen/y110"
+                android:layout_marginTop="12dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher" />
+
+            <ImageView
+                android:id="@+id/cg_item_one_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/bg_home_plot_detail_paperclip" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/cg_item_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/x10"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:id="@+id/image_ext_icon_image_two"
+                android:layout_width="@dimen/x110"
+                android:layout_height="@dimen/y110"
+                android:layout_marginTop="12dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher" />
+
+            <ImageView
+                android:id="@+id/cg_item_one_info_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/bg_home_plot_detail_paperclip" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/cg_item_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/x10"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:id="@+id/image_ext_icon_image_three"
+                android:layout_width="@dimen/x110"
+                android:layout_height="@dimen/y110"
+                android:layout_marginTop="12dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher" />
+
+            <ImageView
+                android:id="@+id/cg_item_one_info_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/bg_home_plot_detail_paperclip" />
+        </RelativeLayout>
+    </LinearLayout>
+
 
 </RelativeLayout>

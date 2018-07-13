@@ -7,6 +7,7 @@ import com.moemoe.lalala.model.entity.FolderType;
 import com.moemoe.lalala.model.entity.ManHuaUploadEntity;
 import com.moemoe.lalala.model.entity.UploadResultEntity;
 import com.moemoe.lalala.utils.Utils;
+
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -18,7 +19,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- *
  * Created by yi on 2016/11/29.
  */
 
@@ -46,12 +46,12 @@ public class FileUploadPresenter implements FileUploadContract.Presenter {
                 .subscribe(new NetResultSubscriber<Boolean>() {
                     @Override
                     public void onSuccess(Boolean aBoolean) {
-                        if(view != null) view.onCheckSize(aBoolean);
+                        if (view != null) view.onCheckSize(aBoolean);
                     }
 
                     @Override
                     public void onFail(int code, String msg) {
-                        if(view != null) view.onFailure(code, msg);
+                        if (view != null) view.onFailure(code, msg);
                     }
                 });
     }
@@ -61,6 +61,7 @@ public class FileUploadPresenter implements FileUploadContract.Presenter {
                             final String folderId,
                             final String parentFolderId,
                             final String name,
+                            final String orderByType,
                             final ArrayList<Object> items,
                             final String cover,
                             final int coverSize,
@@ -68,113 +69,116 @@ public class FileUploadPresenter implements FileUploadContract.Presenter {
                             final String desc,
                             final ArrayList<String> tags) {
         final ArrayList<UploadResultEntity> resList = new ArrayList<>();
-        Utils.uploadFiles(apiService,items,cover,coverSize,folderType,name,new Observer<UploadResultEntity>() {
+        Utils.uploadFiles(apiService, items, cover, coverSize, folderType, name, new Observer<UploadResultEntity>() {
             @Override
             public void onError(Throwable e) {
-                if(view != null) view.onFailure(-1,"");
+                if (view != null) view.onFailure(-1, "");
             }
 
             @Override
             public void onComplete() {
 
-                if(folderType.equals(FolderType.XS.toString())){
-                    if(resList.size() == 2){
+                if (folderType.equals(FolderType.XS.toString())) {
+                    if (resList.size() == 2) {
                         UploadResultEntity finalRes = resList.get(1);
                         finalRes.setCover(resList.get(0).getPath());
                         finalRes.setCoverSize((int) resList.get(0).getSize());
                         resList.clear();
                         resList.add(finalRes);
-                        apiService.uploadXiaoshuo(folderId,resList)
+                        apiService.uploadXiaoshuo(folderId, resList)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(new NetSimpleResultSubscriber() {
                                     @Override
                                     public void onSuccess() {
-                                        if(view != null) view.onUploadFilesSuccess();
+                                        if (view != null) view.onUploadFilesSuccess();
                                     }
 
                                     @Override
                                     public void onFail(int code, String msg) {
-                                        if(view != null) view.onFailure(code,msg);
+                                        if (view != null) view.onFailure(code, msg);
                                     }
                                 });
-                    }else {
-                        if(view != null) view.onFailure(-1,"");
+                    } else {
+                        if (view != null) view.onFailure(-1, "");
                     }
-                }else if(folderType.equals(FolderType.MH.toString())){
+                } else if (folderType.equals(FolderType.MH.toString())) {
                     String path = resList.get(0).getPath();
                     int size = (int) resList.get(0).getSize();
                     resList.remove(0);
-                    ManHuaUploadEntity entity = new ManHuaUploadEntity(path,size,resList,name);
-                    apiService.uploadManhua(parentFolderId,entity)
+                    ManHuaUploadEntity entity = new ManHuaUploadEntity(path, size, resList, name, orderByType);
+                    /**
+                     * 排序
+                     */
+                    apiService.uploadManhua(parentFolderId, entity)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new NetSimpleResultSubscriber() {
                                 @Override
                                 public void onSuccess() {
-                                    if(view != null) view.onUploadFilesSuccess();
+                                    if (view != null) view.onUploadFilesSuccess();
                                 }
 
                                 @Override
                                 public void onFail(int code, String msg) {
-                                    if(view != null) view.onFailure(code,msg);
+                                    if (view != null) view.onFailure(code, msg);
                                 }
                             });
-                }else if(folderType.equals(FolderType.ZH.toString())){
-                    apiService.uploadZonghe(folderId,resList)
+                } else if (folderType.equals(FolderType.ZH.toString())) {
+                    apiService.uploadZonghe(folderId, resList)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new NetSimpleResultSubscriber() {
                                 @Override
                                 public void onSuccess() {
-                                    if(view != null) view.onUploadFilesSuccess();
+                                    if (view != null) view.onUploadFilesSuccess();
                                 }
 
                                 @Override
                                 public void onFail(int code, String msg) {
-                                    if(view != null) view.onFailure(code,msg);
+                                    if (view != null) view.onFailure(code, msg);
                                 }
                             });
-                }else if(folderType.equals(FolderType.TJ.toString())){
-                    apiService.uploadTuji(folderId,resList)
+                } else if (folderType.equals(FolderType.TJ.toString())) {
+                    apiService.uploadTuji(folderId, resList)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new NetSimpleResultSubscriber() {
                                 @Override
                                 public void onSuccess() {
-                                    if(view != null) view.onUploadFilesSuccess();
+                                    if (view != null) view.onUploadFilesSuccess();
                                 }
 
                                 @Override
                                 public void onFail(int code, String msg) {
-                                    if(view != null) view.onFailure(code,msg);
+                                    if (view != null) view.onFailure(code, msg);
                                 }
                             });
-                }else if(folderType.equals(FolderType.MHD.toString())){
+                } else if (folderType.equals(FolderType.MHD.toString())) {
                     String path = resList.get(0).getPath();
                     int size = (int) resList.get(0).getSize();
-                    if(coverSize != -1){
+                    if (coverSize != -1) {
                         resList.remove(0);
-                    }else {
+                    } else {
                         size = -1;
                         path = cover;
                     }
-                    ManHuaUploadEntity entity = new ManHuaUploadEntity(path,size,resList,name);
-                    apiService.uploadManhua2(parentFolderId,folderId,entity)
+                    ManHuaUploadEntity entity = new ManHuaUploadEntity(path, size, resList, name, orderByType);
+                    apiService.uploadManhua2(parentFolderId, folderId, entity)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new NetSimpleResultSubscriber() {
                                 @Override
                                 public void onSuccess() {
-                                    if(view != null) view.onUploadFilesSuccess();
+                                    if (view != null) view.onUploadFilesSuccess();
                                 }
 
                                 @Override
                                 public void onFail(int code, String msg) {
-                                    if(view != null) view.onFailure(code,msg);
+                                    if (view != null) view.onFailure(code, msg);
                                 }
                             });
-                }else if(folderType.equals(FolderType.SP.toString())){
+                } else if (folderType.equals(FolderType.SP.toString())) {
                     String path = resList.get(0).getPath();
                     int size = (int) resList.get(0).getSize();
                     resList.remove(0);
@@ -185,42 +189,42 @@ public class FileUploadPresenter implements FileUploadContract.Presenter {
                     entity.setSummary(desc);
                     entity.setTexts(tags);
                     entity.setFileName(name);
-                    apiService.uploadShipin(folderId,entity)
+                    apiService.uploadShipin(folderId, entity)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new NetSimpleResultSubscriber() {
                                 @Override
                                 public void onSuccess() {
-                                    if(view != null) view.onUploadFilesSuccess();
+                                    if (view != null) view.onUploadFilesSuccess();
                                 }
 
                                 @Override
                                 public void onFail(int code, String msg) {
-                                    if(view != null) view.onFailure(code,msg);
+                                    if (view != null) view.onFailure(code, msg);
                                 }
                             });
-                }else if(folderType.equals(FolderType.YY.toString())){
+                } else if (folderType.equals(FolderType.YY.toString())) {
                     String path = resList.get(0).getPath();
                     int size = (int) resList.get(0).getSize();
                     resList.remove(0);
-                    for(UploadResultEntity entity : resList){
+                    for (UploadResultEntity entity : resList) {
                         entity.setCover(path);
                         entity.setCoverSize(size);
                         entity.setCoin(coin);
                         entity.setTexts(tags);
                     }
-                    apiService.uploadYinyue(folderId,resList)
+                    apiService.uploadYinyue(folderId, resList)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new NetSimpleResultSubscriber() {
                                 @Override
                                 public void onSuccess() {
-                                    if(view != null) view.onUploadFilesSuccess();
+                                    if (view != null) view.onUploadFilesSuccess();
                                 }
 
                                 @Override
                                 public void onFail(int code, String msg) {
-                                    if(view != null) view.onFailure(code,msg);
+                                    if (view != null) view.onFailure(code, msg);
                                 }
                             });
                 }

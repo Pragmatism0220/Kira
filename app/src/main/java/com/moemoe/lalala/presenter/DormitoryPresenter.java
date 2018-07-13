@@ -146,6 +146,24 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                 });
     }
 
+    @Override
+    public void isComplete() {
+        apiService.iscomplete()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean aBoolean) {
+                        if (view != null) view.isCompleteSuccess(aBoolean);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
 
     @Override
     public void loadRoleLikeCollect(String roleId) {
@@ -233,7 +251,7 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                     }
 
                     @Override
-                    
+
                     public void onFail(int code, String msg) {
                         if (view != null) view.onFailure(code, msg);
                     }

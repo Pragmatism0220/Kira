@@ -8,6 +8,7 @@ import com.moemoe.lalala.model.entity.Comment24Entity;
 import com.moemoe.lalala.model.entity.DepartmentGroupEntity;
 import com.moemoe.lalala.model.entity.DiscoverEntity;
 import com.moemoe.lalala.model.entity.DocResponse;
+import com.moemoe.lalala.model.entity.GiveCoinEntity;
 import com.moemoe.lalala.model.entity.NewDynamicEntity;
 import com.moemoe.lalala.model.entity.ShowFolderEntity;
 import com.moemoe.lalala.model.entity.TagLikeEntity;
@@ -207,7 +208,7 @@ public class NewFeedPresenter implements NewFeedContract.Presenter {
 
     @Override
     public void likeDoc(String id, final boolean isLike, final int position) {
-        apiService.loadDocLike(!isLike,id )
+        apiService.loadDocLike(!isLike, id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetSimpleResultSubscriber() {
@@ -275,18 +276,18 @@ public class NewFeedPresenter implements NewFeedContract.Presenter {
 
     @Override
     public void loadOldDocList(String type, final long time) {
-        apiService.loadOldDocList(type,time)
+        apiService.loadOldDocList(type, time)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetResultSubscriber<ArrayList<DocResponse>>() {
                     @Override
                     public void onSuccess(ArrayList<DocResponse> list) {
-                        if(view != null) view.loadOldDocListSuccess(list,time == 0);
+                        if (view != null) view.loadOldDocListSuccess(list, time == 0);
                     }
 
                     @Override
                     public void onFail(int code, String msg) {
-                        if(view != null) view.onFailure(code, msg);
+                        if (view != null) view.onFailure(code, msg);
                     }
                 });
     }
@@ -353,15 +354,16 @@ public class NewFeedPresenter implements NewFeedContract.Presenter {
                 .subscribe(new NetResultSubscriber<String>() {
                     @Override
                     public void onSuccess(String s) {
-                        if(view != null) view.onCreateLabel(s,entity.getTag(),position);
+                        if (view != null) view.onCreateLabel(s, entity.getTag(), position);
                     }
 
                     @Override
-                    public void onFail(int code,String msg) {
-                        if(view != null) view.onFailure(code,msg);
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
                     }
                 });
     }
+
     @Override
     public void likeTag(final boolean isLike, final int position, TagLikeEntity entity, final int parentPosition) {
         apiService.plusTag(!isLike, entity.getDocId(), entity.getTagId())
@@ -370,7 +372,25 @@ public class NewFeedPresenter implements NewFeedContract.Presenter {
                 .subscribe(new NetSimpleResultSubscriber() {
                     @Override
                     public void onSuccess() {
-                        if (view != null) view.onPlusLabel(position, !isLike,parentPosition);
+                        if (view != null) view.onPlusLabel(position, !isLike, parentPosition);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+    @Override
+    public void giveCoin(final GiveCoinEntity entity) {
+        apiService.giveCoinToDoc(entity)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetSimpleResultSubscriber() {
+                    @Override
+                    public void onSuccess() {
+                        if (view != null) view.onGiveCoin(entity.coins);
                     }
 
                     @Override

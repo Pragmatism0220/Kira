@@ -151,6 +151,16 @@
             android:src="@drawable/btn_house_share" />
 
         <ImageView
+            android:id="@+id/iv_seven"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_share"
+            android:layout_marginStart="@dimen/x16"
+            android:layout_marginTop="@dimen/y16"
+            android:background="@drawable/house_seven_btn"
+            android:onClick="@{presenter.onClick}" />
+
+        <ImageView
             android:id="@+id/iv_bag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

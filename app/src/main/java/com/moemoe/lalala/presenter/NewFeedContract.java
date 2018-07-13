@@ -5,6 +5,7 @@ import com.moemoe.lalala.model.entity.Comment24Entity;
 import com.moemoe.lalala.model.entity.DepartmentGroupEntity;
 import com.moemoe.lalala.model.entity.DiscoverEntity;
 import com.moemoe.lalala.model.entity.DocResponse;
+import com.moemoe.lalala.model.entity.GiveCoinEntity;
 import com.moemoe.lalala.model.entity.NewDynamicEntity;
 import com.moemoe.lalala.model.entity.ShowFolderEntity;
 import com.moemoe.lalala.model.entity.TagLikeEntity;
@@ -29,7 +30,7 @@ public interface NewFeedContract {
         void loadDiscoverList(String type, long minIdx, long maxIdx, boolean isPull);
         void loadOldDocList(String type,long time);
         void likeTag(boolean isLike,int position, TagLikeEntity entity,int parentPosition);
-
+        void giveCoin(GiveCoinEntity entity);
         void loadDepartmentGroup(String id);
         void loadDocList(String id,long timestamp);
         void joinAuthor(String id,String name);
@@ -50,5 +51,6 @@ public interface NewFeedContract {
         void onLoadDocListSuccess(ArrayList<DocResponse> responses, boolean isPull);
         void onJoinSuccess(String id,String name);
         void onCreateLabel(String s,String name,int position);
+        void onGiveCoin(int coins);
     }
 }

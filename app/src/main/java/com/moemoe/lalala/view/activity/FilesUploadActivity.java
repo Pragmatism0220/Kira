@@ -80,6 +80,8 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
     View mBgRoot;
     @BindView(R.id.ll_name_root)
     View mNameRoot;
+    @BindView(R.id.ll_sort_root)
+    View mSort;
     @BindView(R.id.ll_desc_root)
     View mDescRoot;
     @BindView(R.id.layout_tag_root)
@@ -116,6 +118,8 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
     TextView mTvTag2;
     @BindView(R.id.tv_label_add_3)
     TextView mTvTag3;
+    @BindView(R.id.tv_sort)
+    TextView mSortName;
 
     @Inject
     FileUploadPresenter mPresenter;
@@ -134,6 +138,7 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
     private int inputType; //1 name 2 desc 3 coin
     private ArrayList<String> mTags;
     private int mCoin = 0;
+    private String mSortString;
 
     @Override
     protected int getLayoutId() {
@@ -188,6 +193,7 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
             mTvZip.setVisibility(View.VISIBLE);
             mBgRoot.setVisibility(View.VISIBLE);
             mNameRoot.setVisibility(View.VISIBLE);
+            mSort.setVisibility(View.VISIBLE);
             if (mFolderType.equals(FolderType.MHD.toString())) {
                 ManHua2Entity entity = getIntent().getParcelableExtra("manhua");
                 mTvName.setText(entity.getFolderName());
@@ -200,7 +206,7 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
                         .bitmapTransform(new CropTransformation(FilesUploadActivity.this, (int) getResources().getDimension(R.dimen.y112), (int) getResources().getDimension(R.dimen.y112)))
                         .into(mIvBg);
             }
-        } else if (mFolderType.equals(FolderType.XS.toString())|| mFolderType.equals(FolderType.SP.toString())) {
+        } else if (mFolderType.equals(FolderType.XS.toString()) || mFolderType.equals(FolderType.SP.toString())) {
             mBgRoot.setVisibility(View.VISIBLE);
             mNameRoot.setVisibility(View.VISIBLE);
             mSelectAdapter.setSelectSize(1);
@@ -446,8 +452,38 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
             }
         });
         initPopupMenus();
+        mSort.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                showSortMenu();
+            }
+        });
     }
-
+    private void showSortMenu() {
+        bottomMenuFragment = new BottomMenuFragment();
+        ArrayList<MenuItem> items = new ArrayList<>();
+        MenuItem item = new MenuItem(1, "名称排序");
+        items.add(item);
+        item = new MenuItem(2, "时间排序");
+        items.add(item);
+        bottomMenuFragment.setMenuItems(items);
+        bottomMenuFragment.setShowTop(false);
+        bottomMenuFragment.setMenuType(BottomMenuFragment.TYPE_VERTICAL);
+        bottomMenuFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
+            @Override
+            public void OnMenuItemClick(int itemId) {
+                if (itemId == 1) {
+                    mSortName.setText("名称排序");
+                    mSortString = "NAME";
+                }
+                if (itemId == 2) {
+                    mSortName.setText("时间排序");
+                    mSortString = "DATE";
+                }
+            }
+        });
+        bottomMenuFragment.show(getSupportFragmentManager(),"MHEdit");
+    }
     private void done() {
         if (!NetworkUtils.isNetworkAvailable(this)) {
             showToast(R.string.msg_connection);
@@ -774,7 +810,7 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
     @Override
     public void onCheckSize(boolean isOk) {
         if (isOk) {
-            mPresenter.uploadFiles(mFolderType, mFolderId, mParentId, mTvName.getText().toString(), mItemPaths, mBgPath, mBgPath.equals(mBgTmp) ? -1 : 0, mCoin, mDescName.getText().toString(), mTags);
+            mPresenter.uploadFiles(mFolderType, mFolderId, mParentId, mTvName.getText().toString(), mSortString,mItemPaths, mBgPath, mBgPath.equals(mBgTmp) ? -1 : 0, mCoin, mDescName.getText().toString(), mTags);
         } else {
             showToast("空间不足");
             finalizeDialog();

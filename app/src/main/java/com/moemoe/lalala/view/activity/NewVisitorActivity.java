@@ -99,9 +99,9 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
             public void onLoadMore() {
                 isLoading = true;
                 if (uuid == null) {
-                    mPresenter.getNewVisitorsInfo(10, 0);
+                    mPresenter.getNewVisitorsInfo(10, mAdapter.getItemCount());
                 } else {
-                    mPresenter.getHisVisitorsInfo(10, 0, uuid);
+                    mPresenter.getHisVisitorsInfo(10, mAdapter.getItemCount(), uuid);
                 }
 
             }
@@ -110,9 +110,9 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
             public void onRefresh() {
                 isLoading = true;
                 if (uuid == null) {
-                    mPresenter.getNewVisitorsInfo(10, 0);
+                    mPresenter.getNewVisitorsInfo(10, mAdapter.getItemCount());
                 } else {
-                    mPresenter.getHisVisitorsInfo(10, 0, uuid);
+                    mPresenter.getHisVisitorsInfo(10, mAdapter.getItemCount(), uuid);
                 }
             }
 
@@ -149,6 +149,16 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (uuid == null) {
+            mPresenter.getNewVisitorsInfo(10, 0);
+        } else {
+            mPresenter.getHisVisitorsInfo(10, 0, uuid);
+        }
+    }
+
 
     @Override
     public void getNewVisitorsInfoSuccess(final ArrayList<VisitorsEntity> entities, boolean isPull) {
@@ -164,6 +174,7 @@ public class NewVisitorActivity extends BaseActivity implements NewVisitorsContr
             mAdapter.addList(entities);
         }
     }
+
 
     @Override
     public void getHiiVisitorsInfoSccess(ArrayList<VisitorsEntity> entities, boolean isPull) {

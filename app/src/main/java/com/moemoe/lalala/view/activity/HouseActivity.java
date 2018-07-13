@@ -157,6 +157,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     private TextView mTvRoleName;
     private RelativeLayout mRlRoleJuQing;
     private ImageView mIvCover;
+    private ImageView mSeven;
     private TextView mTvRewardName;
     private RelativeLayout mRleSelect;
     private TextView mTvLeft;
@@ -203,6 +204,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mTvRoleName = findViewById(R.id.tv_role_name);
         mRlRoleJuQing = findViewById(R.id.rl_role_juqing);
         mIvCover = findViewById(R.id.iv_cover_next);
+        mSeven = findViewById(R.id.iv_seven);
         mRleSelect = findViewById(R.id.rl_select);
         mTvLeft = findViewById(R.id.tv_left);
         mTvRight = findViewById(R.id.tv_right);
@@ -277,6 +279,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     protected void onResume() {
         super.onResume();
         onResumeNew();
+
     }
 
     private void onResumeNew() {
@@ -286,6 +289,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         binding.map.clearAllView();
         binding.map.addTouchView(HouseActivity.this);
         mPresenter.getVisitorsInfo();
+        mPresenter.loadPower();
         mPresenter.loadHouseObjects(true, "");
         if (TextUtils.isEmpty(PreferenceUtils.getUUid())) {
             binding.ivPersonal.setImageResource(R.drawable.bg_default_circle);
@@ -629,6 +633,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
 
     @Override
     protected void initData() {
+        mPresenter.isComplete();
 
     }
 
@@ -841,7 +846,6 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                 mTvCnanle.setVisibility(View.VISIBLE);
                 mTvChuWu.setText("(已放入储物箱)");
                 mTvCnanle.setText("点击任意区域关闭");
-
             } else if (type == 2) {
                 int w = getResources().getDimensionPixelSize(R.dimen.x360);
                 int h = getResources().getDimensionPixelSize(R.dimen.y360);
@@ -906,6 +910,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
 
     }
 
+
     /**
      * 获取体力值成功
      *
@@ -954,6 +959,15 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mTvJuQing.setVisibility(View.GONE);
         mRleSelect.setVisibility(View.GONE);
         showToast(entity.getToolUseMessage());
+    }
+
+    @Override
+    public void isCompleteSuccess(boolean isComplete) {
+        if (isComplete == true) {//完成所有任务
+            mSeven.setVisibility(View.GONE);
+        } else {
+            mSeven.setVisibility(View.VISIBLE);
+        }
     }
 
     private void resolvErrorList(ArrayList<HouseDbEntity> errorList, final String type) {
@@ -1037,7 +1051,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvPowerAnimator = ObjectAnimator.ofFloat(binding.power, "translationX", -binding.power.getWidth(), 0).setDuration(300);
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
-
+        ObjectAnimator mIvSevenAnimator = ObjectAnimator.ofFloat(binding.ivSeven, "translationX", -binding.ivSeven.getWidth(), 0).setDuration(300);
+        mIvSevenAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(mRoleAnimator);
         set.play(mStorageAnimator).with(mDramaAnimator);
@@ -1045,6 +1060,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         set.play(mIvTrandsAnimator).with(mIvAlarmsAnimator);
         set.play(mIvMesssgeAnimator).with(mIvShareAnimator);
         set.play(mIvPowerAnimator).with(mIvBagAnimator);
+        set.play(mIvSevenAnimator);
         set.start();
     }
 
@@ -1073,6 +1089,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvPowerAnimator = ObjectAnimator.ofFloat(binding.power, "translationX", 0, -getResources().getDimension(R.dimen.y60) - binding.power.getWidth()).setDuration(300);
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvSevenAnimator = ObjectAnimator.ofFloat(binding.ivSeven, "translationX", 0, -getResources().getDimension(R.dimen.y60) - binding.ivSeven.getWidth()).setDuration(300);
+        mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(mRoleAnimator);
         set.play(mStorageAnimator).with(mDramaAnimator);
@@ -1080,6 +1098,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         set.play(mIvTrandsAnimator).with(mIvAlarmsAnimator);
         set.play(mIvMesssgeAnimator).with(mIvShareAnimator);
         set.play(mIvPowerAnimator).with(mIvBagAnimator);
+        set.play(mIvSevenAnimator);
         set.start();
     }
 
@@ -1143,6 +1162,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                 case R.id.iv_alarm://同桌电话
                     Intent intent1 = new Intent(HouseActivity.this, AlarmActivity.class);
                     startActivity(intent1);
+//                    Intent intent1 = new Intent(HouseActivity.this, SevenDayLoginActivity.class);
+//                    startActivity(intent1);
                     break;
                 case R.id.iv_trends://动态
                     Intent i5 = new Intent(HouseActivity.this, NewDynamicActivity.class);
@@ -1162,6 +1183,10 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                         Intent intent2 = new Intent(HouseActivity.this, BagOpenActivity.class);
                         startActivity(intent2);
                     }
+                    break;
+                case R.id.iv_seven:
+                    Intent intent2 = new Intent(HouseActivity.this, SevenDayLoginActivity.class);
+                    startActivity(intent2);
                     break;
                 case R.id.iv_share:
                     if (bottomMenuFragment != null) {
@@ -1259,7 +1284,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
             String roleId = event.getRoleId();
             int type = event.getType();
             if (type == 3) {
-                mPresenter.saveVisitor(new SaveVisitorEntity("", PreferenceUtils.getUUid(), 3));
+                mPresenter.saveVisitor(new SaveVisitorEntity(event.getRoleId(), PreferenceUtils.getUUid(), 3));
                 mPresenter.loadHouseRubblish(new RubblishBody(PreferenceUtils.getUUid(), roleId, ""));
             } else {
                 this.type = 2;

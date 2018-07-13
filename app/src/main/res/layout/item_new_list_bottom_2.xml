@@ -26,9 +26,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:drawablePadding="@dimen/x10"
-                android:drawableStart="@drawable/btn_feed_repeat"
+                android:drawableStart="@drawable/btn_feed_reward"
                 android:gravity="center_vertical"
-                android:textColor="@color/main_cyan"
+                android:textColor="@color/orange_f2cc2c"
                 android:textSize="@dimen/x20" />
 
         </FrameLayout>

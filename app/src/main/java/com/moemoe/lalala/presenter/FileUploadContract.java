@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public interface FileUploadContract {
     interface Presenter extends BasePresenter{
         void checkSize(long size);
-        void uploadFiles(String folderType,String folderId,String parentFolderId,String name,ArrayList<Object> items,String cover,int coverSize,int coin,String desc,ArrayList<String> tags);
+        void uploadFiles(String folderType,String folderId,String parentFolderId,String name,String orderByType,ArrayList<Object> items,String cover,int coverSize,int coin,String desc,ArrayList<String> tags);
         void createMh(String folderId, String parentFolderId, String name, ArrayList<Object> items);
     }
 

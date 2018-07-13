@@ -1,6 +1,7 @@
 package com.moemoe.lalala.view.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +18,7 @@ import com.moemoe.lalala.model.entity.NewStoryGroupInfoEntity;
 import com.moemoe.lalala.model.entity.OnItemListener;
 import com.moemoe.lalala.presenter.PrincipalContract;
 import com.moemoe.lalala.presenter.PrincipalPresenter;
+import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.view.adapter.PrAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;

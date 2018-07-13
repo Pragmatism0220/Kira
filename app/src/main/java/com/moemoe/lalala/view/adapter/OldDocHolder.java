@@ -17,10 +17,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
+import com.moemoe.lalala.event.CountEvent;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.BadgeEntity;
 import com.moemoe.lalala.model.entity.DocResponse;
@@ -30,6 +30,7 @@ import com.moemoe.lalala.model.entity.REPORT;
 import com.moemoe.lalala.model.entity.SimpleUserEntity;
 import com.moemoe.lalala.model.entity.TagLikeEntity;
 import com.moemoe.lalala.model.entity.TagSendEntity;
+import com.moemoe.lalala.model.entity.ToFragmentListener;
 import com.moemoe.lalala.utils.AlertDialogUtil;
 import com.moemoe.lalala.utils.BitmapUtils;
 import com.moemoe.lalala.utils.DensityUtil;
@@ -38,6 +39,7 @@ import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.LevelSpan;
 import com.moemoe.lalala.utils.NetworkUtils;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
+import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.TagUtils;
 import com.moemoe.lalala.utils.ToastUtils;
@@ -60,6 +62,8 @@ import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
 import com.moemoe.lalala.view.widget.netamenu.MenuItem;
 import com.moemoe.lalala.view.widget.view.DocLabelView;
 import com.moemoe.lalala.view.widget.view.NewDocLabelAdapter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -333,15 +337,20 @@ public class OldDocHolder extends ClickableViewHolder {
         setVisible(R.id.rl_list_bottom_root_2, true);
 
         TextView forwardNum = $(R.id.tv_forward_num_2);
-        forwardNum.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.drawable.btn_feed_tab_blue), null, null, null);
+        forwardNum.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.drawable.btn_feed_reward), null, null, null);
+//        forwardNum.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.drawable.btn_feed_tab_blue), null, null, null);
         forwardNum.setCompoundDrawablePadding((int) context.getResources().getDimension(R.dimen.x10));
-        forwardNum.setTextColor(getResources().getColor(R.color.main_cyan));
+//        forwardNum.setTextColor(getResources().getColor(R.color.main_cyan));
+        forwardNum.setTextColor(getResources().getColor(R.color.yellow_f2cc2c));
 
         if (entity.getTagLikes() == 0) {
-            forwardNum.setText("标签");
-        } else {
-            forwardNum.setText(StringUtils.getNumberInLengthLimit(entity.getTagLikes(), 3));
+            forwardNum.setText("打赏");
         }
+//        else {
+            //TODO 节操数
+//            forwardNum.setText(StringUtils.getNumberInLengthLimit(entity.getTagLikes(), 3));
+//            forwardNum.setText(StringUtils.getNumberInLengthLimit(, 3));
+//        }
 
         if (entity.getComments() == 0) {
             setText(R.id.tv_comment_num_2, "评论");
@@ -403,13 +412,16 @@ public class OldDocHolder extends ClickableViewHolder {
         $(R.id.fl_forward_root_2).setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                addDocLabel(entity, paposition);
+//                addDocLabel(entity, paposition);
+                addCoin(entity);
             }
         });
+
 
         $(R.id.fl_comment_root_2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
 //                Intent i = new Intent(itemView.getContext(), NewDocDetailActivity.class);
 //                i.putExtra("uuid", entity.getId());
 //                i.putExtra("isPinLun", true);
@@ -470,6 +482,46 @@ public class OldDocHolder extends ClickableViewHolder {
 
     }
 
+
+    private void giveCoin(int count, String docId) {
+        if (!NetworkUtils.checkNetworkAndShowError(context)) {
+            return;
+        }
+        CountEvent countEvent = new CountEvent(count,docId);
+        EventBus.getDefault().post(countEvent);
+    }
+
+    private void addCoin(final DocResponse entity) {
+        /**
+         * 打赏
+         */
+        final AlertDialogUtil alertDialogUtil = AlertDialogUtil.getInstance();
+        alertDialogUtil.createEditDialog(context, PreferenceUtils.getAuthorInfo().getCoin(), 0);
+        alertDialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+            @Override
+            public void CancelOnClick() {
+                alertDialogUtil.dismissDialog();
+            }
+
+            @Override
+            public void ConfirmOnClick() {
+                if (DialogUtils.checkLoginAndShowDlg(context)) {
+                    String content = alertDialogUtil.getEditTextContent();
+                    if (!TextUtils.isEmpty(content) && Integer.valueOf(content) > 0) {
+//                        giveCoin(Integer.valueOf(content), entity.getDocId());
+                        giveCoin(Integer.valueOf(content), entity.getId());
+                        alertDialogUtil.dismissDialog();
+                    } else {
+                        ToastUtils.showShortToast(context, R.string.msg_input_err_coin);
+                    }
+                }
+            }
+        });
+        alertDialogUtil.showDialog();
+
+    }
+
+
     private void addDocLabel(final DocResponse entity, final int paposition) {
         final AlertDialogUtil alertDialogUtil = AlertDialogUtil.getInstance();
         alertDialogUtil.createDocEditDialog(itemView.getContext());
@@ -505,6 +557,7 @@ public class OldDocHolder extends ClickableViewHolder {
         });
         alertDialogUtil.showDialog();
     }
+
 
     private void setImg(ArrayList<Image> images) {
         if (images.size() == 1) {

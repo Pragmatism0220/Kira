@@ -1212,4 +1212,12 @@ public interface ApiService {
     @GET("v2/kira/house/user/role/diary/{roleId}")
     Observable<ApiResult<DiaryEntity>> loadDiary(@Path("roleId") String roleId);
 
+    @POST("v2/kira/house/user/task")
+    Observable<ApiResult<UserLoginSevenEntity>> loadSevenLoginInfo();
+
+    @POST("v2/kira/house/user/task/iscomplete")
+    Observable<ApiResult<Boolean>> iscomplete();
+
+    @POST("v2/kira/house/user/task/reward")
+    Observable<ApiResult<String>> getReward();
 }

@@ -648,29 +648,55 @@ public class NewDocDetailActivity extends BaseAppCompatActivity implements DocDe
                 }
                 break;
             case R.id.fl_forward_root_2:
-                ShareArticleEntity entity = new ShareArticleEntity();
-                entity.setDocId(mDoc.getId());
-                entity.setTitle(mDoc.getShare().getTitle());
-                entity.setContent(mDoc.getShare().getDesc());
-                entity.setCover(mDoc.getCover());
-                entity.setCreateTime(mDoc.getCreateTime());
-                UserTopEntity entity2 = new UserTopEntity();
-                if (mDoc.getBadgeList().size() > 0) {
-                    entity2.setBadge(mDoc.getBadgeList().get(0));
-                } else {
-                    entity2.setBadge(null);
-                }
-                entity2.setHeadPath(mDoc.getUserIcon());
-                entity2.setLevel(mDoc.getUserLevel());
-                entity2.setLevelColor(mDoc.getUserLevelColor());
-                entity2.setSex(mDoc.getUserSex());
-                entity2.setUserId(mDoc.getUserId());
-                entity2.setUserName(mDoc.getUserName());
-                entity.setTexts(mDoc.getTexts());
-                entity.setDocCreateUser(entity2);
-                if (NetworkUtils.checkNetworkAndShowError(NewDocDetailActivity.this)) {
-                    CreateForwardV2Activity.startActivity(this, entity);
-                }
+                final AlertDialogUtil alertDialogUtil = AlertDialogUtil.getInstance();
+                alertDialogUtil.createEditDialog(NewDocDetailActivity.this, PreferenceUtils.getAuthorInfo().getCoin(), 0);
+                alertDialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+                    @Override
+                    public void CancelOnClick() {
+                        alertDialogUtil.dismissDialog();
+                    }
+
+                    @Override
+                    public void ConfirmOnClick() {
+                        if (DialogUtils.checkLoginAndShowDlg(NewDocDetailActivity.this)) {
+                            String content = alertDialogUtil.getEditTextContent();
+                            if (!TextUtils.isEmpty(content) && Integer.valueOf(content) > 0) {
+                                giveCoin(Integer.valueOf(content));
+                                alertDialogUtil.dismissDialog();
+                            } else {
+                                ToastUtils.showShortToast(NewDocDetailActivity.this, R.string.msg_input_err_coin);
+                            }
+                        }
+                    }
+                });
+                alertDialogUtil.showDialog();
+//                } else {
+//                    ((NewDocDetailActivity) mContext).replyNormal();
+//                }
+//                getCoinContent();
+//                ShareArticleEntity entity = new ShareArticleEntity();
+//                entity.setDocId(mDoc.getId());
+//                entity.setTitle(mDoc.getShare().getTitle());
+//                entity.setContent(mDoc.getShare().getDesc());
+//                entity.setCover(mDoc.getCover());
+//                entity.setCreateTime(mDoc.getCreateTime());
+//                UserTopEntity entity2 = new UserTopEntity();
+//                if (mDoc.getBadgeList().size() > 0) {
+//                    entity2.setBadge(mDoc.getBadgeList().get(0));
+//                } else {
+//                    entity2.setBadge(null);
+//                }
+//                entity2.setHeadPath(mDoc.getUserIcon());
+//                entity2.setLevel(mDoc.getUserLevel());
+//                entity2.setLevelColor(mDoc.getUserLevelColor());
+//                entity2.setSex(mDoc.getUserSex());
+//                entity2.setUserId(mDoc.getUserId());
+//                entity2.setUserName(mDoc.getUserName());
+//                entity.setTexts(mDoc.getTexts());
+//                entity.setDocCreateUser(entity2);
+//                if (NetworkUtils.checkNetworkAndShowError(NewDocDetailActivity.this)) {
+//                    CreateForwardV2Activity.startActivity(this, entity);
+//                }
 
 
                 // TODO: 2018/6/27 标签 
@@ -1469,10 +1495,10 @@ public class NewDocDetailActivity extends BaseAppCompatActivity implements DocDe
         mDocTags = entity.getTags();
         tagId = entity.getTagId();
 
-        if (entity.getRtNum() > 0) {
-            mTvForwardNum.setText(StringUtils.getNumberInLengthLimit(entity.getRtNum(), 4));
+        if (entity.getCoinPays() > 0) {
+            mTvForwardNum.setText(StringUtils.getNumberInLengthLimit(entity.getCoinPays(), 4));
         } else {
-            mTvForwardNum.setText("转发");
+            mTvForwardNum.setText("打赏");
         }
         if (entity.getComments() > 0) {
             mTvCommentNum.setText(StringUtils.getNumberInLengthLimit(entity.getComments(), 4));

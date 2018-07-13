@@ -33,6 +33,7 @@ public interface DormitoryContract {
         void getHiVisitorsInfo(String userId);
         void loadPower();
         void houseToolUse(String toolId);
+        void isComplete();
     }
 
     interface View extends BaseView {
@@ -45,5 +46,6 @@ public interface DormitoryContract {
         void onLoadPowerSuccess(PowerEntity entity);
         void getHisVisitorsInfo(ArrayList<VisitorsEntity> entities);
         void onLoadHouseToolUse(PropUseEntity entity);
+        void isCompleteSuccess(boolean isComplete);
     }
 }

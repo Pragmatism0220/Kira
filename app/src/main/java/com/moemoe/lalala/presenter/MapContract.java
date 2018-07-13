@@ -54,6 +54,7 @@ public interface MapContract {
         void loadMapNearUser(double lat,double lon);
         void loadSplashList();
         void loadHousUserDeskmate();
+        void isMapComplete();
     }
 
     interface View extends BaseView{
@@ -77,5 +78,6 @@ public interface MapContract {
         void onLoadMapNearUser(NearUserEntity entities);
         void onLoadSplashSuccess(ArrayList<SplashEntity> entities);
         void onLoadHousUserDeskmateSuccess(UserDeskmateEntity entity);
+        void isMapCompleteSuccess(boolean isComplete);
     }
 }

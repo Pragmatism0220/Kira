@@ -172,6 +172,7 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         set.start();
     }
 
+
     @Override
     protected void initToolbar(Bundle savedInstanceState) {
 
@@ -188,13 +189,8 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
     @Override
     protected void onResume() {
         super.onResume();
-        mRlRoleJuQing.setVisibility(View.GONE);
-        mTvContent.setVisibility(View.GONE);
-        mTvJuQing.setVisibility(View.GONE);
-        mIvGongXI.setVisibility(View.GONE);
-        mRleSelect.setVisibility(View.GONE);
+        mPresenter.loadPower();
     }
-
 
     @Override
     protected void initListeners() {
@@ -562,6 +558,11 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         showToast(entity.getToolUseMessage());
     }
 
+    @Override
+    public void isCompleteSuccess(boolean isComplete) {
+
+    }
+
     private void resolvErrorList(ArrayList<HouseDbEntity> errorList, final String type) {
         final ArrayList<HouseDbEntity> errorListTmp = new ArrayList<>();
         final ArrayList<HouseDbEntity> res = new ArrayList<>();
@@ -648,4 +649,5 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
             }
         }
     }
+
 }

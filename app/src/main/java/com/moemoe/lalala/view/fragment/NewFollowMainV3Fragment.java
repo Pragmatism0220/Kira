@@ -23,12 +23,14 @@ import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.di.components.DaggerNewFeedComponent;
 import com.moemoe.lalala.di.modules.NewFeedModule;
+import com.moemoe.lalala.event.CountEvent;
 import com.moemoe.lalala.model.entity.BannerEntity;
 import com.moemoe.lalala.model.entity.Comment24Entity;
 import com.moemoe.lalala.model.entity.DepartmentGroupEntity;
 import com.moemoe.lalala.model.entity.DiscoverEntity;
 import com.moemoe.lalala.model.entity.DocResponse;
 import com.moemoe.lalala.model.entity.DocTagEntity;
+import com.moemoe.lalala.model.entity.GiveCoinEntity;
 import com.moemoe.lalala.model.entity.NewDynamicEntity;
 import com.moemoe.lalala.model.entity.ShowFolderEntity;
 import com.moemoe.lalala.model.entity.SimpleUserEntity;
@@ -56,6 +58,10 @@ import com.moemoe.lalala.view.widget.view.SlideScrollView;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -93,6 +99,7 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
     private String type;
     private String id;
     View mLogin;
+    private String mDocId;
 
     public static NewFollowMainV3Fragment newInstance(String type) {
         NewFollowMainV3Fragment fragment = new NewFollowMainV3Fragment();
@@ -142,6 +149,7 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
             });
         }
         type = getArguments().getString("type");
+        EventBus.getDefault().register(this);
         if (PreferenceUtils.isLogin()) {
             if ("ground".equals(type)) {
                 mPresenter.requestBannerData("CLASSROOM");
@@ -225,6 +233,7 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
                 return false;
             }
         });
+
     }
 
     public void onSmoothScrollBy() {
@@ -455,6 +464,17 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
         }
     }
 
+//    public void giveCoin(int count) {
+//
+//        GiveCoinEntity bean = new GiveCoinEntity(count, mDocId);
+//        mPresenter.giveCoin(bean);
+//    }
+
+    @Override
+    public void onGiveCoin(int coins) {
+        Toast.makeText(getContext(), R.string.label_give_coin_success, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onLoadGroupSuccess(ArrayList<DepartmentGroupEntity> entity) {
 
@@ -499,6 +519,7 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
         } else {
             mAdapter.notifyItemChanged(position);
         }
+
     }
 
     private void changeIdx(ArrayList<DiscoverEntity> entities) {
@@ -567,10 +588,19 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
         pauseTime();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(CountEvent event) {
+        if (event != null) {
+            GiveCoinEntity bean = new GiveCoinEntity(event.getCount(), event.getDocId());
+            mPresenter.giveCoin(bean);
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         stayEvent("社团-广场");
+        EventBus.getDefault().unregister(this);
     }
 
 }
