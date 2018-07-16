@@ -38,5 +38,15 @@
             android:layout_marginTop="@dimen/y20"
             android:textColor="@drawable/item_choose_role_name_color"
             android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/role_news_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_home_new_mini"
+            android:visibility="visible"
+            />
+
     </RelativeLayout>
 </layout>

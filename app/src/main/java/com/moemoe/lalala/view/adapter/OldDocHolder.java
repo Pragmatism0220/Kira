@@ -343,14 +343,13 @@ public class OldDocHolder extends ClickableViewHolder {
 //        forwardNum.setTextColor(getResources().getColor(R.color.main_cyan));
         forwardNum.setTextColor(getResources().getColor(R.color.yellow_f2cc2c));
 
-        if (entity.getTagLikes() == 0) {
+        if (entity.getCoinPayed() == 0) {
             forwardNum.setText("打赏");
-        }
-//        else {
-            //TODO 节操数
+        } else {
+            // TODO 节操数
 //            forwardNum.setText(StringUtils.getNumberInLengthLimit(entity.getTagLikes(), 3));
-//            forwardNum.setText(StringUtils.getNumberInLengthLimit(, 3));
-//        }
+            forwardNum.setText(StringUtils.getNumberInLengthLimit(entity.getCoinPayed(), 3));
+        }
 
         if (entity.getComments() == 0) {
             setText(R.id.tv_comment_num_2, "评论");
@@ -487,7 +486,7 @@ public class OldDocHolder extends ClickableViewHolder {
         if (!NetworkUtils.checkNetworkAndShowError(context)) {
             return;
         }
-        CountEvent countEvent = new CountEvent(count,docId);
+        CountEvent countEvent = new CountEvent(count, docId);
         EventBus.getDefault().post(countEvent);
     }
 

@@ -40,6 +40,15 @@ public class DocResponse implements Parcelable {
     private String icon;
     private String tagId;
     private int tagLikes;
+    private int coinPayed;
+
+    public int getCoinPayed() {
+        return coinPayed;
+    }
+
+    public void setCoinPayed(int coinPayed) {
+        this.coinPayed = coinPayed;
+    }
 
     private int position;
 
@@ -368,27 +377,27 @@ public class DocResponse implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         Bundle bundle = new Bundle();
-        bundle.putInt("comments",comments);
-        bundle.putParcelable("createUser",createUser);
+        bundle.putInt("comments", comments);
+        bundle.putParcelable("createUser", createUser);
         bundle.putString("createTime", createTime);
         bundle.putLong("timestamp", timestamp);
-        bundle.putParcelableArrayList("images",images);
-        bundle.putBoolean("manager",manager);
-        bundle.putString("title",title);
-        bundle.putString("from",from);
-        bundle.putParcelableArrayList("texts",texts);
-        bundle.putParcelableArrayList("tags",tags);
-        bundle.putParcelableArrayList("thumbUsers",thumbUsers);
-        bundle.putString("id",id);
-        bundle.putString("departmentName",departmentName);
-        bundle.putString("departmentId",departmentId);
-        bundle.putBoolean("thumb",thumb);
-        bundle.putInt("retweets",retweets);
-        bundle.putInt("comments",comments);
-        bundle.putInt("likes",likes);
-        bundle.putString("cover",cover);
-        bundle.putInt("thumbs",thumbs);
-        bundle.putString("content",content);
+        bundle.putParcelableArrayList("images", images);
+        bundle.putBoolean("manager", manager);
+        bundle.putString("title", title);
+        bundle.putString("from", from);
+        bundle.putParcelableArrayList("texts", texts);
+        bundle.putParcelableArrayList("tags", tags);
+        bundle.putParcelableArrayList("thumbUsers", thumbUsers);
+        bundle.putString("id", id);
+        bundle.putString("departmentName", departmentName);
+        bundle.putString("departmentId", departmentId);
+        bundle.putBoolean("thumb", thumb);
+        bundle.putInt("retweets", retweets);
+        bundle.putInt("comments", comments);
+        bundle.putInt("likes", likes);
+        bundle.putString("cover", cover);
+        bundle.putInt("thumbs", thumbs);
+        bundle.putString("content", content);
         parcel.writeBundle(bundle);
     }
 

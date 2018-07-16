@@ -134,45 +134,75 @@
 
             </FrameLayout>
 
-            <ImageView
-                android:id="@+id/role_diary_btn"
+            <FrameLayout
+                android:id="@+id/role_diary_fl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/role_heart_title"
                 android:layout_marginStart="@dimen/x52"
-                android:layout_marginTop="@dimen/y16"
-                android:background="@drawable/role_diary_selector"
-                android:onClick="@{presenter.onClick}" />
+                android:layout_marginTop="@dimen/y16">
+
+                <ImageView
+                    android:id="@+id/role_diary_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/role_diary_selector"
+                    android:onClick="@{presenter.onClick}" />
+
+                <ImageView
+                    android:id="@+id/role_diary_news"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_home_new_mini"
+                    android:layout_gravity="end"
+                    />
+            </FrameLayout>
+
 
             <ImageView
                 android:id="@+id/put_house_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/role_diary_btn"
+                android:layout_below="@+id/role_diary_fl"
                 android:layout_marginStart="@dimen/x52"
                 android:layout_marginTop="@dimen/y16"
                 android:background="@drawable/ic_role_put_house_bg"
                 android:onClick="@{presenter.onClick}" />
 
-            <ImageView
-                android:id="@+id/check_cloth_btn"
+            <FrameLayout
+                android:id="@+id/cl_fl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/role_diary_btn"
+                android:layout_below="@+id/role_diary_fl"
                 android:layout_marginStart="@dimen/x20"
                 android:layout_marginTop="@dimen/y16"
-                android:layout_toEndOf="@+id/put_house_btn"
-                android:background="@drawable/role_clothing_bg"
-                android:onClick="@{presenter.onClick}" />
+                android:layout_toEndOf="@+id/put_house_btn">
+
+                <ImageView
+                    android:id="@+id/check_cloth_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/role_clothing_bg"
+                    android:onClick="@{presenter.onClick}" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="-5dp"
+                    android:src="@drawable/ic_home_new_mini" />
+
+            </FrameLayout>
+
 
             <ImageView
                 android:id="@+id/set_deskmake_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/role_diary_btn"
+                android:layout_below="@+id/role_diary_fl"
                 android:layout_marginStart="@dimen/x20"
                 android:layout_marginTop="@dimen/y16"
-                android:layout_toEndOf="@+id/check_cloth_btn"
+                android:layout_toEndOf="@+id/cl_fl"
                 android:background="@drawable/ic_role_deskmake_bg"
                 android:onClick="@{presenter.onClick}" />
 

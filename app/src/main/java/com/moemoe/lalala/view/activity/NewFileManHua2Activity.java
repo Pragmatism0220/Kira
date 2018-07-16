@@ -453,13 +453,14 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
                 ArrayList<Image> images = new ArrayList<>();
                 for (int i = 0; i < entities.size(); i++) {
                     Image image = new Image();
-                    String path = entities.get(position).getPath();
+                    String path = entities.get(i).getPath();
                     image.setPath(path);
                     images.add(image);
                 }
+
                 Intent intent = new Intent(NewFileManHua2Activity.this, ImageBigSelectActivity.class);
                 intent.putExtra(ImageBigSelectActivity.EXTRA_KEY_FILEBEAN, images);
-                intent.putExtra(ImageBigSelectActivity.EXTRAS_KEY_FIRST_PHTOT_INDEX,position);
+                intent.putExtra(ImageBigSelectActivity.EXTRAS_KEY_FIRST_PHTOT_INDEX, position);
                 startActivity(intent);
             }
 

@@ -122,6 +122,14 @@
                                 android:layout_marginBottom="@dimen/y10"
                                 android:layout_marginEnd="@dimen/y80"
                                 android:textColor="@color/white" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_home_new_mini"
+                                android:layout_marginStart="@dimen/x58"
+                                android:layout_marginTop="@dimen/y36"
+                                />
                         </FrameLayout>
 
 

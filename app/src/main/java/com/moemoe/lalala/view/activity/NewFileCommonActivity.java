@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -124,6 +125,8 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
     TextView mTvUserName;
     @BindView(R.id.tv_to_bag)
     TextView mTvToBag;
+    @BindView(R.id.null_recommend_up)
+    RelativeLayout mNull;
 
     @Inject
     NewFolderItemPresenter mPresenter;
@@ -141,6 +144,7 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
     private boolean isLoading = false;
     private HashMap<Integer, CommonFileEntity> mSelectMap;
     private View mBottomView;
+    private View mBottomViewDown;
     private AlertDialogUtil alertDialogUtil;
     private boolean mIsGrid;
     private NewFolderEntity mFolderInfo;
@@ -222,8 +226,10 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
             public void onLoadMore() {
                 isLoading = true;
                 if (mFolderInfo == null) {
+//                    mNull.setVisibility(View.GONE);
                     mPresenter.loadFolderInfo(mUserId, mFolderType, mFolderId);
                 } else {
+//                    mNull.setVisibility(View.GONE);
                     mPresenter.loadFileList(mUserId, mFolderType, mFolderId, mAdapter.getItemCount());
                 }
             }
@@ -252,6 +258,18 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
         initPopupMenus();
         isLoading = true;
         mPresenter.loadFolderInfo(mUserId, mFolderType, mFolderId);
+//        mNull.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mFolderInfo == null) {
+//                    mNull.setVisibility(View.GONE);
+//                    mPresenter.loadFolderInfo(mUserId, mFolderType, mFolderId);
+//                } else {
+//                    mNull.setVisibility(View.GONE);
+//                    mPresenter.loadFileList(mUserId, mFolderType, mFolderId, mAdapter.getItemCount());
+//                }
+//            }
+//        });
     }
 
     private void sendBtnIn() {
@@ -367,7 +385,7 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
                     entity1.setHeadPath(mFolderInfo.getUserIcon().getPath());
                     entity.setCreateUser(entity1);
                     CreateForwardActivity.startActivity(NewFileCommonActivity.this, entity, mUserId);
-                }else if (itemId == 5) {
+                } else if (itemId == 5) {
                 }
             }
         });
@@ -406,6 +424,7 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
             }
         });
     }
+
     /**
      * 分享回调
      */
