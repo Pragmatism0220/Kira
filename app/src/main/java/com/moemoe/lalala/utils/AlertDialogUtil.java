@@ -33,6 +33,8 @@ import com.moemoe.lalala.model.entity.FileXiaoShuoEntity;
 import com.moemoe.lalala.model.entity.ShareLive2dEntity;
 import com.moemoe.lalala.view.activity.CommunityV1Activity;
 import com.moemoe.lalala.view.activity.FileMovieActivity;
+import com.moemoe.lalala.view.activity.HouseActivity;
+import com.moemoe.lalala.view.activity.Live3dActivity;
 import com.moemoe.lalala.view.activity.NewDocDetailActivity;
 import com.moemoe.lalala.view.activity.NewFileCommonActivity;
 import com.moemoe.lalala.view.activity.NewFileManHuaActivity;
@@ -514,6 +516,16 @@ public class AlertDialogUtil {
         dialog.setCancelable(false);
         cancel = contentView.findViewById(R.id.cancel);
         confirm = contentView.findViewById(R.id.confirm);
+        if (context instanceof Live3dActivity){
+            cancel.setText("忽略");
+            confirm.setText("加入VIP");
+        }else if (context instanceof HouseActivity){
+            cancel.setText("忽略");
+            confirm.setText("加入VIP");
+        }else {
+            cancel.setText("取消");
+            confirm.setText("确认");
+        }
     }
 
     public void createNewNormalDialog(Context context, String content, String canlceText) {

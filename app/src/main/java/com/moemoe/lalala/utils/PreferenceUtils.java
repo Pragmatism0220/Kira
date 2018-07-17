@@ -131,6 +131,7 @@ public class PreferenceUtils {
             sAuthorInfo.setInviteNum(info.getInviteNum());
             sAuthorInfo.setOpenBag(info.isOpenBag());
             sAuthorInfo.setInspector(info.isInspector());
+            sAuthorInfo.setVip(info.isVip());
         }
         sAuthorInfo.setId(1);
         AuthorInfoDao dao = GreenDaoManager.getInstance().getSession().getAuthorInfoDao();
@@ -831,5 +832,26 @@ public class PreferenceUtils {
         SharedPreferences sp = context.getSharedPreferences(
                 FILE_NAME, Activity.MODE_PRIVATE);
         return sp.getString("stage_line", "");
+    }
+
+    public static void setBagSize(Context context, long size, long usersize) {
+        SharedPreferences sp = context.getSharedPreferences(
+                FILE_NAME, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong("bag_maxsize", size);
+        editor.putLong("bag_usersize", usersize);
+        editor.commit();
+    }
+
+    public static long getBagMaxSize(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(
+                FILE_NAME, Activity.MODE_PRIVATE);
+        return sp.getLong("bag_maxsize", 0);
+    }
+
+    public static long getBagUserSize(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(
+                FILE_NAME, Activity.MODE_PRIVATE);
+        return sp.getLong("bag_usersize", 0);
     }
 }

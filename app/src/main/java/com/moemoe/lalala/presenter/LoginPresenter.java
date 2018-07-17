@@ -104,7 +104,9 @@ public class LoginPresenter implements LoginContract.Presenter {
                                         Date now = new Date();
                                         if(date.before(now)){
                                             authorInfo.setVipTime("");
+                                            authorInfo.setVip(false);
                                         }else {
+                                            authorInfo.setVip(true);
                                             authorInfo.setVipTime(entity.getVipTime());
                                         }
                                     } catch (ParseException e) {
@@ -112,6 +114,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                                     }
                                 }else {
                                     authorInfo.setVipTime("");
+                                    authorInfo.setVip(false);
                                 }
                                 authorInfo.setInviteNum(entity.getInviteNum());
                                 authorInfo.setInspector(entity.isInspector());

@@ -39,11 +39,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 
 /**
- *
  * Created by yi on 2016/12/2.
  */
 
-public class DepartmentV3Activity extends BaseAppCompatActivity implements DepartContract.View{
+public class DepartmentV3Activity extends BaseAppCompatActivity implements DepartContract.View {
 
     private final String EXTRA_NAME = "name";
     @BindView(R.id.iv_back)
@@ -58,7 +57,7 @@ public class DepartmentV3Activity extends BaseAppCompatActivity implements Depar
     ImageView mIvMenu;
     @BindView(R.id.ll_comment_pannel)
     View mLlcomment;
-    
+
 
     private TabFragmentPagerAdapter mAdapter;
 
@@ -78,7 +77,7 @@ public class DepartmentV3Activity extends BaseAppCompatActivity implements Depar
     @Override
     protected void initViews(Bundle savedInstanceState) {
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             String FRAGMENTS_TAG = "android:support:fragments";
             savedInstanceState.remove(FRAGMENTS_TAG);
         }
@@ -112,7 +111,7 @@ public class DepartmentV3Activity extends BaseAppCompatActivity implements Depar
         mPageIndicator.setTabWidth(76);
         mPageIndicator.setIndicatorWidth(56);
 
-        mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(),fragmentList,titles);
+        mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragmentList, titles);
         mDataPager.setAdapter(mAdapter);
         mPageIndicator.setTabData(mTabEntities);
         mPresenter.loadIsFollow(roomId);
@@ -120,12 +119,13 @@ public class DepartmentV3Activity extends BaseAppCompatActivity implements Depar
 
     /**
      * 添加标签
+     *
      * @param entity
      */
     public void createLabel(TagSendEntity entity, int position) {
         createDialog();
-       if (mDataPager.getCurrentItem() == 1) {
-            luntanFragment.createLabel(entity,position);
+        if (mDataPager.getCurrentItem() == 1) {
+            luntanFragment.createLabel(entity, position);
         }
 
     }
@@ -142,6 +142,7 @@ public class DepartmentV3Activity extends BaseAppCompatActivity implements Depar
             luntanFragment.likeDoc(id, isLike, position);
         }
     }
+
     @Override
     protected void initToolbar(Bundle savedInstanceState) {
         mIvMenu.setVisibility(View.VISIBLE);
@@ -224,14 +225,14 @@ public class DepartmentV3Activity extends BaseAppCompatActivity implements Depar
     @Override
     protected void onDestroy() {
         if (mPresenter != null) mPresenter.release();
-        if(mAdapter != null) mAdapter.release();
+        if (mAdapter != null) mAdapter.release();
         stayEvent(roomId);
         super.onDestroy();
     }
 
     @Override
     public void onFailure(int code, String msg) {
-        ErrorCodeUtils.showErrorMsgByCode(this,code,msg);
+        ErrorCodeUtils.showErrorMsgByCode(this, code, msg);
     }
 
     @Override

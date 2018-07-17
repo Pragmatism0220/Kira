@@ -31,6 +31,7 @@ public class AuthorInfo {
     private String vipTime;
     private int inviteNum;
     private String picPath;
+    private boolean isVip;
     @Transient
     private boolean shield;
     @Transient
@@ -59,10 +60,11 @@ public class AuthorInfo {
     }
 
 
-    @Generated(hash = 1406400735)
+    @Generated(hash = 533606819)
     public AuthorInfo(long id, String headPath, String userId, String openId, String platform,
-                      String token, String password, String phone, int coin, String userName, int level,
-                      boolean openBag, String rcToken, String vipTime, int inviteNum, String picPath) {
+            String token, String password, String phone, int coin, String userName, int level,
+            boolean openBag, String rcToken, String vipTime, int inviteNum, String picPath,
+            boolean isVip) {
         this.id = id;
         this.headPath = headPath;
         this.userId = userId;
@@ -79,8 +81,17 @@ public class AuthorInfo {
         this.vipTime = vipTime;
         this.inviteNum = inviteNum;
         this.picPath = picPath;
+        this.isVip = isVip;
     }
 
+
+    public boolean isVip() {
+        return isVip;
+    }
+
+    public void setVip(boolean vip) {
+        isVip = vip;
+    }
 
     public String getPicPath() {
         return picPath;
@@ -244,6 +255,16 @@ public class AuthorInfo {
 
     public boolean getShield() {
         return this.shield;
+    }
+
+
+    public boolean getIsVip() {
+        return this.isVip;
+    }
+
+
+    public void setIsVip(boolean isVip) {
+        this.isVip = isVip;
     }
 
 }

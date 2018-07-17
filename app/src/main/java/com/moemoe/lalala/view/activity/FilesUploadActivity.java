@@ -240,6 +240,7 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
         mSelectAdapter.setOnItemClickListener(new SelectItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                
                 if (position == mItemPaths.size()) {
                     if (FolderType.YY.toString().equals(mFolderType)) {
                         Intent intent = new Intent(FilesUploadActivity.this, SelectMusicActivity.class);
@@ -248,8 +249,10 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
                         Intent intent = new Intent(FilesUploadActivity.this, SelectMovieActivity.class);
                         startActivityForResult(intent, REQ_GET_FROM_SELECT_MOVIE);
                     } else {
-                        if (bottomMenuFragment != null)
+                        if (bottomMenuFragment != null){
+                            initPopupMenus();
                             bottomMenuFragment.show(getSupportFragmentManager(), "upload");
+                        }
                     }
                 }
             }
@@ -459,7 +462,11 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
             }
         });
     }
+
     private void showSortMenu() {
+        if (bottomMenuFragment != null) {
+            bottomMenuFragment = null;
+        }
         bottomMenuFragment = new BottomMenuFragment();
         ArrayList<MenuItem> items = new ArrayList<>();
         MenuItem item = new MenuItem(1, "名称排序");
@@ -482,8 +489,9 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
                 }
             }
         });
-        bottomMenuFragment.show(getSupportFragmentManager(),"MHEdit");
+        bottomMenuFragment.show(getSupportFragmentManager(), "MHEdit");
     }
+
     private void done() {
         if (!NetworkUtils.isNetworkAvailable(this)) {
             showToast(R.string.msg_connection);
@@ -563,6 +571,9 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
     }
 
     private void initPopupMenus() {
+        if (bottomMenuFragment != null) {
+            bottomMenuFragment = null;
+        }
         bottomMenuFragment = new BottomMenuFragment();
         ArrayList<MenuItem> items = new ArrayList<>();
         MenuItem item = new MenuItem(1, "图片");
@@ -810,7 +821,7 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
     @Override
     public void onCheckSize(boolean isOk) {
         if (isOk) {
-            mPresenter.uploadFiles(mFolderType, mFolderId, mParentId, mTvName.getText().toString(), mSortString,mItemPaths, mBgPath, mBgPath.equals(mBgTmp) ? -1 : 0, mCoin, mDescName.getText().toString(), mTags);
+            mPresenter.uploadFiles(mFolderType, mFolderId, mParentId, mTvName.getText().toString(), mSortString, mItemPaths, mBgPath, mBgPath.equals(mBgTmp) ? -1 : 0, mCoin, mDescName.getText().toString(), mTags);
         } else {
             showToast("空间不足");
             finalizeDialog();

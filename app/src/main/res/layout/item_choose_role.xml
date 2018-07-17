@@ -45,8 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_home_new_mini"
-            android:visibility="visible"
-            />
+            android:visibility="gone" />
 
     </RelativeLayout>
 </layout>

@@ -113,13 +113,16 @@ public class SimplePresenter implements SimpleContract.Presenter {
                                         Date now = new Date();
                                         if (date.before(now)) {
                                             finalInfo1.setVipTime("");
+                                            finalInfo1.setVip(false);
                                         } else {
                                             finalInfo1.setVipTime(entity.getVipTime());
+                                            finalInfo1.setVip(true);
                                         }
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
                                 } else {
+                                    finalInfo1.setVip(false);
                                     finalInfo1.setVipTime("");
                                 }
                                 finalInfo1.setInspector(entity.isInspector());
@@ -161,14 +164,17 @@ public class SimplePresenter implements SimpleContract.Presenter {
                                         Date now = new Date();
                                         if (date.before(now)) {
                                             finalInfo.setVipTime("");
+                                            finalInfo.setVip(false);
                                         } else {
                                             finalInfo.setVipTime(entity.getVipTime());
+                                            finalInfo.setVip(true);
                                         }
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
                                 } else {
                                     finalInfo.setVipTime("");
+                                    finalInfo.setVip(false);
                                 }
                                 finalInfo.setInspector(entity.isInspector());
                                 finalInfo.setInviteNum(entity.getInviteNum());

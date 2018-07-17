@@ -104,9 +104,9 @@ public class NewDepartmentHolder extends ClickableViewHolder {
 
         int score = docBean.getScore();
         int coin = docBean.getCoin();
-        if (score ==0 || coin==0){
+        if (score == 0 || coin == 0) {
             flScoreRoot.setVisibility(View.GONE);
-        }else {
+        } else {
             flScoreRoot.setVisibility(View.VISIBLE);
         }
         tvScore.setText(coin + "节操+" + score + "学分");

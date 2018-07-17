@@ -106,7 +106,7 @@ public class IntentUtils {//TODO 待优化代码结构与跳转方式 by yi
                     i.setData(uri1);
                     i.setAction("android.intent.action.VIEW");
                     context.startActivity(i);
-                }else{
+                }else {
                     i.setPackage(uri.getHost());
                     i.setData(uri);
                     i.setAction(path);

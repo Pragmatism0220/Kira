@@ -84,18 +84,10 @@
                 android:id="@+id/iv_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/y26"
                 android:background="@color/transparent"
                 android:onClick="@{presenter.onClick}"
-                android:src="@drawable/btn_association" />
+                android:src="@drawable/role_back_btn_new" />
 
-            <ImageView
-                android:id="@+id/iv_personal"
-                android:layout_width="@dimen/x70"
-                android:layout_height="@dimen/y70"
-                android:layout_marginStart="@dimen/x26"
-                android:onClick="@{presenter.onClick}"
-                android:src="@drawable/bg_default_circle" />
 
             <LinearLayout
                 android:id="@+id/rl_search"
@@ -127,7 +119,17 @@
                     android:layout_marginEnd="@dimen/y20"
                     android:onClick="@{presenter.onClick}"
                     android:src="@drawable/btn_trends_search_white" />
+
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_personal"
+                android:layout_width="@dimen/x70"
+                android:layout_height="@dimen/y70"
+                android:layout_marginEnd="@dimen/y26"
+                android:layout_marginStart="@dimen/y26"
+                android:onClick="@{presenter.onClick}"
+                android:src="@drawable/bg_default_circle" />
 
             <ImageView
                 android:id="@+id/iv_right"
@@ -137,7 +139,8 @@
                 android:layout_marginStart="@dimen/y26"
                 android:background="@color/transparent"
                 android:onClick="@{presenter.onClick}"
-                android:src="@drawable/btn_map" />
+                android:src="@drawable/btn_map"
+                android:visibility="gone" />
         </LinearLayout>
 
         <ImageView
@@ -169,7 +172,8 @@
             android:layout_marginEnd="@dimen/x8"
             android:layout_marginTop="@dimen/y8"
             android:onClick="@{presenter.onClick}"
-            android:src="@drawable/bg_role_bag" />
+            android:src="@drawable/bg_role_bag"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_sleep"
@@ -180,7 +184,8 @@
             android:layout_marginEnd="@dimen/x8"
             android:layout_marginTop="@dimen/y8"
             android:onClick="@{presenter.onClick}"
-            android:src="@drawable/bg_role_sleep" />
+            android:src="@drawable/bg_role_sleep"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_alarm"
@@ -190,7 +195,8 @@
             android:layout_below="@+id/iv_sleep"
             android:layout_marginEnd="@dimen/x8"
             android:onClick="@{presenter.onClick}"
-            android:src="@drawable/btn_house_alarm" />
+            android:src="@drawable/btn_house_alarm"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_trends"
@@ -274,6 +280,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/dormitory_storage"
+            android:onClick="@{presenter.onClick}"
             android:visibility="visible">
 
             <ImageView

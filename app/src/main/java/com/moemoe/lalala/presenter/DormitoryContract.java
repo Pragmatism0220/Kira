@@ -6,6 +6,9 @@ import com.moemoe.lalala.model.entity.HouseLikeEntity;
 import com.moemoe.lalala.model.entity.HouseMarkContainer;
 import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
+import com.moemoe.lalala.model.entity.OrderEntity;
+import com.moemoe.lalala.model.entity.PayReqEntity;
+import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.model.entity.PowerEntity;
 import com.moemoe.lalala.model.entity.PropUseEntity;
 import com.moemoe.lalala.model.entity.RubbishEntity;
@@ -33,6 +36,8 @@ public interface DormitoryContract {
         void getHiVisitorsInfo(String userId);
         void loadPower();
         void houseToolUse(String toolId);
+        void createOrder(String id);
+        void payOrder(PayReqEntity entity);
         void isComplete();
     }
 
@@ -46,6 +51,8 @@ public interface DormitoryContract {
         void onLoadPowerSuccess(PowerEntity entity);
         void getHisVisitorsInfo(ArrayList<VisitorsEntity> entities);
         void onLoadHouseToolUse(PropUseEntity entity);
+        void onCreateOrderSuccess(OrderEntity entity);
+        void onPayOrderSuccess(PayResEntity entity);
         void isCompleteSuccess(boolean isComplete);
     }
 }

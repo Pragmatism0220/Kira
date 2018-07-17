@@ -55,7 +55,7 @@ import cn.sharesdk.wechat.friends.Wechat;
  * Created by yi on 2016/12/1.
  */
 
-public class LoginActivity extends BaseAppCompatActivity implements LoginContract.View{
+public class LoginActivity extends BaseAppCompatActivity implements LoginContract.View {
     private final String TAG = "LoginActivity";
     public static final String EXTRA_KEY_FIRST_RUN = "first_run";
     public static final String EXTRA_KEY_SETTING = "setting";
@@ -113,12 +113,12 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginContrac
                 .build()
                 .inject(this);
         boolean mIsFirstRun = false;
-        if(getIntent() != null){
+        if (getIntent() != null) {
             mIsFirstRun = getIntent().getBooleanExtra(EXTRA_KEY_FIRST_RUN, false);
-            mShouldGoMain = getIntent().getBooleanExtra(EXTRA_KEY_SETTING,false);
+            mShouldGoMain = getIntent().getBooleanExtra(EXTRA_KEY_SETTING, false);
         }
         mTvGo2Main.setVisibility(mIsFirstRun ? View.VISIBLE : View.GONE);
-        if(!TextUtils.isEmpty(mAccount)){
+        if (!TextUtils.isEmpty(mAccount)) {
             mEdtAccount.setText(mAccount);
         }
         mPresenter.getServerTime();
@@ -155,9 +155,9 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginContrac
         mEdtPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     mIvPwd.setSelected(true);
-                }else {
+                } else {
                     mIvPwd.setSelected(false);
                 }
             }
@@ -309,7 +309,9 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginContrac
                 Date date = format.parse(entity.getVipTime());
                 if (date.before(now)) {
                     authorInfo.setVipTime("");
+                    authorInfo.setVip(false);
                 } else {
+                    authorInfo.setVip(true);
                     authorInfo.setVipTime(entity.getVipTime());
                 }
             } catch (ParseException e) {
@@ -317,6 +319,7 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginContrac
             }
         } else {
             authorInfo.setVipTime("");
+            authorInfo.setVip(false);
         }
         authorInfo.setInviteNum(entity.getInviteNum());
         finalizeDialog();
@@ -329,8 +332,8 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginContrac
         }
         EventBus.getDefault().post(new MateChangeEvent());
         setResult(RESPONSE_LOGIN_SUCCESS);
-        Intent i = new Intent(LoginActivity.this, HouseActivity.class);
-        startActivity(i);
+//        Intent i = new Intent(LoginActivity.this, HouseActivity.class);
+//        startActivity(i);
         finish();
     }
 

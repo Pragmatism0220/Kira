@@ -153,6 +153,7 @@
                     android:id="@+id/role_diary_news"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:src="@drawable/ic_home_new_mini"
                     android:layout_gravity="end"
                     />
@@ -189,6 +190,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center"
+                    android:visibility="gone"
                     android:layout_marginBottom="-5dp"
                     android:src="@drawable/ic_home_new_mini" />
 
