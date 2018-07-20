@@ -162,7 +162,6 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/storage_commodity_buy_btn">
 
-
                 <RadioGroup
                     android:id="@+id/radio_group"
                     android:layout_width="wrap_content"
@@ -186,6 +185,16 @@
                         android:button="@null" />
 
                 </RadioGroup>
+
+                <ImageView
+                    android:id="@+id/storage_newa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_home_new_mini"
+                    android:visibility="gone"
+                    />
+
 
             </FrameLayout>
 

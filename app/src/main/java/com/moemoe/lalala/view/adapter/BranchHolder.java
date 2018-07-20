@@ -57,6 +57,12 @@ public class BranchHolder extends ClubChildHolder {
             ((TextView) $(R.id.tv_branch_num_new)).setVisibility(View.GONE);
         }
 
+        if (entity.isBranchShowNews() == true) {
+            ((ImageView) $(R.id.branch_news)).setVisibility(View.VISIBLE);
+        } else {
+            ((ImageView) $(R.id.branch_news)).setVisibility(View.GONE);
+        }
+
         $(R.id.iv_plot_memory).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

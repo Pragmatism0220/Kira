@@ -8,6 +8,11 @@ import com.moemoe.lalala.model.entity.OrderEntity;
 import com.moemoe.lalala.model.entity.PayReqEntity;
 import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.model.entity.PropUseEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
+import com.moemoe.lalala.model.entity.upDateEntity;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -76,6 +81,42 @@ public class StoragePresenter implements StorageContract.Presenter {
                     @Override
                     public void onSuccess(PropUseEntity entity) {
                         if (view != null) view.propUseSuccess(entity);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+    @Override
+    public void searchStorageNew(SearchListEntity name) {
+        apiService.searchNewList(name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<ArrayList<SearchNewListEntity>>() {
+                    @Override
+                    public void onSuccess(ArrayList<SearchNewListEntity> newListEntities) {
+                        if (view != null) view.searchStorageNewSuccess(newListEntities);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+    @Override
+    public void updateStorageNews(upDateEntity entity) {
+        apiService.updateNews(entity)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetSimpleResultSubscriber() {
+                    @Override
+                    public void onSuccess() {
+                        if (view != null) view.updateStorageNewsSuccess();
                     }
 
                     @Override

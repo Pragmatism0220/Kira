@@ -4,16 +4,22 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +29,7 @@ import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.di.components.DaggerNewFeedComponent;
 import com.moemoe.lalala.di.modules.NewFeedModule;
+import com.moemoe.lalala.event.CommentEvent;
 import com.moemoe.lalala.event.CountEvent;
 import com.moemoe.lalala.model.entity.BannerEntity;
 import com.moemoe.lalala.model.entity.Comment24Entity;
@@ -46,6 +53,8 @@ import com.moemoe.lalala.utils.NewCommunityDecoration;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.ViewUtils;
+import com.moemoe.lalala.view.activity.BottomSheetAdapter;
+import com.moemoe.lalala.view.activity.CreateCommentV2Activity;
 import com.moemoe.lalala.view.activity.FeedV3Activity;
 import com.moemoe.lalala.view.activity.LoginActivity;
 import com.moemoe.lalala.view.activity.NewDocDetailActivity;
@@ -100,6 +109,16 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
     private String id;
     View mLogin;
     private String mDocId;
+
+
+    private RecyclerView mList;
+    private ImageView mClose;
+    private TextView mTo;
+
+    private BottomSheetAdapter mSheetAdapter;
+    private BottomSheetDialog mDialog;
+    private BottomSheetBehavior mBehavior;
+
 
     public static NewFollowMainV3Fragment newInstance(String type) {
         NewFollowMainV3Fragment fragment = new NewFollowMainV3Fragment();
@@ -182,10 +201,11 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
         mAdapter = new OldDocAdapter();
         mListDocs.getRecyclerView().addItemDecoration(new NewCommunityDecoration((int) getResources().getDimension(R.dimen.y24), 2));
         mListDocs.getRecyclerView().setAdapter(mAdapter);
+
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                
+
                 if (getContext() instanceof FeedV3Activity) {
                     clickEvent("社团-广场列表点击");
                 }
@@ -202,6 +222,8 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
 
             }
         });
+
+
         minIdx = PreferenceUtils.getDiscoverMinIdx(getContext(), type);
         maxIdx = PreferenceUtils.getDiscoverMaxIdx(getContext(), type);
 
@@ -233,6 +255,58 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
                 return false;
             }
         });
+
+    }
+
+    private void showSheetDialog(final String id) {
+        View view = View.inflate(getContext(), R.layout.dialog_bottom_sheet, null);
+        mList = view.findViewById(R.id.dialog_bottomsheet_list);
+        mClose = view.findViewById(R.id.dialog_bottomsheet_close);
+        mTo = view.findViewById(R.id.dialog_bottomsheet_bottom);
+        mSheetAdapter = new BottomSheetAdapter();
+        mList.setHasFixedSize(true);
+        mList.setLayoutManager(new LinearLayoutManager(getContext()));
+        mList.setItemAnimator(new DefaultItemAnimator());
+        mList.setAdapter(mSheetAdapter);
+        mDialog = new BottomSheetDialog(getContext(), R.style.dialog);
+        mDialog.setContentView(view);
+        mBehavior = BottomSheetBehavior.from((View) view.getParent());
+//        mBehavior.setPeekHeight(800);
+        mBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+        if (mDialog != null) {
+            mDialog.show();
+        }
+        mClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mDialog != null) {
+                    mDialog.dismiss();
+                }
+            }
+        });
+        mTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mDialog != null) {
+                    CreateCommentV2Activity.startActivity(getContext(), id, false, "", 0, id);
+                }
+            }
+        });
+
+
+        //CreateCommentV2Activity.startActivity(context, entity.getId(), false, "", 0, entity.getId());
 
     }
 
@@ -593,6 +667,13 @@ public class NewFollowMainV3Fragment extends BaseFragment implements NewFeedCont
         if (event != null) {
             GiveCoinEntity bean = new GiveCoinEntity(event.getCount(), event.getDocId());
             mPresenter.giveCoin(bean);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCommentEvent(CommentEvent event) {
+        if (event != null) {
+            showSheetDialog(event.getId());
         }
     }
 

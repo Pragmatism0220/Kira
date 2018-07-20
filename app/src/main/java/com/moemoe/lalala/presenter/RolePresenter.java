@@ -4,6 +4,9 @@ import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetResultSubscriber;
 import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
 import com.moemoe.lalala.model.entity.RoleInfoEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
+import com.moemoe.lalala.model.entity.upDateEntity;
 
 import java.util.ArrayList;
 
@@ -116,6 +119,42 @@ public class RolePresenter implements RoleContract.Presenter {
 //
 //                    }
 //                });
+    }
+
+    @Override
+    public void searchRoleNew(SearchListEntity name) {
+        apiService.searchNewList(name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<ArrayList<SearchNewListEntity>>() {
+                    @Override
+                    public void onSuccess(ArrayList<SearchNewListEntity> entities) {
+                        if (view!=null) view.getRoleNewListSuccess(entities);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+    @Override
+    public void updateNews(upDateEntity entity) {
+        apiService.updateNews(entity)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetSimpleResultSubscriber() {
+                    @Override
+                    public void onSuccess() {
+                        if (view!=null) view.upDateNewsSuccess();
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view!=null) view.onFailure(code, msg);
+                    }
+                });
     }
 
 

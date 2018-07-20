@@ -34,6 +34,17 @@ public class AllFurnitureInfo {
     private String suitTypeId;// 套装风格ID ,
     private int position;
 
+
+    private boolean showNews;
+
+    public boolean isShowNews() {
+        return showNews;
+    }
+
+    public void setShowNews(boolean showNews) {
+        this.showNews = showNews;
+    }
+
     public void setFurnitureProductId(String furnitureProductId) {
         this.furnitureProductId = furnitureProductId;
     }

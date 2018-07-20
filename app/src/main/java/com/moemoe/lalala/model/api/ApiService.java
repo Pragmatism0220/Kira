@@ -1220,4 +1220,10 @@ public interface ApiService {
 
     @POST("v2/kira/house/user/task/reward")
     Observable<ApiResult<String>> getReward();
+
+    @POST("v2/kira/house/user/notice/list")
+    Observable<ApiResult<ArrayList<SearchNewListEntity>>> searchNewList(@Body SearchListEntity entity);
+
+    @POST("v2/kira/house/user/notice/update")
+    Observable<ApiResult> updateNews(@Body upDateEntity entity);
 }

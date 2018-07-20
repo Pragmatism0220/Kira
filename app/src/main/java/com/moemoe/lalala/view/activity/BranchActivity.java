@@ -10,6 +10,8 @@ import com.moemoe.lalala.databinding.ActivityBranchBinding;
 import com.moemoe.lalala.di.components.DaggerBranchComponent;
 import com.moemoe.lalala.di.modules.BranchModule;
 import com.moemoe.lalala.model.entity.BranchStoryAllEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
 import com.moemoe.lalala.presenter.BranchContract;
 import com.moemoe.lalala.presenter.BranchPresenter;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
@@ -19,6 +21,8 @@ import com.moemoe.lalala.view.adapter.TabFragmentPagerAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.fragment.BaseFragment;
 import com.moemoe.lalala.view.fragment.BranchFragment;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -137,12 +141,25 @@ public class BranchActivity extends BaseActivity implements BranchContract.View 
      */
     @Override
     public void onLoadBranchStoryAllSuccess(ArrayList<BranchStoryAllEntity> entities) {
-        setAdapterData(entities);
+        if (entities != null && entities.size() > 0) {
+            setAdapterData(entities);
+            SearchListEntity entity = new SearchListEntity();
+            entity.setFunNames(new String[]{"user_branch_story"});
+            mPresenter.searchBranchNews(entity);
+        }
+
     }
 
     @Override
     public void onLoadBranchStoryJoin() {
 
+    }
+
+    @Override
+    public void getBranchNewsSuccess(ArrayList<SearchNewListEntity> searchNewLists) {
+        if (searchNewLists != null && searchNewLists.size() > 0) {
+            EventBus.getDefault().post(searchNewLists);
+        }
     }
 
     /**
@@ -184,6 +201,14 @@ public class BranchActivity extends BaseActivity implements BranchContract.View 
         binding.branchTabLayout.setViewPager(binding.branchViewpager);
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SearchListEntity entity = new SearchListEntity();
+        entity.setFunNames(new String[]{"user_branch_story"});
+        mPresenter.searchBranchNews(entity);
+    }
 
     public class Presenter {
         public void onClick(View v) {

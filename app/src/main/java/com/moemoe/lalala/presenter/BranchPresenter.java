@@ -6,6 +6,8 @@ import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
 import com.moemoe.lalala.model.entity.BranchStoryAllEntity;
 import com.moemoe.lalala.model.entity.BranchStoryJoinEntity;
 import com.moemoe.lalala.model.entity.MapEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
 
 import java.util.ArrayList;
 
@@ -78,6 +80,24 @@ public class BranchPresenter implements BranchContract.Presenter {
                     @Override
                     public void onSuccess() {
                         if (view != null) view.onLoadBranchStoryJoin();
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+    @Override
+    public void searchBranchNews(SearchListEntity name) {
+        apiService.searchNewList(name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<ArrayList<SearchNewListEntity>>() {
+                    @Override
+                    public void onSuccess(ArrayList<SearchNewListEntity> newListEntities) {
+                        if (view != null) view.getBranchNewsSuccess(newListEntities);
                     }
 
                     @Override

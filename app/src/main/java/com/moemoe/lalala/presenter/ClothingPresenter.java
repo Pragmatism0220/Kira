@@ -10,6 +10,9 @@ import com.moemoe.lalala.model.entity.OrderEntity;
 import com.moemoe.lalala.model.entity.PayReqEntity;
 import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.model.entity.RoleInfoEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
+import com.moemoe.lalala.model.entity.upDateEntity;
 
 import java.util.ArrayList;
 
@@ -109,6 +112,43 @@ public class ClothingPresenter implements ClothingContrarct.Presenter {
                     @Override
                     public void onSuccess(PayResEntity entity) {
                         if (view != null) view.onPayOrderSuccess(entity);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
+    @Override
+    public void getNewsCloth(SearchListEntity name) {
+        apiService.searchNewList(name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<ArrayList<SearchNewListEntity>>() {
+                    @Override
+                    public void onSuccess(ArrayList<SearchNewListEntity> newListEntities) {
+                        if (view != null) view.getClothNewSuccess(newListEntities);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+
+    }
+
+    @Override
+    public void updateNewsCloth(upDateEntity entity) {
+        apiService.updateNews(entity)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetSimpleResultSubscriber() {
+                    @Override
+                    public void onSuccess() {
+                        if (view != null) view.updateSuccess();
                     }
 
                     @Override

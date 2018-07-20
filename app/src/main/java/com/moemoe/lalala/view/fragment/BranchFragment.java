@@ -12,9 +12,18 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.moemoe.lalala.R;
+import com.moemoe.lalala.app.MoeMoeApplication;
+import com.moemoe.lalala.di.components.DaggerBranchComponent;
+import com.moemoe.lalala.di.components.DaggerBranchNewsComponent;
+import com.moemoe.lalala.di.modules.BranchNewsModule;
 import com.moemoe.lalala.model.entity.BranchStoryAllEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
+import com.moemoe.lalala.model.entity.upDateEntity;
+import com.moemoe.lalala.presenter.BranchNewsContract;
+import com.moemoe.lalala.presenter.BranchNewsPresenter;
 import com.moemoe.lalala.utils.ToastUtils;
 import com.moemoe.lalala.view.activity.BranchActivity;
 import com.moemoe.lalala.view.activity.BranchInfoActivity;
@@ -22,13 +31,18 @@ import com.moemoe.lalala.view.adapter.BranchFragmentListAdapter;
 import com.moemoe.lalala.view.widget.adapter.BaseRecyclerViewAdapter;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 
@@ -39,10 +53,13 @@ import static android.app.Activity.RESULT_OK;
  */
 
 @SuppressLint("ValidFragment")
-public class BranchFragment extends BaseFragment {
+public class BranchFragment extends BaseFragment implements BranchNewsContract.View {
 
     @BindView(R.id.branch_recycle_view)
     RecyclerView mRecycleView;
+
+    @Inject
+    BranchNewsPresenter mPresenter;
 
     private BranchFragmentListAdapter mAdapter;
     private ArrayList<BranchStoryAllEntity> mlists;
@@ -51,6 +68,7 @@ public class BranchFragment extends BaseFragment {
     private int postion;
     private String key;
     private boolean isCheckSelect;
+    int mPosition;
 
     @SuppressLint("ValidFragment")
     public BranchFragment(Context context, ArrayList<BranchStoryAllEntity> entities) {
@@ -80,6 +98,11 @@ public class BranchFragment extends BaseFragment {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        DaggerBranchNewsComponent.builder()
+                .branchNewsModule(new BranchNewsModule(this))
+                .netComponent(MoeMoeApplication.getInstance().getNetComponent())
+                .build()
+                .inject(this);
         mAdapter = new BranchFragmentListAdapter(getContext(), isSelect);
         mRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         mRecycleView.addItemDecoration(new SpacesItemDecoration(12, 12, 0));
@@ -89,10 +112,17 @@ public class BranchFragment extends BaseFragment {
         } else {
             branchOrCompound(mlists);
         }
+        EventBus.getDefault().register(this);
 
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                mPosition = position;
+                if (mlists.get(position).isBranchShowNews() == true) {
+                    upDateEntity upDateEntity = new upDateEntity("user_branch_story", mlists.get(position).getId());
+                    mPresenter.updateBranchNews(upDateEntity);
+                }
+
                 if (isSelect) {
                     Intent intent = new Intent();
                     intent.putExtra("coverImage", mAdapter.getItem(position).getCoverImage());
@@ -158,5 +188,52 @@ public class BranchFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
+
+    @Override
+    public void onFailure(int code, String msg) {
+
+    }
+
+//    @Override
+//    public void getBranchNewsSuccess(ArrayList<SearchNewListEntity> searchNewLists) {
+//        if (searchNewLists != null && searchNewLists.size() > 0) {
+//            Map<String, String> branchNewsMaps = new HashMap<String, String>();
+//            for (int i = 0; i < searchNewLists.size(); i++) {
+//                branchNewsMaps.put(searchNewLists.get(i).getTargetId(), searchNewLists.get(i).getFunName());
+//            }
+//            for (int i = 0; i < searchNewLists.size(); i++) {
+//                if (branchNewsMaps.containsKey(searchNewLists.get(i).getTargetId())) {
+//                    mlists.get(i).setBranchShowNews(true);
+//                }
+//            }
+//
+//        }
+//    }
+
+    @Override
+    public void updateBranchNewsSuccess() {
+        mAdapter.getList().get(mPosition).setBranchShowNews(false);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void branchNewsEvent(ArrayList<SearchNewListEntity> entities) {
+        if (entities != null && entities.size() > 0) {
+            Map<String, String> branchNewsMaps = new HashMap<String, String>();
+            for (int i = 0; i < entities.size(); i++) {
+                branchNewsMaps.put(entities.get(i).getTargetId(), entities.get(i).getFunName());
+            }
+            for (int i = 0; i < mlists.size(); i++) {
+                if (branchNewsMaps.containsKey(mlists.get(i).getId())) {
+                    mlists.get(i).setBranchShowNews(true);
+                }
+            }
+            if (mAdapter != null) {
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
 }

@@ -6,22 +6,36 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.moemoe.lalala.R;
+import com.moemoe.lalala.app.MoeMoeApplication;
+import com.moemoe.lalala.di.components.DaggerFurnitureUpDateComponent;
+import com.moemoe.lalala.di.modules.FurnitureUpDateMoudle;
 import com.moemoe.lalala.event.FurnitureEvent;
 import com.moemoe.lalala.event.FurnitureSelectEvent;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
+import com.moemoe.lalala.model.entity.upDateEntity;
+import com.moemoe.lalala.presenter.FurniturePresenter;
+import com.moemoe.lalala.presenter.FurnitureUpDateContract;
+import com.moemoe.lalala.presenter.FurnitureUpDatePresenter;
 import com.moemoe.lalala.utils.ToastUtils;
 import com.moemoe.lalala.view.adapter.FurnitureInfoAdapter;
 import com.moemoe.lalala.view.adapter.PropAdapter;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
+import com.squareup.haha.trove.THash;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 
@@ -31,12 +45,15 @@ import butterknife.BindView;
  */
 
 @SuppressLint("ValidFragment")
-public class FurnitureInfoFragment extends BaseFragment {
+public class FurnitureInfoFragment extends BaseFragment implements FurnitureUpDateContract.View {
 
 
     @BindView(R.id.furniture_recycle_view)
     RecyclerView mRecycleView;
     private boolean isUse;
+
+    @Inject
+    FurnitureUpDatePresenter mPresenter;
 
     private FurnitureInfoAdapter mAdapter;
 
@@ -64,6 +81,11 @@ public class FurnitureInfoFragment extends BaseFragment {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        DaggerFurnitureUpDateComponent.builder()
+                .furnitureUpDateMoudle(new FurnitureUpDateMoudle(this))
+                .netComponent(MoeMoeApplication.getInstance().getNetComponent())
+                .build()
+                .inject(this);
         info.get(0).setSelected(true);
         EventBus.getDefault().post(new FurnitureSelectEvent(info.get(0).getId()));
         mAdapter = new FurnitureInfoAdapter(getContext());
@@ -78,7 +100,10 @@ public class FurnitureInfoFragment extends BaseFragment {
                 AllFurnitureInfo infoEvent = mAdapter.getData().get(position);
                 infoEvent.setPosition(position);
                 EventBus.getDefault().post(infoEvent);
-
+                if (info.get(position).isShowNews() == true) {
+                    upDateEntity upDateEntity = new upDateEntity("user_furniture", info.get(position).getId());
+                    mPresenter.upDateFurnitureNews(upDateEntity);
+                }
                 for (int i = 0; i < info.size(); i++) {
                     if (info.get(position).getType().equals("套装")) {
                         info.get(i).setSelected(infoEvent.getSuitTypeId().equals(info.get(i).getSuitTypeId()));
@@ -95,7 +120,9 @@ public class FurnitureInfoFragment extends BaseFragment {
                             EventBus.getDefault().post(new FurnitureSelectEvent(infoEvent.getId()));
                         }
                     }
+
                 }
+
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -148,6 +175,24 @@ public class FurnitureInfoFragment extends BaseFragment {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+        public void furnitureEvent(ArrayList<SearchNewListEntity> entities) {
+        if (entities != null) {
+            Map<String, String> furnitureMaps = new HashMap<String, String>();
+            for (int i = 0; i < entities.size(); i++) {
+                furnitureMaps.put(entities.get(i).getTargetId(), entities.get(i).getFunName());
+            }
+            for (int i = 0; i < info.size(); i++) {
+                if (furnitureMaps.containsKey(info.get(i).getId())) {
+                    info.get(i).setShowNews(true);
+                }
+            }
+            if (mAdapter != null) {
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
 
     @Override
     public void onDestroy() {
@@ -156,5 +201,16 @@ public class FurnitureInfoFragment extends BaseFragment {
         if (mAdapter != null) {
             mAdapter.unRegister();
         }
+    }
+
+    @Override
+    public void onFailure(int code, String msg) {
+
+    }
+
+    @Override
+    public void upDateFurnitureNewsSuccess() {
+        mAdapter.getList().get(mPosition).setShowNews(false);
+        mAdapter.notifyDataSetChanged();
     }
 }

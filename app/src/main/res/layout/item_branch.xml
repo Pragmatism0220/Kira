@@ -28,14 +28,24 @@
             android:visibility="gone" />
 
         <ImageView
+            android:id="@+id/branch_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/x8"
+            android:layout_marginTop="@dimen/y8"
+            android:src="@drawable/ic_home_new_mini"
+            android:visibility="gone" />
+
+        <ImageView
             android:id="@+id/iv_plot_memory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/y10"
-            android:src="@drawable/bg_ic_home_compse" />
+            android:src="@drawable/bg_ic_home_compse"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <TextView

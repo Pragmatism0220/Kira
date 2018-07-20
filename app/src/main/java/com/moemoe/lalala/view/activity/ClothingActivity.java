@@ -7,7 +7,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
@@ -19,6 +18,10 @@ import com.moemoe.lalala.model.entity.ClothingEntity;
 import com.moemoe.lalala.model.entity.OrderEntity;
 import com.moemoe.lalala.model.entity.PayReqEntity;
 import com.moemoe.lalala.model.entity.PayResEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
+import com.moemoe.lalala.model.entity.ClothUpDateEvent;
+import com.moemoe.lalala.model.entity.upDateEntity;
 import com.moemoe.lalala.presenter.ClothingContrarct;
 import com.moemoe.lalala.presenter.ClothingPresenter;
 import com.moemoe.lalala.utils.AlertDialogUtil;
@@ -39,7 +42,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -127,6 +132,9 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
             binding.viewPager.setAdapter(mAdapter);
             binding.kiraBar.setViewPager(binding.viewPager);
             binding.viewPager.setCurrentItem(0);
+            SearchListEntity searchListEntity = new SearchListEntity();
+            searchListEntity.setFunNames(new String[]{"user_role_clothes"});
+            mPresenter.getNewsCloth(searchListEntity);
             ClothingEntity entity = titles.get(0);
             binding.tvName.setText(entity.getName());
             binding.tvAcquisitonName.setText(entity.getCondition());
@@ -136,6 +144,24 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
                 binding.ivClothNameSelect.setVisibility(View.GONE);
             }
             binding.tvClothContent.setText(entity.getDescribe());
+
+        }
+    }
+
+
+    @Override
+    public void getClothNewSuccess(ArrayList<SearchNewListEntity> searchNewLists) {
+        if (searchNewLists != null && searchNewLists.size() > 0) {
+            Map<String, String> searchNewListsMap = new HashMap<String, String>();
+            for (int i = 0; i < searchNewLists.size(); i++) {
+                searchNewListsMap.put(searchNewLists.get(i).getTargetId(), searchNewLists.get(i).getFunName());
+            }
+            for (int i = 0; i < titles.size(); i++) {
+                if (searchNewListsMap.containsKey(titles.get(i).getId())) {
+                    titles.get(i).setClothNews(true);
+                }
+            }
+            binding.kiraBar.notifyDataSetChanged();
         }
     }
 
@@ -246,6 +272,13 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
                 });
             }
         }
+    }
+
+
+    @Override
+    public void updateSuccess() {
+        showToast("更新成功");
+        binding.kiraBar.notifyDataSetChanged();
     }
 
     private void initPayMenu() {
@@ -365,4 +398,14 @@ public class ClothingActivity extends BaseActivity implements ClothingContrarct.
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void ClothingEvent(ClothUpDateEvent event) {
+        if (event != null) {
+            if (titles.get(event.getPosition()).isClothNews() == true) {
+                upDateEntity updateEntity = new upDateEntity("user_role_clothes", titles.get(event.getPosition()).getId());
+                mPresenter.updateNewsCloth(updateEntity);
+            }
+
+        }
+    }
 }

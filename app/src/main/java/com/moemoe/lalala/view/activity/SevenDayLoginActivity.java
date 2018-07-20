@@ -126,7 +126,7 @@ public class SevenDayLoginActivity extends BaseActivity implements SevenDayLogin
             } else if (entities.getDays() - 1 == 3) {
                 binding.tvSevenAward.setText("今日奖励: 莲的死库水");
             } else if (entities.getDays() - 1 == 4) {
-                binding.tvSevenAward.setText("今日奖励: 随机宅屋地图");
+                binding.tvSevenAward.setText("今日奖励: 随机宅屋背景");
             } else if (entities.getDays() - 1 == 5) {
                 binding.tvSevenAward.setText("今日奖励: SR剧情卡");
             } else if (entities.getDays() - 1 == 6) {

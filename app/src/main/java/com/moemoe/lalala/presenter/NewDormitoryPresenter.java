@@ -1,8 +1,14 @@
 package com.moemoe.lalala.presenter;
 
+import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
 import com.moemoe.lalala.model.entity.NewStoryInfoEventEntity;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetResultSubscriber;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
+import com.moemoe.lalala.model.entity.upDateEntity;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -45,5 +51,43 @@ public class NewDormitoryPresenter implements NewDormitioryContract.Presenter {
                         if (view != null) view.onFailure(code, msg);
                     }
                 });
+    }
+
+    @Override
+    public void searchDormitioryNews(SearchListEntity name) {
+        apiService.searchNewList(name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<ArrayList<SearchNewListEntity>>() {
+                    @Override
+                    public void onSuccess(ArrayList<SearchNewListEntity> newListEntities) {
+                        if (view != null) view.getDormitioryNewsSuccess(newListEntities);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+
+    }
+
+    @Override
+    public void updateDormitioryNews(upDateEntity entity) {
+        apiService.updateNews(entity)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetSimpleResultSubscriber() {
+                    @Override
+                    public void onSuccess() {
+                        if (view != null) view.updateDormitioryNewsSuccess();
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+
     }
 }

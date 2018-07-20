@@ -7,6 +7,9 @@ import com.moemoe.lalala.model.entity.OrderEntity;
 import com.moemoe.lalala.model.entity.PayReqEntity;
 import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.model.entity.RoleInfoEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
+import com.moemoe.lalala.model.entity.upDateEntity;
 
 import java.util.ArrayList;
 
@@ -20,6 +23,8 @@ public interface ClothingContrarct {
         void loadRoleColthesSelect(int position,String roleId, String clothesId);
         void createOrder(String id);
         void payOrder(PayReqEntity entity);
+        void getNewsCloth(SearchListEntity name);
+        void updateNewsCloth(upDateEntity entity);
     }
 
     interface View extends BaseView {
@@ -27,5 +32,7 @@ public interface ClothingContrarct {
         void loadRoleColthesSelectSuccess(int position);
         void onCreateOrderSuccess(OrderEntity entity);
         void onPayOrderSuccess(PayResEntity entity);
+        void getClothNewSuccess(ArrayList<SearchNewListEntity> searchNewLists);
+        void updateSuccess();
     }
 }

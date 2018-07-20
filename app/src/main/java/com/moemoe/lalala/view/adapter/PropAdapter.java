@@ -67,6 +67,11 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
     @Override
     public void onBindViewHolder(final PropViewHolder holder, final int position) {
         final PropInfoEntity data = infos.get(position);
+        if (data.isShowNews() == true) {
+            holder.mNews.setVisibility(View.VISIBLE);
+        } else {
+            holder.mNews.setVisibility(View.GONE);
+        }
         if (data.isUserHadTool()) {
             Glide.with(mContext).load(ApiService.URL_QINIU + data.getImage()).
                     bitmapTransform(new RoundedCornersTransformation(mContext, 12, 0)).crossFade(1000).
@@ -142,6 +147,7 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
         private TextView mName;//道具名称
         private TextView mNum;//道具数量
         private LinearLayout mTop;
+        private ImageView mNews;
 
         public PropViewHolder(View itemView) {
             super(itemView);
@@ -150,6 +156,7 @@ public class PropAdapter extends RecyclerView.Adapter<PropAdapter.PropViewHolder
             mName = itemView.findViewById(R.id.item_commodity_name);
             mNum = itemView.findViewById(R.id.item_commodity_num);
             mTop = itemView.findViewById(R.id.top);
+            mNews = itemView.findViewById(R.id.commodity_new);
         }
     }
 }

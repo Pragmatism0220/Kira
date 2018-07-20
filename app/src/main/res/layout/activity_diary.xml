@@ -319,7 +319,6 @@
                     android:layout_alignBottom="@+id/diary_rv"
                     android:layout_alignParentStart="true"
                     android:layout_marginBottom="53dp"
-                    android:text="已完成：13/30"
                     android:textColor="@color/white"
                     android:textSize="@dimen/x30"
                     android:textStyle="bold" />

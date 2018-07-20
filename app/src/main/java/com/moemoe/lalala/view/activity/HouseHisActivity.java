@@ -31,6 +31,7 @@ import com.moemoe.lalala.model.entity.PropUseEntity;
 import com.moemoe.lalala.model.entity.RubbishEntity;
 import com.moemoe.lalala.model.entity.RubblishBody;
 import com.moemoe.lalala.model.entity.SaveVisitorEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.presenter.DormitoryContract;
 import com.moemoe.lalala.presenter.DormitoryPresenter;
@@ -560,6 +561,16 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
 
     @Override
     public void isCompleteSuccess(boolean isComplete) {
+
+    }
+
+    @Override
+    public void getHouseNewSuccess(ArrayList<SearchNewListEntity> searchNewLists) {
+
+    }
+
+    @Override
+    public void updateSuccess() {
 
     }
 

@@ -2,8 +2,8 @@ package com.moemoe.lalala.presenter;
 
 import android.content.Context;
 
+import com.moemoe.lalala.model.entity.upDateEntity;
 import com.moemoe.lalala.model.entity.HouseLikeEntity;
-import com.moemoe.lalala.model.entity.HouseMarkContainer;
 import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
 import com.moemoe.lalala.model.entity.PowerEntity;
@@ -11,9 +11,10 @@ import com.moemoe.lalala.model.entity.PropUseEntity;
 import com.moemoe.lalala.model.entity.RubbishEntity;
 import com.moemoe.lalala.model.entity.RubblishBody;
 import com.moemoe.lalala.model.entity.SaveVisitorEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.view.widget.map.MapLayout;
-import com.moemoe.lalala.view.widget.map.MapWidget;
 
 import java.util.ArrayList;
 
@@ -34,6 +35,8 @@ public interface DormitoryContract {
         void loadPower();
         void houseToolUse(String toolId);
         void isComplete();
+        void searchHouseNew(SearchListEntity name);
+        void updateNews(upDateEntity entity);
     }
 
     interface View extends BaseView {
@@ -47,5 +50,7 @@ public interface DormitoryContract {
         void getHisVisitorsInfo(ArrayList<VisitorsEntity> entities);
         void onLoadHouseToolUse(PropUseEntity entity);
         void isCompleteSuccess(boolean isComplete);
+        void getHouseNewSuccess(ArrayList<SearchNewListEntity> searchNewLists);
+        void updateSuccess();
     }
 }

@@ -203,15 +203,34 @@
             android:src="@drawable/btn_house_trends"
             android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/iv_message"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/iv_trends"
-            android:layout_marginEnd="@dimen/x8"
-            android:onClick="@{presenter.onClick}"
-            android:src="@drawable/btn_house_message" />
+            android:layout_below="@+id/iv_trends">
+
+            <ImageView
+                android:id="@+id/message_news"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_new_mini"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/x30"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/y8"
+                />
+
+            <ImageView
+                android:id="@+id/iv_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/x8"
+                android:onClick="@{presenter.onClick}"
+                android:src="@drawable/btn_house_message"
+                />
+
+        </RelativeLayout>
+
 
         <RelativeLayout
             android:id="@+id/visitor_info"
@@ -223,7 +242,7 @@
             android:onClick="@{presenter.onClick}"
             android:paddingEnd="@dimen/x16"
             android:paddingStart="@dimen/x16"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:id="@+id/ll_like_user_root"
@@ -249,6 +268,15 @@
                 android:textSize="@dimen/x24"
                 android:textStyle="bold" />
 
+            <ImageView
+                android:id="@+id/visitor_news"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toEndOf="@+id/image"
+                android:src="@drawable/rc_unread_remind_list_count"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/visitor_count"
                 android:layout_width="wrap_content"
@@ -260,6 +288,7 @@
                 android:textSize="@dimen/x24" />
 
             <ImageView
+                android:id="@+id/image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -314,6 +343,17 @@
         </RelativeLayout>
 
         <ImageView
+            android:id="@+id/storage_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/dormitory_storage"
+            android:layout_marginEnd="@dimen/x16"
+            android:layout_toStartOf="@+id/dormitory_drama"
+            android:src="@drawable/ic_home_new_mini"
+            android:visibility="gone" />
+
+
+        <ImageView
             android:id="@+id/dormitory_storage"
             android:layout_width="@dimen/x120"
             android:layout_height="@dimen/y120"
@@ -323,6 +363,15 @@
             android:onClick="@{presenter.onClick}"
             android:src="@drawable/bg_storage_box_selector" />
 
+        <ImageView
+            android:id="@+id/drama_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/dormitory_drama"
+            android:layout_marginStart="@dimen/x16"
+            android:layout_toEndOf="@+id/dormitory_storage"
+            android:src="@drawable/ic_home_new_mini"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/dormitory_drama"
@@ -333,6 +382,17 @@
             android:layout_toStartOf="@+id/dormitory_role"
             android:onClick="@{presenter.onClick}"
             android:src="@drawable/bg_drama_selector" />
+
+
+        <ImageView
+            android:id="@+id/role_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/dormitory_role"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/x16"
+            android:src="@drawable/ic_home_new_mini"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/dormitory_role"

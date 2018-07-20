@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Selection;
@@ -16,6 +20,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -81,6 +86,14 @@ public class CreateCommentV2Activity extends BaseAppCompatActivity implements Cr
     CheckBox mCbComment;
     @BindView(R.id.rl_ope_root)
     View mRlOpRoot;
+
+    private RecyclerView mList;
+    private ImageView mClose;
+
+    private BottomSheetAdapter mAdapter;
+    private BottomSheetDialog mDialog;
+    private BottomSheetBehavior mBehavior;
+
 
     @Inject
     CreateCommentPresenter mPresenter;
@@ -214,7 +227,10 @@ public class CreateCommentV2Activity extends BaseAppCompatActivity implements Cr
         mRvImg.setAdapter(mSelectAdapter);
         mPaths = new ArrayList<>();
         mRlOpRoot.setOnClickListener(null);
+
     }
+
+
 
     @Override
     protected void initToolbar(Bundle savedInstanceState) {

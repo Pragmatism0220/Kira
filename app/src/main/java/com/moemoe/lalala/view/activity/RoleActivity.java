@@ -15,6 +15,9 @@ import com.moemoe.lalala.di.components.DaggerRoleComponent;
 import com.moemoe.lalala.di.modules.RoleModule;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.RoleInfoEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
+import com.moemoe.lalala.model.entity.upDateEntity;
 import com.moemoe.lalala.presenter.RoleContract;
 import com.moemoe.lalala.presenter.RolePresenter;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
@@ -22,9 +25,14 @@ import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.view.adapter.RoleAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
+import com.squareup.haha.guava.collect.Maps;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -83,6 +91,15 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+//        mPresenter.getRoleInfo();
+        SearchListEntity entity = new SearchListEntity();
+        entity.setFunNames(new String[]{"user_role", "diary", "user_role_clothes"});
+        mPresenter.searchRoleNew(entity);
+    }
+
+    @Override
     public void getRoleInfo(final ArrayList<RoleInfoEntity> entities) {
         if (entities != null) {
             info = entities;
@@ -90,13 +107,13 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
             binding.roleListRv.setLayoutManager(new GridLayoutManager(this, 3));
             binding.roleListRv.addItemDecoration(new SpacesItemDecoration(20, 16, 0));
             binding.roleListRv.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
+
 
             if (entities.get(0).getRoleType().equals("official")) {
                 binding.roleGuanfang.setText("官方角色");
             } else if (entities.get(0).getRoleType().equals("cameo")) {
                 binding.roleGuanfang.setText("客串角色");
-            }else {
+            } else {
                 binding.roleGuanfang.setText("联动");
             }
 
@@ -179,21 +196,31 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
             binding.roleNameText.setText(entities.get(0).getName());
 
             entities.get(0).setSelected(true);
+            mAdapter.notifyDataSetChanged();
+            SearchListEntity entity = new SearchListEntity();
+            entity.setFunNames(new String[]{"user_role", "diary", "user_role_clothes"});
+            mPresenter.searchRoleNew(entity);
 
             //点击事件
             mAdapter.setOnItemClickListener(new RoleAdapter.RoleItemClickListener() {
                 @Override
                 public void onClick(View v, int position, int which) {
                     mPosition = position;
-
+                    for (int i = 0; i < entities.size(); i++) {
+                        if (entities.get(position).isShowNew() == true) {
+                            upDateEntity updateEntity = new upDateEntity("user_role", entities.get(position).getId());
+                            mPresenter.updateNews(updateEntity);
+                        }
+                    }
 
                     if (entities.get(position).getRoleType().equals("official")) {
                         binding.roleGuanfang.setText("官方角色");
                     } else if (entities.get(position).getRoleType().equals("cameo")) {
                         binding.roleGuanfang.setText("客串角色");
-                    }else {
+                    } else {
                         binding.roleGuanfang.setText("联动");
                     }
+
                     if (entities.get(position).getUserLikeRoleDefine() < 20) {
                         binding.roleHeartTitle.setBackgroundResource(R.drawable.ic_home_roles_emotion_1);
                     } else if (entities.get(position).getUserLikeRoleDefine() < 40) {
@@ -249,8 +276,6 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                             .error(R.drawable.shape_transparent_background)
                             .placeholder(R.drawable.shape_transparent_background)
                             .into(binding.roleImage);
-//                    roleId = entities.get(position).getId();
-//                    isPut = entities.get(position).getIsPutInHouse();
 
                     //拿到集合中放入宅屋的个数
                     int count = 0;
@@ -296,6 +321,72 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
         binding.putHouseBtn.setBackgroundResource(R.drawable.ic_role_put_house_bg);
         showToast("操作成功");
     }
+
+
+    @Override
+    public void upDateNewsSuccess() {
+        mAdapter.getList().get(mPosition).setShowNew(false);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 获取宅屋中新消息
+     *
+     * @param newListEntities
+     */
+    @Override
+    public void getRoleNewListSuccess(ArrayList<SearchNewListEntity> newListEntities) {
+        if (newListEntities != null && newListEntities.size() > 0 && info != null && info.size() > 0) {
+            Map<String, String> newListEntitiesMap = new HashMap<String, String>();
+            for (int i = 0; i < newListEntities.size(); i++) {
+                newListEntitiesMap.put(newListEntities.get(i).getTargetId(), newListEntities.get(i).getFunName());
+            }
+            for (int i = 0; i < info.size(); i++) {
+                if (newListEntitiesMap.containsKey(info.get(i).getId())) {
+                    info.get(i).setShowNew(true);
+                }
+            }
+
+            if (mAdapter != null) {
+                mAdapter.notifyDataSetChanged();
+            }
+
+
+            //日记、服装
+            Map<String, Integer> map = Maps.newHashMap();
+            for (int i = 0; i < newListEntities.size(); i++) {
+                if (newListEntities.get(i).getFunName().equals("diary")) {
+                    if (!map.containsKey("diary")) {
+                        map.put("diary", 1);
+                    }
+                }
+            }
+            Map<String, String> clothMaps = new HashMap<String, String>();
+            for (int i = 0; i < newListEntities.size(); i++) {
+                if (newListEntities.get(i).getFunName().equals("user_role_clothes")) {
+                    clothMaps.put(newListEntities.get(i).getTargetId(), newListEntities.get(i).getFunName());
+                }
+            }
+
+//            RoleInfoEntity role = info.get(mPosition);
+            for (int j = 0; j < info.get(mPosition).getUserHadClothesIds().size(); j++) {
+                if (clothMaps.containsKey(info.get(mPosition).getUserHadClothesIds().get(j))) {
+                    binding.roleCloseNews.setVisibility(View.VISIBLE);
+                    break;
+                }
+            }
+
+
+            if (map.get("diary") != null) {
+                binding.roleDiaryNews.setVisibility(View.VISIBLE);
+            } else {
+                binding.roleDiaryNews.setVisibility(View.GONE);
+            }
+
+
+        }
+    }
+
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
@@ -343,6 +434,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
     @Override
     protected void initData() {
+
     }
 
 
@@ -413,6 +505,10 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
                 case R.id.role_diary_btn:
                     if (mAdapter.getList().get(mPosition).getIsUserHadRole()) {
                         if (info.get(mPosition).getId() != null) {
+//                            if (info.get(mPosition).isShowNew() == true) {
+                            upDateEntity diaryupDateEntity = new upDateEntity("diary", null);
+                            mPresenter.updateNews(diaryupDateEntity);
+//                            }
                             Intent diary = new Intent(RoleActivity.this, DiaryActivity.class);
                             diary.putExtra("roleId", info.get(mPosition).getId());
                             startActivity(diary);

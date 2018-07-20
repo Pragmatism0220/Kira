@@ -1,5 +1,7 @@
 package com.moemoe.lalala.model.entity;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2018/5/28.
  */
@@ -18,11 +20,41 @@ public class RoleInfoEntity {
     private int userLikeRoleDefine; //用户将角色房屋宅屋里收集的好感度累计值 ,
     private String userLikeRoleDefineTxt;//用户将角色房屋宅屋里收集的好感度累计值对应的好感评价
     private String showHeadIcon;//大图
-    private int  userLikeRoleDefineFull;//好感度满值
+    private int userLikeRoleDefineFull;//好感度满值
     private boolean isPutInHouse;// 是否放入宅屋，true：已经放入宅屋
     private boolean isSelected = false; //item选中 自加入
     private int count;
     private String roleNumber;
+
+    private List<String> userHadClothesIds;
+
+    public List<String> getUserHadClothesIds() {
+        return userHadClothesIds;
+    }
+
+    public void setUserHadClothesIds(List<String> userHadClothesIds) {
+        this.userHadClothesIds = userHadClothesIds;
+    }
+
+    public boolean isShowNew() {
+        return isShowNew;
+    }
+
+    public void setShowNew(boolean showNew) {
+        isShowNew = showNew;
+    }
+
+    private boolean isShowNew;
+
+    private boolean isDiary;
+
+    public boolean isDiary() {
+        return isDiary;
+    }
+
+    public void setDiary(boolean diary) {
+        isDiary = diary;
+    }
 
     public int getUserLikeRoleDefineFull() {
         return userLikeRoleDefineFull;

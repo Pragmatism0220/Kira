@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_bottom_sheet_bg"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+
+    <RelativeLayout
+        android:id="@+id/dialog_bottomsheet_root"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y72">
+
+        <TextView
+            android:id="@+id/dialog_bottomsheet_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="3411条评论"
+            android:textColor="@color/black"
+            android:textSize="@dimen/x36" />
+
+        <ImageView
+            android:id="@+id/dialog_bottomsheet_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="@dimen/x36"
+            android:src="@drawable/btn_club_comment_cancel" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/dialog_bottomsheet_root"
+        android:background="@color/gray_e8e8e8" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/dialog_bottomsheet_list"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y800"
+        android:layout_below="@+id/view"
+        android:layout_marginTop="@dimen/y16"></android.support.v7.widget.RecyclerView>
+
+    <FrameLayout
+        android:layout_below="@+id/dialog_bottomsheet_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/y16">
+
+        <TextView
+            android:id="@+id/dialog_bottomsheet_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x36"
+            android:text="有爱评论，说点好听的~"
+            android:textColor="@color/black"
+            android:textSize="@dimen/x32" />
+
+    </FrameLayout>
+
+
+</RelativeLayout>

@@ -6,11 +6,13 @@ import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
+import com.moemoe.lalala.event.CommentEvent;
 import com.moemoe.lalala.event.CountEvent;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.BadgeEntity;
@@ -84,6 +87,7 @@ public class OldDocHolder extends ClickableViewHolder {
         docLabel = $(R.id.dv_doc_label_root);
         docLabelAdapter = new NewDocLabelAdapter(itemView.getContext(), false);
     }
+
 
     public void createItem(final DocResponse entity, final int paposition) {
         //from
@@ -416,7 +420,6 @@ public class OldDocHolder extends ClickableViewHolder {
             }
         });
 
-
         $(R.id.fl_comment_root_2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -433,8 +436,10 @@ public class OldDocHolder extends ClickableViewHolder {
 //                    i.putExtra("title", "个人中心");
 //                }
 //                context.startActivity(i);
-
+//                CommentEvent event = new CommentEvent($(R.id.fl_comment_root_2), paposition,entity.getId());
+//                EventBus.getDefault().post(event);
                 CreateCommentV2Activity.startActivity(context, entity.getId(), false, "", 0, entity.getId());
+
             }
         });
         $(R.id.fl_tag_root_2).setOnClickListener(new NoDoubleClickListener() {

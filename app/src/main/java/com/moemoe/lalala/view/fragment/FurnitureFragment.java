@@ -16,6 +16,9 @@ import com.moemoe.lalala.event.FurnitureSelectEvent;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
 import com.moemoe.lalala.model.entity.FurnitureInfoEntity;
 import com.moemoe.lalala.model.entity.MapDbEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
+import com.moemoe.lalala.model.entity.upDateEntity;
 import com.moemoe.lalala.presenter.FurnitureContract;
 import com.moemoe.lalala.presenter.FurniturePresenter;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
@@ -80,7 +83,6 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
                 .netComponent(MoeMoeApplication.getInstance().getNetComponent())
                 .build()
                 .inject(this);
-
         mPresenter.getFurnitureInfo();
         EventBus.getDefault().register(this);
     }
@@ -92,7 +94,6 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
 
     @Override
     public void getFurnitureInfoSuccess(FurnitureInfoEntity furnitureInfoEntity) {
-
         Map<String, ArrayList<AllFurnitureInfo>> map = new HashMap<>();
         Map<String, ArrayList<AllFurnitureInfo>> allFurnitures = furnitureInfoEntity.getAllFurnitures();
         ArrayList<AllFurnitureInfo> allList = new ArrayList<>();
@@ -125,7 +126,11 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
             mTitle.add(key);
             map.put(key, allFurnitures.get(key));
         }
-        if (map != null)    {
+
+        SearchListEntity entity = new SearchListEntity();
+        entity.setFunNames(new String[]{"user_furniture"});
+        mPresenter.getFurnitureNews(entity);
+        if (map != null) {
             for (int i = 0; i < mTitle.size(); i++) {
                 fragmentList.add(FurnitureInfoFragment.newInstance(map.get(mTitle.get(i))));
             }
@@ -138,6 +143,14 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
             mTab.setViewPager(mFurnitureViewPager);
         }
     }
+
+    @Override
+    public void getFurnitureNewsSuccess(ArrayList<SearchNewListEntity> entities) {
+        if (entities != null) {
+            EventBus.getDefault().post(entities);
+        }
+    }
+
 
     /**
      * 家具仅显示未拥有
@@ -164,16 +177,11 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
         }
     }
 
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(FurnitureSelectEvent event) {
         if (event != null && mAllListData != null && mAllListData.size() > 0) {
             for (AllFurnitureInfo mAlldata : mAllListData) {
-//
-//                if (event.getId().equals(mAlldata.getId())) {
-//                    mAlldata.setSelected(true);
-//                } else {
-//                    mAlldata.setSelected(false);
-//                }
                 if (mAlldata.getType().equals("套装")) {
                     if (event.getId().equals(mAlldata.getSuitTypeId())) {
                         mAlldata.setSelected(true);
@@ -194,6 +202,17 @@ public class FurnitureFragment extends BaseFragment implements FurnitureContract
                 }
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFurnitureUpDate(upDateEntity updateEntity) {
+        if (updateEntity != null) {
+//            mPresenter.updateFurnitureNews(updateEntity);
+        }
+    }
+    @Override
+    public void upDateFurnitureNewsSuccess() {
+        Log.i(TAG, "upDateFurnitureNewsSuccess:");
     }
 
 

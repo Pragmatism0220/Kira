@@ -29,6 +29,9 @@ import com.moemoe.lalala.model.entity.PayReqEntity;
 import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.model.entity.PropInfoEntity;
 import com.moemoe.lalala.model.entity.PropUseEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
+import com.moemoe.lalala.model.entity.upDateEntity;
 import com.moemoe.lalala.presenter.StorageContract;
 import com.moemoe.lalala.presenter.StoragePresenter;
 import com.moemoe.lalala.utils.AlertDialogUtil;
@@ -50,7 +53,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -100,6 +105,9 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
         initViewPager();
         initPayMenu();
         initGuide();
+        final SearchListEntity entity = new SearchListEntity();
+        entity.setFunNames(new String[]{"user_furniture"});
+        mPresenter.searchStorageNew(entity);
     }
 
     private void initGuide() {
@@ -134,7 +142,6 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
         binding.storageViewpager.setOnPageChangeListener(new myOnPageChangeListener());
         binding.radioGroup.setOnCheckedChangeListener(new myCheckChangeListener());
         binding.radioGroup.check(R.id.choose_prop_btn);
-
     }
 
     /**
@@ -285,6 +292,32 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
     }
 
     @Override
+    public void searchStorageNewSuccess(ArrayList<SearchNewListEntity> searchNewLists) {
+        if (searchNewLists != null && searchNewLists.size() > 0) {
+            Map<String, Integer> searchStorageMaps = new HashMap<String, Integer>();
+            for (int i = 0; i < searchNewLists.size(); i++) {
+                if (searchNewLists.get(i).getFunName().equals("user_furniture")) {
+                    if (!searchStorageMaps.containsKey("user_furniture")) {
+                        searchStorageMaps.put("user_furniture", 1);
+                    }
+                }
+            }
+            if (searchStorageMaps.get("user_furniture") != null) {
+                binding.storageNewa.setVisibility(View.VISIBLE);
+            } else {
+                binding.storageNewa.setVisibility(View.GONE);
+            }
+
+        }
+
+    }
+
+    @Override
+    public void updateStorageNewsSuccess() {
+
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
@@ -304,6 +337,9 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     binding.storageCommodityNum.setVisibility(View.VISIBLE);
                     binding.storageViewpager.setCurrentItem(0, false);
                     binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_use_btn_bg);
+                    final SearchListEntity entity = new SearchListEntity();
+                    entity.setFunNames(new String[]{"user_furniture"});
+                    mPresenter.searchStorageNew(entity);
                     break;
                 case R.id.choose_furniture_btn:
                     isCheck = false;
@@ -311,6 +347,8 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
                     binding.storageCommodityUseBtn.setBackgroundResource(R.drawable.storage_put_btn_bg);
                     binding.storageCommodityNum.setVisibility(View.GONE);
                     binding.storageViewpager.setCurrentItem(1, false);
+                    upDateEntity updateEntity = new upDateEntity("user_furniture", "");
+                    mPresenter.updateStorageNews(updateEntity);
                     break;
                 default:
                     break;

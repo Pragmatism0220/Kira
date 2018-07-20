@@ -15,6 +15,17 @@ public class ClothingEntity {
     private String name;
     private String productId;
 
+    private boolean clothNews;
+
+
+    public boolean isClothNews() {
+        return clothNews;
+    }
+
+    public void setClothNews(boolean clothNews) {
+        this.clothNews = clothNews;
+    }
+
     public void setProductId(String productId) {
         this.productId = productId;
     }

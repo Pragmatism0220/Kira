@@ -25,8 +25,17 @@ public class BranchStoryAllEntity implements Serializable, Cloneable {
     private ArrayList<String> detailImage;
     private String xml;
     private String json;
-    
-    
+
+    private boolean branchShowNews;
+
+    public boolean isBranchShowNews() {
+        return branchShowNews;
+    }
+
+    public void setBranchShowNews(boolean branchShowNews) {
+        this.branchShowNews = branchShowNews;
+    }
+
     public BranchStoryAllEntity clone() {
         BranchStoryAllEntity o = null;
         try {

@@ -15,6 +15,16 @@ public class PropInfoEntity {
     private String productId;//商品ID
     private int count;
 
+    private boolean showNews;
+
+    public boolean isShowNews() {
+        return showNews;
+    }
+
+    public void setShowNews(boolean showNews) {
+        this.showNews = showNews;
+    }
+
     public int getCount() {
         return count;
     }

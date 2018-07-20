@@ -2,6 +2,9 @@ package com.moemoe.lalala.presenter;
 
 
 import com.moemoe.lalala.model.entity.RoleInfoEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
+import com.moemoe.lalala.model.entity.upDateEntity;
 
 import java.util.ArrayList;
 
@@ -16,6 +19,8 @@ public interface RoleContract {
         void putInHouse(String roleId);
         void removeOutHouse(String roleId);
         void getStoryInfo();
+        void searchRoleNew(SearchListEntity name);
+        void updateNews(upDateEntity entity);
     }
 
     interface View extends BaseView {
@@ -23,5 +28,7 @@ public interface RoleContract {
         void setDeskMateSuccess();
         void putInHouseSuccess();
         void removeOutHouseSuccess();
+        void getRoleNewListSuccess(ArrayList<SearchNewListEntity> entities);
+        void upDateNewsSuccess();
     }
 }

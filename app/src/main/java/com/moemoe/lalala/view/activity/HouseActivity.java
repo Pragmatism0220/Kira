@@ -4,27 +4,17 @@ package com.moemoe.lalala.view.activity;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.NinePatch;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.text.style.TtsSpan;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -34,10 +24,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.liulishuo.filedownloader.BaseDownloadTask;
-import com.liulishuo.filedownloader.FileDownloadListener;
-import com.liulishuo.filedownloader.FileDownloader;
-import com.moemoe.lalala.BuildConfig;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.AppSetting;
 import com.moemoe.lalala.app.MoeMoeApplication;
@@ -50,29 +36,25 @@ import com.moemoe.lalala.galgame.FileManager;
 import com.moemoe.lalala.galgame.SoundManager;
 import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
 import com.moemoe.lalala.model.api.ApiService;
-import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
 import com.moemoe.lalala.model.entity.AuthorInfo;
+import com.moemoe.lalala.model.entity.upDateEntity;
 import com.moemoe.lalala.model.entity.DeskmateEntils;
-import com.moemoe.lalala.model.entity.DocDetailEntity;
 import com.moemoe.lalala.model.entity.HouseDbEntity;
 import com.moemoe.lalala.model.entity.HouseLikeEntity;
 import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
 import com.moemoe.lalala.model.entity.PowerEntity;
 import com.moemoe.lalala.model.entity.PropUseEntity;
-import com.moemoe.lalala.model.entity.REPORT;
 import com.moemoe.lalala.model.entity.RubbishEntity;
 import com.moemoe.lalala.model.entity.RubblishBody;
 import com.moemoe.lalala.model.entity.SaveVisitorEntity;
-import com.moemoe.lalala.model.entity.ShareArticleEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
 import com.moemoe.lalala.model.entity.StageLineEntity;
 import com.moemoe.lalala.model.entity.StageLineOptionsEntity;
-import com.moemoe.lalala.model.entity.UserTopEntity;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.presenter.DormitoryContract;
 import com.moemoe.lalala.presenter.DormitoryPresenter;
-import com.moemoe.lalala.utils.AlertDialogUtil;
-import com.moemoe.lalala.utils.BitmapUtils;
 import com.moemoe.lalala.utils.DialogUtils;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.FileUtil;
@@ -87,55 +69,33 @@ import com.moemoe.lalala.utils.ShareUtils;
 import com.moemoe.lalala.utils.SideCharacterUtils;
 import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.StringUtils;
-import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.base.BaseActivity;
-import com.moemoe.lalala.view.widget.map.MapLayout;
-import com.moemoe.lalala.view.widget.map.TouchImageView;
 import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
 import com.moemoe.lalala.view.widget.netamenu.MenuItem;
+import com.squareup.haha.guava.collect.Maps;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.reactivestreams.Subscription;
-import org.slf4j.helpers.Util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Observable;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.FlowableEmitter;
-import io.reactivex.FlowableOnSubscribe;
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
-import jp.wasabeef.glide.transformations.CropTransformation;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import static android.view.View.DRAWING_CACHE_QUALITY_AUTO;
 import static android.view.View.DRAWING_CACHE_QUALITY_HIGH;
 import static android.view.View.DRAWING_CACHE_QUALITY_LOW;
-import static com.moemoe.lalala.R.dimen.x428;
-import static com.moemoe.lalala.utils.StartActivityConstant.REQ_DELETE_TAG;
-import static com.moemoe.lalala.view.activity.BaseAppCompatActivity.UUID;
 
 public class HouseActivity extends BaseActivity implements DormitoryContract.View {
 
@@ -182,6 +142,11 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     private ImageView sidaMenuIvSignRoot;
     private ImageView sidaMenuIvPhoneMenu;
     private ImageView sidaMenuIvMsg;
+    private ImageView mVisitor;
+    private ImageView mRoleNews;
+    private ImageView mDrameNews;
+    private ImageView mStorage;
+    private ImageView mMessageNews;
     private View sideLine;
     private TextView sideLineContent;
     private LinearLayout sideLineSelect;
@@ -191,6 +156,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     private ImageView sidaCharacter;
     private RelativeLayout sideLineFrist;
     private StageLineEntity stageLineEntity;
+    private List<SearchNewListEntity> news;
 
     @Override
     protected void initComponent() {
@@ -214,6 +180,11 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mTvChuWu = findViewById(R.id.tv_chuwu);
         mTvCnanle = findViewById(R.id.tv_canle);
         mTvUserName = findViewById(R.id.tv_user_name);
+        mVisitor = findViewById(R.id.visitor_news);
+        mRoleNews = findViewById(R.id.role_news);
+        mDrameNews = findViewById(R.id.drama_news);
+        mStorage = findViewById(R.id.storage_news);
+        mMessageNews = findViewById(R.id.message_news);
     }
 
     @Override
@@ -235,6 +206,10 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         FileManager.init(this);
         initPopupMenus();
         mPresenter.loadPower();
+
+        SearchListEntity entity = new SearchListEntity();
+        entity.setFunNames(new String[]{"visitor", "user_role", "user_branch_story", "user_tool", "user_furniture", "leave_message"});
+        mPresenter.searchHouseNew(entity);
         EventBus.getDefault().register(this);
         if (PreferenceUtils.isActivityFirstLaunch(this, "house")) {
             Intent intent = new Intent(this, MengXinActivity.class);
@@ -279,7 +254,9 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     protected void onResume() {
         super.onResume();
         onResumeNew();
-
+        SearchListEntity entity = new SearchListEntity();
+        entity.setFunNames(new String[]{"visitor", "user_role", "user_branch_story", "user_tool", "user_furniture", "leave_message"});
+        mPresenter.searchHouseNew(entity);
     }
 
     private void onResumeNew() {
@@ -970,6 +947,81 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         }
     }
 
+    /**
+     * 获取宅屋新消息提醒
+     *
+     * @param searchNewLists
+     */
+    @Override
+    public void getHouseNewSuccess(ArrayList<SearchNewListEntity> searchNewLists) {
+        if (searchNewLists != null && searchNewLists.size() > 0) {
+            news = new ArrayList<>();
+            news = searchNewLists;
+            Map<String, Integer> searchMap = Maps.newHashMap();
+            for (int i = 0; i < searchNewLists.size(); i++) {
+                if (searchNewLists.get(i).getFunName().equals("visitor")) {
+                    if (!searchMap.containsKey("visitor")) {
+                        searchMap.put("visitor", 1);
+                    }
+                }
+                if (searchNewLists.get(i).getFunName().equals("user_role")) {
+                    if (!searchMap.containsKey("user_role")) {
+                        searchMap.put("user_role", 2);
+                    }
+                }
+                if (searchNewLists.get(i).getFunName().equals("user_tool") || searchNewLists.get(i).getFunName().equals("user_furniture")) {
+                    if (!searchMap.containsKey("user_tool")) {
+                        searchMap.put("user_tool", 3);
+                    }
+                    if (!searchMap.containsKey("user_furniture")) {
+                        searchMap.put("user_furniture", 4);
+                    }
+                }
+                if (searchNewLists.get(i).getFunName().equals("user_branch_story")) {
+                    if (!searchMap.containsKey("user_branch_story")) {
+                        searchMap.put("user_branch_story", 5);
+                    }
+                }
+                if (searchNewLists.get(i).getFunName().equals("leave_message")) {
+                    if (!searchMap.containsKey("leave_message")) {
+                        searchMap.put("leave_message", 6);
+                    }
+                }
+            }
+            if (searchMap.get("visitor") != null) {
+                mVisitor.setVisibility(View.VISIBLE);
+            } else {
+                mVisitor.setVisibility(View.GONE);
+            }
+            if (searchMap.get("user_role") != null) {
+                mRoleNews.setVisibility(View.VISIBLE);
+            } else {
+                mRoleNews.setVisibility(View.GONE);
+            }
+            if (searchMap.get("user_tool") != null || searchMap.get("user_furniture") != null) {
+                mStorage.setVisibility(View.VISIBLE);
+            } else {
+                mStorage.setVisibility(View.GONE);
+            }
+            if (searchMap.get("user_branch_story") != null) {
+                mDrameNews.setVisibility(View.VISIBLE);
+            } else {
+                mDrameNews.setVisibility(View.GONE);
+            }
+            if (searchMap.get("leave_message") != null) {
+                mMessageNews.setVisibility(View.VISIBLE);
+            } else {
+                mMessageNews.setVisibility(View.GONE);
+            }
+
+
+        }
+    }
+
+    @Override
+    public void updateSuccess() {
+    }
+
     private void resolvErrorList(ArrayList<HouseDbEntity> errorList, final String type) {
         final ArrayList<HouseDbEntity> errorListTmp = new ArrayList<>();
         final ArrayList<HouseDbEntity> res = new ArrayList<>();
@@ -1053,6 +1105,12 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvSevenAnimator = ObjectAnimator.ofFloat(binding.ivSeven, "translationX", -binding.ivSeven.getWidth(), 0).setDuration(300);
         mIvSevenAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mRoleNewsAnimator = ObjectAnimator.ofFloat(binding.roleNews, "translationY", binding.roleNews.getHeight() + binding.roleNews.getHeight() - getResources().getDimension(R.dimen.y60), 0).setDuration(300);
+        mRoleNewsAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mDramaNewsAnimator = ObjectAnimator.ofFloat(binding.dramaNews, "translationY", binding.dramaNews.getHeight() + binding.dramaNews.getHeight() - getResources().getDimension(R.dimen.y60), 0).setDuration(300);
+        mRoleNewsAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mSrorageNewsAnimator = ObjectAnimator.ofFloat(binding.storageNews, "translationY", binding.storageNews.getHeight() + binding.storageNews.getHeight() - getResources().getDimension(R.dimen.y60), 0).setDuration(300);
+        mSrorageNewsAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(mRoleAnimator);
         set.play(mStorageAnimator).with(mDramaAnimator);
@@ -1060,7 +1118,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         set.play(mIvTrandsAnimator).with(mIvAlarmsAnimator);
         set.play(mIvMesssgeAnimator).with(mIvShareAnimator);
         set.play(mIvPowerAnimator).with(mIvBagAnimator);
-        set.play(mIvSevenAnimator);
+        set.play(mIvSevenAnimator).with(mRoleNewsAnimator);
+        set.play(mDramaNewsAnimator).with(mSrorageNewsAnimator);
         set.start();
     }
 
@@ -1091,6 +1150,12 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvSevenAnimator = ObjectAnimator.ofFloat(binding.ivSeven, "translationX", 0, -getResources().getDimension(R.dimen.y60) - binding.ivSeven.getWidth()).setDuration(300);
         mIvMesssgeAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mRoleNewsAnimator = ObjectAnimator.ofFloat(binding.roleNews, "translationY", 0, -getResources().getDimension(R.dimen.y60) - -binding.roleNews.getHeight() - (-binding.dormitoryRole.getHeight()) * 2).setDuration(300);
+        mRoleNewsAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mDramaNewsAnimator = ObjectAnimator.ofFloat(binding.dramaNews, "translationY", 0, -getResources().getDimension(R.dimen.y60) - -binding.dramaNews.getHeight() - (-binding.dormitoryDrama.getHeight()) * 2).setDuration(300);
+        mDramaAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mStorageNewsAnimator = ObjectAnimator.ofFloat(binding.storageNews, "translationY", 0, -getResources().getDimension(R.dimen.y60) - -binding.storageNews.getHeight() - (-binding.dormitoryStorage.getHeight()) * 2).setDuration(300);
+        mStorageNewsAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(mRoleAnimator);
         set.play(mStorageAnimator).with(mDramaAnimator);
@@ -1098,7 +1163,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         set.play(mIvTrandsAnimator).with(mIvAlarmsAnimator);
         set.play(mIvMesssgeAnimator).with(mIvShareAnimator);
         set.play(mIvPowerAnimator).with(mIvBagAnimator);
-        set.play(mIvSevenAnimator);
+        set.play(mIvSevenAnimator).with(mRoleNewsAnimator);
+        set.play(mDramaNewsAnimator).with(mStorageNewsAnimator);
         set.start();
     }
 
@@ -1133,6 +1199,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                     Intent i7 = new Intent(HouseActivity.this, NewVisitorActivity.class);
 //                    i7.putExtra(UUID, PreferenceUtils.getUUid());
                     startActivity(i7);
+                    upDateEntity event = new upDateEntity("visitor", null);
+                    mPresenter.updateNews(event);
                     break;
                 case R.id.dormitory_storage:
                     Intent i6 = new Intent(HouseActivity.this, StorageActivity.class);
@@ -1172,6 +1240,12 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                 case R.id.iv_message://留言板
                     Intent i1 = new Intent(HouseActivity.this, CommentsListActivity.class);
                     i1.putExtra("uuid", PreferenceUtils.getUUid());
+                    for (int i = 0; i < news.size(); i++) {
+                        if (news.get(i).getFunName().equals("leave_message")) {
+                            upDateEntity eventMessage = new upDateEntity("leave_message", null);
+                            mPresenter.updateNews(eventMessage);
+                        }
+                    }
                     startActivity(i1);
                     break;
                 case R.id.iv_bag:

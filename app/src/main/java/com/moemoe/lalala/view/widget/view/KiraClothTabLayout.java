@@ -28,7 +28,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.event.KiraTabLayoutEvent;
+import com.moemoe.lalala.model.entity.ClothUpDateEvent;
 import com.moemoe.lalala.model.entity.ClothingEntity;
+import com.moemoe.lalala.model.entity.Image;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.view.adapter.TabFragmentPagerV3Adapter;
 
@@ -273,6 +275,7 @@ public class KiraClothTabLayout extends HorizontalScrollView implements ViewPage
         TextView tv_title = tabView.findViewById(R.id.tv_tab_title);
         ImageView mIvCover = tabView.findViewById(R.id.iv_cover);
         ImageView mIvSelect = tabView.findViewById(R.id.iv_select);
+        ImageView mNews = tabView.findViewById(R.id.cloth_news);
         if (tv_title == null) {
             throw new IllegalStateException("title textView id must be tv_tab_title");
         }
@@ -282,6 +285,10 @@ public class KiraClothTabLayout extends HorizontalScrollView implements ViewPage
         if (mIvSelect == null) {
             throw new IllegalStateException("title imageView id must be iv_select");
         }
+        if (mNews == null) {
+            throw new IllegalStateException("title imageView id must be cloth_news");
+        }
+
         if (!TextUtils.isEmpty(entity.getName())) {
             tv_title.setText(entity.getName());
         }
@@ -302,10 +309,17 @@ public class KiraClothTabLayout extends HorizontalScrollView implements ViewPage
             mIvCover.setAlpha(0.5f);
             tv_title.setAlpha(0.5f);
         }
+        if (entity.isClothNews() == true) {
+            mNews.setVisibility(View.VISIBLE);
+        } else {
+            mNews.setVisibility(View.GONE);
+        }
         tabView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 setOnTabClick(v, position);
+                ClothUpDateEvent event = new ClothUpDateEvent(position);
+                EventBus.getDefault().post(event);
             }
         });
 
@@ -348,6 +362,7 @@ public class KiraClothTabLayout extends HorizontalScrollView implements ViewPage
             ImageView mIvCover = v.findViewById(R.id.iv_cover);
             ImageView mIvSelect = v.findViewById(R.id.iv_select);
             ImageView mIvRoot = v.findViewById(R.id.iv_root);
+            ImageView mNews = v.findViewById(R.id.cloth_news);
             if (tv_title == null) {
                 throw new IllegalStateException("title textView id must be tv_tab_title");
             }
@@ -359,6 +374,9 @@ public class KiraClothTabLayout extends HorizontalScrollView implements ViewPage
             }
             if (mIvRoot == null) {
                 throw new IllegalStateException("title imageView id must be iv_root");
+            }
+            if (mNews == null) {
+                throw new IllegalStateException("title imageView id must be cloth_news");
             }
             tv_title.setTextColor(i == mCurrentTab ? mTextSelectColor : mTextUnSelectColor);
             tv_title.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
@@ -431,6 +449,7 @@ public class KiraClothTabLayout extends HorizontalScrollView implements ViewPage
             ImageView mIvCover = tabView.findViewById(R.id.iv_cover);
             ImageView mIvSelect = tabView.findViewById(R.id.iv_select);
             ImageView mIvRoot = tabView.findViewById(R.id.iv_root);
+            ImageView mNews = tabView.findViewById(R.id.cloth_news);
             if (tv_title == null) {
                 throw new IllegalStateException("title textView id must be tv_tab_title");
             }
@@ -442,6 +461,9 @@ public class KiraClothTabLayout extends HorizontalScrollView implements ViewPage
             }
             if (mIvRoot == null) {
                 throw new IllegalStateException("title imageView id must be iv_root");
+            }
+            if (mNews == null) {
+                throw new IllegalStateException("title imageView id must be cloth_news");
             }
             tv_title.setTextColor(isSelect ? mTextSelectColor : mTextUnSelectColor);
 //            tv_title.setPadding(0, (int) (isSelect ? mTextSelectPaddingTop : mTextUnSelectPaddingTop), 0, 0);

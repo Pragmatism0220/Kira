@@ -15,6 +15,7 @@ import com.moemoe.lalala.di.modules.BranchModule;
 import com.moemoe.lalala.model.entity.BranchStoryAllEntity;
 import com.moemoe.lalala.model.entity.BranchStoryJoinEntity;
 import com.moemoe.lalala.model.entity.CompoundEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
 import com.moemoe.lalala.presenter.BranchContract;
 import com.moemoe.lalala.presenter.BranchPresenter;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
@@ -218,6 +219,11 @@ public class CompoundActivity extends BaseActivity implements BranchContract.Vie
         intent.putExtra("isCompound", false);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void getBranchNewsSuccess(ArrayList<SearchNewListEntity> searchNewLists) {
+
     }
 
     public class Presenter {

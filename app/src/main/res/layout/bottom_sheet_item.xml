@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="@dimen/x90"
+        android:layout_height="@dimen/y90"
+        android:layout_marginStart="@dimen/x24"
+        android:layout_marginTop="@dimen/y16"
+        android:src="@drawable/test_image" />
+
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x16"
+        android:layout_marginTop="@dimen/y16"
+        android:layout_toEndOf="@+id/item_image"
+        android:text="我的名字太长敌人看不"
+        android:textColor="@color/black"
+        android:textSize="@dimen/x24"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/item_level"
+        android:layout_width="@dimen/x52"
+        android:layout_height="@dimen/y26"
+        android:layout_marginStart="@dimen/x12"
+        android:layout_marginTop="@dimen/y24"
+        android:layout_toEndOf="@+id/item_name"
+        android:gravity="center"
+        android:text="等级"
+        android:textSize="@dimen/x20"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/item_content"
+        android:layout_width="@dimen/x480"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_name"
+        android:layout_marginStart="@dimen/x16"
+        android:layout_marginTop="@dimen/y8"
+        android:layout_toEndOf="@+id/item_image"
+        android:text="人生意义:全职更新，人生意义:全职更新，人生意义:全职更新，"
+        android:textColor="@color/black"
+        android:textSize="@dimen/x28" />
+
+    <ImageView
+        android:id="@+id/item_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="@dimen/x24"
+        android:src="@drawable/bg_cardbg_myrole_like" />
+
+    <TextView
+        android:id="@+id/item_floor_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_content"
+        android:layout_marginStart="@dimen/x16"
+        android:layout_marginTop="@dimen/y8"
+        android:layout_toEndOf="@+id/item_image"
+        android:text="1楼 . "
+        android:textColor="@color/gray_929292"
+        android:textSize="@dimen/x20" />
+
+    <TextView
+        android:id="@+id/item_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_content"
+        android:layout_marginTop="@dimen/y8"
+        android:layout_toEndOf="@+id/item_floor_num"
+        android:text="24分钟之前"
+        android:textColor="@color/gray_929292"
+        android:textSize="@dimen/x20"
+
+        />
+
+</RelativeLayout>

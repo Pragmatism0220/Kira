@@ -14,14 +14,18 @@ import com.moemoe.lalala.di.modules.NewDormitorModule;
 import com.moemoe.lalala.model.entity.NewStoryInfoEventEntity;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.NewStoryInfoEventEntity;
+import com.moemoe.lalala.model.entity.SearchListEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
 import com.moemoe.lalala.presenter.NewDormitioryContract;
 import com.moemoe.lalala.presenter.NewDormitoryPresenter;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.base.BaseActivity;
+import com.squareup.haha.guava.collect.Maps;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -72,6 +76,10 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
     @Override
     protected void initViews(Bundle savedInstanceState) {
         mPresenter.getStoryInfo();
+        SearchListEntity entity = new SearchListEntity();
+        entity.setFunNames(new String[]{"user_branch_story"});
+        mPresenter.searchDormitioryNews(entity);
+
     }
 
     @Override
@@ -108,6 +116,40 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
         } else {
             binding.bgImage.setBackgroundResource(R.drawable.drama_dormitory_bg);
         }
+    }
+
+    @Override
+    public void getDormitioryNewsSuccess(ArrayList<SearchNewListEntity> searchNewLists) {
+        if (searchNewLists != null && searchNewLists.size() > 0) {
+            Map<String, Integer> searchDormitioryMap = Maps.newHashMap();
+            for (int i = 0; i < searchNewLists.size(); i++) {
+                if (searchNewLists.get(i).getFunName().equals("user_branch_story")) {
+                    if (!searchDormitioryMap.containsKey("user_branch_story")) {
+                        searchDormitioryMap.put("user_branch_story", 1);
+                    }
+                }
+                if (searchDormitioryMap.get("user_branch_story") != null) {
+                    binding.dramaNews.setVisibility(View.VISIBLE);
+                } else {
+                    binding.dramaNews.setVisibility(View.GONE);
+                }
+            }
+
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SearchListEntity entity = new SearchListEntity();
+        entity.setFunNames(new String[]{"user_branch_story"});
+        mPresenter.searchDormitioryNews(entity);
+    }
+
+    @Override
+    public void updateDormitioryNewsSuccess() {
+
     }
 
 

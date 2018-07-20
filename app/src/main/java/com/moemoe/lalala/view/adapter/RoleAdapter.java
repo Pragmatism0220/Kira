@@ -18,8 +18,15 @@ import com.moemoe.lalala.event.*;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
 import com.moemoe.lalala.model.entity.RoleInfoEntity;
+import com.moemoe.lalala.model.entity.SearchNewListEntity;
+import com.moemoe.lalala.view.activity.StorageActivity;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +44,7 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder
         this.entities = roles;
         this.mContext = mContext;
     }
+
 
     public List<RoleInfoEntity> getList() {
         return entities;
@@ -58,6 +66,12 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder
     public void onBindViewHolder(final RoleViewHolder holder, final int position) {
         final RoleInfoEntity data = entities.get(position);
         if (data != null) {
+
+            if (data.isShowNew() == true) {
+                holder.mNews.setVisibility(View.VISIBLE);
+            } else {
+                holder.mNews.setVisibility(View.GONE);
+            }
 
             if (data.getIsPutInHouse()) {
                 holder.mZhai.setVisibility(View.VISIBLE);
@@ -155,6 +169,7 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder
         private TextView mName;//人物名称
         private ImageView mTitle;//联动  官方
         private ImageView mZhai;//宅
+        private ImageView mNews;//
 
         private RoleViewHolder(View view) {
             super(view);
@@ -163,6 +178,7 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.RoleViewHolder
             mName = view.findViewById(R.id.item_choose_role_name);
             mTitle = view.findViewById(R.id.item_choose_role_title);
             mZhai = view.findViewById(R.id.item_choose_role_zhai);
+            mNews = view.findViewById(R.id.role_news_item);
         }
     }
 }

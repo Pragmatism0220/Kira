@@ -113,6 +113,11 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
                 holder.mFusing.setVisibility(View.GONE);
             }
         }
+        if (data.isShowNews() == true) {
+            holder.mFurnitureNews.setVisibility(View.VISIBLE);
+        }else {
+            holder.mFurnitureNews.setVisibility(View.GONE);
+        }
 
 
         if (data.getType().equals("套装")) {
@@ -180,6 +185,7 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
         private ImageView mFusing;
         private TextView mFName;
         private TextView mFStyle;
+        private ImageView mFurnitureNews;
 
         public FurnitureHolder(View itemView) {
             super(itemView);
@@ -190,6 +196,7 @@ public class FurnitureInfoAdapter extends RecyclerView.Adapter<FurnitureInfoAdap
             mFusing = itemView.findViewById(R.id.item_furniture_using);
             mFName = itemView.findViewById(R.id.item_furniture_name);
             mFStyle = itemView.findViewById(R.id.item_furniture_style);
+            mFurnitureNews = itemView.findViewById(R.id.furniture_news);
         }
     }
 }
