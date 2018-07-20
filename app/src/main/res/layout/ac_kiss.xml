@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.moemoe.lalala.view.activity.KissActivity.Presenter" />
+    </data>
+
+    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context="com.moemoe.lalala.view.activity.KissActivity">
+
+        <ImageView
+            android:id="@+id/iv_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/kiss" />
+
+        <ImageView
+            android:id="@+id/iv_cg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/iv_pose"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/iv_face"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/iv_extra"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/iv_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <RelativeLayout
+            android:id="@+id/rl_kiss_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_accept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dialog_kiss"
+                android:gravity="center"
+                android:text="接受"
+                android:onClick="@{presenter.onClick}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x40"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_refuse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_accept"
+                android:layout_marginTop="@dimen/y60"
+                android:background="@drawable/dialog_kiss"
+                android:gravity="center"
+                android:text="拒绝"
+                android:onClick="@{presenter.onClick}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x40"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_text"
+            android:layout_width="@dimen/x714"
+            android:layout_height="@dimen/y222"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/y52"
+            android:background="@drawable/ic_gal_talkbar_text"
+            android:paddingEnd="@dimen/x44"
+            android:paddingStart="@dimen/x44"
+            android:paddingTop="@dimen/y68"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x30"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="@dimen/x287"
+            android:layout_height="@dimen/y77"
+            android:layout_above="@+id/tv_text"
+            android:layout_alignStart="@+id/tv_text"
+            android:layout_marginBottom="-25dp"
+            android:background="@drawable/ic_gal_talkbar_name"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingStart="@dimen/x44"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x30"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+
+        <FrameLayout
+            android:id="@+id/fl_click"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_download"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/bg_gal_loading_2"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/ll_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/y20"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x30" />
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="@dimen/x562"
+                    android:layout_height="@dimen/y36"
+                    android:layout_gravity="center"
+                    android:background="@drawable/shape_white_background_y18"
+                    android:padding="@dimen/y4"
+                    android:progress="100"
+                    android:progressDrawable="@drawable/download_progress" />
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </RelativeLayout>
+</layout>

@@ -1,7 +1,6 @@
 package com.moemoe.lalala.presenter;
 
-import com.moemoe.lalala.model.entity.AddressEntity;
-import com.moemoe.lalala.model.entity.CommonFileEntity;
+import com.moemoe.lalala.model.entity.LibraryContribute;
 import com.moemoe.lalala.model.entity.ManHua2Entity;
 import com.moemoe.lalala.model.entity.NewFolderEntity;
 import com.moemoe.lalala.model.entity.ShowFolderEntity;
@@ -25,6 +24,7 @@ public interface NewFolderItemContract {
         void buyFolder(String userId,String type,String folderId);
         void followUser(String id,boolean isFollow);
         void refreshRecommend(String folderName,int page,String excludeFolderId);
+        void loadLibrarySubmitContribute(LibraryContribute entity);
     }
 
     interface View extends BaseView{
@@ -37,5 +37,6 @@ public interface NewFolderItemContract {
         void onFollowSuccess(boolean isFollow);
         void onLoadManHua2ListSuccess(ArrayList<ManHua2Entity> entities,boolean isPull);
         void onReFreshSuccess(ArrayList<ShowFolderEntity> entities);
+        void onLoadLibrarySubmitContribute();
     }
 }

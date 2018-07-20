@@ -1052,7 +1052,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 clickSelect();
                 //埋点统计：home
                 if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
-                  
+
                     Intent intent1 = new Intent(MapActivity.this, AlarmActivity.class);
                     startActivity(intent1);
                 }
@@ -1358,11 +1358,11 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 IntentUtils.toActivityFromUri(this, Uri.parse(mSchema), null);
             } else {
                 // Intent i3 = new Intent(MapActivity.this,WallBlockActivity.class);
-                Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
+                //Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
 //                if (AlertDialogUtil.getInstance() != null && AlertDialogUtil.getInstance().isShow()) {
 //                    AlertDialogUtil.getInstance().dismissDialog();
 //                }
-//                Intent i3 = new Intent(MapActivity.this, HouseActivity.class);
+                Intent i3 = new Intent(MapActivity.this, HouseActivity.class);
 //                Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
                 startActivity(i3);
             }
@@ -2186,7 +2186,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         mIvSleepAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvBagAnimator = ObjectAnimator.ofFloat(mIvBag, "translationX", 0, -mIvBag.getWidth() - getResources().getDimension(R.dimen.y60)).setDuration(300);
         mIvBagAnimator.setInterpolator(new OvershootInterpolator());
-        ObjectAnimator mIvAlarmsAnimator = ObjectAnimator.ofFloat(mIvAlarm, "translationX", 0, -mIvAlarm.getWidth() -getResources().getDimension(R.dimen.y60)).setDuration(300);
+        ObjectAnimator mIvAlarmsAnimator = ObjectAnimator.ofFloat(mIvAlarm, "translationX", 0, -mIvAlarm.getWidth() - getResources().getDimension(R.dimen.y60)).setDuration(300);
         mIvAlarmsAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(luntanAnimator);

@@ -33,21 +33,21 @@
                 android:id="@+id/iv_left"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingEnd="@dimen/x20"
                 android:onClick="@{presenter.onClick}"
+                android:paddingEnd="@dimen/x20"
                 android:paddingStart="@dimen/x36"
-                android:src="@drawable/btn_back_blue_normal_unity"
-                 />
+                android:src="@drawable/btn_back_blue_normal_unity" />
 
             <LinearLayout
+                android:id="@+id/ll_search"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/y70"
+                android:layout_marginEnd="@dimen/x24"
                 android:layout_marginStart="@dimen/y40"
                 android:layout_weight="1"
-                android:layout_marginEnd="@dimen/x24"
-                android:onClick="@{presenter.onClick}"
                 android:background="@drawable/shape_tool_bar"
                 android:gravity="center"
+                android:onClick="@{presenter.onClick}"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -73,13 +73,14 @@
                 android:id="@+id/iv_right"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingEnd="@dimen/x36"
                 android:onClick="@{presenter.onClick}"
+                android:paddingEnd="@dimen/x36"
                 android:paddingStart="@dimen/x24"
                 android:src="@drawable/btn_menu_normal" />
         </LinearLayout>
-        
-        <include layout="@layout/item_new_banner"/>
+
+        <include layout="@layout/item_new_banner" />
+
         <RelativeLayout
             android:id="@+id/rl_list"
             android:layout_width="match_parent"
@@ -88,22 +89,23 @@
 
             <com.moemoe.lalala.view.widget.view.KiraTabLayout
                 android:id="@+id/indicator_person_data"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/y100"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y88"
                 android:layout_centerHorizontal="true"
+                android:layout_marginEnd="@dimen/x24"
+                android:layout_marginStart="@dimen/x24"
                 android:background="@color/white"
                 app:kira_tl_dot_bg_color="@color/main_red"
                 app:kira_tl_dot_text_color="@color/white"
                 app:kira_tl_dot_text_size="@dimen/x16"
-                app:kira_tl_dot_width="@dimen/y28"
                 app:kira_tl_indicator_color="@color/main_cyan"
                 app:kira_tl_indicator_corner_radius="@dimen/y4"
                 app:kira_tl_indicator_height="@dimen/y8"
-                app:kira_tl_indicator_width="@dimen/x88"
-                app:kira_tl_tab_width="@dimen/x136"
+                app:kira_tl_indicator_width_equal_title="true"
+                app:kira_tl_tab_space_equal="true"
                 app:kira_tl_textBold="BOTH"
                 app:kira_tl_textSelectColor="@color/main_cyan"
-                app:kira_tl_textUnSelectColor="@color/main_cyan_50"
+                app:kira_tl_textUnSelectColor="@color/black"
                 app:kira_tl_text_size="@dimen/x36" />
 
             <View
@@ -118,6 +120,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/view_step" />
+
+            <ImageView
+                android:id="@+id/iv_to_wen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:onClick="@{presenter.onClick}"
+                android:layout_marginBottom="@dimen/y24"
+                android:layout_marginEnd="@dimen/x24"
+                android:src="@drawable/btn_tougao" />
         </RelativeLayout>
 
     </LinearLayout>

@@ -34,6 +34,7 @@ import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.BookInfo;
 import com.moemoe.lalala.model.entity.CommonFileEntity;
 import com.moemoe.lalala.model.entity.FolderType;
+import com.moemoe.lalala.model.entity.LibraryContribute;
 import com.moemoe.lalala.model.entity.ManHua2Entity;
 import com.moemoe.lalala.model.entity.NewFolderEntity;
 import com.moemoe.lalala.model.entity.REPORT;
@@ -151,6 +152,7 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
     private ArrayList<CommonFileEntity> mCurList;
     private FileItemDecoration mGridDecoration;
     private int mCurPage = 1;
+    private boolean isSubmission;
 
     @Override
     protected int getLayoutId() {
@@ -162,6 +164,15 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
         i.putExtra(UUID, userId);
         i.putExtra("folderType", folderType);
         i.putExtra("folderId", folderId);
+        context.startActivity(i);
+    }
+
+    public static void startActivity(Context context, String folderType, String folderId, String userId, boolean isSubmission) {
+        Intent i = new Intent(context, NewFileCommonActivity.class);
+        i.putExtra(UUID, userId);
+        i.putExtra("folderType", folderType);
+        i.putExtra("folderId", folderId);
+        i.putExtra("isSubmission", isSubmission);
         context.startActivity(i);
     }
 
@@ -183,6 +194,7 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
         mUserId = getIntent().getStringExtra(UUID);
         mFolderType = getIntent().getStringExtra("folderType");
         mFolderId = getIntent().getStringExtra("folderId");
+        isSubmission = getIntent().getBooleanExtra("isSubmission", false);
         mBottomRoot.setVisibility(View.VISIBLE);
         mIsSelect = false;
         mIsGrid = true;
@@ -621,7 +633,13 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
                 finish();
             }
         });
-        mIvMenu.setVisibility(View.VISIBLE);
+        if (isSubmission) {
+            mIvMenu.setVisibility(View.GONE);
+            mIvAdd.setVisibility(View.GONE);
+        } else {
+            mIvMenu.setVisibility(View.VISIBLE);
+            mIvAdd.setVisibility(View.VISIBLE);
+        }
         mIvMenu.setImageResource(R.drawable.btn_menu_black_normal);
         mIvMenu.setOnClickListener(new NoDoubleClickListener() {
             @Override
@@ -666,7 +684,11 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
         });
         mTvMenuRight.setVisibility(View.GONE);
         if (mFolderType.equals(FolderType.TJ.toString())) {
-            mIvMenu2.setVisibility(View.VISIBLE);
+            if (isSubmission) {
+                mIvMenu2.setVisibility(View.GONE);
+            } else {
+                mIvMenu2.setVisibility(View.VISIBLE);
+            }
             mIvMenu2.setImageResource(R.drawable.btn_bag_pic_big_noraml);
         } else {
             mIvMenu2.setVisibility(View.GONE);
@@ -968,6 +990,11 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
     public void onReFreshSuccess(ArrayList<ShowFolderEntity> entities) {
         mCurPage++;
         addBottomList(entities);
+    }
+
+    @Override
+    public void onLoadLibrarySubmitContribute() {
+        
     }
 
     @Override

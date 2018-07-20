@@ -414,6 +414,7 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
 
         } else {
             showToast("你破坏了TA的好感度哦~");
+            mPresenter.loadPower();
         }
     }
 

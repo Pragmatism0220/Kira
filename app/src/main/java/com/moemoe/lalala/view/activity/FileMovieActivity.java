@@ -82,8 +82,7 @@ import static com.moemoe.lalala.utils.StartActivityConstant.REQ_FILE_UPLOAD;
  * Created by yi on 2018/1/19.
  */
 @SuppressWarnings("unchecked")
-public class
-FileMovieActivity extends BaseAppCompatActivity implements NewFolderItemContract.View {
+public class FileMovieActivity extends BaseAppCompatActivity implements NewFolderItemContract.View {
 
     @BindView(R.id.iv_back)
     ImageView mIvBack;
@@ -890,6 +889,11 @@ FileMovieActivity extends BaseAppCompatActivity implements NewFolderItemContract
     public void onReFreshSuccess(ArrayList<ShowFolderEntity> entities) {
         mCurPage++;
         addBottomList(entities);
+    }
+
+    @Override
+    public void onLoadLibrarySubmitContribute() {
+        
     }
 
     private void addBottomList(ArrayList<ShowFolderEntity> entities) {

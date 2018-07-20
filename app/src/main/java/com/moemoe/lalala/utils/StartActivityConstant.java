@@ -33,4 +33,5 @@ public interface StartActivityConstant {
     int REQ_COMMUNITY_INTRODUTION = 10025;//保存社区简介
     int REQ_GO_COMMUNITY = 10026;//跳转社区详情
     int REQ_GO_COMPOUND_SELECT = 10027;//合成剧情卡片
+    int REQ_LIBRARY_TOUGAO=10028;//图书馆投稿
 }

@@ -102,7 +102,7 @@ public class BranchFragment extends BaseFragment {
                     ((BranchActivity) mContext).finish();
                 } else {
                     BranchStoryAllEntity entity = mAdapter.getItem(position);
-                    if (entity.getLevel() == 1 && entity.getUserBranchLevelCount() <= 0) {
+                    if (entity.getUserBranchLevelCount() <= 0) {
                         ToastUtils.showShortToast(mContext, "还未拥有该卡片~");
                         return;
                     }

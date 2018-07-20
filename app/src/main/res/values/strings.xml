@@ -22,6 +22,7 @@
     <string name="label_out_url_action">url_outter_1.0</string>
     <string name="label_department_path">/department_1.0</string>
     <string name="label_department_action">department_1.0</string>
+    <string name="label_department_path_library">library</string>
     <string name="label_trash_path">/garbage_1.0</string>
     <string name="label_img_trash_path">/garbage_img_1.0</string>
     <string name="label_trash_action">garbage_1.0</string>
