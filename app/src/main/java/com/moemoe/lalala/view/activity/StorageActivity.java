@@ -216,6 +216,7 @@ public class StorageActivity extends BaseActivity implements PropFragment.CallBa
             @Override
             public void ConfirmOnClick() {
                 dialogUtil1.dismissDialog();
+                if (bottomFragment!=null)
                 bottomFragment.show(getSupportFragmentManager(), "payMenu");
 
             }

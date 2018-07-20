@@ -11,6 +11,7 @@ import com.moemoe.lalala.model.entity.ApiResult;
 import com.moemoe.lalala.model.entity.CommonFileEntity;
 import com.moemoe.lalala.model.entity.FileXiaoShuoEntity;
 import com.moemoe.lalala.model.entity.FolderType;
+import com.moemoe.lalala.model.entity.LibraryContribute;
 import com.moemoe.lalala.model.entity.ManHua2Entity;
 import com.moemoe.lalala.model.entity.NewFolderEntity;
 import com.moemoe.lalala.model.entity.ShowFolderEntity;
@@ -24,7 +25,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- *
  * Created by yi on 2016/11/29.
  */
 
@@ -47,68 +47,72 @@ public class NewFolderItemPresenter implements NewFolderItemContract.Presenter {
 
     @Override
     public void loadFolderInfo(String userId, String type, String folderId) {
-        apiService.loadFolderInfo(userId,type,folderId)
+        apiService.loadFolderInfo(userId, type, folderId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetResultSubscriber<NewFolderEntity>() {
                     @Override
                     public void onSuccess(NewFolderEntity newFolderEntity) {
-                        if(view != null) view.onLoadFolderSuccess(newFolderEntity);
+                        if (view != null) view.onLoadFolderSuccess(newFolderEntity);
                     }
 
                     @Override
                     public void onFail(int code, String msg) {
-                        if(view != null) view.onFailure(code, msg);
+                        if (view != null) view.onFailure(code, msg);
                     }
                 });
     }
 
     @Override
     public void loadFileList(String userId, String type, String folderId, final int index) {
-        if(type.equals(FolderType.MH.toString())){
-            apiService.loadFiManHua2List(userId,folderId,ApiService.LENGHT,index)
+        if (type.equals(FolderType.MH.toString())) {
+            apiService.loadFiManHua2List(userId, folderId, ApiService.LENGHT, index)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetResultSubscriber<ArrayList<ManHua2Entity>>() {
                         @Override
                         public void onSuccess(ArrayList<ManHua2Entity> manHua2Entities) {
-                            if(view != null) view.onLoadManHua2ListSuccess(manHua2Entities,index == 0);
+                            if (view != null)
+                                view.onLoadManHua2ListSuccess(manHua2Entities, index == 0);
                         }
 
                         @Override
                         public void onFail(int code, String msg) {
-                            if(view != null) view.onFailure(code, msg);
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
-        }else {
-            if(type.equals(FolderType.MHD.toString())){
+        } else {
+            if (type.equals(FolderType.MHD.toString())) {
                 type = FolderType.MH.toString();
             }
             final String finalType = type;
-            apiService.loadFileList(userId,type,folderId,ApiService.LENGHT,index)
+            apiService.loadFileList(userId, type, folderId, ApiService.LENGHT, index)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetResultSubscriber<JsonArray>() {
                         @Override
                         public void onSuccess(JsonArray res) {
-                            if(view != null) {
+                            if (view != null) {
                                 Gson gson = new Gson();
-                                if(finalType.equals(FolderType.XS.toString())){
-                                    ArrayList<FileXiaoShuoEntity> list = gson.fromJson(res,new TypeToken<ArrayList<FileXiaoShuoEntity>>(){}.getType());
-                                    if(view!=null)view.onLoadFileListSuccess(list, index == 0);
-                                }else if(finalType.equals(FolderType.SP.toString()) || finalType.equals(FolderType.YY.toString())){
-                                    ArrayList<StreamFileEntity> list = gson.fromJson(res,new TypeToken<ArrayList<StreamFileEntity>>(){}.getType());
-                                    if(view!=null)view.onLoadFileListSuccess(list, index == 0);
-                                }else {
-                                    ArrayList<CommonFileEntity> list = gson.fromJson(res,new TypeToken<ArrayList<CommonFileEntity>>(){}.getType());
-                                    if(view!=null)view.onLoadFileListSuccess(list, index == 0);
+                                if (finalType.equals(FolderType.XS.toString())) {
+                                    ArrayList<FileXiaoShuoEntity> list = gson.fromJson(res, new TypeToken<ArrayList<FileXiaoShuoEntity>>() {
+                                    }.getType());
+                                    if (view != null) view.onLoadFileListSuccess(list, index == 0);
+                                } else if (finalType.equals(FolderType.SP.toString()) || finalType.equals(FolderType.YY.toString())) {
+                                    ArrayList<StreamFileEntity> list = gson.fromJson(res, new TypeToken<ArrayList<StreamFileEntity>>() {
+                                    }.getType());
+                                    if (view != null) view.onLoadFileListSuccess(list, index == 0);
+                                } else {
+                                    ArrayList<CommonFileEntity> list = gson.fromJson(res, new TypeToken<ArrayList<CommonFileEntity>>() {
+                                    }.getType());
+                                    if (view != null) view.onLoadFileListSuccess(list, index == 0);
                                 }
                             }
                         }
 
                         @Override
                         public void onFail(int code, String msg) {
-                            if(view != null) view.onFailure(code, msg);
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
         }
@@ -116,72 +120,72 @@ public class NewFolderItemPresenter implements NewFolderItemContract.Presenter {
 
     @Override
     public void loadFileList(String userId, String type, String folderId, final int index, boolean isFav) {
-        if(isFav){
-            apiService.loadFavFileList(userId,type,ApiService.LENGHT,index)
+        if (isFav) {
+            apiService.loadFavFileList(userId, type, ApiService.LENGHT, index)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetResultSubscriber<ArrayList<StreamFileEntity>>() {
                         @Override
                         public void onSuccess(ArrayList<StreamFileEntity> entities) {
-                            if(view!=null) view.onLoadFileListSuccess(entities, index == 0);
+                            if (view != null) view.onLoadFileListSuccess(entities, index == 0);
                         }
 
                         @Override
                         public void onFail(int code, String msg) {
-                            if(view != null) view.onFailure(code, msg);
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
-        }else {
+        } else {
             loadFileList(userId, type, folderId, index);
         }
     }
 
     @Override
-    public void deleteFiles(ArrayList<String> ids, String type, String folderId,String parentId) {
-        if(type.equals(FolderType.MH.toString())){
-            apiService.deleteManHua2(ids,folderId)
+    public void deleteFiles(ArrayList<String> ids, String type, String folderId, String parentId) {
+        if (type.equals(FolderType.MH.toString())) {
+            apiService.deleteManHua2(ids, folderId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetSimpleResultSubscriber() {
                         @Override
                         public void onSuccess() {
-                            if(view != null) view.onDeleteFilesSuccess();
+                            if (view != null) view.onDeleteFilesSuccess();
                         }
 
                         @Override
                         public void onFail(int code, String msg) {
-                            if(view != null) view.onFailure(code, msg);
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
-        }else {
-            if(type.equals(FolderType.MHD.toString())){
-                apiService.deleteManHuaFile(parentId,folderId,ids)
+        } else {
+            if (type.equals(FolderType.MHD.toString())) {
+                apiService.deleteManHuaFile(parentId, folderId, ids)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new NetSimpleResultSubscriber() {
                             @Override
                             public void onSuccess() {
-                                if(view != null) view.onDeleteFilesSuccess();
+                                if (view != null) view.onDeleteFilesSuccess();
                             }
 
                             @Override
                             public void onFail(int code, String msg) {
-                                if(view != null) view.onFailure(code, msg);
+                                if (view != null) view.onFailure(code, msg);
                             }
                         });
-            }else {
-                apiService.deleteFiles(ids,type,folderId)
+            } else {
+                apiService.deleteFiles(ids, type, folderId)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new NetSimpleResultSubscriber() {
                             @Override
                             public void onSuccess() {
-                                if(view != null) view.onDeleteFilesSuccess();
+                                if (view != null) view.onDeleteFilesSuccess();
                             }
 
                             @Override
                             public void onFail(int code, String msg) {
-                                if(view != null) view.onFailure(code, msg);
+                                if (view != null) view.onFailure(code, msg);
                             }
                         });
             }
@@ -190,34 +194,34 @@ public class NewFolderItemPresenter implements NewFolderItemContract.Presenter {
 
     @Override
     public void topFile(String folderId, String type, String fileId) {
-        if(type.equals(FolderType.MH.toString())){
-            apiService.topManHua2(folderId,fileId)  .subscribeOn(Schedulers.io())
+        if (type.equals(FolderType.MH.toString())) {
+            apiService.topManHua2(folderId, fileId).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetSimpleResultSubscriber() {
                         @Override
                         public void onSuccess() {
-                            if(view != null) view.onTopFileSuccess();
+                            if (view != null) view.onTopFileSuccess();
                         }
 
                         @Override
                         public void onFail(int code, String msg) {
-                            if(view != null) view.onFailure(code, msg);
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
 
-        }else {
-            apiService.topFile(folderId,type,fileId)
+        } else {
+            apiService.topFile(folderId, type, fileId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetSimpleResultSubscriber() {
                         @Override
                         public void onSuccess() {
-                            if(view != null) view.onTopFileSuccess();
+                            if (view != null) view.onTopFileSuccess();
                         }
 
                         @Override
                         public void onFail(int code, String msg) {
-                            if(view != null) view.onFailure(code, msg);
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
         }
@@ -225,88 +229,88 @@ public class NewFolderItemPresenter implements NewFolderItemContract.Presenter {
 
     @Override
     public void followFolder(String userId, String type, String folderId) {
-        apiService.followFolder(userId,type,folderId)
+        apiService.followFolder(userId, type, folderId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetSimpleResultSubscriber() {
                     @Override
                     public void onSuccess() {
-                        if(view != null) view.onFollowFolderSuccess();
+                        if (view != null) view.onFollowFolderSuccess();
                     }
 
                     @Override
                     public void onFail(int code, String msg) {
-                        if(view != null) view.onFailure(code, msg);
+                        if (view != null) view.onFailure(code, msg);
                     }
                 });
     }
 
     @Override
     public void removeFollowFolder(String userId, String type, String folderId) {
-        apiService.removeFollowFolder(userId,type,folderId)
+        apiService.removeFollowFolder(userId, type, folderId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetSimpleResultSubscriber() {
                     @Override
                     public void onSuccess() {
-                        if(view != null) view.onFollowFolderSuccess();
+                        if (view != null) view.onFollowFolderSuccess();
                     }
 
                     @Override
                     public void onFail(int code, String msg) {
-                        if(view != null) view.onFailure(code, msg);
+                        if (view != null) view.onFailure(code, msg);
                     }
                 });
     }
 
     @Override
     public void buyFolder(String userId, String type, String folderId) {
-        apiService.buyFolder(userId,type,folderId)
+        apiService.buyFolder(userId, type, folderId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetSimpleResultSubscriber() {
                     @Override
                     public void onSuccess() {
-                        if(view != null) view.onBuyFolderSuccess();
+                        if (view != null) view.onBuyFolderSuccess();
                     }
 
                     @Override
                     public void onFail(int code, String msg) {
-                        if(view != null) view.onFailure(code, msg);
+                        if (view != null) view.onFailure(code, msg);
                     }
                 });
     }
 
     @Override
     public void followUser(String id, boolean isFollow) {
-        if (!isFollow){
+        if (!isFollow) {
             apiService.followUser(id)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetSimpleResultSubscriber() {
                         @Override
                         public void onSuccess() {
-                            if(view != null) view.onFollowSuccess(true);
+                            if (view != null) view.onFollowSuccess(true);
                         }
 
                         @Override
-                        public void onFail(int code,String msg) {
-                            if(view != null) view.onFailure(code,msg);
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
-        }else {
+        } else {
             apiService.cancelfollowUser(id)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetSimpleResultSubscriber() {
                         @Override
                         public void onSuccess() {
-                            if(view != null) view.onFollowSuccess(false);
+                            if (view != null) view.onFollowSuccess(false);
                         }
 
                         @Override
-                        public void onFail(int code,String msg) {
-                            if(view != null) view.onFailure(code,msg);
+                        public void onFail(int code, String msg) {
+                            if (view != null) view.onFailure(code, msg);
                         }
                     });
         }
@@ -314,19 +318,38 @@ public class NewFolderItemPresenter implements NewFolderItemContract.Presenter {
 
     @Override
     public void refreshRecommend(String folderName, int page, String excludeFolderId) {
-        apiService.loadRefreshList(excludeFolderId,folderName,page)
+        apiService.loadRefreshList(excludeFolderId, folderName, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetResultSubscriber<ArrayList<ShowFolderEntity>>() {
                     @Override
                     public void onSuccess(ArrayList<ShowFolderEntity> entities) {
-                        if(view != null) view.onReFreshSuccess(entities);
+                        if (view != null) view.onReFreshSuccess(entities);
                     }
 
                     @Override
                     public void onFail(int code, String msg) {
-                        if(view != null) view.onFailure(code,msg);
+                        if (view != null) view.onFailure(code, msg);
                     }
                 });
     }
+
+    @Override
+    public void loadLibrarySubmitContribute(LibraryContribute entity) {
+        apiService.loadLibrarySubmitContribute(entity)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetSimpleResultSubscriber() {
+                    @Override
+                    public void onSuccess() {
+                        if (view != null) view.onLoadLibrarySubmitContribute();
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+
 }

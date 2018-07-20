@@ -46,6 +46,16 @@ public class ShowFolderEntity implements Parcelable {
     private int barrageNum;
 
     private String timestamp;
+    
+    private String level2FolderId;
+
+    public void setLevel2FolderId(String level2FolderId) {
+        this.level2FolderId = level2FolderId;
+    }
+
+    public String getLevel2FolderId() {
+        return level2FolderId;
+    }
 
     public String getUuid() {
         return uuid;

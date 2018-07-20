@@ -27,6 +27,8 @@ import com.moemoe.lalala.model.entity.AlarmClockEntity;
 import com.moemoe.lalala.model.entity.DeskMateEntity;
 import com.moemoe.lalala.model.entity.HouseSleepEntity;
 import com.moemoe.lalala.model.entity.Live2dMusicEntity;
+import com.moemoe.lalala.model.entity.OrderEntity;
+import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.model.entity.ShareLive2dEntity;
 import com.moemoe.lalala.netamusic.data.model.Music;
 import com.moemoe.lalala.netamusic.data.model.MusicListType;
@@ -568,6 +570,16 @@ public class Live2dActivity extends BaseAppCompatActivity implements Live2dContr
     @Override
     public void onLoadHouseListSuccess(ArrayList<HouseSleepEntity> entities) {
         
+    }
+
+    @Override
+    public void onCreateOrderSuccess(OrderEntity entity) {
+        
+    }
+
+    @Override
+    public void onPayOrderSuccess(PayResEntity entity) {
+
     }
 
 //    @Override

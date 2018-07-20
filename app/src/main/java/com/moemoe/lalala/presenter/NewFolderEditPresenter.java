@@ -49,9 +49,9 @@ public class NewFolderEditPresenter implements NewFolderEditContract.Presenter {
                 apiService.createFolder(entity)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new NetSimpleResultSubscriber() {
+                        .subscribe(new NetResultSubscriber<String>() {
                             @Override
-                            public void onSuccess() {
+                            public void onSuccess(String folderId) {
                                 if(view != null)view.onSuccess();
                             }
 

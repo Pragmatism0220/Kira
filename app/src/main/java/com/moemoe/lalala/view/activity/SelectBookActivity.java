@@ -16,7 +16,9 @@ import android.widget.TextView;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.model.entity.BookInfo;
+import com.moemoe.lalala.utils.AlertDialogUtil;
 import com.moemoe.lalala.utils.FileUtil;
+import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 
@@ -74,10 +76,38 @@ public class SelectBookActivity extends BaseAppCompatActivity {
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent();
-                i.putExtra(EXTRA_SELECT_BOOK,mAdapter.getItem(position));
-                setResult(RESULT_OK,i);
-                finish();
+//                long bagMaxSize = PreferenceUtils.getBagMaxSize(SelectBookActivity.this);
+//                long bagUserSize = PreferenceUtils.getBagUserSize(SelectBookActivity.this);
+//                long size = mAdapter.getItem(position).gets.getSize();
+//                if (!PreferenceUtils.getAuthorInfo().isVip()) {
+//                    if (size > bagMaxSize - bagUserSize) {
+//                        final AlertDialogUtil alertDialogUtilVip = AlertDialogUtil.getInstance();
+//                        alertDialogUtilVip.createNormalDialog(SelectBookActivity.this, "需要VIP酱帮助你增加体力上线呢?");
+//                        alertDialogUtilVip.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+//                            @Override
+//                            public void CancelOnClick() {
+//                                alertDialogUtilVip.dismissDialog();
+//                            }
+//
+//                            @Override
+//                            public void ConfirmOnClick() {
+//                                alertDialogUtilVip.dismissDialog();
+//                                mPresenter.createOrder("d61547ce-62c7-4665-993e-81a78cd32976");
+//                            }
+//                        });
+//                        alertDialogUtilVip.showDialog();
+//                    } else {
+//                        Intent i = new Intent();
+//                        i.putExtra(EXTRA_SELECT_BOOK,mAdapter.getItem(position));
+//                        setResult(RESULT_OK,i);
+//                        finish();
+//                    }
+//                } else {
+                    Intent i = new Intent();
+                    i.putExtra(EXTRA_SELECT_BOOK,mAdapter.getItem(position));
+                    setResult(RESULT_OK,i);
+                    finish();
+//                }
             }
         });
         queryFiles();

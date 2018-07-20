@@ -24,7 +24,8 @@
         android:layout_below="@+id/top_view"
         android:background="@color/white_95"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_left"
@@ -88,8 +89,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/ll_tool_bar"
-        android:layout_marginTop="@dimen/y16"
         android:layout_marginEnd="@dimen/x16"
+        android:layout_marginTop="@dimen/y16"
         android:src="@drawable/map_seven_btn" />
 
     <ImageView
@@ -238,13 +239,41 @@
 
     </RelativeLayout>
 
+
+    <ImageView
+        android:id="@+id/iv_bag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_tool_bar"
+        android:layout_marginStart="@dimen/x8"
+        android:layout_marginTop="@dimen/y8"
+        android:src="@drawable/bg_role_bag" />
+
+    <ImageView
+        android:id="@+id/iv_sleep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_bag"
+        android:layout_marginStart="@dimen/x8"
+        android:layout_marginTop="@dimen/y8"
+        android:src="@drawable/bg_role_sleep" />
+
+    <ImageView
+        android:id="@+id/iv_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_sleep"
+        android:layout_marginStart="@dimen/x8"
+        android:src="@drawable/btn_house_alarm" />
+
+
     <RelativeLayout
         android:id="@+id/rl_luntan_root"
         android:layout_width="@dimen/y200"
         android:layout_height="@dimen/y200"
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/rl_main_list_root"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/iv_luntan"
@@ -265,6 +294,14 @@
             android:visibility="gone" />
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/iv_go_house"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/x26"
+        android:src="@drawable/bg_drama_house" />
 
     <include layout="@layout/float_send_layout" />
 

@@ -32,6 +32,7 @@ import com.moemoe.lalala.di.modules.NewFileModule;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.FileXiaoShuoEntity;
 import com.moemoe.lalala.model.entity.FolderType;
+import com.moemoe.lalala.model.entity.LibraryContribute;
 import com.moemoe.lalala.model.entity.ManHua2Entity;
 import com.moemoe.lalala.model.entity.NewFolderEntity;
 import com.moemoe.lalala.model.entity.REPORT;
@@ -72,6 +73,7 @@ import jp.wasabeef.glide.transformations.CropTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import static com.moemoe.lalala.utils.StartActivityConstant.REQ_FILE_UPLOAD;
+import static com.moemoe.lalala.utils.StartActivityConstant.REQ_LIBRARY_TOUGAO;
 
 //import zlc.season.rxdownload2.RxDownload;
 //import zlc.season.rxdownload2.entity.DownloadStatus;
@@ -145,6 +147,8 @@ public class NewFileXiaoshuoActivity extends BaseAppCompatActivity implements Ne
             R.drawable.shape_rect_border_green_y4,
             R.drawable.shape_rect_label_purple,
             R.drawable.shape_rect_label_tab_blue};
+    private boolean isSubmission;
+    private String departmentId;
 
     @Override
     protected int getLayoutId() {
@@ -157,6 +161,16 @@ public class NewFileXiaoshuoActivity extends BaseAppCompatActivity implements Ne
         i.putExtra("folderType", folderType);
         i.putExtra("folderId", folderId);
         context.startActivity(i);
+    }
+
+    public static void startActivity(Context context, String folderType, String folderId, String userId, boolean isSubmission,String departmentId) {
+        Intent i = new Intent(context, NewFileXiaoshuoActivity.class);
+        i.putExtra(UUID, userId);
+        i.putExtra("folderType", folderType);
+        i.putExtra("folderId", folderId);
+        i.putExtra("isSubmission", isSubmission);
+        i.putExtra("departmentId",departmentId);
+        ((BaseAppCompatActivity) context).startActivityForResult(i, REQ_LIBRARY_TOUGAO);
     }
 
     @Override
@@ -176,6 +190,8 @@ public class NewFileXiaoshuoActivity extends BaseAppCompatActivity implements Ne
         mUserId = getIntent().getStringExtra(UUID);
         mFolderType = getIntent().getStringExtra("folderType");
         mFolderId = getIntent().getStringExtra("folderId");
+        isSubmission = getIntent().getBooleanExtra("isSubmission", false);
+        departmentId = getIntent().getStringExtra("departmentId");
         mBottomRoot.setVisibility(View.VISIBLE);
         mIsSelect = false;
         mSelectMap = new HashMap<>();
@@ -193,6 +209,14 @@ public class NewFileXiaoshuoActivity extends BaseAppCompatActivity implements Ne
             @Override
             public void onItemClick(View view, final int position) {
                 final FileXiaoShuoEntity entity = mAdapter.getItem(position);
+                if (isSubmission){
+                    LibraryContribute contribute = new LibraryContribute();
+                    contribute.setFolderId(entity.getFileId());
+                    contribute.setDepartmentId(departmentId);
+                    contribute.setType(mFolderType);
+                    mPresenter.loadLibrarySubmitContribute(contribute);
+                    return;
+                }
                 if (!mIsSelect) {
                     if (FileUtil.isExists(StorageUtils.getNovRootPath() + entity.getFileId() + File.separator + entity.getFileName())) {
                         NewFileXiaoShuo2Activity.startActivity(NewFileXiaoshuoActivity.this, mAdapter.getList(), mUserId, position);
@@ -553,7 +577,13 @@ public class NewFileXiaoshuoActivity extends BaseAppCompatActivity implements Ne
                 finish();
             }
         });
-        mIvMenu.setVisibility(View.VISIBLE);
+        if (isSubmission) {
+            mIvAdd.setVisibility(View.GONE);
+            mIvMenu.setVisibility(View.GONE);
+        } else {
+            mIvAdd.setVisibility(View.VISIBLE);
+            mIvMenu.setVisibility(View.VISIBLE);
+        }
         mIvMenu.setImageResource(R.drawable.btn_menu_black_normal);
         mIvMenu.setOnClickListener(new NoDoubleClickListener() {
             @Override
@@ -861,6 +891,16 @@ public class NewFileXiaoshuoActivity extends BaseAppCompatActivity implements Ne
     public void onReFreshSuccess(ArrayList<ShowFolderEntity> entities) {
         mCurPage++;
         addBottomList(entities);
+    }
+
+    /**
+     * 投稿成功
+     */
+    @Override
+    public void onLoadLibrarySubmitContribute() {
+        showToast("投稿成功");
+        setResult(RESULT_OK);
+        finish();
     }
 
     private void addBottomList(ArrayList<ShowFolderEntity> entities) {

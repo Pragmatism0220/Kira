@@ -11,6 +11,16 @@
         android:scaleType="centerCrop" />
 
     <TextView
+        android:id="@+id/tv_browse_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x8"
+        android:layout_marginTop="@dimen/y12"
+        android:maxEms="12"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x20" />
+
+    <TextView
         android:id="@+id/tv_mark"
         android:layout_width="@dimen/x80"
         android:layout_height="@dimen/y48"

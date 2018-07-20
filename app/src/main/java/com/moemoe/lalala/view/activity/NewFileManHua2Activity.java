@@ -106,6 +106,15 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
         context.startActivity(i);
     }
 
+    public static void startActivity(Context context, String parentId, String folderId, String userId, int position) {
+        Intent i = new Intent(context, NewFileManHua2Activity.class);
+        i.putExtra(UUID, userId);
+        i.putExtra("folderId", folderId);
+        i.putExtra("parentId", parentId);
+        i.putExtra("position", position);
+        context.startActivity(i);
+    }
+
     @Override
     protected void onDestroy() {
         if (mPresenter != null) mPresenter.release();
@@ -184,9 +193,13 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
         initPopupMenus();
         isLoading = true;
         mPresenter.loadFileList(mUserId, FolderType.MHD.toString(), mFolderId, 0);
-        mFolderName = mManHualist.get(mPosition).getFolderName();
-        mTvMenuLeft.setText(mFolderName);
-        createBottomView();
+        if (mManHualist == null || mManHualist.size() == 0) {
+
+        } else {
+            mFolderName = mManHualist.get(mPosition).getFolderName();
+            mTvMenuLeft.setText(mFolderName);
+            createBottomView();
+        }
 
 
         mListDocs.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -522,5 +535,10 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
     @Override
     public void onReFreshSuccess(ArrayList<ShowFolderEntity> entities) {
 
+    }
+
+    @Override
+    public void onLoadLibrarySubmitContribute() {
+        
     }
 }

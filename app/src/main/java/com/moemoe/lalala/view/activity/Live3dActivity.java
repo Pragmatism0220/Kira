@@ -2,7 +2,9 @@ package com.moemoe.lalala.view.activity;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
@@ -27,6 +29,9 @@ import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
 import com.moemoe.lalala.model.entity.AlarmClockEntity;
 import com.moemoe.lalala.model.entity.HouseSleepEntity;
 import com.moemoe.lalala.model.entity.Live2dMusicEntity;
+import com.moemoe.lalala.model.entity.OrderEntity;
+import com.moemoe.lalala.model.entity.PayReqEntity;
+import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.model.entity.ShareLive2dEntity;
 import com.moemoe.lalala.netamusic.data.model.Music;
 import com.moemoe.lalala.netamusic.data.model.MusicListType;
@@ -38,10 +43,16 @@ import com.moemoe.lalala.netamusic.player.PlayModeEnum;
 import com.moemoe.lalala.presenter.Live2dContract;
 import com.moemoe.lalala.presenter.Live2dPresenter;
 import com.moemoe.lalala.utils.AlertDialogUtil;
+import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.GreenDaoManager;
+import com.moemoe.lalala.utils.IpAdressUtils;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.Utils;
+import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
+import com.moemoe.lalala.view.widget.netamenu.MenuItem;
+import com.pingplusplus.ui.PaymentHandler;
+import com.pingplusplus.ui.PingppUI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,6 +125,8 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
     private boolean isFirstClick = true;
     private String model;
     private ArrayList<HouseSleepEntity> mSleepEntites;
+    private OrderEntity entit;
+    private BottomMenuFragment bottomFragment;
 
     @Override
     protected int getLayoutId() {
@@ -196,6 +209,7 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
         RelativeLayout.LayoutParams mScrollViewLayoutParams = (RelativeLayout.LayoutParams) mScrollView.getLayoutParams();
         mScrollViewLayoutParams.width = (int) (heightPixels - mRlDianTai.getMeasuredWidth() - getResources().getDimension(R.dimen.x50) - getResources().getDimension(R.dimen.status_bar_height));
         mScrollView.setLayoutParams(mScrollViewLayoutParams);
+        initPayMenu();
     }
 
     private void soundLoading() {
@@ -312,8 +326,9 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                         }
                     }
                     if (entity != null) {
-                        if (entity.isCompanion()) {
+                        if (PreferenceUtils.getAuthorInfo().isVip()) {
                             if (!"mei".equals(mCurRole)) {
+                                showToast("咪里马拉轰！神奇的VIP魔法！");
                                 mCurRole = "mei";
                                 live2DMgr.changeModel(Live2DDefine.MODEL_LEN);
                                 mIvLen.setAlpha(1.0f);
@@ -325,7 +340,22 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                                 mRem.setAlpha(0.3f);
                             }
                         } else {
-                            showToast(entity.getWhyCannotSleepWithYou());
+                            if (entity.isCompanion()) {
+                                if (!"mei".equals(mCurRole)) {
+                                    mCurRole = "mei";
+                                    live2DMgr.changeModel(Live2DDefine.MODEL_LEN);
+                                    mIvLen.setAlpha(1.0f);
+                                    mIvSari.setAlpha(0.3f);
+                                    mIvIchiGo.setAlpha(0.3f);
+                                    mIvMei.setAlpha(0.3f);
+                                    mFuzi.setAlpha(0.3f);
+                                    mMisaka.setAlpha(0.3f);
+                                    mRem.setAlpha(0.3f);
+                                }
+                            } else {
+//                                showToast(entity.getWhyCannotSleepWithYou());
+                                goPayVip();
+                            }
                         }
                     }
                 }
@@ -339,8 +369,9 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                         }
                     }
                     if (entity != null) {
-                        if (entity.isCompanion()) {
+                        if (PreferenceUtils.getAuthorInfo().isVip()) {
                             if (!"mei".equals(mCurRole)) {
+                                showToast("咪里马拉轰！神奇的VIP魔法！");
                                 mCurRole = "mei";
                                 live2DMgr.changeModel(Live2DDefine.MODEL_MEI);
                                 mIvLen.setAlpha(0.3f);
@@ -352,7 +383,22 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                                 mRem.setAlpha(0.3f);
                             }
                         } else {
-                            showToast(entity.getWhyCannotSleepWithYou());
+                            if (entity.isCompanion()) {
+                                if (!"mei".equals(mCurRole)) {
+                                    mCurRole = "mei";
+                                    live2DMgr.changeModel(Live2DDefine.MODEL_MEI);
+                                    mIvLen.setAlpha(0.3f);
+                                    mIvSari.setAlpha(0.3f);
+                                    mIvMei.setAlpha(1.0f);
+                                    mIvIchiGo.setAlpha(0.3f);
+                                    mFuzi.setAlpha(0.3f);
+                                    mMisaka.setAlpha(0.3f);
+                                    mRem.setAlpha(0.3f);
+                                }
+                            } else {
+//                                showToast(entity.getWhyCannotSleepWithYou());
+                                goPayVip();
+                            }
                         }
                     }
                 }
@@ -366,8 +412,9 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                         }
                     }
                     if (entity != null) {
-                        if (entity.isCompanion()) {
+                        if (PreferenceUtils.getAuthorInfo().isVip()) {
                             if (!"sari".equals(mCurRole)) {
+                                showToast("咪里马拉轰！神奇的VIP魔法！");
                                 mCurRole = "sari";
                                 live2DMgr.changeModel(Live2DDefine.MODEL_SARI);
                                 mIvLen.setAlpha(0.3f);
@@ -379,8 +426,24 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                                 mRem.setAlpha(0.3f);
                             }
                         } else {
-                            showToast(entity.getWhyCannotSleepWithYou());
+                            if (entity.isCompanion()) {
+                                if (!"sari".equals(mCurRole)) {
+                                    mCurRole = "sari";
+                                    live2DMgr.changeModel(Live2DDefine.MODEL_SARI);
+                                    mIvLen.setAlpha(0.3f);
+                                    mIvSari.setAlpha(1.0f);
+                                    mIvMei.setAlpha(0.3f);
+                                    mIvIchiGo.setAlpha(0.3f);
+                                    mFuzi.setAlpha(0.3f);
+                                    mMisaka.setAlpha(0.3f);
+                                    mRem.setAlpha(0.3f);
+                                }
+                            } else {
+//                                showToast(entity.getWhyCannotSleepWithYou());
+                                goPayVip();
+                            }
                         }
+
                     }
                 }
                 break;
@@ -393,8 +456,9 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                         }
                     }
                     if (entity != null) {
-                        if (entity.isCompanion()) {
+                        if (PreferenceUtils.getAuthorInfo().isVip()) {
                             if (!"ichigo".equals(mCurRole)) {
+                                showToast("咪里马拉轰！神奇的VIP魔法！");
                                 mCurRole = "ichigo";
                                 live2DMgr.changeModel(Live2DDefine.MODEL_ICHIGO);
                                 mIvLen.setAlpha(0.3f);
@@ -406,7 +470,23 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                                 mRem.setAlpha(0.3f);
                             }
                         } else {
-                            showToast(entity.getWhyCannotSleepWithYou());
+                            //  showToast("vip才能选哦");
+                            if (entity.isCompanion()) {
+                                if (!"ichigo".equals(mCurRole)) {
+                                    mCurRole = "ichigo";
+                                    live2DMgr.changeModel(Live2DDefine.MODEL_ICHIGO);
+                                    mIvLen.setAlpha(0.3f);
+                                    mIvSari.setAlpha(0.3f);
+                                    mIvMei.setAlpha(0.3f);
+                                    mIvIchiGo.setAlpha(1.0f);
+                                    mFuzi.setAlpha(0.3f);
+                                    mMisaka.setAlpha(0.3f);
+                                    mRem.setAlpha(0.3f);
+                                }
+                            } else {
+//                                showToast(entity.getWhyCannotSleepWithYou());
+                                goPayVip();
+                            }
                         }
                     }
                 }
@@ -420,8 +500,9 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                         }
                     }
                     if (entity != null) {
-                        if (entity.isCompanion()) {
+                        if (PreferenceUtils.getAuthorInfo().isVip()) {
                             if (!"fuzi".equals(mCurRole)) {
+                                showToast("咪里马拉轰！神奇的VIP魔法！");
                                 mCurRole = "fuzi";
                                 live2DMgr.changeModel(Live2DDefine.MODEL_FUZI);
                                 mIvLen.setAlpha(0.3f);
@@ -433,8 +514,24 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                                 mRem.setAlpha(0.3f);
                             }
                         } else {
-                            showToast(entity.getWhyCannotSleepWithYou());
+                            if (entity.isCompanion()) {
+                                if (!"fuzi".equals(mCurRole)) {
+                                    mCurRole = "fuzi";
+                                    live2DMgr.changeModel(Live2DDefine.MODEL_FUZI);
+                                    mIvLen.setAlpha(0.3f);
+                                    mIvSari.setAlpha(0.3f);
+                                    mIvMei.setAlpha(0.3f);
+                                    mIvIchiGo.setAlpha(0.3f);
+                                    mFuzi.setAlpha(1.0f);
+                                    mMisaka.setAlpha(0.3f);
+                                    mRem.setAlpha(0.3f);
+                                }
+                            } else {
+//                                showToast(entity.getWhyCannotSleepWithYou());
+                                goPayVip();
+                            }
                         }
+
                     }
                 }
                 break;
@@ -447,8 +544,9 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                         }
                     }
                     if (entity != null) {
-                        if (entity.isCompanion()) {
+                        if (PreferenceUtils.getAuthorInfo().isVip()) {
                             if (!"misaka".equals(mCurRole)) {
+                                showToast("咪里马拉轰！神奇的VIP魔法！");
                                 mCurRole = "misaka";
                                 live2DMgr.changeModel(Live2DDefine.MODEL_MISAKA);
                                 mIvLen.setAlpha(0.3f);
@@ -460,7 +558,23 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                                 mRem.setAlpha(0.3f);
                             }
                         } else {
-                            showToast(entity.getWhyCannotSleepWithYou());
+
+                            if (entity.isCompanion()) {
+                                if (!"misaka".equals(mCurRole)) {
+                                    mCurRole = "misaka";
+                                    live2DMgr.changeModel(Live2DDefine.MODEL_MISAKA);
+                                    mIvLen.setAlpha(0.3f);
+                                    mIvSari.setAlpha(0.3f);
+                                    mIvMei.setAlpha(0.3f);
+                                    mIvIchiGo.setAlpha(0.3f);
+                                    mFuzi.setAlpha(0.3f);
+                                    mMisaka.setAlpha(1.0f);
+                                    mRem.setAlpha(0.3f);
+                                }
+                            } else {
+                                goPayVip();
+//                                showToast(entity.getWhyCannotSleepWithYou());
+                            }
                         }
                     }
                 }
@@ -500,6 +614,24 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
                 showToast("功能暂未开放");
                 break;
         }
+    }
+
+    private void goPayVip() {
+        final AlertDialogUtil alertDialogUtilVip = AlertDialogUtil.getInstance();
+        alertDialogUtilVip.createNormalDialog(Live3dActivity.this, "这里不可以哦~需要VIP的力量才能进入~");
+        alertDialogUtilVip.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+            @Override
+            public void CancelOnClick() {
+                alertDialogUtilVip.dismissDialog();
+            }
+
+            @Override
+            public void ConfirmOnClick() {
+                alertDialogUtilVip.dismissDialog();
+                mPresenter.createOrder("d61547ce-62c7-4665-993e-81a78cd32976");
+            }
+        });
+        alertDialogUtilVip.showDialog();
     }
 
     private void showShareToBuy(String role) {
@@ -597,7 +729,7 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
 
     @Override
     public void onFailure(int code, String msg) {
-
+        ErrorCodeUtils.showErrorMsgByCode(this, code, msg);
     }
 
     @Override
@@ -637,6 +769,98 @@ public class Live3dActivity extends BaseAppCompatActivity implements Live2dContr
         mSleepEntites = entities;
     }
 
+    @Override
+    public void onCreateOrderSuccess(OrderEntity entity) {
+        entit = entity;
+        if (bottomFragment != null)
+            bottomFragment.show(getSupportFragmentManager(), "payMenu");
+    }
+
+    @Override
+    public void onPayOrderSuccess(PayResEntity entity) {
+        if (entity.isSuccess()) {
+            finalizeDialog();
+            showToast("支付成功");
+            Intent i = new Intent();
+            i.putExtra("position", -1);
+            i.putExtra("type", "pay");
+            setResult(RESULT_OK, i);
+            finish();
+        } else {
+            if (entity.getCharge() != null) {
+//                if("qpay".equals(entity.getCharge().get("channel"))){
+//                    Pingpp.createPayment(OrderActivity.this, entity.getCharge().toString(),"qwallet1104765197");
+//                }else {
+//                    Pingpp.createPayment(OrderActivity.this, entity.getCharge().toString());
+//                }
+                PingppUI.createPay(Live3dActivity.this, entity.getCharge().toString(), new PaymentHandler() {
+                    @Override
+                    public void handlePaymentResult(Intent intent) {
+                        String result = intent.getExtras().getString("result");
+                        if (result.contains("success")) {
+                            result = "success";
+                        } else if (result.contains("fail")) {
+                            result = "fail";
+                        } else if (result.contains("cancel")) {
+                            result = "cancel";
+                        } else if (result.contains("invalid")) {
+                            result = "invalid";
+                        }
+                        finalizeDialog();
+                        if ("success".equals(result)) {
+                            PreferenceUtils.getAuthorInfo().setVip(true);
+                            showToast("支付成功");
+                            Intent i = new Intent();
+                            i.putExtra("position", -1);
+                            i.putExtra("type", "pay");
+                            setResult(RESULT_OK, i);
+                            finish();
+                        } else {
+                            showToast(result);
+                            finish();
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    private void initPayMenu() {
+        ArrayList<MenuItem> items = new ArrayList<>();
+        MenuItem item = new MenuItem(0, getString(R.string.label_alipay));
+        items.add(item);
+        item = new MenuItem(1, getString(R.string.label_wx));
+        items.add(item);
+        item = new MenuItem(2, getString(R.string.label_qpay));
+        items.add(item);
+        bottomFragment = new BottomMenuFragment();
+        bottomFragment.setShowTop(true);
+        bottomFragment.setTopContent("选择支付方式");
+        bottomFragment.setMenuItems(items);
+        bottomFragment.setMenuType(BottomMenuFragment.TYPE_VERTICAL);
+        bottomFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
+            @Override
+            public void OnMenuItemClick(int itemId) {
+                createDialog();
+                String payType = "";
+                if (itemId == 0) {
+                    payType = "alipay";
+                } else if (itemId == 1) {
+                    payType = "wx";
+                } else if (itemId == 2) {
+                    payType = "qpay";
+                }
+                PayReqEntity entity = new PayReqEntity(entit.getAddress().getAddress(),
+                        payType,
+                        IpAdressUtils.getIpAdress(Live3dActivity.this),
+                        entit.getOrderId(),
+                        entit.getAddress().getPhone(),
+                        "",
+                        entit.getAddress().getUserName());
+                mPresenter.payOrder(entity);
+            }
+        });
+    }
 //    @Override
 //    public void onSwitchLast(@Nullable Song last) {
 //

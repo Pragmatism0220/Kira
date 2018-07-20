@@ -382,7 +382,10 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
             }
         });
     }
-
+    public void GoneSidaMenuOrLine() {
+        sidaMenu.setVisibility(View.GONE);
+        sideLine.setVisibility(View.GONE);
+    }
     public void likeTag(boolean isLike, int position, TagLikeEntity entity, int parentPosition) {
         if (!feedFollowV4Fragment.isHidden()) {
             feedFollowV4Fragment.likeTag(isLike, position, entity, parentPosition);
@@ -584,7 +587,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
                 Log.e("view.getRight()--", view.getRight() + "");
                 Log.e("view.getBottom()--", view.getBottom() + "");
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) sidaMenu.getLayoutParams();
-                if (view.getLeft() == 0) {//左方
+                if (view.getLeft() <= 10) {//左方
                     if (view.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
                         sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
@@ -620,7 +623,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
                         params.setMargins((int) (view.getLeft() - (int) getResources().getDimension(R.dimen.x428) + view.getWidth() - getResources().getDimension(R.dimen.x24)),
                                 (int) (view.getTop() + (view.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)), 0, 0);
                     }
-                } else if (view.getTop() == getResources().getDimension(R.dimen.status_bar_height)) {//上方
+                } else if (view.getTop() <= getResources().getDimension(R.dimen.status_bar_height)) {//上方
                     if (view.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
                         sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
@@ -637,7 +640,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
                                 view.getTop() + (view.getHeight() / 2), 0, 0);
                     }
 
-                } else if (view.getTop() + view.getHeight() == getResources().getDisplayMetrics().heightPixels) {//下方
+                } else if (view.getTop() + view.getHeight()  >=(getResources().getDisplayMetrics().heightPixels-getResources().getDimension(R.dimen.y20))) {//下方
                     if (view.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
                         sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
@@ -874,7 +877,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
         if (sideLine.getVisibility() == View.GONE) {
             sideLine.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) sideLine.getLayoutParams();
-            if (sidaCharacter.getLeft() == 0) {//左边
+            if (sidaCharacter.getLeft() <=10) {//左边
                 if (sidaCharacter.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
                     sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_left);
                     params.setMargins((int) (sidaCharacter.getLeft() + getResources().getDimension(R.dimen.x24)),
@@ -899,7 +902,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
                             0, 0);
 
                 }
-            } else if (sidaCharacter.getTop() == getResources().getDimension(R.dimen.status_bar_height)) {//上方
+            } else if (sidaCharacter.getTop() <= getResources().getDimension(R.dimen.status_bar_height)) {//上方
                 if (sidaCharacter.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
                     sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_right);
                     params.setMargins((int) (sidaCharacter.getLeft() - sidaMenu.getWidth() + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
@@ -912,7 +915,7 @@ public class FeedV3Activity extends BaseAppCompatActivity implements IUnReadMess
                             0, 0);
 
                 }
-            } else if (sidaCharacter.getTop() + sidaCharacter.getHeight() == getResources().getDisplayMetrics().heightPixels) {//下方
+            } else if (sidaCharacter.getTop() + sidaCharacter.getHeight()  >=( getResources().getDisplayMetrics().heightPixels-getResources().getDimension(R.dimen.y20))) {//下方
                 if (sidaCharacter.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
                     sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_right);
                     params.setMargins((int) (sidaCharacter.getLeft() - sidaMenu.getWidth() + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),

@@ -1,6 +1,7 @@
 package com.moemoe.lalala.presenter;
 
 import com.moemoe.lalala.model.entity.AddressEntity;
+import com.moemoe.lalala.model.entity.LibraryContribute;
 import com.moemoe.lalala.model.entity.ShowFolderEntity;
 
 import java.util.ArrayList;
@@ -14,11 +15,13 @@ public interface NewFolderContract {
         void loadFolderList(String folderType,int index,String userId,String type);
         void deleteFolders(ArrayList<String> ids,String type);
         void topFolder(String folderId);
+        void loadLibrarySubmitContribute(LibraryContribute entity);
     }
 
     interface View extends BaseView{
         void onLoadFolderListSuccess(Object o, boolean isPull);
         void onDeleteFoldersSuccess();
         void onTopFolderSuccess();
+        void onLoadLibrarySubmitContribute();
     }
 }

@@ -17,6 +17,7 @@ import com.moemoe.lalala.di.components.DaggerNewFolderComponent;
 import com.moemoe.lalala.di.modules.NewFolderModule;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.FolderType;
+import com.moemoe.lalala.model.entity.LibraryContribute;
 import com.moemoe.lalala.model.entity.ShowFolderEntity;
 import com.moemoe.lalala.presenter.NewFolderContract;
 import com.moemoe.lalala.presenter.NewFolderPresenter;
@@ -38,6 +39,9 @@ import java.util.HashMap;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import io.rong.imlib.IGetNotificationQuietHoursCallback;
+
+import static com.moemoe.lalala.utils.StartActivityConstant.REQ_LIBRARY_TOUGAO;
 
 /**
  * 新文件夹界面
@@ -75,6 +79,8 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
     private BottomMenuFragment bottomMenuFragment;
     private boolean mIsSelect;
     private HashMap<Integer, ShowFolderEntity> mSelectMap;
+    private boolean isSubmission;
+    private String departmentId;
 
     @Override
     protected int getLayoutId() {
@@ -95,6 +101,16 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
         context.startActivity(i);
     }
 
+    public static void startActivity(Context context, String userId, String folderType, String type, boolean isSubmission, String departmentId) {
+        Intent i = new Intent(context, NewFolderActivity.class);
+        i.putExtra(UUID, userId);
+        i.putExtra("folderType", folderType);
+        i.putExtra("type", type);
+        i.putExtra("isSubmission", isSubmission);
+        i.putExtra("departmentId", departmentId);
+        ((BaseAppCompatActivity) context).startActivityForResult(i, REQ_LIBRARY_TOUGAO);
+    }
+
     @Override
     protected void initViews(Bundle savedInstanceState) {
         DaggerNewFolderComponent.builder()
@@ -106,6 +122,8 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
         mUserId = getIntent().getStringExtra(UUID);
         mFolderType = getIntent().getStringExtra("folderType");
         mType = getIntent().getStringExtra("type");
+        isSubmission = getIntent().getBooleanExtra("isSubmission", false);
+        departmentId = getIntent().getStringExtra("departmentId");
         mIsSelect = false;
         String title = "";
         mSelectMap = new HashMap<>();
@@ -132,12 +150,17 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
                 }
             });
         }
+
         mTitle.setText(title);
         if (mUserId.equals(PreferenceUtils.getUUid())) {
             if (mFolderType.equals(FolderType.SP.toString())) {
                 mExamineSp.setVisibility(View.VISIBLE);
             }
-            mIvAdd.setVisibility(View.VISIBLE);
+            if (isSubmission) {
+                mIvAdd.setVisibility(View.GONE);
+            } else {
+                mIvAdd.setVisibility(View.VISIBLE);
+            }
             if (mFolderType.equals(FolderType.WZ.toString())) {
                 mIvAdd.setImageResource(R.drawable.btn_add_folder_item);
             } else {
@@ -171,15 +194,33 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
             @Override
             public void onItemClick(View view, int position) {
                 ShowFolderEntity entity = mAdapter.getItem(position);
+
                 if (!mIsSelect) {
                     if (mFolderType.equals(FolderType.ZH.toString())) {
                         NewFileCommonActivity.startActivity(NewFolderActivity.this, FolderType.ZH.toString(), entity.getFolderId(), entity.getCreateUser());
                     } else if (mFolderType.equals(FolderType.TJ.toString())) {
-                        NewFileCommonActivity.startActivity(NewFolderActivity.this, FolderType.TJ.toString(), entity.getFolderId(), entity.getCreateUser());
+                        if (isSubmission) {
+//                            NewFileCommonActivity.startActivity(NewFolderActivity.this, FolderType.TJ.toString(), entity.getFolderId(), entity.getCreateUser(), true);
+                            LibraryContribute contribute = new LibraryContribute();
+                            contribute.setFolderId(entity.getFolderId());
+                            contribute.setDepartmentId(departmentId);
+                            contribute.setType(mFolderType);
+                            mPresenter.loadLibrarySubmitContribute(contribute);
+                        } else {
+                            NewFileCommonActivity.startActivity(NewFolderActivity.this, FolderType.TJ.toString(), entity.getFolderId(), entity.getCreateUser());
+                        }
                     } else if (mFolderType.equals(FolderType.MH.toString())) {
-                        NewFileManHuaActivity.startActivity(NewFolderActivity.this, FolderType.MH.toString(), entity.getFolderId(), entity.getCreateUser());
+                        if (isSubmission) {
+                            NewFileManHuaActivity.startActivity(NewFolderActivity.this, FolderType.MH.toString(), entity.getFolderId(), entity.getCreateUser(), true, departmentId);
+                        } else {
+                            NewFileManHuaActivity.startActivity(NewFolderActivity.this, FolderType.MH.toString(), entity.getFolderId(), entity.getCreateUser());
+                        }
                     } else if (mFolderType.equals(FolderType.XS.toString())) {
-                        NewFileXiaoshuoActivity.startActivity(NewFolderActivity.this, FolderType.XS.toString(), entity.getFolderId(), entity.getCreateUser());
+                        if (isSubmission) {
+                            NewFileXiaoshuoActivity.startActivity(NewFolderActivity.this, FolderType.XS.toString(), entity.getFolderId(), entity.getCreateUser(), true, departmentId);
+                        } else {
+                            NewFileXiaoshuoActivity.startActivity(NewFolderActivity.this, FolderType.XS.toString(), entity.getFolderId(), entity.getCreateUser());
+                        }
                     } else if (mFolderType.equals(FolderType.YY.toString())) {
                         FileMovieActivity.startActivity(NewFolderActivity.this, FolderType.YY.toString(), entity.getFolderId(), entity.getCreateUser(), "11111111-1111-1111-1111-111111111111".equals(entity.getFolderId()));
                     } else if (mFolderType.equals(FolderType.SP.toString())) {
@@ -236,7 +277,11 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
         });
         if (mUserId.equals(PreferenceUtils.getUUid())) {
             initPopupMenus();
-            mIvMenu.setVisibility(View.VISIBLE);
+            if (isSubmission) {
+                mIvMenu.setVisibility(View.GONE);
+            } else {
+                mIvMenu.setVisibility(View.VISIBLE);
+            }
         } else {
             mIvMenu.setVisibility(View.GONE);
         }
@@ -390,5 +435,26 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
             mAdapter.notifyItemRangeChanged(0, i + 1);
         }
         mSelectMap.clear();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_LIBRARY_TOUGAO && resultCode == RESULT_OK) {
+//            if (data != null) {
+                setResult(RESULT_OK);
+                finish();
+//            }
+        }
+    }
+
+    /**
+     * 投稿成功
+     */
+    @Override
+    public void onLoadLibrarySubmitContribute() {
+        showToast("投稿成功");
+        setResult(RESULT_OK);
+        finish();
     }
 }

@@ -891,6 +891,11 @@ public class FileMovieActivity extends BaseAppCompatActivity implements NewFolde
         addBottomList(entities);
     }
 
+    @Override
+    public void onLoadLibrarySubmitContribute() {
+        
+    }
+
     private void addBottomList(ArrayList<ShowFolderEntity> entities) {
         LinearLayout recommendRoot = mBottomView.findViewById(R.id.ll_recommend_root);
         recommendRoot.removeAllViews();

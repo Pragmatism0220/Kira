@@ -210,6 +210,15 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
     TextView mTvSearch;
     @BindView(R.id.map_seven)
     ImageView mMapSeven;
+    @BindView(R.id.iv_go_house)
+    ImageView mIvGoHouse;
+    @BindView(R.id.iv_bag)
+    ImageView mIvBag;
+    @BindView(R.id.iv_sleep)
+    ImageView mIvSleep;
+    @BindView(R.id.iv_alarm)
+    ImageView mIvAlarm;
+
 
     @Inject
     MapPresenter mPresenter;
@@ -1027,6 +1036,56 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
     @Override
     protected void initToolbar(Bundle savedInstanceState) {
+        mIvGoHouse.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                clickSelect();
+                //埋点统计：home
+                if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+                    startActivity(new Intent(MapActivity.this, HouseActivity.class));
+                }
+            }
+        });
+        mIvAlarm.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                clickSelect();
+                //埋点统计：home
+                if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+
+                    Intent intent1 = new Intent(MapActivity.this, AlarmActivity.class);
+                    startActivity(intent1);
+                }
+            }
+        });
+        mIvSleep.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                clickSelect();
+                //埋点统计：home
+                if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+                    Intent i9 = new Intent(MapActivity.this, Live3dActivity.class);
+                    startActivity(i9);
+                }
+            }
+        });
+        mIvBag.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                clickSelect();
+                //埋点统计：home
+                if (NetworkUtils.checkNetworkAndShowError(MapActivity.this) && DialogUtils.checkLoginAndShowDlg(MapActivity.this)) {
+                    if (PreferenceUtils.getAuthorInfo().isOpenBag()) {
+                        Intent intent2 = new Intent(MapActivity.this, NewBagV5Activity.class);
+                        intent2.putExtra("uuid", PreferenceUtils.getUUid());
+                        startActivity(intent2);
+                    } else {
+                        Intent intent2 = new Intent(MapActivity.this, BagOpenActivity.class);
+                        startActivity(intent2);
+                    }
+                }
+            }
+        });
         sidaCharacter = SideCharacterUtils.addFloatDragView(this, mMainRoot, new SideCHaracterOnClick());
 
 
@@ -1165,12 +1224,8 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 
             if (sidaMenu != null && sidaMenu.getVisibility() == View.GONE) {
                 sidaMenu.setVisibility(View.VISIBLE);
-                Log.e("view.getLeft()--", view.getLeft() + "");
-                Log.e("view.getTop()--", view.getTop() + "");
-                Log.e("view.getRight()--", view.getRight() + "");
-                Log.e("view.getBottom()--", view.getBottom() + "");
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) sidaMenu.getLayoutParams();
-                if (view.getLeft() == 0) {//左方
+                if (view.getLeft() <= 10) {//左方
                     if (view.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
                         sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_left);
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
@@ -1206,7 +1261,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                         params.setMargins((int) (view.getLeft() - (int) getResources().getDimension(R.dimen.x428) + view.getWidth() - getResources().getDimension(R.dimen.x24)),
                                 (int) (view.getTop() + (view.getHeight() / 2) - getResources().getDimension(R.dimen.status_bar_height)), 0, 0);
                     }
-                } else if (view.getTop() == getResources().getDimension(R.dimen.status_bar_height)) {//上方
+                } else if (view.getTop() <= getResources().getDimension(R.dimen.status_bar_height)) {//上方
                     if (view.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
                         sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_top_right);
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
@@ -1223,7 +1278,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                                 view.getTop() + (view.getHeight() / 2), 0, 0);
                     }
 
-                } else if (view.getTop() + view.getHeight() == getResources().getDisplayMetrics().heightPixels) {//下方
+                } else if (view.getTop() + view.getHeight() >= (getResources().getDisplayMetrics().heightPixels - getResources().getDimension(R.dimen.y20))) {//下方
                     if (view.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
                         sidaMenuViewById.setBackgroundResource(R.drawable.bg_classmate_menu_bottom_right);
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) sidaMenuFrist.getLayoutParams();
@@ -1303,11 +1358,20 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                 IntentUtils.toActivityFromUri(this, Uri.parse(mSchema), null);
             } else {
                 // Intent i3 = new Intent(MapActivity.this,WallBlockActivity.class);
-//                Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
+                //Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
+//                if (AlertDialogUtil.getInstance() != null && AlertDialogUtil.getInstance().isShow()) {
+//                    AlertDialogUtil.getInstance().dismissDialog();
+//                }
                 Intent i3 = new Intent(MapActivity.this, HouseActivity.class);
+//                Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
                 startActivity(i3);
             }
         }
+    }
+
+    public void GoneSidaMenuOrLine() {
+        sidaMenu.setVisibility(View.GONE);
+        sideLine.setVisibility(View.GONE);
     }
 
     /**
@@ -2074,6 +2138,14 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         mToolBarAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvSevenAnimator = ObjectAnimator.ofFloat(mMapSeven, "translationX", mMapSeven.getWidth() + getResources().getDimension(R.dimen.y60), 0).setDuration(300);
         mIvSevenAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvGoHouseAnimator = ObjectAnimator.ofFloat(mIvGoHouse, "translationY", mIvGoHouse.getHeight(), 0).setDuration(300);
+        mIvGoHouseAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvSleepAnimator = ObjectAnimator.ofFloat(mIvSleep, "translationX", -mIvSleep.getWidth() + getResources().getDimension(R.dimen.y60), 0).setDuration(300);
+        mIvSleepAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvBagAnimator = ObjectAnimator.ofFloat(mIvBag, "translationX", -mIvBag.getWidth() + getResources().getDimension(R.dimen.y60), 0).setDuration(300);
+        mIvBagAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvAlarmsAnimator = ObjectAnimator.ofFloat(mIvAlarm, "translationX", -mIvAlarm.getWidth() + getResources().getDimension(R.dimen.y60), 0).setDuration(300);
+        mIvAlarmsAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(luntanAnimator);
         set.play(luntanAnimator).with(roleAnimator);
@@ -2082,7 +2154,9 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         set.play(refreshAnimator).with(userImageAnimator);
         set.play(userImageAnimator).with(mMapNewAnimator);
         set.play(mMapNewAnimator).with(mToolBarAnimator);
-        set.play(mIvSevenAnimator);
+        set.play(mIvSevenAnimator).with(mIvGoHouseAnimator);
+        set.play(mIvSleepAnimator).with(mIvBagAnimator);
+        set.play(mIvAlarmsAnimator);
         set.start();
     }
 
@@ -2105,7 +2179,15 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         mToolBarAnimator.setInterpolator(new OvershootInterpolator());
         ObjectAnimator mIvSevenAnimator = ObjectAnimator.ofFloat(mMapSeven, "translationX", 0, mMapSeven.getWidth() + getResources().getDimension(R.dimen.y60)).setDuration(300);
         mIvSevenAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvGoHouseAnimator = ObjectAnimator.ofFloat(mIvGoHouse, "translationY", 0, mIvGoHouse.getHeight()).setDuration(300);
+        mIvGoHouseAnimator.setInterpolator(new OvershootInterpolator());
 
+        ObjectAnimator mIvSleepAnimator = ObjectAnimator.ofFloat(mIvSleep, "translationX", 0, -mIvSleep.getWidth() - getResources().getDimension(R.dimen.y60)).setDuration(300);
+        mIvSleepAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvBagAnimator = ObjectAnimator.ofFloat(mIvBag, "translationX", 0, -mIvBag.getWidth() - getResources().getDimension(R.dimen.y60)).setDuration(300);
+        mIvBagAnimator.setInterpolator(new OvershootInterpolator());
+        ObjectAnimator mIvAlarmsAnimator = ObjectAnimator.ofFloat(mIvAlarm, "translationX", 0, -mIvAlarm.getWidth() - getResources().getDimension(R.dimen.y60)).setDuration(300);
+        mIvAlarmsAnimator.setInterpolator(new OvershootInterpolator());
         AnimatorSet set = new AnimatorSet();
         set.play(phoneAnimator).with(luntanAnimator);
         set.play(luntanAnimator).with(roleAnimator);
@@ -2114,19 +2196,25 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         set.play(refreshAnimator).with(userImageAnimator);
         set.play(userImageAnimator).with(mMapNewAnimator);
         set.play(mMapNewAnimator).with(mToolBarAnimator);
-        set.play(mIvSevenAnimator);
+        set.play(mIvSevenAnimator).with(mIvGoHouseAnimator);
+        set.play(mIvSleepAnimator).with(mIvBagAnimator);
+        set.play(mIvAlarmsAnimator);
         set.start();
     }
 
     private void showBtn() {
         mIvRole.setVisibility(View.GONE);
         mPhoneRoot.setVisibility(View.GONE);
-        mLuntanRoot.setVisibility(View.GONE);
+        mLuntanRoot.setVisibility(View.VISIBLE);
         mLive2dRoot.setVisibility(View.GONE);
         mRefreshRoot.setVisibility(View.GONE);
         mUserImageRoot.setVisibility(View.GONE);
         mMapNew.setVisibility(View.GONE);
-        mLlToolBar.setVisibility(View.VISIBLE);
+        mLlToolBar.setVisibility(View.GONE);
+        mIvGoHouse.setVisibility(View.VISIBLE);
+        mIvSleep.setVisibility(View.VISIBLE);
+        mIvBag.setVisibility(View.VISIBLE);
+        mIvAlarm.setVisibility(View.VISIBLE);
     }
 
     private void hideBtn() {
@@ -2138,6 +2226,10 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         mUserImageRoot.setVisibility(View.INVISIBLE);
         mMapNew.setVisibility(View.INVISIBLE);
         mLlToolBar.setVisibility(View.INVISIBLE);
+        mIvGoHouse.setVisibility(View.GONE);
+        mIvSleep.setVisibility(View.INVISIBLE);
+        mIvBag.setVisibility(View.INVISIBLE);
+        mIvAlarm.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -2336,7 +2428,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
         if (sideLine.getVisibility() == View.GONE) {
             sideLine.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) sideLine.getLayoutParams();
-            if (sidaCharacter.getLeft() == 0) {//左边
+            if (sidaCharacter.getLeft() <= 10) {//左边
                 if (sidaCharacter.getTop() > getResources().getDisplayMetrics().heightPixels / 2) {
                     sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_left);
                     params.setMargins((int) (sidaCharacter.getLeft() + getResources().getDimension(R.dimen.x24)),
@@ -2361,7 +2453,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                             0, 0);
 
                 }
-            } else if (sidaCharacter.getTop() == getResources().getDimension(R.dimen.status_bar_height)) {//上方
+            } else if (sidaCharacter.getTop() <= getResources().getDimension(R.dimen.status_bar_height)) {//上方
                 if (sidaCharacter.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
                     sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_top_right);
                     params.setMargins((int) (sidaCharacter.getLeft() - sidaMenu.getWidth() + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),
@@ -2374,7 +2466,7 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                             0, 0);
 
                 }
-            } else if (sidaCharacter.getTop() + sidaCharacter.getHeight() == getResources().getDisplayMetrics().heightPixels) {//下方
+            } else if (sidaCharacter.getTop() + sidaCharacter.getHeight() >= (getResources().getDisplayMetrics().heightPixels - getResources().getDimension(R.dimen.y20))) {//下方
                 if (sidaCharacter.getLeft() > getResources().getDisplayMetrics().widthPixels / 2) {
                     sideLineFrist.setBackgroundResource(R.drawable.bg_classmate_talkbg_bottom_right);
                     params.setMargins((int) (sidaCharacter.getLeft() - sidaMenu.getWidth() + sidaCharacter.getWidth() - getResources().getDimension(R.dimen.x24)),

@@ -209,21 +209,20 @@ public class NewFolderWenZhangActivity extends BaseAppCompatActivity implements 
                 return false;
             }
         });
+        mIvBack.setVisibility(View.VISIBLE);
         if (mUserId.equals(PreferenceUtils.getUUid())) {
             if (!type.equals("my")) {
                 mIvMenu.setVisibility(View.GONE);
-                mIvBack.setVisibility(View.VISIBLE);
             } else {
                 initPopupMenus();
                 if (mIsSelect) {
-                    mIvBack.setVisibility(View.VISIBLE);
                     mIvMenu.setVisibility(View.GONE);
                     mTvMenuLeft.setVisibility(View.VISIBLE);
                     ViewUtils.setLeftMargins(mTvMenuLeft, getResources().getDimensionPixelSize(R.dimen.x36));
                     mTvMenuLeft.setText(getString(R.string.label_give_up));
                     mTvMenuLeft.setTextColor(ContextCompat.getColor(NewFolderWenZhangActivity.this, R.color.black_1e1e1e));
                 } else {
-                    mIvBack.setVisibility(View.VISIBLE);
+                  
                     mIvMenu.setVisibility(View.VISIBLE);
                 }
             }
@@ -327,5 +326,10 @@ public class NewFolderWenZhangActivity extends BaseAppCompatActivity implements 
 //            mAdapter.notifyItemRangeChanged(0,i + 1);
 //        }
 //        mSelectMap.clear();
+    }
+
+    @Override
+    public void onLoadLibrarySubmitContribute() {
+        
     }
 }

@@ -204,6 +204,7 @@ public class BagMyFragment extends BaseFragment implements BagMyContract.View {
                 mRlCapacity.setVisibility(View.VISIBLE);
                 mView.setVisibility(View.VISIBLE);
                 mTvCapacity.setText("我的容量：" + getString(R.string.label_bag_space, getSize(entity.getUseSize()), getSize(entity.getMaxSize())));
+                PreferenceUtils.setBagSize(getContext(), entity.getMaxSize(), entity.getUseSize());
             }
         }
     }

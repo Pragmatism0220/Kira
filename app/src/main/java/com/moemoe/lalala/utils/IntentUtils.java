@@ -18,14 +18,13 @@ import java.util.ArrayList;
 import java.util.Set;
 
 /**
- *
  * Created by yi on 2016/11/28.
  */
 
 public class IntentUtils {//TODO 待优化代码结构与跳转方式 by yi
-    public static ArrayList<String> sSupportSchame  = new ArrayList<>();
+    public static ArrayList<String> sSupportSchame = new ArrayList<>();
 
-    public static void init(Context context){
+    public static void init(Context context) {
         sSupportSchame.add(context.getResources().getString(R.string.label_doc_action));
         sSupportSchame.add(context.getResources().getString(R.string.label_doc_action_old));
         sSupportSchame.add(context.getResources().getString(R.string.label_tag_action));
@@ -64,144 +63,150 @@ public class IntentUtils {//TODO 待优化代码结构与跳转方式 by yi
         sSupportSchame.add("conversation/detail");
     }
 
-    public static void haveShareWeb(Context context, Uri uri, View v){
-        if(sSupportSchame.size() <= 0) init(context);
-        try{
+    public static void haveShareWeb(Context context, Uri uri, View v) {
+        if (sSupportSchame.size() <= 0) init(context);
+        try {
             Intent i = new Intent();
             String path = uri.getPath();
-            if(path.startsWith("/")){
+            if (path.startsWith("/")) {
                 path = path.substring(1);
             }
-            if(sSupportSchame.contains(path)){
-                if(path.equals(context.getResources().getString(R.string.label_url_action))){
+            if (sSupportSchame.contains(path)) {
+                if (path.equals(context.getResources().getString(R.string.label_url_action))) {
                     i.setPackage(uri.getHost());
                     i.setData(uri);
                     i.setAction(path);
                     i.putExtra(BaseAppCompatActivity.UUID, uri.getQuery());
-                    i.putExtra(WebViewActivity.EXTRA_KEY_SHARE,true);
+                    i.putExtra(WebViewActivity.EXTRA_KEY_SHARE, true);
                     context.startActivity(i);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
 
-    public static void toActivityForResultFromUri(Context context, Uri uri, View v, int requestCode){
-        if(sSupportSchame.size() <= 0) init(context);
-        try{
+    public static void toActivityForResultFromUri(Context context, Uri uri, View v, int requestCode) {
+        if (sSupportSchame.size() <= 0) init(context);
+        try {
             Intent i = new Intent();
             String path = uri.getPath();
-            if(path.startsWith("/")){
+            if (path.startsWith("/")) {
                 path = path.substring(1);
             }
-            if(path.equals(context.getResources().getString(R.string.label_tag_action))){
-                return;     
+            if (path.equals(context.getResources().getString(R.string.label_tag_action))) {
+                return;
             }
-            if(sSupportSchame.contains(path)){
-                if(path.equals("event_1.0")){
+            if (sSupportSchame.contains(path)) {
+                if (path.equals("event_1.0")) {
 //                    showEvent(context);
-                } else if(path.equals(context.getResources().getString(R.string.label_out_url_action))){
+                } else if (path.equals(context.getResources().getString(R.string.label_out_url_action))) {
                     Uri uri1 = Uri.parse(uri.getQuery());
                     i.setData(uri1);
                     i.setAction("android.intent.action.VIEW");
                     context.startActivity(i);
-                }else{
+                } else {
+//                    if (path.equals("department_1.0") && uri.getQueryParameter("name").equals("图书馆")) {
+//                        i.setPackage(uri.getHost());
+//                        i.setData(uri);
+//                        i.setAction("library");
+//                    } else {
                     i.setPackage(uri.getHost());
                     i.setData(uri);
                     i.setAction(path);
+//                    }
                     String query = uri.getQuery();
-                    if(path.equals(context.getResources().getString(R.string.label_url_action))){
-                        if(query.contains("netaopera/chap")){
-                            i.putExtra(WebViewActivity.EXTRA_KEY_SHOW_TOOLBAR,false);
+                    if (path.equals(context.getResources().getString(R.string.label_url_action))) {
+                        if (query.contains("netaopera/chap")) {
+                            i.putExtra(WebViewActivity.EXTRA_KEY_SHOW_TOOLBAR, false);
                         }
                         i.putExtra(BaseAppCompatActivity.UUID, uri.getQuery());
-                    }else {
-                        if(!TextUtils.isEmpty(query)){
-                            if(!query.contains("&")){
-                                if(query.contains("=")){
+                    } else {
+                        if (!TextUtils.isEmpty(query)) {
+                            if (!query.contains("&")) {
+                                if (query.contains("=")) {
                                     Set<String> names = uri.getQueryParameterNames();
-                                    for(String name : names){
-                                        i.putExtra(name,uri.getQueryParameter(name));
+                                    for (String name : names) {
+                                        i.putExtra(name, uri.getQueryParameter(name));
                                     }
-                                }else {
+                                } else {
                                     i.putExtra(BaseAppCompatActivity.UUID, uri.getQuery());
                                 }
-                            }else {
+                            } else {
                                 Set<String> names = uri.getQueryParameterNames();
-                                for(String name : names){
-                                    i.putExtra(name,uri.getQueryParameter(name));
+                                for (String name : names) {
+                                    i.putExtra(name, uri.getQueryParameter(name));
                                 }
                             }
                         }
                     }
-                    if(path.equals(context.getResources().getString(R.string.label_plot_action))){
-                        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(v,0,0,0,0);
-                        if(requestCode == -1){
-                            ActivityCompat.startActivity(context,i,options.toBundle());
-                        }else {
-                            ActivityCompat.startActivityForResult((Activity) context,i,requestCode,options.toBundle());
+                    if (path.equals(context.getResources().getString(R.string.label_plot_action))) {
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(v, 0, 0, 0, 0);
+                        if (requestCode == -1) {
+                            ActivityCompat.startActivity(context, i, options.toBundle());
+                        } else {
+                            ActivityCompat.startActivityForResult((Activity) context, i, requestCode, options.toBundle());
                         }
-                    }else {
-                        if(requestCode == -1){
+                    } else {
+                        if (requestCode == -1) {
                             context.startActivity(i);
-                        }else {
+                        } else {
                             ((Activity) context).startActivityForResult(i, requestCode);
                         }
                     }
                 }
-            }else {
+            } else {
                 WebViewActivity.startActivity(context, BuildConfig.NOT_FOUND_PAGE);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             WebViewActivity.startActivity(context, BuildConfig.NOT_FOUND_PAGE);
         }
     }
 
-    public static void toActivityFromUri(Context context, Uri uri, View v){
-        toActivityForResultFromUri(context,uri,v,-1);
+    public static void toActivityFromUri(Context context, Uri uri, View v) {
+        toActivityForResultFromUri(context, uri, v, -1);
     }
 
-    public static Intent getIntentFromUri(Context context,Uri uri){
-        if(sSupportSchame.size() <= 0) init(context);
+    public static Intent getIntentFromUri(Context context, Uri uri) {
+        if (sSupportSchame.size() <= 0) init(context);
         Intent i = new Intent();
-        try{
+        try {
             String path = uri.getPath();
-            if(path.startsWith("/")){
+            if (path.startsWith("/")) {
                 path = path.substring(1);
             }
-            if(sSupportSchame.contains(path)){
-                if(path.equals(context.getResources().getString(R.string.label_out_url_action))){
+            if (sSupportSchame.contains(path)) {
+                if (path.equals(context.getResources().getString(R.string.label_out_url_action))) {
                     Uri uri1 = Uri.parse(uri.getQuery());
                     i.setData(uri1);
                     i.setAction("android.intent.action.VIEW");
-                }else {
+                } else {
                     i.setPackage(uri.getHost());
                     i.setData(uri);
                     i.setAction(path);
                     String query = uri.getQuery();
-                    if(path.equals(context.getResources().getString(R.string.label_url_action))){
+                    if (path.equals(context.getResources().getString(R.string.label_url_action))) {
                         i.putExtra(BaseAppCompatActivity.UUID, uri.getQuery());
-                    }else {
-                        if(!query.contains("&")){
+                    } else {
+                        if (!query.contains("&")) {
                             i.putExtra(BaseAppCompatActivity.UUID, uri.getQuery());
-                        }else {
+                        } else {
                             Set<String> names = uri.getQueryParameterNames();
-                            for(String name : names){
-                                i.putExtra(name,uri.getQueryParameter(name));
+                            for (String name : names) {
+                                i.putExtra(name, uri.getQueryParameter(name));
                             }
                         }
                     }
                 }
-            }else {
+            } else {
                 i.setClass(context, WebViewActivity.class);
                 i.putExtra(WebViewActivity.EXTRA_KEY_URL, BuildConfig.NOT_FOUND_PAGE);
             }
             return i;
-        }catch (Exception e){
-            i.setClass(context,WebViewActivity.class);
+        } catch (Exception e) {
+            i.setClass(context, WebViewActivity.class);
             i.putExtra(WebViewActivity.EXTRA_KEY_URL, BuildConfig.NOT_FOUND_PAGE);
-        }finally {
+        } finally {
             return i;
         }
     }

@@ -30,7 +30,9 @@ import android.widget.RelativeLayout;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
 import com.moemoe.lalala.model.entity.DeskmateEntils;
+import com.moemoe.lalala.view.activity.FeedV3Activity;
 import com.moemoe.lalala.view.activity.HouseActivity;
+import com.moemoe.lalala.view.activity.MapActivity;
 
 import org.w3c.dom.Text;
 
@@ -367,7 +369,11 @@ public class SideCharacterUtils {
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (context instanceof HouseActivity) {
-                            ((HouseActivity) context).GoneSidaMenu();
+                            ((HouseActivity) context).GoneSidaMenuOrLine();
+                        } else if (context instanceof FeedV3Activity) {
+                            ((FeedV3Activity) context).GoneSidaMenuOrLine();
+                        } else if (context instanceof MapActivity) {
+                            ((MapActivity) context).GoneSidaMenuOrLine();
                         }
                         int dx = (int) event.getRawX() - relativeMoveX;
                         int dy = (int) event.getRawY() - relativeMoveY;

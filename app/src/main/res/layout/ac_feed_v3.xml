@@ -30,16 +30,9 @@
                 android:id="@+id/iv_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/y26"
                 android:background="@color/transparent"
-                android:src="@drawable/btn_map" />
+                android:src="@drawable/role_back_btn_new" />
 
-            <ImageView
-                android:id="@+id/iv_personal"
-                android:layout_width="@dimen/x70"
-                android:layout_height="@dimen/y70"
-                android:layout_marginStart="@dimen/x26"
-                android:src="@drawable/bg_default_circle" />
 
             <LinearLayout
                 android:id="@+id/rl_search"
@@ -78,7 +71,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/y26"
                 android:layout_marginStart="@dimen/y26"
-                android:src="@drawable/btn_home" />
+                android:src="@drawable/btn_home"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/iv_personal"
+                android:layout_width="@dimen/x70"
+                android:layout_height="@dimen/y70"
+                android:layout_marginEnd="@dimen/y26"
+                android:layout_marginStart="@dimen/y26"
+                android:src="@drawable/bg_default_circle" />
         </LinearLayout>
 
         <RelativeLayout

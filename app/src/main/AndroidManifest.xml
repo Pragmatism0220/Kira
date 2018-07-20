@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.moemoe.lalala">
 
     <!-- normal permission -->
@@ -58,6 +59,9 @@
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="5afbfb72f29d98287800002b" />
+        <!--<meta-data-->
+        <!--android:name="UMENG_APPKEY"-->
+        <!--android:value="559b89c267e58ee03e0021b7" />-->
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
@@ -1575,12 +1579,35 @@
             android:screenOrientation="portrait"
             android:theme="@style/MainColorTranslucentTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".view.activity.SevenDayLoginActivity"
+        <activity
+            android:name=".view.activity.SevenDayLoginActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:screenOrientation="portrait"
             android:theme="@style/MainColorTranslucentTheme"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            ></activity>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!--<activity-->
+            <!--android:name=".view.activity.LibraryActivity"-->
+            <!--android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:theme="@style/MainColorTranslucentTheme">-->
+
+            <!--<intent-filter>-->
+                <!--<action android:name="library" />-->
+
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+                <!--<category android:name="android.intent.category.BROWSABLE" />-->
+
+                <!--<data-->
+                    <!--android:host="@string/label_host"-->
+                    <!--android:path="@string/label_department_path"-->
+                    <!--android:scheme="@string/label_scheme" />-->
+            <!--</intent-filter>-->
+
+        <!--</activity>-->
+        <activity android:name=".view.activity.KissActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainColorTranslucentTheme"/>
     </application>
 
 </manifest>
