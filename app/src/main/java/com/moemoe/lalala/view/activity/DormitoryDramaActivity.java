@@ -127,11 +127,11 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
                         searchDormitioryMap.put("user_branch_story", 1);
                     }
                 }
-                if (searchDormitioryMap.get("user_branch_story") != null) {
-                    binding.dramaNews.setVisibility(View.VISIBLE);
-                } else {
-                    binding.dramaNews.setVisibility(View.GONE);
-                }
+//                if (searchDormitioryMap.get("user_branch_story") != null) {
+//                    binding.dramaNews.setVisibility(View.VISIBLE);
+//                } else {
+//                    binding.dramaNews.setVisibility(View.GONE);
+//                }
             }
 
         }

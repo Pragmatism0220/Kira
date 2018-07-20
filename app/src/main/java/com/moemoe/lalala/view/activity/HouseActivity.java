@@ -1131,12 +1131,12 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
             } else {
                 mStorage.setVisibility(View.GONE);
             }
-            if (searchMap.get("user_branch_story") != null) {
-                mDrameNews.setVisibility(View.VISIBLE);
-            } else {
-                mDrameNews.setVisibility(View.GONE);
-            }
-            if (searchMap.get("leave_message") != null) {
+//            if (searchMap.get("user_branch_story") != null) {
+//                mDrameNews.setVisibility(View.VISIBLE);
+//            } else {
+//                mDrameNews.setVisibility(View.GONE);
+//            }
+            if (searchMap.get("leave_message") != null) { 
                 mMessageNews.setVisibility(View.VISIBLE);
             } else {
                 mMessageNews.setVisibility(View.GONE);
