@@ -106,15 +106,15 @@ public class IntentUtils {//TODO 待优化代码结构与跳转方式 by yi
                     i.setAction("android.intent.action.VIEW");
                     context.startActivity(i);
                 } else {
-                    if (path.equals("department_1.0") && uri.getQueryParameter("name").equals("图书馆")) {
-                        i.setPackage(uri.getHost());
-                        i.setData(uri);
-                        i.setAction("library");
-                    } else {
-                        i.setPackage(uri.getHost());
-                        i.setData(uri);
-                        i.setAction(path);
-                    }
+//                    if (path.equals("department_1.0") && uri.getQueryParameter("name").equals("图书馆")) {
+//                        i.setPackage(uri.getHost());
+//                        i.setData(uri);
+//                        i.setAction("library");
+//                    } else {
+                    i.setPackage(uri.getHost());
+                    i.setData(uri);
+                    i.setAction(path);
+//                    }
                     String query = uri.getQuery();
                     if (path.equals(context.getResources().getString(R.string.label_url_action))) {
                         if (query.contains("netaopera/chap")) {
