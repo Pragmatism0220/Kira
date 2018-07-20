@@ -26,6 +26,9 @@ import com.moemoe.lalala.model.entity.HouseDbEntity;
 import com.moemoe.lalala.model.entity.HouseLikeEntity;
 import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
+import com.moemoe.lalala.model.entity.OrderEntity;
+import com.moemoe.lalala.model.entity.PayReqEntity;
+import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.model.entity.PowerEntity;
 import com.moemoe.lalala.model.entity.PropUseEntity;
 import com.moemoe.lalala.model.entity.RubbishEntity;
@@ -35,15 +38,21 @@ import com.moemoe.lalala.model.entity.SearchNewListEntity;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
 import com.moemoe.lalala.presenter.DormitoryContract;
 import com.moemoe.lalala.presenter.DormitoryPresenter;
+import com.moemoe.lalala.utils.AlertDialogUtil;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.GreenDaoManager;
+import com.moemoe.lalala.utils.IpAdressUtils;
 import com.moemoe.lalala.utils.MapUtil;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.base.BaseActivity;
+import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
+import com.moemoe.lalala.view.widget.netamenu.MenuItem;
+import com.pingplusplus.ui.PaymentHandler;
+import com.pingplusplus.ui.PingppUI;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -90,6 +99,8 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
     private TextView mTvCnanle;
     private TextView mTvUserName;
     private int count;
+    private BottomMenuFragment bottomFragment;
+    private OrderEntity entitPay;
 
     @Override
     protected void initComponent() {
@@ -124,22 +135,13 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         mPresenter.loadHouseObjects(false, id);
         mContainer = new MapMarkContainer();
         initMap();
+        initPayMenu();
+
         EventBus.getDefault().register(this);
     }
 
     public void initMap() {
-        binding.map.setOnImageClickLietener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mIsOut) {
-                    imgIn();
-                    mIsOut = false;
-                } else {
-                    imgOut();
-                    mIsOut = true;
-                }
-            }
-        });
+
     }
 
     private void imgIn() {
@@ -176,7 +178,18 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
 
     @Override
     protected void initToolbar(Bundle savedInstanceState) {
-
+        binding.map.setOnImageClickLietener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mIsOut) {
+                    imgIn();
+                    mIsOut = false;
+                } else {
+                    imgOut();
+                    mIsOut = true;
+                }
+            }
+        });
     }
 
     @Override
@@ -198,6 +211,26 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         mRlRoleJuQing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (mRubbishEntity.getName().equals("你又扔了3个垃圾进去")) {
+                    binding.map.clearAllView();
+                    binding.map.addTouchView(HouseHisActivity.this);
+                    binding.map.setIsHis(true);
+                    mPresenter.getHiVisitorsInfo(id);
+                    mPresenter.loadHouseObjects(false, id);
+                    binding.map.setOnImageClickLietener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (mIsOut) {
+                                imgIn();
+                                mIsOut = false;
+                            } else {
+                                imgOut();
+                                mIsOut = true;
+                            }
+                        }
+                    });
+                }
+
                 mRlRoleJuQing.setVisibility(View.GONE);
                 mTvContent.setVisibility(View.GONE);
                 mTvJuQing.setVisibility(View.GONE);
@@ -269,8 +302,33 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
 
     @Override
     public void onFailure(int code, String msg) {
-        ErrorCodeUtils.showErrorMsgByCode(this, code, msg);
-        finish();
+        if (!msg.equals("体力值不足")) {
+            ErrorCodeUtils.showErrorMsgByCode(this, code, msg);
+            finish();
+        } else {
+            if (!PreferenceUtils.getAuthorInfo().isVip()) {
+                goPayVip();
+            }
+        }
+
+    }
+
+    private void goPayVip() {
+        final AlertDialogUtil alertDialogUtilVip = AlertDialogUtil.getInstance();
+        alertDialogUtilVip.createNormalDialog(HouseHisActivity.this, "需要VIP酱帮助你增加体力上线呢?");
+        alertDialogUtilVip.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+            @Override
+            public void CancelOnClick() {
+                alertDialogUtilVip.dismissDialog();
+            }
+
+            @Override
+            public void ConfirmOnClick() {
+                alertDialogUtilVip.dismissDialog();
+                mPresenter.createOrder("d61547ce-62c7-4665-993e-81a78cd32976");
+            }
+        });
+        alertDialogUtilVip.showDialog();
     }
 
     /**
@@ -357,6 +415,7 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
 
         } else {
             showToast("你破坏了TA的好感度哦~");
+            mPresenter.loadPower();
         }
     }
 
@@ -559,6 +618,71 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         showToast(entity.getToolUseMessage());
     }
 
+    /**
+     * 创建订单
+     *
+     * @param entity
+     */
+    @Override
+    public void onCreateOrderSuccess(OrderEntity entity) {
+        entitPay = entity;
+        if (bottomFragment != null)
+            bottomFragment.show(getSupportFragmentManager(), "payMenu");
+    }
+
+    /**
+     * 支付回调
+     *
+     * @param entity
+     */
+    @Override
+    public void onPayOrderSuccess(PayResEntity entity) {
+        if (entity.isSuccess()) {
+            finalizeDialog();
+            showToast("支付成功");
+            Intent i = new Intent();
+            i.putExtra("position", -1);
+            i.putExtra("type", "pay");
+            setResult(RESULT_OK, i);
+            finish();
+        } else {
+            if (entity.getCharge() != null) {
+//                if("qpay".equals(entity.getCharge().get("channel"))){
+//                    Pingpp.createPayment(OrderActivity.this, entity.getCharge().toString(),"qwallet1104765197");
+//                }else {
+//                    Pingpp.createPayment(OrderActivity.this, entity.getCharge().toString());
+//                }
+                PingppUI.createPay(HouseHisActivity.this, entity.getCharge().toString(), new PaymentHandler() {
+                    @Override
+                    public void handlePaymentResult(Intent intent) {
+                        String result = intent.getExtras().getString("result");
+                        if (result.contains("success")) {
+                            result = "success";
+                        } else if (result.contains("fail")) {
+                            result = "fail";
+                        } else if (result.contains("cancel")) {
+                            result = "cancel";
+                        } else if (result.contains("invalid")) {
+                            result = "invalid";
+                        }
+                        finalizeDialog();
+                        if ("success".equals(result)) {
+                            showToast("支付成功");
+                            Intent i = new Intent();
+                            i.putExtra("position", -1);
+                            i.putExtra("type", "pay");
+                            setResult(RESULT_OK, i);
+                            finish();
+                        } else {
+                            showToast(result);
+//                            finish();
+                        }
+                    }
+                });
+            }
+        }
+    }
+
     @Override
     public void isCompleteSuccess(boolean isComplete) {
 
@@ -636,6 +760,44 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
         }
     }
 
+    private void initPayMenu() {
+        ArrayList<MenuItem> items = new ArrayList<>();
+        MenuItem item = new MenuItem(0, getString(R.string.label_alipay));
+        items.add(item);
+        item = new MenuItem(1, getString(R.string.label_wx));
+        items.add(item);
+        item = new MenuItem(2, getString(R.string.label_qpay));
+        items.add(item);
+        bottomFragment = new BottomMenuFragment();
+        bottomFragment.setShowTop(true);
+        bottomFragment.setTopContent("选择支付方式");
+        bottomFragment.setMenuItems(items);
+        bottomFragment.setMenuType(BottomMenuFragment.TYPE_VERTICAL);
+        bottomFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
+            @Override
+            public void OnMenuItemClick(int itemId) {
+                createDialog();
+                String payType = "";
+                if (itemId == 0) {
+                    payType = "alipay";
+                } else if (itemId == 1) {
+                    payType = "wx";
+                } else if (itemId == 2) {
+                    payType = "qpay";
+                }
+                PayReqEntity entity = new PayReqEntity(entitPay.getAddress().getAddress(),
+                        payType,
+                        IpAdressUtils.getIpAdress(HouseHisActivity.this),
+                        entitPay.getOrderId(),
+                        entitPay.getAddress().getPhone(),
+                        "",
+                        entitPay.getAddress().getUserName());
+                mPresenter.payOrder(entity);
+            }
+        });
+    }
+
+
     public class Presenter {
         public void onClick(View view) {
             switch (view.getId()) {
@@ -657,6 +819,25 @@ public class HouseHisActivity extends BaseActivity implements DormitoryContract.
                     startActivity(i3);
                     finish();
                     break;
+                case R.id.power:
+                    if (!PreferenceUtils.getAuthorInfo().isVip()) {
+                        final AlertDialogUtil alertDialogUtilVip = AlertDialogUtil.getInstance();
+                        alertDialogUtilVip.createNormalDialog(HouseHisActivity.this, "VIP酱偷偷的说:“VIP可以多20%体力上限哦”");
+                        alertDialogUtilVip.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+                            @Override
+                            public void CancelOnClick() {
+                                alertDialogUtilVip.dismissDialog();
+                            }
+
+                            @Override
+                            public void ConfirmOnClick() {
+                                alertDialogUtilVip.dismissDialog();
+                                mPresenter.createOrder("d61547ce-62c7-4665-993e-81a78cd32976");
+                            }
+                        });
+                    }
+                    break;
+
             }
         }
     }

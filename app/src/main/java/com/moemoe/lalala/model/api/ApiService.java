@@ -501,7 +501,7 @@ public interface ApiService {
     Observable<ApiResult> updateFolder(@Path("id") String folderId, @Body FolderRepEntity entity);
 
     @POST("v2/kira/bag/add/folder")
-    Observable<ApiResult> createFolder(@Body FolderRepEntity entity);
+    Observable<ApiResult<String>> createFolder(@Body FolderRepEntity entity);
 
     @GET("v2/kira/bag/{userId}/{type}/folder/list")
     Observable<ApiResult<ArrayList<ShowFolderEntity>>> loadFolderList(@Path("userId") String userId, @Path("type") String type, @Query("size") int size, @Query("index") int index);
@@ -546,10 +546,10 @@ public interface ApiService {
     Observable<ApiResult> buyFolder(@Path("userId") String userId, @Path("type") String type, @Path("folderId") String folderId);
 
     @POST("v2/kira/bag/folder/fiction/{folderId}/upload")
-    Observable<ApiResult> uploadXiaoshuo(@Path("folderId") String folderId, @Body ArrayList<UploadResultEntity> entities);
+    Observable<ApiResult<String>> uploadXiaoshuo(@Path("folderId") String folderId, @Body ArrayList<UploadResultEntity> entities);
 
     @POST("v2/kira/bag/folder/image/{folderId}/upload")
-    Observable<ApiResult> uploadTuji(@Path("folderId") String folderId, @Body ArrayList<UploadResultEntity> entities);
+    Observable<ApiResult<String>> uploadTuji(@Path("folderId") String folderId, @Body ArrayList<UploadResultEntity> entities);
 
     @POST("v2/kira/bag/folder/synthesize/{folderId}/upload")
     Observable<ApiResult> uploadZonghe(@Path("folderId") String folderId, @Body ArrayList<UploadResultEntity> entities);
@@ -564,7 +564,7 @@ public interface ApiService {
     Observable<ApiResult> uploadManhua2(@Path("parentFolderId") String parentFolderId, @Path("id") String folderId, @Body ManHuaUploadEntity entities);
 
     @POST("v2/kira/bag/add/{parentFolderId}/cartoon/folder")
-    Observable<ApiResult> uploadManhua(@Path("parentFolderId") String parentFolderId, @Body ManHuaUploadEntity entities);
+    Observable<ApiResult<String>> uploadManhua(@Path("parentFolderId") String parentFolderId, @Body ManHuaUploadEntity entities);
 
     @GET("v2/kira/bag/my/dynamic")
     Observable<ApiResult<ArrayList<DynamicTopEntity>>> loadDynamicTop();
@@ -1226,4 +1226,10 @@ public interface ApiService {
 
     @POST("v2/kira/house/user/notice/update")
     Observable<ApiResult> updateNews(@Body upDateEntity entity);
+    
+    @GET("v2/kira/bag/library/newest/v2/{type}/bag")
+    Observable<ApiResult<ArrayList<ShowFolderEntity>>> loadLibraryBagList(@Path("type") String type, @Query("size") int size, @Query("index") int index);
+
+    @POST("v2/kira/bag/library/submit/contribute")
+    Observable<ApiResult> loadLibrarySubmitContribute(@Body LibraryContribute entity);
 }

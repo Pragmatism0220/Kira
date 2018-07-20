@@ -11,7 +11,6 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.ActivityDormitoryDramaBinding;
 import com.moemoe.lalala.di.components.DaggerNewDormitoryComponent;
 import com.moemoe.lalala.di.modules.NewDormitorModule;
-import com.moemoe.lalala.model.entity.NewStoryInfoEventEntity;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.NewStoryInfoEventEntity;
 import com.moemoe.lalala.model.entity.SearchListEntity;
@@ -22,9 +21,9 @@ import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.base.BaseActivity;
-import com.squareup.haha.guava.collect.Maps;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -121,7 +120,7 @@ public class DormitoryDramaActivity extends BaseActivity implements NewDormitior
     @Override
     public void getDormitioryNewsSuccess(ArrayList<SearchNewListEntity> searchNewLists) {
         if (searchNewLists != null && searchNewLists.size() > 0) {
-            Map<String, Integer> searchDormitioryMap = Maps.newHashMap();
+            Map<String, Integer> searchDormitioryMap = new HashMap<>();
             for (int i = 0; i < searchNewLists.size(); i++) {
                 if (searchNewLists.get(i).getFunName().equals("user_branch_story")) {
                     if (!searchDormitioryMap.containsKey("user_branch_story")) {

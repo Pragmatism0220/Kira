@@ -29,8 +29,8 @@ android {
         applicationId "com.moemoe.lalala"
         minSdkVersion MINSDKVERSION as int
         targetSdkVersion TARGETSDKVERSION as int
-        versionCode 6020
-        versionName "6.0.2"
+        versionCode 6030
+        versionName "6.0.3"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "moemoe",
                                 GETUI_APP_ID       : "yJYiw8VtVO9wuMk0DgV6p4",
                                 GETUI_APP_KEY      : "WaKYr5EG2c7DIAib45aPy3",

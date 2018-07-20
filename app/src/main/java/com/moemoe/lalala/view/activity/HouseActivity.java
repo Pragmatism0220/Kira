@@ -37,12 +37,14 @@ import com.moemoe.lalala.galgame.SoundManager;
 import com.moemoe.lalala.greendao.gen.DeskmateEntilsDao;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.entity.AuthorInfo;
-import com.moemoe.lalala.model.entity.upDateEntity;
 import com.moemoe.lalala.model.entity.DeskmateEntils;
 import com.moemoe.lalala.model.entity.HouseDbEntity;
 import com.moemoe.lalala.model.entity.HouseLikeEntity;
 import com.moemoe.lalala.model.entity.MapEntity;
 import com.moemoe.lalala.model.entity.MapMarkContainer;
+import com.moemoe.lalala.model.entity.OrderEntity;
+import com.moemoe.lalala.model.entity.PayReqEntity;
+import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.model.entity.PowerEntity;
 import com.moemoe.lalala.model.entity.PropUseEntity;
 import com.moemoe.lalala.model.entity.RubbishEntity;
@@ -53,13 +55,16 @@ import com.moemoe.lalala.model.entity.SearchNewListEntity;
 import com.moemoe.lalala.model.entity.StageLineEntity;
 import com.moemoe.lalala.model.entity.StageLineOptionsEntity;
 import com.moemoe.lalala.model.entity.VisitorsEntity;
+import com.moemoe.lalala.model.entity.upDateEntity;
 import com.moemoe.lalala.presenter.DormitoryContract;
 import com.moemoe.lalala.presenter.DormitoryPresenter;
+import com.moemoe.lalala.utils.AlertDialogUtil;
 import com.moemoe.lalala.utils.DialogUtils;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.GreenDaoManager;
 import com.moemoe.lalala.utils.IntentUtils;
+import com.moemoe.lalala.utils.IpAdressUtils;
 import com.moemoe.lalala.utils.MapUtil;
 import com.moemoe.lalala.utils.NetworkUtils;
 import com.moemoe.lalala.utils.NewUtils;
@@ -72,7 +77,8 @@ import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
 import com.moemoe.lalala.view.widget.netamenu.MenuItem;
-import com.squareup.haha.guava.collect.Maps;
+import com.pingplusplus.ui.PaymentHandler;
+import com.pingplusplus.ui.PingppUI;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -157,6 +163,8 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     private RelativeLayout sideLineFrist;
     private StageLineEntity stageLineEntity;
     private List<SearchNewListEntity> news;
+    private OrderEntity entitPay;
+    private BottomMenuFragment bottomFragment;
 
     @Override
     protected void initComponent() {
@@ -206,7 +214,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         FileManager.init(this);
         initPopupMenus();
         mPresenter.loadPower();
-
+        initPayMenu();
         SearchListEntity entity = new SearchListEntity();
         entity.setFunNames(new String[]{"visitor", "user_role", "user_branch_story", "user_tool", "user_furniture", "leave_message"});
         mPresenter.searchHouseNew(entity);
@@ -238,7 +246,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         mPresenter.addMapMark(HouseActivity.this, mContainer, binding.map, "house");
     }
 
-//    @Override
+    //    @Override
 //    public boolean dispatchTouchEvent(MotionEvent ev) {
 //        if (MoeMoeApplication.getInstance().GoneDiaLog()) {
 //            return true;
@@ -249,6 +257,10 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
 //        }
 //        return super.dispatchTouchEvent(ev);
 //    }
+    public void GoneSidaMenuOrLine() {
+        sidaMenu.setVisibility(View.GONE);
+        sideLine.setVisibility(View.GONE);
+    }
 
     @Override
     protected void onResume() {
@@ -624,7 +636,30 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
 //                }
 //            }
             finish();
+        } else {
+            if (!PreferenceUtils.getAuthorInfo().isVip()) {
+                goPayVip();
+            }
         }
+
+    }
+
+    private void goPayVip() {
+        final AlertDialogUtil alertDialogUtilVip = AlertDialogUtil.getInstance();
+        alertDialogUtilVip.createNormalDialog(HouseActivity.this, "需要VIP酱帮助你增加体力上线呢?");
+        alertDialogUtilVip.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+            @Override
+            public void CancelOnClick() {
+                alertDialogUtilVip.dismissDialog();
+            }
+
+            @Override
+            public void ConfirmOnClick() {
+                alertDialogUtilVip.dismissDialog();
+                mPresenter.createOrder("d61547ce-62c7-4665-993e-81a78cd32976");
+            }
+        });
+        alertDialogUtilVip.showDialog();
     }
 
     @Override
@@ -939,6 +974,99 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
     }
 
     @Override
+    public void onCreateOrderSuccess(OrderEntity entity) {
+        entitPay = entity;
+        if (bottomFragment != null)
+            bottomFragment.show(getSupportFragmentManager(), "payMenu");
+    }
+
+    private void initPayMenu() {
+        ArrayList<MenuItem> items = new ArrayList<>();
+        MenuItem item = new MenuItem(0, getString(R.string.label_alipay));
+        items.add(item);
+        item = new MenuItem(1, getString(R.string.label_wx));
+        items.add(item);
+        item = new MenuItem(2, getString(R.string.label_qpay));
+        items.add(item);
+        bottomFragment = new BottomMenuFragment();
+        bottomFragment.setShowTop(true);
+        bottomFragment.setTopContent("选择支付方式");
+        bottomFragment.setMenuItems(items);
+        bottomFragment.setMenuType(BottomMenuFragment.TYPE_VERTICAL);
+        bottomFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
+            @Override
+            public void OnMenuItemClick(int itemId) {
+                createDialog();
+                String payType = "";
+                if (itemId == 0) {
+                    payType = "alipay";
+                } else if (itemId == 1) {
+                    payType = "wx";
+                } else if (itemId == 2) {
+                    payType = "qpay";
+                }
+                PayReqEntity entity = new PayReqEntity(entitPay.getAddress().getAddress(),
+                        payType,
+                        IpAdressUtils.getIpAdress(HouseActivity.this),
+                        entitPay.getOrderId(),
+                        entitPay.getAddress().getPhone(),
+                        "",
+                        entitPay.getAddress().getUserName());
+                mPresenter.payOrder(entity);
+            }
+        });
+    }
+
+    @Override
+    public void onPayOrderSuccess(PayResEntity entity) {
+        if (entity.isSuccess()) {
+            finalizeDialog();
+            showToast("支付成功");
+            Intent i = new Intent();
+            i.putExtra("position", -1);
+            i.putExtra("type", "pay");
+            setResult(RESULT_OK, i);
+            finish();
+        } else {
+            if (entity.getCharge() != null) {
+//                if("qpay".equals(entity.getCharge().get("channel"))){
+//                    Pingpp.createPayment(OrderActivity.this, entity.getCharge().toString(),"qwallet1104765197");
+//                }else {
+//                    Pingpp.createPayment(OrderActivity.this, entity.getCharge().toString());
+//                }
+                PingppUI.createPay(HouseActivity.this, entity.getCharge().toString(), new PaymentHandler() {
+                    @Override
+                    public void handlePaymentResult(Intent intent) {
+                        String result = intent.getExtras().getString("result");
+                        if (result.contains("success")) {
+                            result = "success";
+                        } else if (result.contains("fail")) {
+                            result = "fail";
+                        } else if (result.contains("cancel")) {
+                            result = "cancel";
+                        } else if (result.contains("invalid")) {
+                            result = "invalid";
+                        }
+                        finalizeDialog();
+                        if ("success".equals(result)) {
+                            PreferenceUtils.getAuthorInfo().setVip(true);
+                            showToast("支付成功");
+                            Intent i = new Intent();
+                            i.putExtra("position", -1);
+                            i.putExtra("type", "pay");
+                            setResult(RESULT_OK, i);
+                            finish();
+                        } else {
+                            showToast(result);
+//                            finish();
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
     public void isCompleteSuccess(boolean isComplete) {
         if (isComplete == true) {//完成所有任务
             mSeven.setVisibility(View.GONE);
@@ -957,7 +1085,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         if (searchNewLists != null && searchNewLists.size() > 0) {
             news = new ArrayList<>();
             news = searchNewLists;
-            Map<String, Integer> searchMap = Maps.newHashMap();
+            Map<String, Integer> searchMap = new HashMap<>();
             for (int i = 0; i < searchNewLists.size(); i++) {
                 if (searchNewLists.get(i).getFunName().equals("visitor")) {
                     if (!searchMap.containsKey("visitor")) {
@@ -1172,8 +1300,17 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.iv_left:
-                    Intent i3 = new Intent(HouseActivity.this, FeedV3Activity.class);
-                    startActivity(i3);
+//                    Intent i3 = new Intent(HouseActivity.this, FeedV3Activity.class);
+//                    startActivity(i3);
+                    if (sidaMenu != null && sidaMenu.getVisibility() == View.VISIBLE) {
+                        sidaMenu.setVisibility(View.GONE);
+                        return;
+                    }
+                    if (sideLine != null && sideLine.getVisibility() == View.VISIBLE) {
+                        sideLine.setVisibility(View.GONE);
+                        return;
+                    }
+
                     finish();
                     break;
                 case R.id.iv_right:
@@ -1285,6 +1422,26 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                         }
                     }
                     break;
+                case R.id.power:
+                    if (!PreferenceUtils.getAuthorInfo().isVip()) {
+                        final AlertDialogUtil alertDialogUtilVip = AlertDialogUtil.getInstance();
+                        alertDialogUtilVip.createNormalDialog(HouseActivity.this, "VIP酱偷偷的说:“VIP可以多20%体力上限哦”");
+                        alertDialogUtilVip.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+                            @Override
+                            public void CancelOnClick() {
+                                alertDialogUtilVip.dismissDialog();
+                            }
+
+                            @Override
+                            public void ConfirmOnClick() {
+                                alertDialogUtilVip.dismissDialog();
+                                mPresenter.createOrder("d61547ce-62c7-4665-993e-81a78cd32976");
+                            }
+                        });
+                        alertDialogUtilVip.showDialog();
+                    }
+                    break;
+
             }
         }
 

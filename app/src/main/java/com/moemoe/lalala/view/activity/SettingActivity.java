@@ -351,6 +351,7 @@ public class SettingActivity extends BaseAppCompatActivity implements View.OnCli
             PreferenceUtils.setMessageDot(this, "at_user", false);
             PreferenceUtils.setMessageDot(this, "normal", false);
             GreenDaoManager.getInstance().getSession().getDeskmateEntilsDao().deleteAll();
+            PreferenceUtils.setJuQingVersion(this, 0);
             AudioPlayer.get().clearList(true);
             if (AudioPlayer.get().isPlaying()) {
                 AudioPlayer.get().stopPlayer();

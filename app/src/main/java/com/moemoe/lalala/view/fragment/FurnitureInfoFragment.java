@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
@@ -17,14 +15,11 @@ import com.moemoe.lalala.event.FurnitureSelectEvent;
 import com.moemoe.lalala.model.entity.AllFurnitureInfo;
 import com.moemoe.lalala.model.entity.SearchNewListEntity;
 import com.moemoe.lalala.model.entity.upDateEntity;
-import com.moemoe.lalala.presenter.FurniturePresenter;
 import com.moemoe.lalala.presenter.FurnitureUpDateContract;
 import com.moemoe.lalala.presenter.FurnitureUpDatePresenter;
-import com.moemoe.lalala.utils.ToastUtils;
 import com.moemoe.lalala.view.adapter.FurnitureInfoAdapter;
 import com.moemoe.lalala.view.adapter.PropAdapter;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
-import com.squareup.haha.trove.THash;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

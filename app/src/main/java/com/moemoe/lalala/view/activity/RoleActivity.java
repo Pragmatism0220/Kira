@@ -25,14 +25,11 @@ import com.moemoe.lalala.utils.PreferenceUtils;
 import com.moemoe.lalala.view.adapter.RoleAdapter;
 import com.moemoe.lalala.view.base.BaseActivity;
 import com.moemoe.lalala.view.widget.view.SpacesItemDecoration;
-import com.squareup.haha.guava.collect.Maps;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Map; 
 
 import javax.inject.Inject;
 
@@ -353,7 +350,7 @@ public class RoleActivity extends BaseActivity implements RoleContract.View {
 
 
             //日记、服装
-            Map<String, Integer> map = Maps.newHashMap();
+            Map<String, Integer> map = new HashMap<>();
             for (int i = 0; i < newListEntities.size(); i++) {
                 if (newListEntities.get(i).getFunName().equals("diary")) {
                     if (!map.containsKey("diary")) {

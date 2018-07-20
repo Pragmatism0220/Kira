@@ -1362,9 +1362,11 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
 //                if (AlertDialogUtil.getInstance() != null && AlertDialogUtil.getInstance().isShow()) {
 //                    AlertDialogUtil.getInstance().dismissDialog();
 //                }
-                Intent i3 = new Intent(MapActivity.this, HouseActivity.class);
+                if (!TextUtils.isEmpty(PreferenceUtils.getUUid())) {
+                    Intent i3 = new Intent(MapActivity.this, HouseActivity.class);
 //                Intent i3 = new Intent(MapActivity.this, FeedV3Activity.class);
-                startActivity(i3);
+                    startActivity(i3);
+                }
             }
         }
     }

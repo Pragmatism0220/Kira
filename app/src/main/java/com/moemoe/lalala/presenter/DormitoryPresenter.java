@@ -11,6 +11,10 @@ import com.moemoe.lalala.greendao.gen.HouseDbEntityDao;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetResultSubscriber;
 import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
+import com.moemoe.lalala.model.entity.CreateOrderEntity;
+import com.moemoe.lalala.model.entity.OrderEntity;
+import com.moemoe.lalala.model.entity.PayReqEntity;
+import com.moemoe.lalala.model.entity.PayResEntity;
 import com.moemoe.lalala.model.entity.upDateEntity;
 import com.moemoe.lalala.model.entity.HouseDbEntity;
 import com.moemoe.lalala.model.entity.HouseLikeEntity;
@@ -300,6 +304,47 @@ public class DormitoryPresenter implements DormitoryContract.Presenter {
                 );
     }
 
+    @Override
+    public void createOrder(final String id) {
+        apiService.createOrder(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<CreateOrderEntity>() {
+                    @Override
+                    public void onSuccess(CreateOrderEntity entity) {
+                        OrderEntity orderEntity = new OrderEntity();
+                        orderEntity.setAddress(entity.getAddress());
+                        orderEntity.setEndTime(entity.getEndTime());
+                        orderEntity.setOrderNo(entity.getOrderNo());
+                        orderEntity.setLastRemark(entity.getLastRemark());
+                        orderEntity.setOrderId(entity.getOrderId());
+                        orderEntity.setBuyNum(1);
+                        if (view != null) view.onCreateOrderSuccess(orderEntity);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
+    @Override
+    public void payOrder(PayReqEntity entity) {
+        apiService.payOrder(entity)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetResultSubscriber<PayResEntity>() {
+                    @Override
+                    public void onSuccess(PayResEntity entity) {
+                        if (view != null) view.onPayOrderSuccess(entity);
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        if (view != null) view.onFailure(code, msg);
+                    }
+                });
+    }
 
     @Override
     public void addMapMark(Context context, MapMarkContainer container, MapLayout map, String type) {
