@@ -1,6 +1,8 @@
 package com.moemoe.lalala.view.widget.recycler;
 
 import android.content.Context;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -168,6 +170,10 @@ public class PullAndLoadView extends FrameLayout {
         mRecyclerViewHelper = RecyclerViewPositionHelper.createHelper(mRecyclerView);
     }
 
+    public RecyclerViewPositionHelper getRecycylerViewHelper() {
+        return mRecyclerViewHelper != null ? mRecyclerViewHelper : null;
+    }
+
     public SwipeRefreshLayout getSwipeRefreshLayout() {
         return mSwipeRefreshLayout;
     }
@@ -187,5 +193,4 @@ public class PullAndLoadView extends FrameLayout {
     public boolean isLoadMoreEnabled() {
         return mIsLoadMoreEnabled;
     }
-
 }

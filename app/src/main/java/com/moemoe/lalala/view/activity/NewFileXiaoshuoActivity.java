@@ -30,6 +30,7 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.di.components.DaggerNewFileComponent;
 import com.moemoe.lalala.di.modules.NewFileModule;
 import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.entity.BagLoadReadprogressEntity;
 import com.moemoe.lalala.model.entity.FileXiaoShuoEntity;
 import com.moemoe.lalala.model.entity.FolderType;
 import com.moemoe.lalala.model.entity.LibraryContribute;
@@ -210,11 +211,27 @@ public class NewFileXiaoshuoActivity extends BaseAppCompatActivity implements Ne
             public void onItemClick(View view, final int position) {
                 final FileXiaoShuoEntity entity = mAdapter.getItem(position);
                 if (isSubmission){
-                    LibraryContribute contribute = new LibraryContribute();
-                    contribute.setFolderId(entity.getFileId());
-                    contribute.setDepartmentId(departmentId);
-                    contribute.setType(mFolderType);
-                    mPresenter.loadLibrarySubmitContribute(contribute);
+                    final AlertDialogUtil alertDialogUtil = AlertDialogUtil.getInstance();
+                    alertDialogUtil.createNormalDialog(NewFileXiaoshuoActivity.this, "确认投稿？");
+                    alertDialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+                        @Override
+                        public void CancelOnClick() {
+                            alertDialogUtil.dismissDialog();
+                        }
+
+                        @Override
+                        public void ConfirmOnClick() {
+
+                            LibraryContribute contribute = new LibraryContribute();
+                            contribute.setTargetId(entity.getFileId());
+                            contribute.setDepartmentId(departmentId);
+                            contribute.setType(mFolderType);
+                            mPresenter.loadLibrarySubmitContribute(contribute);
+                            alertDialogUtil.dismissDialog();
+                        }
+                    });
+                    alertDialogUtil.showDialog();
+
                     return;
                 }
                 if (!mIsSelect) {
@@ -901,6 +918,16 @@ public class NewFileXiaoshuoActivity extends BaseAppCompatActivity implements Ne
         showToast("投稿成功");
         setResult(RESULT_OK);
         finish();
+    }
+
+    @Override
+    public void onLoadBagReadprogressSuccess(BagLoadReadprogressEntity entity) {
+
+    }
+
+    @Override
+    public void onloadBagReadpressUpdateSuccess() {
+
     }
 
     private void addBottomList(ArrayList<ShowFolderEntity> entities) {

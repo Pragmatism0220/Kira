@@ -867,7 +867,7 @@ public class NewDocDetailActivity extends BaseAppCompatActivity implements DocDe
 //        SoftKeyboardUtils.showSoftKeyboard(this, mEdtCommentInput);
         mCurType = 2;
         final AlertDialogUtil alertDialogUtil = AlertDialogUtil.getInstance();
-        alertDialogUtil.createDocEditDialog(this);
+        alertDialogUtil.createDocEditDialog(this,"");
         alertDialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
             @Override
             public void CancelOnClick() {

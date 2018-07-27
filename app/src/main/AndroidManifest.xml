@@ -77,6 +77,23 @@
         <meta-data
             android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
             android:value="GlideModule" />
+        <!-- 配置APP ID -->
+        <meta-data
+            android:name="BUGLY_APPID"
+            android:value="7fdb3b3e9f" />
+        <!-- 配置APP版本号 -->
+        <meta-data
+            android:name="BUGLY_APP_VERSION"
+            android:value="@string/app_version_code" />
+        <!-- 配置APP渠道号 -->
+        <meta-data
+            android:name="BUGLY_APP_CHANNEL"
+            android:value="${UMENG_CHANNEL_VALUE}" />
+        <!-- 配置Bugly调试模式（true或者false）-->
+        <meta-data
+            android:name="BUGLY_ENABLE_DEBUG"
+            android:value="${isDebug}" />
+
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -1585,29 +1602,30 @@
             android:screenOrientation="portrait"
             android:theme="@style/MainColorTranslucentTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <!--<activity-->
-            <!--android:name=".view.activity.LibraryActivity"-->
-            <!--android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@style/MainColorTranslucentTheme">-->
+        <activity
+        android:name=".view.activity.LibraryActivity"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+        android:screenOrientation="portrait"
+        android:theme="@style/MainColorTranslucentTheme">
 
-            <!--<intent-filter>-->
-                <!--<action android:name="library" />-->
+        <intent-filter>
+        <action android:name="library" />
 
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.BROWSABLE" />-->
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
-                <!--<data-->
-                    <!--android:host="@string/label_host"-->
-                    <!--android:path="@string/label_department_path"-->
-                    <!--android:scheme="@string/label_scheme" />-->
-            <!--</intent-filter>-->
+        <data
+        android:host="@string/label_host"
+        android:path="@string/label_department_path"
+        android:scheme="@string/label_scheme" />
+        </intent-filter>
 
-        <!--</activity>-->
-        <activity android:name=".view.activity.KissActivity"
+        </activity>
+        <activity
+            android:name=".view.activity.KissActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/MainColorTranslucentTheme"/>
+            android:theme="@style/MainColorTranslucentTheme" />
     </application>
 
 </manifest>

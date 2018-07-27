@@ -528,7 +528,7 @@ public class OldDocHolder extends ClickableViewHolder {
 
     private void addDocLabel(final DocResponse entity, final int paposition) {
         final AlertDialogUtil alertDialogUtil = AlertDialogUtil.getInstance();
-        alertDialogUtil.createDocEditDialog(itemView.getContext());
+        alertDialogUtil.createDocEditDialog(itemView.getContext(), "");
         alertDialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
             @Override
             public void CancelOnClick() {

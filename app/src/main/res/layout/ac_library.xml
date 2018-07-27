@@ -76,7 +76,8 @@
                 android:onClick="@{presenter.onClick}"
                 android:paddingEnd="@dimen/x36"
                 android:paddingStart="@dimen/x24"
-                android:src="@drawable/btn_menu_normal" />
+                android:src="@drawable/btn_menu_normal"
+                android:visibility="gone" />
         </LinearLayout>
 
         <include layout="@layout/item_new_banner" />
@@ -127,9 +128,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                android:onClick="@{presenter.onClick}"
                 android:layout_marginBottom="@dimen/y24"
                 android:layout_marginEnd="@dimen/x24"
+                android:onClick="@{presenter.onClick}"
                 android:src="@drawable/btn_tougao" />
         </RelativeLayout>
 

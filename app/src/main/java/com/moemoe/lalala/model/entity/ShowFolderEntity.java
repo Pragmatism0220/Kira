@@ -7,7 +7,6 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 /**
- *
  * Created by yi on 2017/8/18.
  */
 
@@ -46,8 +45,42 @@ public class ShowFolderEntity implements Parcelable {
     private int barrageNum;
 
     private String timestamp;
-    
+
     private String level2FolderId;
+
+    private double readProgress;
+
+    private long lastReadTime;
+    private String parentFolderName;
+
+    public void setParentFolderName(String parentFolderName) {
+        this.parentFolderName = parentFolderName;
+    }
+
+    public String getParentFolderName() {
+
+        return parentFolderName;
+    }
+
+    private String path;
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getPath() {
+
+        return path;
+    }
+
+    public void setLastReadTime(long lastReadTime) {
+        this.lastReadTime = lastReadTime;
+    }
+
+    public long getLastReadTime() {
+
+        return lastReadTime;
+    }
 
     public void setLevel2FolderId(String level2FolderId) {
         this.level2FolderId = level2FolderId;
@@ -193,7 +226,17 @@ public class ShowFolderEntity implements Parcelable {
         this.select = select;
     }
 
+    public void setReadProgress(double readProgress) {
+        this.readProgress = readProgress;
+    }
+
+    public double getReadProgress() {
+
+        return readProgress;
+    }
+
     @Override
+
     public int describeContents() {
         return 0;
     }
@@ -232,23 +275,23 @@ public class ShowFolderEntity implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         Bundle bundle = new Bundle();
-        bundle.putString("uuid",uuid);
-        bundle.putString("folderId",folderId);
-        bundle.putString("cover",cover);
-        bundle.putString("folderName",folderName);
-        bundle.putString("createUser",createUser);
-        bundle.putString("createUserName",createUserName);
-        bundle.putString("type",type);
-        bundle.putStringArrayList("texts",texts);
-        bundle.putParcelableArrayList("textsV2",textsV2);
-        bundle.putBoolean("select",select);
-        bundle.putInt("coin",coin);
-        bundle.putInt("items",items);
-        bundle.putInt("playNum",playNum);
-        bundle.putInt("barrageNum",barrageNum);
-        bundle.putString("time",time);
-        bundle.putString("userIcon",userIcon);
-        bundle.putString("timestamp",timestamp);
+        bundle.putString("uuid", uuid);
+        bundle.putString("folderId", folderId);
+        bundle.putString("cover", cover);
+        bundle.putString("folderName", folderName);
+        bundle.putString("createUser", createUser);
+        bundle.putString("createUserName", createUserName);
+        bundle.putString("type", type);
+        bundle.putStringArrayList("texts", texts);
+        bundle.putParcelableArrayList("textsV2", textsV2);
+        bundle.putBoolean("select", select);
+        bundle.putInt("coin", coin);
+        bundle.putInt("items", items);
+        bundle.putInt("playNum", playNum);
+        bundle.putInt("barrageNum", barrageNum);
+        bundle.putString("time", time);
+        bundle.putString("userIcon", userIcon);
+        bundle.putString("timestamp", timestamp);
         parcel.writeBundle(bundle);
     }
 }

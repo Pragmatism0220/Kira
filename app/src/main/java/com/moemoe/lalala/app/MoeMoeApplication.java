@@ -66,9 +66,13 @@ import com.moemoe.lalala.view.widget.netamenu.MenuItem;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 import com.shuyu.gsyvideoplayer.video.NormalGSYVideoPlayer;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Proxy;
 import java.net.URLEncoder;
@@ -121,8 +125,52 @@ public class MoeMoeApplication extends Application {
 //        TCAgent.setReportUncaughtExceptions(true);
         //初始化Leak内存泄露检测工具
         //LeakCanary.install(this);
+
+
+        Context context = getApplicationContext();
+// 获取当前包名
+        String packageName = context.getPackageName();
+// 获取当前进程名
+        String processName = getProcessName(android.os.Process.myPid());
+// 设置是否为上报进程
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
+        strategy.setUploadProcess(processName == null || processName.equals(packageName));
+// 初始化Bugly
+// 如果通过“AndroidManifest.xml”来配置APP信息，初始化方法如下
+        CrashReport.initCrashReport(context, strategy);
+
+
     }
-    
+
+    /**
+     * 获取进程号对应的进程名
+     *
+     * @param pid 进程号
+     * @return 进程名
+     */
+    private static String getProcessName(int pid) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader("/proc/" + pid + "/cmdline"));
+            String processName = reader.readLine();
+            if (!TextUtils.isEmpty(processName)) {
+                processName = processName.trim();
+            }
+            return processName;
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     private void initLogger() {
         LogLevel logLevel;
         if (BuildConfig.DEBUG) {

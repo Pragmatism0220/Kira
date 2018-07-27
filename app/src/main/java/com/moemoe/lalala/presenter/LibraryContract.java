@@ -18,5 +18,6 @@ public interface LibraryContract {
     interface View extends BaseView {
         void onBannerLoadSuccess(ArrayList<BannerEntity> bannerEntities);
         void onLoadLibraryListSuccess(ArrayList<ShowFolderEntity> entities, boolean isPull);
+        void onLoadLibraryNewestReadhistorySuccess(ArrayList<ShowFolderEntity> entities, boolean isPull);
     }
 }

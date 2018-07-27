@@ -7,6 +7,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,8 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.di.components.DaggerNewFileComponent;
 import com.moemoe.lalala.di.modules.NewFileModule;
 import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.entity.BagLoadReadprogressEntity;
+import com.moemoe.lalala.model.entity.BagReadprogressEntity;
 import com.moemoe.lalala.model.entity.CommonFileEntity;
 import com.moemoe.lalala.model.entity.FolderType;
 import com.moemoe.lalala.model.entity.Image;
@@ -90,6 +94,7 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
     private ArrayList<ManHua2Entity> mManHualist;
     private int mPosition;
     private FileItemDecoration mItemDecoration;
+    private String folderName;
 
     @Override
     protected int getLayoutId() {
@@ -106,12 +111,13 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
         context.startActivity(i);
     }
 
-    public static void startActivity(Context context, String parentId, String folderId, String userId, int position) {
+    public static void startActivity(Context context, String parentId, String folderId, String userId, int position, String folderName) {
         Intent i = new Intent(context, NewFileManHua2Activity.class);
         i.putExtra(UUID, userId);
         i.putExtra("folderId", folderId);
         i.putExtra("parentId", parentId);
         i.putExtra("position", position);
+        i.putExtra("folderName", folderName);
         context.startActivity(i);
     }
 
@@ -134,6 +140,7 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
         mParentId = getIntent().getStringExtra("parentId");
         mManHualist = getIntent().getParcelableArrayListExtra("folders");
         mPosition = getIntent().getIntExtra("position", 0);
+        folderName = getIntent().getStringExtra("folderName");
         mIsSelect = false;
         mSelectMap = new HashMap<>();
         mIvAddFolder.setVisibility(View.GONE);
@@ -177,6 +184,7 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
             public void onRefresh() {
                 isLoading = true;
                 mPresenter.loadFileList(mUserId, FolderType.MHD.toString(), mFolderId, 0);
+
             }
 
             @Override
@@ -194,7 +202,8 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
         isLoading = true;
         mPresenter.loadFileList(mUserId, FolderType.MHD.toString(), mFolderId, 0);
         if (mManHualist == null || mManHualist.size() == 0) {
-
+            mFolderName = folderName;
+            mTvMenuLeft.setText(mFolderName);
         } else {
             mFolderName = mManHualist.get(mPosition).getFolderName();
             mTvMenuLeft.setText(mFolderName);
@@ -213,6 +222,10 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+        BagReadprogressEntity entity = new BagReadprogressEntity();
+        entity.setType(FolderType.MH.toString());
+        entity.setTargetId(mFolderId);
+        mPresenter.loadBagReadprogress(entity);
     }
 
     private void initPopupMenus() {
@@ -257,6 +270,12 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
                     FilesUploadActivity.startActivityForResult(NewFileManHua2Activity.this, FolderType.MHD.toString(), mFolderId, mParentId, mManHualist.get(mPosition));
                 } else if (itemId == 4) {
                     // TODO: 2018/5/17  添加标签
+                    int firstCompletelyVisibleItemPosition = mListDocs.getRecycylerViewHelper().findFirstVisibleItemPosition();
+                    BagReadprogressEntity entity = new BagReadprogressEntity();
+                    entity.setReadProgress(firstCompletelyVisibleItemPosition);
+                    entity.setTargetId(mFolderId);
+                    entity.setType(FolderType.MH.toString());
+                    mPresenter.loadBagReadpressUpdate(entity);
                 }
             }
         });
@@ -482,6 +501,8 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
 
             }
         });
+
+
     }
 
     @Override
@@ -539,6 +560,28 @@ public class NewFileManHua2Activity extends BaseAppCompatActivity implements New
 
     @Override
     public void onLoadLibrarySubmitContribute() {
-        
+
+    }
+
+    /**
+     * 获取进度条
+     *
+     * @param entity
+     */
+    @Override
+    public void onLoadBagReadprogressSuccess(BagLoadReadprogressEntity entity) {
+        if (entity != null) {
+            if (entity.getReadProgress() > 0) {
+                mListDocs.getRecyclerView().scrollToPosition((int) entity.getReadProgress());
+            }
+        }
+    }
+
+    /**
+     * 更新或添加标签
+     */
+    @Override
+    public void onloadBagReadpressUpdateSuccess() {
+        showToast("保存标签成功～");
     }
 }

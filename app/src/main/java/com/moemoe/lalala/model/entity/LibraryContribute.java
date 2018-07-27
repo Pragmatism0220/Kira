@@ -7,17 +7,9 @@ package com.moemoe.lalala.model.entity;
 public class LibraryContribute {
     
     private String departmentId;
-    private String folderId;
     private String type;
-    private String  fileId;
+    private String  targetId;
 
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
-    }
-
-    public String getFileId() {
-        return fileId;
-    }
 
     public String getType() {
         return type;
@@ -27,17 +19,19 @@ public class LibraryContribute {
         this.type = type;
     }
 
-    public String getFolderId() {
-        return folderId;
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
+    }
+
+    public String getTargetId() {
+
+        return targetId;
     }
 
     public void setDepartmentId(String departmentId) {
         this.departmentId = departmentId;
     }
 
-    public void setFolderId(String folderId) {
-        this.folderId = folderId;
-    }
 
     public String getDepartmentId() {
         return departmentId;

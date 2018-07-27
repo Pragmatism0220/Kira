@@ -1,5 +1,7 @@
 package com.moemoe.lalala.presenter;
 
+import com.moemoe.lalala.model.entity.BagLoadReadprogressEntity;
+import com.moemoe.lalala.model.entity.BagReadprogressEntity;
 import com.moemoe.lalala.model.entity.LibraryContribute;
 import com.moemoe.lalala.model.entity.ManHua2Entity;
 import com.moemoe.lalala.model.entity.NewFolderEntity;
@@ -25,6 +27,8 @@ public interface NewFolderItemContract {
         void followUser(String id,boolean isFollow);
         void refreshRecommend(String folderName,int page,String excludeFolderId);
         void loadLibrarySubmitContribute(LibraryContribute entity);
+        void loadBagReadprogress(BagReadprogressEntity entity);
+        void loadBagReadpressUpdate(BagReadprogressEntity entity);
     }
 
     interface View extends BaseView{
@@ -38,5 +42,7 @@ public interface NewFolderItemContract {
         void onLoadManHua2ListSuccess(ArrayList<ManHua2Entity> entities,boolean isPull);
         void onReFreshSuccess(ArrayList<ShowFolderEntity> entities);
         void onLoadLibrarySubmitContribute();
+        void onLoadBagReadprogressSuccess(BagLoadReadprogressEntity entity);
+        void onloadBagReadpressUpdateSuccess();
     }
 }

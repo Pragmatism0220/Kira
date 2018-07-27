@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers;
 public class LibraryPresenter implements LibraryContract.Presenter {
     private LibraryContract.View view;
     private ApiService apiService;
-        
+
     @Inject
     public LibraryPresenter(LibraryContract.View view, ApiService apiService) {
         this.view = view;
@@ -51,7 +51,20 @@ public class LibraryPresenter implements LibraryContract.Presenter {
     @Override
     public void loadLibraryBagList(String type, final int index) {
         if (type.equals("历史记录")) {
+            apiService.loadLibraryNewestReadhistory(ApiService.LENGHT1, index)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new NetResultSubscriber<ArrayList<ShowFolderEntity>>() {
+                        @Override
+                        public void onSuccess(ArrayList<ShowFolderEntity> entities) {
+                            if (view != null)
+                                view.onLoadLibraryNewestReadhistorySuccess(entities, index == 0);
+                        }
 
+                        @Override
+                        public void onFail(int code, String msg) {
+                        }
+                    });
         } else {
             apiService.loadLibraryBagList(type, ApiService.LENGHT1, index)
                     .subscribeOn(Schedulers.io())

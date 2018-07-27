@@ -31,6 +31,7 @@ import com.moemoe.lalala.model.entity.VideoInfo;
 import com.moemoe.lalala.model.entity.ZipInfo;
 import com.moemoe.lalala.presenter.FileUploadContract;
 import com.moemoe.lalala.presenter.FileUploadPresenter;
+import com.moemoe.lalala.utils.AlertDialogUtil;
 import com.moemoe.lalala.utils.AndroidBug5497Workaround;
 import com.moemoe.lalala.utils.DialogUtils;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
@@ -132,6 +133,12 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
     TextView mTvSubmission;
     @BindView(R.id.tv_select)
     TextView mTvSelect;
+    @BindView(R.id.ll_collection)
+    LinearLayout mLlCollection;
+    @BindView(R.id.tv_collection)
+    TextView mTvCollection;
+    @BindView(R.id.tv_xiaoshuo)
+    TextView mTvXiaoshuo;
 
     @Inject
     FileUploadPresenter mPresenter;
@@ -155,6 +162,7 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
     private String departmentId;
     private int folderType = 0;
     private String olderId;
+    private String mCollection;
 
     @Override
     protected int getLayoutId() {
@@ -197,6 +205,7 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
     @Override
     protected void onDestroy() {
         if (mPresenter != null) mPresenter.release();
+
         super.onDestroy();
     }
 
@@ -221,11 +230,11 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
         if (!TextUtils.isEmpty(submission)) {
             mSubmission.setVisibility(View.VISIBLE);
             if (mFolderType.equals(FolderType.MH.toString())) {
-                mTvSubmission.setText("选择已有漫画直接发稿");
+                mTvSubmission.setText("在书包中选择已有漫画进行投稿");
             } else if (mFolderType.equals(FolderType.TJ.toString())) {
-                mTvSubmission.setText("选择已有图集直接发稿");
+                mTvSubmission.setText("在书包中选择已有图集进行投稿");
             } else if (mFolderType.equals(FolderType.XS.toString())) {
-                mTvSubmission.setText("选择已有小说直接发稿");
+                mTvSubmission.setText("在书包中选择已有小说进行投稿");
             }
         }
         if (mFolderType.equals(FolderType.MH.toString()) || mFolderType.equals(FolderType.MHD.toString())) {
@@ -245,6 +254,12 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
                         .bitmapTransform(new CropTransformation(FilesUploadActivity.this, (int) getResources().getDimension(R.dimen.y112), (int) getResources().getDimension(R.dimen.y112)))
                         .into(mIvBg);
             }
+            if (!TextUtils.isEmpty(submission) && submission.equals("submission")) {
+                mLlCollection.setVisibility(View.VISIBLE);
+            }
+            if (mFolderType.equals(FolderType.MH.toString()) && !TextUtils.isEmpty(submission) && submission.equals("submission")) {
+                mTvNum.setText("上传完成后将会进行审核，审核通过后他人才能看见");
+            }
         } else if (mFolderType.equals(FolderType.XS.toString()) || mFolderType.equals(FolderType.SP.toString())) {
             mBgRoot.setVisibility(View.VISIBLE);
             mNameRoot.setVisibility(View.VISIBLE);
@@ -259,6 +274,10 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
                 mTagRoot.requestLayout();
                 mTvNum.setText("上传视频将会进行审核，审核通过后他人才能看见");
             }
+            if (mFolderType.equals(FolderType.XS.toString()) && !TextUtils.isEmpty(submission) && submission.equals("submission")) {
+                mTvNum.setText("上传完成后将会进行审核，审核通过后他人才能看见");
+                mTvXiaoshuo.setVisibility(View.VISIBLE);
+            }
         }
 
         if (mFolderType.equals(FolderType.YY.toString())) {
@@ -271,7 +290,9 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
             mTagRoot.requestLayout();
             mTvNum.setText("同时上传多个音乐时，将使用同样的封面");
         }
-
+        if (mFolderType.equals(FolderType.TJ.toString()) && !TextUtils.isEmpty(submission) && submission.equals("submission")) {
+            mTvNum.setText("上传完成后将会进行审核，审核通过后他人才能看见");
+        }
         LinearLayoutManager selectRvL = new LinearLayoutManager(this);
         selectRvL.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRvImg.setLayoutManager(selectRvL);
@@ -288,8 +309,22 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
                         startActivityForResult(intent, REQ_GET_FROM_SELECT_MOVIE);
                     } else {
                         if (bottomMenuFragment != null) {
-                            initPopupMenus();
-                            bottomMenuFragment.show(getSupportFragmentManager(), "upload");
+                            if (!TextUtils.isEmpty(submission) && submission.equals("submission") && mFolderType.equals(FolderType.TJ.toString())) {
+                                ArrayList<String> selected = new ArrayList<>();
+                                for (Object o : mItemPaths) {
+                                    if (o instanceof String) {
+                                        selected.add((String) o);
+                                    }
+                                    if (o instanceof MusicLoader.MusicInfo) {
+                                        selected.add("music" + ((MusicLoader.MusicInfo) o).getUrl());
+                                    }
+                                }
+                                mIsCover = false;
+                                DialogUtils.createImgChooseDlg(FilesUploadActivity.this, null, FilesUploadActivity.this, selected, ICON_NUM_LIMIT).show();
+                            } else {
+                                initPopupMenus();
+                                bottomMenuFragment.show(getSupportFragmentManager(), "upload");
+                            }
                         }
                     }
                 }
@@ -462,7 +497,7 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
         mTvMenuRight.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if (!TextUtils.isEmpty(submission)&&submission.equals("submission")) {
+                if (!TextUtils.isEmpty(submission) && submission.equals("submission")) {
                     folderType = 1;
                     folderDone();
                 } else {
@@ -518,33 +553,75 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
             }
         });
 
+        mLlCollection.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                initCollection();
+                if (bottomMenuFragment != null) {
+                    bottomMenuFragment.show(getSupportFragmentManager(), "collection");
+                }
+            }
+        });
     }
 
     private void folderDone() {
+
         if (!NetworkUtils.isNetworkAvailable(this)) {
             showToast(R.string.msg_connection);
             return;
         }
-        String name = mTvName.getText().toString();
-        if (TextUtils.isEmpty(name)) {
-            showToast(R.string.msg_name_cannot_null);
-            return;
+        if (mFolderType.equals(FolderType.MH.toString()) || mFolderType.equals(FolderType.XS.toString()) || mFolderType.equals(FolderType.MHD.toString()) || mFolderType.equals(FolderType.SP.toString())) {
+            String name = mTvName.getText().toString();
+            if (TextUtils.isEmpty(name)) {
+                showToast(R.string.msg_name_cannot_null);
+                return;
+            }
+            if (TextUtils.isEmpty(mBgPath)) {
+                showToast("封面不能为空");
+                return;
+            }
         }
-        if (name.length() > LIMIT_NICK_NAME) {
-            showToast("名称不能超过10个字");
-            return;
-        }
-        if (TextUtils.isEmpty(mBgPath)) {
-            showToast("封面不能为空");
-            return;
-        }
-        createDialog();
-        if (!mBgPath.equals("")) {
-            long size = new File(mBgPath).length();
+
+
+        if (mZipInfo == null) {
+            if (mItemPaths.size() <= 0) {
+                showToast("什么都没选呢");
+                return;
+            }
+            long size = 0;
+            if (!TextUtils.isEmpty(mBgPath)) {
+                size = new File(mBgPath).length();
+            }
+            for (Object o : mItemPaths) {
+                if (o instanceof String) {
+                    size += new File((String) o).length();
+                } else if (o instanceof MusicLoader.MusicInfo) {
+                    size += new File(((MusicLoader.MusicInfo) o).getUrl()).length();
+                } else if (o instanceof BookInfo) {
+                    size += new File(((BookInfo) o).getPath()).length();
+                }
+            }
+            createDialog();
             mPresenter.checkSize(size);
         } else {
-            onCheckSize(true);
+            if (FileUtil.unzip(mZipInfo.getPath(), StorageUtils.getTempRootPath() + mZipInfo.getTitle() + File.separator)) {
+                ArrayList<String> temp = FileUtil.getUnZipFileList(StorageUtils.getTempRootPath() + File.separator + mZipInfo.getTitle());
+                if (temp.size() > 0) {
+                    long size = 0;
+                    for (String o : temp) {
+                        size += new File(o).length();
+                    }
+                    mItemPaths.addAll(temp);
+                    createDialog();
+                    mPresenter.checkSize(size);
+                } else {
+                    showToast("没有任何文件");
+                }
+            } else {
+                showToast("解压失败，压缩文件有密码或者格式不支持,压缩包只能含有图片文件，不能存在文件夹");
+            }
         }
+
     }
 
     private void showSortMenu() {
@@ -653,6 +730,61 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
             }
         }
     }
+
+    /**
+     * 选择漫画合集
+     */
+    public void initCollection() {
+        if (bottomMenuFragment != null) {
+            bottomMenuFragment = null;
+        }
+        bottomMenuFragment = new BottomMenuFragment();
+        ArrayList<MenuItem> items = new ArrayList<>();
+        MenuItem item = new MenuItem(1, "新建合集");
+        items.add(item);
+
+        item = new MenuItem(2, "选择已有合集");
+        items.add(item);
+
+        bottomMenuFragment.setMenuItems(items);
+        bottomMenuFragment.setShowTop(false);
+        bottomMenuFragment.setMenuType(BottomMenuFragment.TYPE_VERTICAL);
+        bottomMenuFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
+            @Override
+            public void OnMenuItemClick(int itemId) {
+                if (itemId == 1) {
+                    final AlertDialogUtil alertDialogUtil = AlertDialogUtil.getInstance();
+                    alertDialogUtil.createDocEditDialog(FilesUploadActivity.this, "名称");
+                    alertDialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+                        @Override
+                        public void CancelOnClick() {
+                            alertDialogUtil.dismissDialog();
+                        }
+
+                        @Override
+                        public void ConfirmOnClick() {
+                            if (DialogUtils.checkLoginAndShowDlg(FilesUploadActivity.this)) {
+                                String content = alertDialogUtil.getEditTextContent();
+                                if (!TextUtils.isEmpty(content)) {
+                                    mTvCollection.setText(content);
+                                    mCollection = content;
+                                    alertDialogUtil.dismissDialog();
+                                } else {
+                                    showToast("名称不能空～");
+                                }
+                            }
+                        }
+                    });
+                    alertDialogUtil.showDialog();
+                } else if (itemId == 2) {
+                    if (mFolderType.equals(FolderType.MH.toString())) {
+                        NewFolderActivity.startActivity(FilesUploadActivity.this, PreferenceUtils.getUUid(), FolderType.MH.toString(), "my", true, departmentId, "collection");
+                    }
+                }
+            }
+        });
+    }
+
 
     private void initPopupMenus() {
         if (bottomMenuFragment != null) {
@@ -770,9 +902,13 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
                 showTags();
             }
         } else if (requestCode == REQ_LIBRARY_TOUGAO && resultCode == RESULT_OK) {
-//            if (data != null) {
-            finish();
-//            }
+            if (data != null) {
+                mParentId = data.getStringExtra("folderId");
+                String folderName = data.getStringExtra("folderName");
+                mTvCollection.setText(folderName);
+            } else {
+                finish();
+            }
         } else {
             DialogUtils.handleImgChooseResult(this, requestCode, resultCode, data, new DialogUtils.OnPhotoGetListener() {
 
@@ -883,7 +1019,16 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
             }
         });
         mTvTitle.setVisibility(View.VISIBLE);
-        mTvTitle.setText(getString(R.string.label_add));
+        if (mFolderType.equals(FolderType.MH.toString()) && !TextUtils.isEmpty(submission) && submission.equals("submission")) {
+            mTvTitle.setText("投稿漫画");
+        } else if (mFolderType.equals(FolderType.TJ.toString()) && !TextUtils.isEmpty(submission) && submission.equals("submission")) {
+            mTvTitle.setText("投稿图集");
+
+        } else if (mFolderType.equals(FolderType.XS.toString()) && !TextUtils.isEmpty(submission) && submission.equals("submission")) {
+            mTvTitle.setText("投稿小说");
+        } else {
+            mTvTitle.setText(getString(R.string.label_add));
+        }
         mTvMenuRight.setVisibility(View.VISIBLE);
         ViewUtils.setRightMargins(mTvMenuRight, (int) getResources().getDimension(R.dimen.x36));
         mTvMenuRight.setText(getString(R.string.label_done));
@@ -909,25 +1054,52 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
     @Override
     public void onCheckSize(boolean isOk) {
         if (isOk) {
-            if (!TextUtils.isEmpty(submission)&&submission.equals("submission")) {
+            if (!TextUtils.isEmpty(submission) && submission.equals("submission")) {
                 if (folderType == 1) {
+                    if (mFolderType.equals(FolderType.MH.toString()) && !TextUtils.isEmpty(mParentId)) {
+                        mPresenter.uploadFiles(mFolderType, mFolderId, mParentId,
+                                mTvName.getText().toString() == null ? (((String) mItemPaths.get(0)).substring(((String) mItemPaths.get(0)).lastIndexOf("/"), ((String) mItemPaths.get(0)).lastIndexOf("."))).substring(1) : mTvName.getText().toString(),
+                                mSortString, mItemPaths, mBgPath, mBgPath.equals(mBgTmp) ? -1 : 0, mCoin, mDescName.getText().toString(), mTags);
+                        return;
+                    }
                     FolderRepEntity entity = new FolderRepEntity();
                     entity.coin = mCoin;
+                    if (TextUtils.isEmpty(mBgPath)) {
+                        mBgPath = mItemPaths.get(0).toString();
+                    }
                     entity.cover = mBgPath;
                     entity.coverSize = -1;
-                    entity.folderName = mTvName.getText().toString();
+                    if (TextUtils.isEmpty(mCollection)) {
+                        if (!TextUtils.isEmpty(mTvName.getText().toString())) {
+                            entity.folderName = mTvName.getText().toString();
+                        } else {
+                            entity.folderName = (((String) mItemPaths.get(0)).substring(((String) mItemPaths.get(0)).lastIndexOf("/"), ((String) mItemPaths.get(0)).lastIndexOf("."))).substring(1);
+                        }
+                    } else {
+                        entity.folderName = mCollection;
+                    }
                     entity.folderType = mFolderType;
+                    if (TextUtils.isEmpty(mSortString)) {
+                        mSortString = "NAME";
+                    }
                     entity.orderbyType = mSortString;
                     entity.sellFolder = mHasModified;
                     entity.texts = mTags;
                     mPresenter.addFolder(entity);
                 } else if (folderType == 2) {
                     if (mFolderType.equals(FolderType.MH.toString())) {
-                        mPresenter.uploadFiles(mFolderType, mFolderId, olderId, mTvName.getText().toString(), mSortString, mItemPaths, mBgPath, mBgPath.equals(mBgTmp) ? -1 : 0, mCoin, mDescName.getText().toString(), mTags);
+                        mPresenter.uploadFiles(mFolderType, mFolderId, olderId,
+                                mTvName.getText().toString() == null ? (((String) mItemPaths.get(0)).substring(((String) mItemPaths.get(0)).lastIndexOf("/"), ((String) mItemPaths.get(0)).lastIndexOf("."))).substring(1) : mTvName.getText().toString(),
+                                mSortString, mItemPaths, mBgPath, mBgPath.equals(mBgTmp) ? -1 : 0, mCoin, mDescName.getText().toString(), mTags);
                     } else if (mFolderType.equals(FolderType.TJ.toString())) {
-                        mPresenter.uploadFiles(mFolderType, olderId, mParentId, mTvName.getText().toString(), mSortString, mItemPaths, mBgPath, mBgPath.equals(mBgTmp) ? -1 : 0, mCoin, mDescName.getText().toString(), mTags);
+                        mPresenter.uploadFiles(mFolderType, olderId, mParentId,
+                                mTvName.getText().toString() == null ? (((String) mItemPaths.get(0)).substring(((String) mItemPaths.get(0)).lastIndexOf("/"), ((String) mItemPaths.get(0)).lastIndexOf("."))).substring(1) : mTvName.getText().toString(),
+                                mSortString, mItemPaths, mBgPath, mBgPath.equals(mBgTmp) ? -1 : 0, mCoin, mDescName.getText().toString(), mTags);
+
                     } else if (mFolderType.equals(FolderType.XS.toString())) {
-                        mPresenter.uploadFiles(mFolderType, olderId, mParentId, mTvName.getText().toString(), mSortString, mItemPaths, mBgPath, mBgPath.equals(mBgTmp) ? -1 : 0, mCoin, mDescName.getText().toString(), mTags);
+                        mPresenter.uploadFiles(mFolderType, olderId, mParentId,
+                                mTvName.getText().toString() == null ? (((String) mItemPaths.get(0)).substring(((String) mItemPaths.get(0)).lastIndexOf("/"), ((String) mItemPaths.get(0)).lastIndexOf("."))).substring(1) : mTvName.getText().toString(),
+                                mSortString, mItemPaths, mBgPath, mBgPath.equals(mBgTmp) ? -1 : 0, mCoin, mDescName.getText().toString(), mTags);
                     }
                 }
             } else {
@@ -946,6 +1118,7 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
      */
     @Override
     public void onSuccess(String folderId) {
+//        finalizeDialog();
         olderId = folderId;
         folderType = 2;
         done();
@@ -959,22 +1132,20 @@ public class FilesUploadActivity extends BaseAppCompatActivity implements FileUp
 
     @Override
     public void onUploadFilesSuccess(String folderId) {
-        if (!TextUtils.isEmpty(submission)&&submission.equals("submission")) {
+        if (!TextUtils.isEmpty(submission) && submission.equals("submission")) {
             LibraryContribute contribute = new LibraryContribute();
             if (mFolderType.equals(FolderType.MH.toString())) {
-                contribute.setFolderId(olderId);
                 contribute.setDepartmentId(departmentId);
                 contribute.setType(mFolderType);
-                contribute.setFileId(folderId);
+                contribute.setTargetId(folderId);
             } else if (mFolderType.equals(FolderType.TJ.toString())) {
-                contribute.setFolderId(olderId);
+                contribute.setTargetId(olderId);
                 contribute.setDepartmentId(departmentId);
                 contribute.setType(mFolderType);
-                contribute.setFileId("");
             } else if (mFolderType.equals(FolderType.XS.toString())) {
-                contribute.setFolderId(olderId);
+                contribute.setTargetId(folderId);
                 contribute.setDepartmentId(departmentId);
-                contribute.setType(folderId);
+                contribute.setType(mFolderType);
             }
             mPresenter.loadLibrarySubmitContribute(contribute);
         } else {

@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import com.moemoe.lalala.model.entity.LibraryContribute;
 import com.moemoe.lalala.model.entity.ShowFolderEntity;
 import com.moemoe.lalala.presenter.NewFolderContract;
 import com.moemoe.lalala.presenter.NewFolderPresenter;
+import com.moemoe.lalala.utils.AlertDialogUtil;
 import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.FolderDecoration;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
@@ -81,6 +83,7 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
     private HashMap<Integer, ShowFolderEntity> mSelectMap;
     private boolean isSubmission;
     private String departmentId;
+    private String collection;
 
     @Override
     protected int getLayoutId() {
@@ -111,6 +114,17 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
         ((BaseAppCompatActivity) context).startActivityForResult(i, REQ_LIBRARY_TOUGAO);
     }
 
+    public static void startActivity(Context context, String userId, String folderType, String type, boolean isSubmission, String departmentId, String collection) {
+        Intent i = new Intent(context, NewFolderActivity.class);
+        i.putExtra(UUID, userId);
+        i.putExtra("folderType", folderType);
+        i.putExtra("type", type);
+        i.putExtra("isSubmission", isSubmission);
+        i.putExtra("departmentId", departmentId);
+        i.putExtra("collection", collection);
+        ((BaseAppCompatActivity) context).startActivityForResult(i, REQ_LIBRARY_TOUGAO);
+    }
+
     @Override
     protected void initViews(Bundle savedInstanceState) {
         DaggerNewFolderComponent.builder()
@@ -124,6 +138,7 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
         mType = getIntent().getStringExtra("type");
         isSubmission = getIntent().getBooleanExtra("isSubmission", false);
         departmentId = getIntent().getStringExtra("departmentId");
+        collection = getIntent().getStringExtra("collection");
         mIsSelect = false;
         String title = "";
         mSelectMap = new HashMap<>();
@@ -193,7 +208,7 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                ShowFolderEntity entity = mAdapter.getItem(position);
+                final ShowFolderEntity entity = mAdapter.getItem(position);
 
                 if (!mIsSelect) {
                     if (mFolderType.equals(FolderType.ZH.toString())) {
@@ -201,17 +216,40 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
                     } else if (mFolderType.equals(FolderType.TJ.toString())) {
                         if (isSubmission) {
 //                            NewFileCommonActivity.startActivity(NewFolderActivity.this, FolderType.TJ.toString(), entity.getFolderId(), entity.getCreateUser(), true);
-                            LibraryContribute contribute = new LibraryContribute();
-                            contribute.setFolderId(entity.getFolderId());
-                            contribute.setDepartmentId(departmentId);
-                            contribute.setType(mFolderType);
-                            mPresenter.loadLibrarySubmitContribute(contribute);
+                            final AlertDialogUtil alertDialogUtil = AlertDialogUtil.getInstance();
+                            alertDialogUtil.createNormalDialog(NewFolderActivity.this, "确认投稿？");
+                            alertDialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+                                @Override
+                                public void CancelOnClick() {
+                                    alertDialogUtil.dismissDialog();
+                                }
+
+                                @Override
+                                public void ConfirmOnClick() {
+                                    LibraryContribute contribute = new LibraryContribute();
+                                    contribute.setTargetId(entity.getFolderId());
+                                    contribute.setDepartmentId(departmentId);
+                                    contribute.setType(mFolderType);
+                                    mPresenter.loadLibrarySubmitContribute(contribute);
+                                    alertDialogUtil.dismissDialog();
+                                }
+                            });
+                            alertDialogUtil.showDialog();
+
                         } else {
                             NewFileCommonActivity.startActivity(NewFolderActivity.this, FolderType.TJ.toString(), entity.getFolderId(), entity.getCreateUser());
                         }
                     } else if (mFolderType.equals(FolderType.MH.toString())) {
                         if (isSubmission) {
-                            NewFileManHuaActivity.startActivity(NewFolderActivity.this, FolderType.MH.toString(), entity.getFolderId(), entity.getCreateUser(), true, departmentId);
+                            if (!TextUtils.isEmpty(collection) && collection.equals("collection")) {
+                                Intent intent = new Intent();
+                                intent.putExtra("folderId", entity.getFolderId());
+                                intent.putExtra("folderName", entity.getFolderName());
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            } else {
+                                NewFileManHuaActivity.startActivity(NewFolderActivity.this, FolderType.MH.toString(), entity.getFolderId(), entity.getCreateUser(), true, departmentId);
+                            }
                         } else {
                             NewFileManHuaActivity.startActivity(NewFolderActivity.this, FolderType.MH.toString(), entity.getFolderId(), entity.getCreateUser());
                         }
@@ -442,8 +480,8 @@ public class NewFolderActivity extends BaseAppCompatActivity implements NewFolde
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_LIBRARY_TOUGAO && resultCode == RESULT_OK) {
 //            if (data != null) {
-                setResult(RESULT_OK);
-                finish();
+            setResult(RESULT_OK);
+            finish();
 //            }
         }
     }

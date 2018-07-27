@@ -1056,6 +1056,8 @@ public class MapActivity extends BaseAppCompatActivity implements MapContract.Vi
                     Intent intent1 = new Intent(MapActivity.this, AlarmActivity.class);
                     startActivity(intent1);
                 }
+//                Intent intent = new Intent(MapActivity.this, KissActivity.class);
+//                startActivity(intent);
             }
         });
         mIvSleep.setOnClickListener(new NoDoubleClickListener() {

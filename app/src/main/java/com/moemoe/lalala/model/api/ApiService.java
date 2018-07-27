@@ -7,6 +7,7 @@ import com.moemoe.lalala.model.entity.NewStoryInfoEntity;
 import com.moemoe.lalala.model.entity.NewStoryInfoEventEntity;
 import com.moemoe.lalala.model.entity.NewStoryJsonInfoEntity;
 import com.moemoe.lalala.model.entity.*;
+import com.moemoe.lalala.view.widget.tooltip.Tooltip;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -1226,10 +1227,19 @@ public interface ApiService {
 
     @POST("v2/kira/house/user/notice/update")
     Observable<ApiResult> updateNews(@Body upDateEntity entity);
-    
+
     @GET("v2/kira/bag/library/newest/v2/{type}/bag")
     Observable<ApiResult<ArrayList<ShowFolderEntity>>> loadLibraryBagList(@Path("type") String type, @Query("size") int size, @Query("index") int index);
 
     @POST("v2/kira/bag/library/submit/contribute")
     Observable<ApiResult> loadLibrarySubmitContribute(@Body LibraryContribute entity);
+
+    @POST("v2/kira/bag/readprogress/get")
+    Observable<ApiResult<BagLoadReadprogressEntity>> loadBagReadprogress(@Body BagReadprogressEntity entity);
+
+    @POST("v2/kira/bag/readprogress/update")
+    Observable<ApiResult> loadBagReadpressUpdate(@Body BagReadprogressEntity entity);
+
+    @GET("v2/kira/bag/library/newest/v2/readhistory/bag")
+    Observable<ApiResult<ArrayList<ShowFolderEntity>>> loadLibraryNewestReadhistory(@Query("size") int size, @Query("index") int index);
 }

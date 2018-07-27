@@ -54,6 +54,7 @@ import com.moemoe.lalala.view.fragment.NewCommunityFragment;
 import com.moemoe.lalala.view.fragment.NewFollowMainV3Fragment;
 import com.moemoe.lalala.view.widget.camera.IFaceDetector;
 import com.moemoe.lalala.view.widget.map.utils.LogUtils;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

@@ -1136,7 +1136,7 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
 //            } else {
 //                mDrameNews.setVisibility(View.GONE);
 //            }
-            if (searchMap.get("leave_message") != null) { 
+            if (searchMap.get("leave_message") != null) {
                 mMessageNews.setVisibility(View.VISIBLE);
             } else {
                 mMessageNews.setVisibility(View.GONE);
@@ -1377,12 +1377,15 @@ public class HouseActivity extends BaseActivity implements DormitoryContract.Vie
                 case R.id.iv_message://留言板
                     Intent i1 = new Intent(HouseActivity.this, CommentsListActivity.class);
                     i1.putExtra("uuid", PreferenceUtils.getUUid());
-                    for (int i = 0; i < news.size(); i++) {
-                        if (news.get(i).getFunName().equals("leave_message")) {
-                            upDateEntity eventMessage = new upDateEntity("leave_message", null);
-                            mPresenter.updateNews(eventMessage);
+                    if (news != null && news.size() > 0) {
+                        for (int i = 0; i < news.size(); i++) {
+                            if (news.get(i).getFunName().equals("leave_message")) {
+                                upDateEntity eventMessage = new upDateEntity("leave_message", null);
+                                mPresenter.updateNews(eventMessage);
+                            }
                         }
                     }
+
                     startActivity(i1);
                     break;
                 case R.id.iv_bag:

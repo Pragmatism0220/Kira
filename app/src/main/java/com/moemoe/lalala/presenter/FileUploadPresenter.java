@@ -142,6 +142,10 @@ public class FileUploadPresenter implements FileUploadContract.Presenter {
                                 }
                             });
                 } else if (folderType.equals(FolderType.TJ.toString())) {
+                    for (UploadResultEntity entity : resList
+                            ) {
+                        entity.setType("image");
+                    }
                     apiService.uploadTuji(folderId, resList)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -248,6 +252,7 @@ public class FileUploadPresenter implements FileUploadContract.Presenter {
     public void createMh(String folderId, String parentFolderId, String name, ArrayList<Object> items) {
 
     }
+
     @Override
     public void loadLibrarySubmitContribute(LibraryContribute entity) {
         apiService.loadLibrarySubmitContribute(entity)
@@ -268,7 +273,7 @@ public class FileUploadPresenter implements FileUploadContract.Presenter {
 
     @Override
     public void addFolder(final FolderRepEntity entity) {
-        Utils.uploadFile(apiService,entity.cover,new Observer<UploadResultEntity>() {
+        Utils.uploadFile(apiService, entity.cover, new Observer<UploadResultEntity>() {
             @Override
             public void onError(Throwable e) {
 
@@ -282,12 +287,12 @@ public class FileUploadPresenter implements FileUploadContract.Presenter {
                         .subscribe(new NetResultSubscriber<String>() {
                             @Override
                             public void onSuccess(String folderId) {
-                                if(view != null)view.onSuccess(folderId);
+                                if (view != null) view.onSuccess(folderId);
                             }
 
                             @Override
                             public void onFail(int code, String msg) {
-                                if(view != null) view.onFailure(code, msg);
+                                if (view != null) view.onFailure(code, msg);
                             }
                         });
             }

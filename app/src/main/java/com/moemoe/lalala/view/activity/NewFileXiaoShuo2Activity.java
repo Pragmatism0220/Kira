@@ -22,9 +22,20 @@ import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.moemoe.lalala.R;
+import com.moemoe.lalala.app.MoeMoeApplication;
+import com.moemoe.lalala.di.components.DaggerNewFileComponent;
+import com.moemoe.lalala.di.components.DaggerNewFolderXiaoShuoComponent;
+import com.moemoe.lalala.di.modules.NewFileModule;
+import com.moemoe.lalala.di.modules.NewFileXiaoShuoModule;
 import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.entity.BagLoadReadprogressEntity;
+import com.moemoe.lalala.model.entity.BagReadprogressEntity;
 import com.moemoe.lalala.model.entity.FileXiaoShuoEntity;
+import com.moemoe.lalala.model.entity.FolderType;
+import com.moemoe.lalala.presenter.NewFolderItemXiaoShuoContract;
+import com.moemoe.lalala.presenter.NewFolderItemXiaoShuoPresenter;
 import com.moemoe.lalala.utils.DensityUtil;
+import com.moemoe.lalala.utils.ErrorCodeUtils;
 import com.moemoe.lalala.utils.FileUtil;
 import com.moemoe.lalala.utils.NoDoubleClickListener;
 import com.moemoe.lalala.utils.PreferenceUtils;
@@ -32,6 +43,8 @@ import com.moemoe.lalala.utils.StorageUtils;
 import com.moemoe.lalala.utils.StringUtils;
 import com.moemoe.lalala.utils.ViewUtils;
 import com.moemoe.lalala.view.adapter.XiaoShuoAdapter;
+import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
+import com.moemoe.lalala.view.widget.netamenu.MenuItem;
 import com.moemoe.lalala.view.widget.recycler.PullAndLoadView;
 import com.moemoe.lalala.view.widget.recycler.PullCallback;
 
@@ -43,6 +56,8 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import jp.wasabeef.glide.transformations.CropTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
@@ -52,7 +67,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
  * Created by yi on 2017/8/20.
  */
 
-public class NewFileXiaoShuo2Activity extends BaseAppCompatActivity {
+public class NewFileXiaoShuo2Activity extends BaseAppCompatActivity implements NewFolderItemXiaoShuoContract.View {
 
     @BindView(R.id.iv_back)
     ImageView mIvBack;
@@ -62,6 +77,11 @@ public class NewFileXiaoShuo2Activity extends BaseAppCompatActivity {
     PullAndLoadView mListDocs;
     @BindView(R.id.iv_add_folder)
     ImageView mIvAddFolder;
+    @BindView(R.id.iv_menu_list)
+    ImageView mIvMenu;
+
+    @Inject
+    NewFolderItemXiaoShuoPresenter mPresenter;
 
     private String mFolderName;
     private XiaoShuoAdapter mAdapter;
@@ -77,6 +97,9 @@ public class NewFileXiaoShuo2Activity extends BaseAppCompatActivity {
     private String mUserId;
     private String path;
     private boolean isFromFolder;
+    private BottomMenuFragment bottomMenuFragment;
+    private String fildId;
+    private String fildName;
 
     @Override
     protected int getLayoutId() {
@@ -88,6 +111,17 @@ public class NewFileXiaoShuo2Activity extends BaseAppCompatActivity {
         i.putExtra(UUID, userId);
         i.putParcelableArrayListExtra("folders", entities);
         i.putExtra("position", position);
+        i.putExtra("from_folder", true);
+        context.startActivity(i);
+    }
+
+    public static void startActivity(Context context, ArrayList<FileXiaoShuoEntity> entities, String userId, int position, String fildId, String fildName) {
+        Intent i = new Intent(context, NewFileXiaoShuo2Activity.class);
+        i.putExtra(UUID, userId);
+        i.putParcelableArrayListExtra("folders", entities);
+        i.putExtra("position", position);
+        i.putExtra("fildId", fildId);
+        i.putExtra("fildName", fildName);
         i.putExtra("from_folder", true);
         context.startActivity(i);
     }
@@ -107,11 +141,16 @@ public class NewFileXiaoShuo2Activity extends BaseAppCompatActivity {
     @Override
     protected void initViews(Bundle savedInstanceState) {
         ViewUtils.setStatusBarLight(getWindow(), $(R.id.top_view));
-
+        DaggerNewFolderXiaoShuoComponent.builder()
+                .newFileXiaoShuoModule(new NewFileXiaoShuoModule(this))
+                .netComponent(MoeMoeApplication.getInstance().getNetComponent())
+                .build()
+                .inject(this);
         mUserId = getIntent().getStringExtra(UUID);
         mManHualist = getIntent().getParcelableArrayListExtra("folders");
         mPosition = getIntent().getIntExtra("position", 0);
-
+        fildId = getIntent().getStringExtra("fildId");
+        fildName = getIntent().getStringExtra("fildName");
         isFromFolder = getIntent().getBooleanExtra("from_folder", false);
         path = getIntent().getStringExtra("path");
         mIvAddFolder.setVisibility(View.GONE);
@@ -147,17 +186,68 @@ public class NewFileXiaoShuo2Activity extends BaseAppCompatActivity {
         });
 
         if (isFromFolder) {
-            mFolderName = mManHualist.get(mPosition).getFileName();
-            mTvMenuLeft.setText(mFolderName);
-            createBottomView();
+            if (mManHualist == null || mManHualist.size() == 0) {
+                mFolderName = fildName;
+                mTvMenuLeft.setText(mFolderName);
+            } else {
+                mFolderName = mManHualist.get(mPosition).getFileName();
+                mTvMenuLeft.setText(mFolderName);
+                createBottomView();
+            }
         }
         initTxt();
+        mIvMenu.setVisibility(View.VISIBLE);
+        mIvMenu.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if (bottomMenuFragment != null)
+                    bottomMenuFragment.show(getSupportFragmentManager(), "xiaoshuo");
+            }
+        });
+        initPopupMenus();
+    }
+
+    private void initPopupMenus() {
+        bottomMenuFragment = new BottomMenuFragment();
+        ArrayList<MenuItem> items = new ArrayList<>();
+        MenuItem item = new MenuItem(4, "添加书签");
+        items.add(item);
+        bottomMenuFragment.setMenuItems(items);
+        bottomMenuFragment.setShowTop(false);
+        bottomMenuFragment.setMenuType(BottomMenuFragment.TYPE_VERTICAL);
+        bottomMenuFragment.setmClickListener(new BottomMenuFragment.MenuItemClickListener() {
+            @Override
+            public void OnMenuItemClick(int itemId) {
+                if (itemId == 4) {
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) mListDocs.getRecyclerView().getLayoutManager();
+                    int firstVisibleItemPosition1 = layoutManager.findFirstVisibleItemPosition();
+                    View viewByPosition = layoutManager.findViewByPosition(firstVisibleItemPosition1);
+                    int height = viewByPosition.getHeight();
+                    int top = firstVisibleItemPosition1 * height - viewByPosition.getTop();
+                    double topPercentage = top / (double) (height * (firstVisibleItemPosition1 + 1));
+                    BagReadprogressEntity entity = new BagReadprogressEntity();
+                    entity.setReadProgress(topPercentage + firstVisibleItemPosition1);
+                    if (mManHualist == null || mManHualist.size() == 0) {
+                        entity.setTargetId(fildId);
+                    } else {
+                        entity.setTargetId(mManHualist.get(mPosition).getFileId());
+                    }
+                    entity.setType(FolderType.XS.toString());
+                    mPresenter.loadBagReadpressUpdate(entity);
+                }
+            }
+        });
     }
 
     private void initTxt() {
         File file;
         if (isFromFolder) {
-            file = new File(StorageUtils.getNovRootPath() + mManHualist.get(mPosition).getFileId(), mManHualist.get(mPosition).getFileName());
+            if (mManHualist == null || mManHualist.size() == 0) {
+                file = new File(StorageUtils.getNovRootPath() + fildId, fildName);
+
+            } else {
+                file = new File(StorageUtils.getNovRootPath() + mManHualist.get(mPosition).getFileId(), mManHualist.get(mPosition).getFileName());
+            }
         } else {
             file = new File(path);
         }
@@ -185,6 +275,14 @@ public class NewFileXiaoShuo2Activity extends BaseAppCompatActivity {
                 e.printStackTrace();
             }
         }
+        BagReadprogressEntity entity = new BagReadprogressEntity();
+        entity.setType(FolderType.XS.toString());
+        if (mManHualist == null || mManHualist.size() == 0) {
+            entity.setTargetId(fildId);
+        } else {
+            entity.setTargetId(mManHualist.get(mPosition).getFileId());
+        }
+        mPresenter.loadBagReadprogress(entity);
     }
 
     private void loadTxt() {
@@ -281,7 +379,6 @@ public class NewFileXiaoShuo2Activity extends BaseAppCompatActivity {
 
     @Override
     protected void initListeners() {
-
     }
 
     @Override
@@ -505,5 +602,34 @@ public class NewFileXiaoShuo2Activity extends BaseAppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public void onLoadBagReadprogressSuccess(BagLoadReadprogressEntity entity) {
+        if (entity != null) {
+            double readProgress = entity.getReadProgress();
+
+            double hou = readProgress - ((int) readProgress);
+
+            if ((int) readProgress > 0) {
+                for (int i = 1; i < entity.getReadProgress(); i++) {
+                    loadTxt();
+                }
+            }
+            View childAt = mListDocs.getRecyclerView().getChildAt(0);
+            int height = childAt.getHeight();
+            mListDocs.getRecyclerView().scrollBy(0, (int) (height * hou));
+        }
+
+    }
+
+    @Override
+    public void onloadBagReadpressUpdateSuccess() {
+        showToast("保存书签成功～");
+    }
+
+    @Override
+    public void onFailure(int code, String msg) {
+        ErrorCodeUtils.showErrorMsgByCode(this, code, msg);
     }
 }

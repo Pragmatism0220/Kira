@@ -31,6 +31,7 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.di.components.DaggerNewFileComponent;
 import com.moemoe.lalala.di.modules.NewFileModule;
 import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.entity.BagLoadReadprogressEntity;
 import com.moemoe.lalala.model.entity.BookInfo;
 import com.moemoe.lalala.model.entity.CommonFileEntity;
 import com.moemoe.lalala.model.entity.FolderType;
@@ -762,6 +763,8 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
         mFolderInfo = entity;
         mFolderName = entity.getFolderName();
         mTvMenuLeft.setText(mFolderName);
+        mTvMenuLeft.setMaxEms(20);
+        mTvMenuLeft.setMaxLines(1);
         mTvBuyNum.setText(entity.getBuyNum() + "");
         mTvFollowNum.setText(entity.getFavoriteNum() + "");
         mTvTime.setText(StringUtils.timeFormat(entity.getCreateTime()));
@@ -994,7 +997,17 @@ public class NewFileCommonActivity extends BaseAppCompatActivity implements NewF
 
     @Override
     public void onLoadLibrarySubmitContribute() {
-        
+
+    }
+
+    @Override
+    public void onLoadBagReadprogressSuccess(BagLoadReadprogressEntity entity) {
+
+    }
+
+    @Override
+    public void onloadBagReadpressUpdateSuccess() {
+
     }
 
     @Override

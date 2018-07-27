@@ -27,6 +27,7 @@ import com.moemoe.lalala.di.components.DaggerFileMovieComponent;
 import com.moemoe.lalala.di.modules.FileMovieModule;
 import com.moemoe.lalala.model.api.ApiService;
 import com.moemoe.lalala.model.api.NetSimpleResultSubscriber;
+import com.moemoe.lalala.model.entity.BagLoadReadprogressEntity;
 import com.moemoe.lalala.model.entity.FolderType;
 import com.moemoe.lalala.model.entity.ManHua2Entity;
 import com.moemoe.lalala.model.entity.NewFolderEntity;
@@ -894,6 +895,16 @@ public class FileMovieActivity extends BaseAppCompatActivity implements NewFolde
     @Override
     public void onLoadLibrarySubmitContribute() {
         
+    }
+
+    @Override
+    public void onLoadBagReadprogressSuccess(BagLoadReadprogressEntity entity) {
+
+    }
+
+    @Override
+    public void onloadBagReadpressUpdateSuccess() {
+
     }
 
     private void addBottomList(ArrayList<ShowFolderEntity> entities) {

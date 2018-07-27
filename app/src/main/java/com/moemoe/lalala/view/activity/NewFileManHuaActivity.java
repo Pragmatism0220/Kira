@@ -26,6 +26,7 @@ import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.di.components.DaggerNewFileComponent;
 import com.moemoe.lalala.di.modules.NewFileModule;
 import com.moemoe.lalala.model.api.ApiService;
+import com.moemoe.lalala.model.entity.BagLoadReadprogressEntity;
 import com.moemoe.lalala.model.entity.FolderType;
 import com.moemoe.lalala.model.entity.LibraryContribute;
 import com.moemoe.lalala.model.entity.ManHua2Entity;
@@ -157,15 +158,17 @@ public class NewFileManHuaActivity extends BaseAppCompatActivity implements NewF
         i.putExtra("folderId", folderId);
         context.startActivity(i);
     }
-    public static void startActivity(Context context, String folderType, String folderId, String userId, boolean isSubmission,String departmentId) {
+
+    public static void startActivity(Context context, String folderType, String folderId, String userId, boolean isSubmission, String departmentId) {
         Intent i = new Intent(context, NewFileManHuaActivity.class);
         i.putExtra(UUID, userId);
         i.putExtra("folderType", folderType);
         i.putExtra("folderId", folderId);
-        i.putExtra("isSubmission",isSubmission);
-        i.putExtra("departmentId",departmentId);
+        i.putExtra("isSubmission", isSubmission);
+        i.putExtra("departmentId", departmentId);
         ((BaseAppCompatActivity) context).startActivityForResult(i, REQ_LIBRARY_TOUGAO);
     }
+
     @Override
     protected void initViews(Bundle savedInstanceState) {
         DaggerNewFileComponent.builder()
@@ -196,13 +199,27 @@ public class NewFileManHuaActivity extends BaseAppCompatActivity implements NewF
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                ManHua2Entity entity = mAdapter.getItem(position);
-                if (isSubmission){
-                    LibraryContribute contribute = new LibraryContribute();
-                    contribute.setFolderId(entity.getFolderId());
-                    contribute.setDepartmentId(departmentId);
-                    contribute.setType(mFolderType);
-                    mPresenter.loadLibrarySubmitContribute(contribute);
+                final ManHua2Entity entity = mAdapter.getItem(position);
+                if (isSubmission) {
+                    final AlertDialogUtil alertDialogUtil = AlertDialogUtil.getInstance();
+                    alertDialogUtil.createNormalDialog(NewFileManHuaActivity.this, "确认投稿？");
+                    alertDialogUtil.setOnClickListener(new AlertDialogUtil.OnClickListener() {
+                        @Override
+                        public void CancelOnClick() {
+                            alertDialogUtil.dismissDialog();
+                        }
+
+                        @Override
+                        public void ConfirmOnClick() {
+                            LibraryContribute contribute = new LibraryContribute();
+                            contribute.setTargetId(entity.getFolderId());
+                            contribute.setDepartmentId(departmentId);
+                            contribute.setType(mFolderType);
+                            mPresenter.loadLibrarySubmitContribute(contribute);
+                            alertDialogUtil.dismissDialog();
+                        }
+                    });
+                    alertDialogUtil.showDialog();
                     return;
                 }
                 if (!mIsSelect) {
@@ -513,10 +530,10 @@ public class NewFileManHuaActivity extends BaseAppCompatActivity implements NewF
                 finish();
             }
         });
-        if (isSubmission){
+        if (isSubmission) {
             mIvMenu.setVisibility(View.GONE);
             mIvAdd.setVisibility(View.GONE);
-        }else {
+        } else {
             mIvMenu.setVisibility(View.VISIBLE);
             mIvAdd.setVisibility(View.VISIBLE);
         }
@@ -830,7 +847,17 @@ public class NewFileManHuaActivity extends BaseAppCompatActivity implements NewF
     public void onLoadLibrarySubmitContribute() {
         showToast("投稿成功");
         setResult(RESULT_OK);
-        finish(); 
+        finish();
+    }
+
+    @Override
+    public void onLoadBagReadprogressSuccess(BagLoadReadprogressEntity entity) {
+
+    }
+
+    @Override
+    public void onloadBagReadpressUpdateSuccess() {
+
     }
 
     private void addBottomList(ArrayList<ShowFolderEntity> entities) {

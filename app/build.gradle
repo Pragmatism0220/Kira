@@ -29,8 +29,8 @@ android {
         applicationId "com.moemoe.lalala"
         minSdkVersion MINSDKVERSION as int
         targetSdkVersion TARGETSDKVERSION as int
-        versionCode 6030
-        versionName "6.0.3"
+        versionCode 6040
+        versionName "6.0.4"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "moemoe",
                                 GETUI_APP_ID       : "yJYiw8VtVO9wuMk0DgV6p4",
                                 GETUI_APP_KEY      : "WaKYr5EG2c7DIAib45aPy3",
@@ -86,16 +86,25 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+//            applicationVariants.all { variant ->
+//                variant.outputs.all { output ->
+//                    def outputFile = output.outputFile
+//                    if (outputFile != null && outputFile.name.endsWith('.apk') && !outputFile.name.endsWith('debug.apk')) {
+//                        def fileName = "neta_v${defaultConfig.versionName}_${buildTime()}_${variant.productFlavors[0].name}.apk"
+//                        outputFileName = new File(outputFile.parent, fileName)
+//                    }
+//
+//                }
+//            }
             applicationVariants.all { variant ->
                 variant.outputs.all { output ->
-                    def outputFile = output.outputFile
-                    if (outputFile != null && outputFile.name.endsWith('.apk') && !outputFile.name.endsWith('debug.apk')) {
-                        def fileName = "neta_v${defaultConfig.versionName}_${buildTime()}_${variant.productFlavors[0].name}.apk"
-                        outputFileName = new File(outputFile.parent, fileName)
-                    }
-
+                    outputFileName = new File(
+                            "./../../../../../build/",
+                            output.outputFile.name)
                 }
             }
+            manifestPlaceholders = [isDebug : false]
+
         }
         debug {
 //            buildConfigField("String", "BASE_URL", "\"http://192.168.1.180:12333/\"")//本地环境
@@ -110,16 +119,25 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
-            applicationVariants.all { variant ->
+//            applicationVariants.all { variant ->//在gradle 3.1.0之前
+//                variant.outputs.all { output ->
+//                    def outputFile = output.outputFile
+//                    if (outputFile != null && outputFile.name.endsWith('.apk') && !outputFile.name.endsWith('debug.apk')) {
+//                        def fileName = "neta_v${defaultConfig.versionName}_${buildTime()}_${variant.productFlavors[0].name}.apk"
+//                        outputFileName = fileName
+//                    }
+//
+//                }
+//            }
+            applicationVariants.all { variant ->//在gradle 3.1.0之后
                 variant.outputs.all { output ->
-                    def outputFile = output.outputFile
-                    if (outputFile != null && outputFile.name.endsWith('.apk') && !outputFile.name.endsWith('debug.apk')) {
-                        def fileName = "neta_v${defaultConfig.versionName}_${buildTime()}_${variant.productFlavors[0].name}.apk"
-                        outputFileName = fileName
-                    }
-
+                    outputFileName = new File(
+                            "./../../../../../build/",
+                            output.outputFile.name)
                 }
             }
+            manifestPlaceholders = [isDebug : true]
+
         }
     }
     greendao {
@@ -364,6 +382,12 @@ dependencies {
 
 //    //talkingData
 //    compile files('libs/TalkingdataAnalytics.jar')
+
+    //腾讯bugly
+    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
+    compile 'com.tencent.bugly:crashreport:latest.release'
+
+
 }
 
 static def buildTime() {

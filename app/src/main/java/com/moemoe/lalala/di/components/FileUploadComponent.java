@@ -5,6 +5,7 @@ import com.moemoe.lalala.di.modules.FileUploadModule;
 import com.moemoe.lalala.di.scopes.UserScope;
 import com.moemoe.lalala.view.activity.AddAddressActivity;
 import com.moemoe.lalala.view.activity.FilesUploadActivity;
+import com.moemoe.lalala.view.activity.SubmissionFilesUploadActivity;
 
 import dagger.Component;
 
@@ -15,4 +16,5 @@ import dagger.Component;
 @Component(modules = FileUploadModule.class,dependencies = NetComponent.class)
 public interface FileUploadComponent {
     void inject(FilesUploadActivity activity);
+    void inject(SubmissionFilesUploadActivity activity);
 }

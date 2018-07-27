@@ -302,7 +302,7 @@ public class AlertDialogUtil {
             this.dialog = null;
         }
 //        }
-       
+
         View contentView = View.inflate(context, R.layout.dialog_normal_notice, null);
         this.dialog = new Dialog(context, R.style.NetaDialog);
         this.dialog.setContentView(contentView);
@@ -516,13 +516,13 @@ public class AlertDialogUtil {
         dialog.setCancelable(false);
         cancel = contentView.findViewById(R.id.cancel);
         confirm = contentView.findViewById(R.id.confirm);
-        if (context instanceof Live3dActivity){
+        if (context instanceof Live3dActivity) {
             cancel.setText("忽略");
             confirm.setText("加入VIP");
-        }else if (context instanceof HouseActivity){
+        } else if (context instanceof HouseActivity) {
             cancel.setText("忽略");
             confirm.setText("加入VIP");
-        }else {
+        } else {
             cancel.setText("取消");
             confirm.setText("确认");
         }
@@ -596,7 +596,7 @@ public class AlertDialogUtil {
         SoftKeyboardUtils.showSoftKeyboard(context, editText);
     }
 
-    public void createDocEditDialog(Context context) {
+    public void createDocEditDialog(Context context, String type) {
         this.context = context;
         if (this.dialog != null && this.dialog.isShowing()) {
             this.dialog.dismiss();
@@ -611,6 +611,11 @@ public class AlertDialogUtil {
         dialog.setCancelable(false);
         cancel = contentView.findViewById(R.id.cancel);
         confirm = contentView.findViewById(R.id.confirm);
+        TextView mTvFloor = contentView.findViewById(R.id.tv_floor);
+        if (!TextUtils.isEmpty(type)) {
+            mTvFloor.setVisibility(View.GONE);
+            editText.setHint("名称");
+        }
         SoftKeyboardUtils.showSoftKeyboard(context, editText);
     }
 

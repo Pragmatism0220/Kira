@@ -411,4 +411,6 @@ public void EventError();
 #-keepclasseswithmembers class *$Presenter { 
 #     <methods>; 
 #}
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
 

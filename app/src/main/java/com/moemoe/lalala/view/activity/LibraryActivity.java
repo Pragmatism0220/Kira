@@ -10,9 +10,7 @@ import android.view.View;
 import com.moemoe.lalala.R;
 import com.moemoe.lalala.app.MoeMoeApplication;
 import com.moemoe.lalala.databinding.AcLibraryBinding;
-import com.moemoe.lalala.di.components.DaggerDepartComponent;
 import com.moemoe.lalala.di.components.DaggerLibraryComponent;
-import com.moemoe.lalala.di.modules.DepartModule;
 import com.moemoe.lalala.di.modules.LibraryModule;
 import com.moemoe.lalala.model.entity.BannerEntity;
 import com.moemoe.lalala.model.entity.FolderType;
@@ -29,6 +27,7 @@ import com.moemoe.lalala.view.fragment.BaseFragment;
 import com.moemoe.lalala.view.fragment.LibraryFragment;
 import com.moemoe.lalala.view.widget.netamenu.BottomMenuFragment;
 import com.moemoe.lalala.view.widget.netamenu.MenuItem;
+import com.moemoe.lalala.view.widget.view.KiraTabLayout;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
@@ -83,7 +82,16 @@ public class LibraryActivity extends BaseActivity implements LibraryContract.Vie
 
     @Override
     protected void initListeners() {
-
+        binding.indicatorPersonData.setmTabClick(new KiraTabLayout.OnTabViewClickListener() {
+            @Override
+            public void onTabClick(View tabView, int position) {
+                if (position == 3) {
+                    binding.ivToWen.setVisibility(View.GONE);
+                } else {
+                    binding.ivToWen.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     @Override
@@ -100,13 +108,13 @@ public class LibraryActivity extends BaseActivity implements LibraryContract.Vie
         for (int i = 0; i < titles.size(); i++) {
             String mFolderType;
             if (titles.get(i).equals("漫画")) {
-                mFolderType=FolderType.MH.toString();
+                mFolderType = FolderType.MH.toString();
             } else if (titles.get(i).equals("图集")) {
-                mFolderType=FolderType.TJ.toString();
+                mFolderType = FolderType.TJ.toString();
             } else if (titles.get(i).equals("小说")) {
-                mFolderType=FolderType.XS.toString();
+                mFolderType = FolderType.XS.toString();
             } else {
-                mFolderType="历史记录";
+                mFolderType = "历史记录";
             }
             fragmentList.add(LibraryFragment.newInstance(mFolderType));
         }
@@ -154,6 +162,11 @@ public class LibraryActivity extends BaseActivity implements LibraryContract.Vie
 
     }
 
+    @Override
+    public void onLoadLibraryNewestReadhistorySuccess(ArrayList<ShowFolderEntity> entities, boolean isPull) {
+
+    }
+
     private void initMenu() {
         if (fragment == null) {
             fragment = new BottomMenuFragment();
@@ -182,7 +195,8 @@ public class LibraryActivity extends BaseActivity implements LibraryContract.Vie
                 } else if (itemId == 3) {
                     mFolderType = FolderType.XS.toString();
                 }
-                FilesUploadActivity.startActivityForResult(LibraryActivity.this, mFolderType, "", "", false, "submission",roomId);
+
+                FilesUploadActivity.startActivityForResult(LibraryActivity.this, mFolderType, "", "", false, "submission", roomId);
             }
         });
 
